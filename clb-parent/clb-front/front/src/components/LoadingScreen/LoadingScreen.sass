@@ -1,0 +1,36 @@
+.loading-screen
+  background-color: #fafafa
+  position: fixed
+  overflow: auto
+  text-align: center
+  display: flex
+  top: 0
+  left: 0
+  bottom: 0
+  right: 0
+  z-index: 100000
+  width: 100%
+  padding: 0
+  margin: 0
+  &__wrapper
+    text-align: center
+    border-radius: 3px
+    margin: auto
+    height: auto
+    background-color: #fafafa
+  // &__speeding-wheel
+  //   width: 49px
+  //   height: 49px
+  //   margin: 0 auto
+  //   border: 5px solid #D9D9D9
+  //   border-radius: 50%
+  //   border-left-color: transparent
+  //   border-right-color: transparent
+  //   animation: loading-screen-spin 775ms infinite linear
+  &__message
+    text-align: center
+    margin-top: 30px
+
+@keyframes loading-screen-spin
+  100%
+    transform: rotate(360deg)

@@ -1,0 +1,131 @@
+@import "constants"
+
+#root 
+  //min-width: 790px
+
+.mdc-top-app-bar 
+  //min-width: 790px
+
+html
+  box-sizing: border-box
+
+*, *:before, *:after
+  box-sizing: border-box
+  vertical-align: middle
+
+.page-under-app-bar-flex-element 
+  height: 100vh  
+  display: flex
+  flex-direction: row
+
+.drawer-app-content 
+  flex: auto
+  overflow: auto
+
+.ReactModalPortal
+  .ReactModal__Overlay
+    z-index: 100
+    button.close-modal
+    .ReactModal__Content 
+      .modal-header
+        display: flex
+        * 
+          vertical-align: middle
+        .left 
+          flex: 1 
+          h1 
+            margin: 0
+            padding: 0
+            line-height: 1em
+        .right 
+          text-align: right
+          .close-modal
+            background: #ffc0cb00
+            background-image: url(../assets/icons/ic_x.svg)
+            background-size: 30px 30px
+            width: 30px
+            height: 30px
+            border: 0px solid pink
+
+body
+  font-family: 'Roboto', Helvetica, Arial, sans-serif
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+  vertical-align: baseline
+  font-weight: normal
+  font-style: normal
+  font-stretch: normal
+
+h1
+  font-weight: 300
+  font-size: 30px
+  line-height: 60px
+
+h2
+  font-weight: 500
+  font-size: 30px
+  line-height: 50px
+
+h3
+  font-weight: 500
+  font-size: 24px
+
+h4
+  font-weight: 500
+  font-size: 18px
+  line-height: 30px
+
+h5
+  font-weight: 500
+  font-size: 16px
+  line-height: 30px
+
+h6
+  font-weight: 500
+  font-size: 14px
+  line-height: 30px
+
+a
+  color: $mainGrey
+  text-decoration: none
+
+a:hover
+  color: $blue
+  text-decoration: none
+
+textarea
+  min-height: 100px
+  padding: 15px
+  color: #808080
+  border: 1px solid hsl(0,0%,80%)
+  border-radius: 4px
+  background: #ffffff
+  font-size: 14px
+
+fieldset
+  border: none
+
+label, input[type="checkbox"], input[type="radio"]
+  cursor: pointer
+
+button
+  cursor: pointer
+  a
+    display: block
+    width: 100%
+
+*:invalid
+  box-shadow: none
+*:-moz-submit-invalid 
+  box-shadow: none
+*:-moz-ui-invalid
+  box-shadow: none
+
+.org-member-disabled
+  font-size: 10px
+  display: inline-block
+  padding: 3px 5px
+  background: #ff00002e
+  border-radius: 5px
+  color: red
+  border: red 1px solid

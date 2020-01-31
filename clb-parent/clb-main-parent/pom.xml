@@ -1,0 +1,55 @@
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+    xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wrkr.clb</groupId>
+        <artifactId>clb-parent</artifactId>
+        <version>3.13.1-CUT</version>
+    </parent>
+    <artifactId>clb-main-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-common-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-common-crypto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-repo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-services-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>clb-services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>clb-model</module>
+        <module>clb-repo</module>
+        <module>clb-services-api</module>
+        <module>clb-services</module>
+        <module>clb-web</module>
+    </modules>
+</project>

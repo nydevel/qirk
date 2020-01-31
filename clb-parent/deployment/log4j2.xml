@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<Configuration status="WARN">
+    <Appenders>
+        <RollingFile name="File-All" append="true" fileName="${sys:catalina.home}/logs/qirk.log"
+            filePattern="${sys:catalina.home}/logs/qirk.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Common" append="true" fileName="${sys:catalina.home}/logs/qirk-common.log"
+            filePattern="${sys:catalina.home}/logs/qirk-common.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Main" append="true" fileName="${sys:catalina.home}/logs/qirk-main.log"
+            filePattern="${sys:catalina.home}/logs/qirk-main.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Chat" append="true" fileName="${sys:catalina.home}/logs/qirk-chat.log"
+            filePattern="${sys:catalina.home}/logs/qirk-chat.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Stat" append="true" fileName="${sys:catalina.home}/logs/qirk-stat.log"
+            filePattern="${sys:catalina.home}/logs/qirk-stat.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Notif" append="true" fileName="${sys:catalina.home}/logs/qirk-notif.log"
+            filePattern="${sys:catalina.home}/logs/qirk-notif.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Crdt" append="true" fileName="${sys:catalina.home}/logs/qirk-crdt.log"
+            filePattern="${sys:catalina.home}/logs/qirk-crdt.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="File-Admin" append="true" fileName="${sys:catalina.home}/logs/qirk-admin.log"
+            filePattern="${sys:catalina.home}/logs/qirk-admin.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="File-All" />
+        </Root>
+
+        <Logger name="org.wrkr.clb.model" level="info">
+            <AppenderRef ref="File-Main" />
+        </Logger>
+        <Logger name="org.wrkr.clb.repo" level="info">
+            <AppenderRef ref="File-Main" />
+        </Logger>
+        <Logger name="org.wrkr.clb.services" level="info">
+            <AppenderRef ref="File-Main" />
+        </Logger>
+        <Logger name="org.wrkr.clb.web" level="info">
+            <AppenderRef ref="File-Main" />
+        </Logger>
+
+        <Logger name="org.wrkr.clb.common" level="info">
+            <AppenderRef ref="File-Common" />
+        </Logger>
+        <Logger name="org.wrkr.clb.chat" level="info">
+            <AppenderRef ref="File-Chat" />
+        </Logger>
+        <Logger name="org.wrkr.clb.statistics" level="info">
+            <AppenderRef ref="File-Stat" />
+        </Logger>
+        <Logger name="org.wrkr.clb.notification" level="info">
+            <AppenderRef ref="File-Notif" />
+        </Logger>
+        <Logger name="org.wrkr.clb.crdt" level="info">
+            <AppenderRef ref="File-Crdt" />
+        </Logger>
+        <Logger name="org.wrkr.clb.admin" level="info">
+            <AppenderRef ref="File-Admin" />
+        </Logger>
+    </Loggers>
+</Configuration>

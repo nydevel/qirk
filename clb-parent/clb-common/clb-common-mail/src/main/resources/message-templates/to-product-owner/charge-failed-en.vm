@@ -1,0 +1,6 @@
+Charging ${amount} coins from user [id=${userId}] ${balanceType} balance failed. Transaction type: ${transactionType}, id: ${transactionId}).<br>
+<br>
+Exception during charging: ${chargeExceptionMessage}<br>
+#if ( $reverseChargeFailed )
+  Exception during reversing charge: ${reverseChargeExceptionMessage}
+#end

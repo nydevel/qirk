@@ -1,0 +1,5 @@
+ALTER TABLE temporary_attachment DROP CONSTRAINT temporary_attachment__project_id__dropbox_settings_fkey;
+ALTER TABLE temporary_attachment DROP CONSTRAINT temporary_attachment__dropbox_settings_id__dropbox_settings_fk;
+ALTER TABLE temporary_attachment ADD CONSTRAINT temporary_attachment__project_id__dropbox_settings_fkey FOREIGN KEY (project_id) REFERENCES project(id);
+ALTER TABLE temporary_attachment ADD CONSTRAINT temporary_attachment__dropbox_settings_id__dropbox_settings_fk FOREIGN KEY (dropbox_settings_id) REFERENCES dropbox_settings(id);
+

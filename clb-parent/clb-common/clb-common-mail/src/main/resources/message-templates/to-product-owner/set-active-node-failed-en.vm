@@ -1,0 +1,3 @@
+Setting node ${environment}-${nodeId} as active to perform ${jobName} failed.<br>
+<br>
+Exception stack-trace: ${exceptionMessage}<br>

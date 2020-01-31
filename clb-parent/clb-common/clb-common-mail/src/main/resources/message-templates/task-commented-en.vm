@@ -1,0 +1,3 @@
+${commentedByName} has commented task <a target="_blank" href="${taskUrl}" style="color: blue;text-decoration: underline;">#${taskNumber}</a> in ${projectName} project:<br>
+<br>
+${message}<br>

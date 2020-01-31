@@ -1,0 +1,3 @@
+Charging user [id=${userId}] during daily charge failed.<br>
+<br>
+Exception stack-trace: ${chargeExceptionMessage}

@@ -1,0 +1,14 @@
+${updatedByName} has updated task <a target="_blank" href="${taskUrl}" style="color: blue;text-decoration: underline;">#${taskNumber}</a> in ${projectName} project.<br>
+<br>
+#if( $assigneeChanged )
+  Assignee changed to ${newAssignee}<br>
+#end
+#if( $typeChanged )
+  Type changed to ${newType}<br>
+#end
+#if( $priorityChanged )
+  Priority changed to ${newPriority}<br>
+#end
+#if( $statusChanged )
+  Status changed to ${newStatus}<br>
+#end

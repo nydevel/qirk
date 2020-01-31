@@ -1,0 +1,5 @@
+Здравствуйте!<br>
+<br>
+Вы можете активировать свою учетную запись, нажав ссылку снизу:<br>
+<br>
+<a target="_blank" href=${url} style="color: blue;text-decoration: underline;">${url}</a><br><br>

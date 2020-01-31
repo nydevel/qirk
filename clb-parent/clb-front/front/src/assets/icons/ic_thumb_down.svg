@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>3. Icons/ic_thumb_down</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M18,6 L9,6 C8.17,6 7.46,6.5 7.16,7.22 L4.14,14.27 C4.05,14.5 4,14.74 4,15 L4,16.91 L4.01,16.92 L4,17 C4,18.1 4.9,19 6,19 L12.31,19 L11.36,23.57 L11.33,23.89 C11.33,24.3 11.5,24.68 11.77,24.95 L12.83,26 L19.42,19.41 C19.78,19.05 20,18.55 20,18 L20,8 C20,6.9 19.1,6 18,6 L18,6 Z M22,6 L22,18 L26,18 L26,6 L22,6 L22,6 Z" id="path-1"></path>
+    </defs>
+    <g id="3.-Icons/ic_thumb_down" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="Icon"></g>
+        <g id="5.-Colors/Gray-85" mask="url(#mask-2)" fill="#D8D8D8">
+            <g transform="translate(2.000000, 2.000000)" id="Gray-85">
+                <rect x="0" y="0" width="26" height="26"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

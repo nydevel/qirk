@@ -1,0 +1,1 @@
+Charging ${amount} coins from user [id=${userId}] failed because their account was not found in the database.

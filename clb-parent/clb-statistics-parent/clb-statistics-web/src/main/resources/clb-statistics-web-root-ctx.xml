@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="classpath:clb-statistics-repo-persistence-ctx.xml" />
+	<import resource="classpath:clb-statistics-repo-validation-ctx.xml" />
+	<import resource="classpath:clb-statistics-services-jms-ctx.xml" />
+	<import resource="classpath:clb-statistics-services-ctx.xml" />
+	<import resource="clb-statistics-web-config.xml" />
+
+</beans>

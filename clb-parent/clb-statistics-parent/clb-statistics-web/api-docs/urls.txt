@@ -1,0 +1,14 @@
+/event/
+Accept: text/plain
+POST: {
+	"code":"AAA",
+	...
+}
+
+"code":"STAT_FEEDBACK"
+POST: {
+	"code":"STAT_FEEDBACK"
+	"sender_id":1,
+	"sender_email":"a@a.com",
+	"feedback":"aaa"
+}

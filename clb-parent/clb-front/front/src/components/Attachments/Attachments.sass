@@ -1,0 +1,39 @@
+.attachments-wrapper
+    h3 
+
+    div.dropzone
+        border: 3px #b1aeae dotted
+        transition: all 100ms ease-in-out
+        background: #eee0
+        box-sizing: border-box
+        cursor: pointer
+        &.file-hovering
+            background: #eee
+        input
+        p
+            padding: 20px 30px
+            margin: 0px
+    div.attachments-list
+        .attachment-item
+            display: flex
+            border-bottom: 1px solid #eee
+            box-sizing: border-box
+            .file-link-wrapper
+                flex: 1
+                padding: 10px 0
+                padding-right: 10px
+                a 
+                    transition: all 120ms ease-in-out
+                    &.uploading
+                        // color: green
+                    &.x-hovered
+                        color: red                     
+                    img 
+                        margin-left: 10px
+                        height: 20px
+            .delete-btn-wrapper
+                display: flex
+                justify-content: center
+                align-items: center
+                
+                

@@ -1,0 +1,20 @@
+@import "../constants"
+
+.input
+  &--error
+    border: 1px solid $red !important
+  &--disabled
+    border-color: hsl(0,0%,90%) !important
+    background-color: hsl(0,0%,95%) !important
+  &__wrapper
+    position: relative
+    input
+      width: 100%
+    input[type=checkbox]
+      width: initial
+    textarea
+      width: 100%
+  &__error
+    font-size: 12px
+    margin-top: 3px
+    color: $red

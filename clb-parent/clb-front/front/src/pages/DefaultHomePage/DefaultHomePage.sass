@@ -1,0 +1,42 @@
+.user-homepage
+  display: flex
+  flex-direction: column
+  justify-content: center
+  align-items: center
+  padding-top: 50px
+  &__actions
+    display: flex
+    justify-content: center
+    align-items: center
+    padding: 30px
+    border: 1px solid rgba(0, 0, 0, 0.2)
+    width: 100%
+    border-radius: 25px
+    &:hover
+      border-color: #1875f0
+    &:hover &__circle
+      border-color: #1875f0 
+    &__circle
+      padding: 15px
+      margin: 5px
+      display: flex
+      justify-content: center
+      align-items: center
+      border-radius: 50%
+      width: 10px
+      height: 10px
+      max-width: 10px
+      max-height: 10px
+      border: 2px solid rgba(0, 0, 0, 0.54)
+    &__step
+      font-size: 30px
+      text-align: center
+
+.disabled__action
+  opacity: .5
+
+.disabled-link 
+  pointer-events: none
+
+.first_step_completed
+  border-color: #06ab74

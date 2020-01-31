@@ -1,0 +1,29 @@
+@import '../../../components/constants'
+
+.sign-up-block
+  &__registration
+    display: flex
+    flex-direction: row
+    justify-content: space-evenly
+  &__announce
+    text-align: left
+    margin-right: 20px
+    button
+      display: block
+      margin: auto
+  &__form
+    display: flex
+    align-items: center
+    border-radius: 3px
+    padding: 30px
+    width: 45%
+
+@media screen and (max-width: 850px)
+  .sign-up-block
+    &__registration
+      flex-direction: column
+    &__announce
+      margin-right: 0
+      text-align: center
+    &__form
+      width: 100%

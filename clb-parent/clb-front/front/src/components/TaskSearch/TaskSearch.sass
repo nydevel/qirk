@@ -1,0 +1,68 @@
+.project-task-search
+  .red 
+    color: red
+  .blue 
+    color: blue
+  .green 
+    color: green
+  &__column-wrapper
+    display: flex
+  &__row
+    display: flex
+    align-items: center
+    button, input
+      margin-right: 15px
+  &__row-checkbox
+    display: flex
+    align-items: center
+    margin-bottom: 15px
+    div
+      margin: 0 !important
+    input
+      margin-right: 5px
+    &-alive
+      margin: 0
+  &__input-wrap
+    margin: 0 !important
+  &__sort-by-label
+    margin-right: 15px
+
+  &__member-search
+    margin-right: 15px
+    width: 230px
+    div:first-of-type
+      margin: 0
+  &__sub-column
+    width: 30%
+    display: flex
+    flex-direction: column
+  &__wrapper
+    display: flex
+  &__checkboxes
+    width: 30%
+  &__sorting
+    display: flex
+    &__by
+      padding-right: 15px
+
+.project-filters-for-mobile-icon-button
+  display: flex
+  justify-content: flex-end
+
+.filter-for-mobile-menu
+  &__content
+    &__title
+      width: 100%
+      display: flex
+      justify-content: space-between
+      margin-top: -5px
+    &__item
+      width: 100%
+
+@media screen and (min-width: 1280px)
+  .project-filters-for-mobile-icon-button
+    display: none
+    
+@media screen and (max-width: 1280px)
+  .project-filters-for-PC
+    display: none

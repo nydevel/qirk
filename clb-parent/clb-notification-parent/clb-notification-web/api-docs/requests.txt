@@ -1,0 +1,32 @@
+ws://localhost:8000/clb-notification-web/notification/
+
+Request
+{
+	"token":"aaa", "IV":"aaa", (only on first GET_HISTORY)
+	"request_type":""
+}
+
+"request_type":"PING"
+no response
+
+"request_type":"GET_HISTORY"
+{
+	"response_type":"NOTIFICATIONS",
+	"data":[{
+		"timestamp": 1,
+		"notification_type":"",
+		"json":"" (must parse)
+	}],
+	"meta": {"last_check": 1 (nullable)}
+}
+
+"request_type":"CHECK_ALL_NOTIFICATIONS"
+{
+	"response_type":"CHECKED_ALL_NOTIFICATIONS",
+	"meta": {"last_check": 1 (nullable)}
+}
+
+"request_type":"UNSUBSCRIBE"
+{
+	"response_type":"UNSUBSCRIBED"
+}

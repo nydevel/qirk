@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>70</x>
+      <y>280</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>clbtcsnd01
+185.221.152.98
+--
+Apache Cassandra
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>310</x>
+      <y>280</y>
+      <w>200</w>
+      <h>100</h>
+    </coordinates>
+    <panel_attributes>clbtmari01
+91.201.40.89
+--
+MariaDB
+Apache ActiveMQ
+Elastic Search
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>590</x>
+      <y>280</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>clbtpsql01
+91.201.42.82
+--
+PostgreSQL
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>180</x>
+      <y>170</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>clbttmct01
+185.221.152.95
+--
+Apache Tomcat
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>460</x>
+      <y>170</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>clbttmct02
+185.12.94.193
+--
+Apache Tomcat
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLUseCase</id>
+    <coordinates>
+      <x>330</x>
+      <y>50</y>
+      <w>160</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>clbtngnx01
+185.12.95.205
+--
+Nginx
+valign=top</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

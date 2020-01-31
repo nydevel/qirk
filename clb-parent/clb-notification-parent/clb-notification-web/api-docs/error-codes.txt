@@ -1,0 +1,2 @@
+INVALID_TOKEN - token is missing or invalid
+ERROR - an internal server error occured

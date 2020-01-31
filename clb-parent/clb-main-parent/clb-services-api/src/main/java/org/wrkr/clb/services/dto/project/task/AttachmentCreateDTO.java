@@ -1,0 +1,35 @@
+/*
+ * This file is part of the Java API to Qirk.
+ * Copyright (C) 2020 Memfis LLC, Russia
+ *
+ * This program is free software: you can redistribute it and/or modify it under the terms of
+ * the GNU General Public License as published by the Free Software Foundation, either version 3
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this program.
+ * If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+package org.wrkr.clb.services.dto.project.task;
+
+import java.util.List;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class AttachmentCreateDTO {
+
+    @JsonProperty(value = "task")
+    @NotNull(message = "task in AttachmentCreateDTO must not be null")
+    public Long taskId;
+
+    @NotNull(message = "uuids in AttachmentCreateDTO must not be null")
+    @NotEmpty(message = "uuids in AttachmentCreateDTO must not be empty")
+    public List<String> uuids;
+}

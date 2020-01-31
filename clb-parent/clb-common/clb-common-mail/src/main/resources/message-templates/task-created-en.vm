@@ -1,0 +1,1 @@
+${createdByName} has created new task <a target="_blank" href="${taskUrl}" style="color: blue;text-decoration: underline;">#${taskNumber}</a> in ${projectName} project.<br>

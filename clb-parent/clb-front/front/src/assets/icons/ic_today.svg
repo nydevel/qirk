@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>3. Icons/ic_today</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M22,7 L21,7 L21,5 L19,5 L19,7 L11,7 L11,5 L9,5 L9,7 L8,7 C6.89,7 6.01,7.9 6.01,9 L6,23 C6,24.1 6.89,25 8,25 L22,25 C23.1,25 24,24.1 24,23 L24,9 C24,7.9 23.1,7 22,7 L22,7 Z M22,23 L8,23 L8,12 L22,12 L22,23 L22,23 Z M10,14 L15,14 L15,19 L10,19 L10,14 Z" id="path-1"></path>
+    </defs>
+    <g id="3.-Icons/ic_today" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="Icon"></g>
+        <g id="5.-Colors/Gray-85" mask="url(#mask-2)" fill="#D8D8D8">
+            <g transform="translate(2.000000, 2.000000)" id="Gray-85">
+                <rect x="0" y="0" width="26" height="26"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

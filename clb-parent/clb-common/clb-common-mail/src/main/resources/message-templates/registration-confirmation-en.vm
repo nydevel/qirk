@@ -1,0 +1,5 @@
+Hello!<br>
+<br>
+To activate your account click the link below:<br>
+<br>
+<a target="_blank" href="${url}" style="color: blue;text-decoration: underline;">${url}</a><br>

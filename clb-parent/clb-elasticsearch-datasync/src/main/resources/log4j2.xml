@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{dd MMM yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L - %msg%n" />
+        </Console>
+        <RollingFile name="File" append="true" fileName="datasync.log"
+            filePattern="datasync.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
+            <PatternLayout>
+                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} [%t] %-5level %logger{36}:%L - %msg%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="50 MB" />
+            </Policies>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console" />
+            <AppenderRef ref="File" />
+        </Root>
+    </Loggers>
+</Configuration>

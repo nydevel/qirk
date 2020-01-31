@@ -1,0 +1,2 @@
+Processing cloudpayments transaction ${transactionId} failed.<br>
+Exception stack-trace: ${cloudpaymentsTransactionProcessingError}

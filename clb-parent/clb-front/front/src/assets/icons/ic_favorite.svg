@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>3. Icons/ic_favorite</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M15,25.35 L13.55,24.03 C8.4,19.36 5,16.28 5,12.5 C5,9.42 7.42,7 10.5,7 C12.24,7 13.91,7.81 15,9.09 C16.09,7.81 17.76,7 19.5,7 C22.58,7 25,9.42 25,12.5 C25,16.28 21.6,19.36 16.45,24.04 L15,25.35 L15,25.35 Z" id="path-1"></path>
+    </defs>
+    <g id="3.-Icons/ic_favorite" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="Icon"></g>
+        <g id="5.-Colors/Gray-85" mask="url(#mask-2)" fill="#D8D8D8">
+            <g transform="translate(2.000000, 2.000000)" id="Gray-85">
+                <rect x="0" y="0" width="26" height="26"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

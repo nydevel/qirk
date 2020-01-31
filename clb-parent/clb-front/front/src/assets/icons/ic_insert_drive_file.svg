@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>3. Icons/ic_insert_drive_file</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M9,5 C7.9,5 7.01,5.9 7.01,7 L7,23 C7,24.1 7.89,25 8.99,25 L21,25 C22.1,25 23,24.1 23,23 L23,11 L17,5 L9,5 L9,5 Z M16,12 L16,6.5 L21.5,12 L16,12 L16,12 Z" id="path-1"></path>
+    </defs>
+    <g id="3.-Icons/ic_insert_drive_file" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="Icon"></g>
+        <g id="5.-Colors/Gray-85" mask="url(#mask-2)" fill="#D8D8D8">
+            <g transform="translate(2.000000, 2.000000)" id="Gray-85">
+                <rect x="0" y="0" width="26" height="26"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

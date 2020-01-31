@@ -1,0 +1,83 @@
+@import "./../../components/constants"
+
+.task-html-container
+  word-break: break-word
+
+.error-emply-field
+  border: 1px solid red
+
+.buttons
+  display: flex
+  width: auto
+
+.un-sub-scribe_block
+  display: flex
+  flex-grow: 1
+
+.last-update-date
+  padding-top: 20px
+  font-size: 15px
+  & > span:first-child
+    font-weight: bold
+
+fieldset
+  margin: 0
+  padding: 0
+.task-edit-header
+  display: flex
+  justify-content: space-between
+  align-items: start
+  flex-direction: column
+  &_back-btn
+    a 
+      button
+
+  &_reporter
+    display: flex
+    padding-top: 24px
+    padding-bottom: 10px
+    border-bottom: 1px solid rgba(0, 0, 0, .2)
+    .descriptor
+      padding-right: 5px
+      font-size: 15px
+      & > span:first-child, & > span:nth-child(3)
+        font-weight: bold
+      & > span:nth-child(2)
+        color: blue
+    .reporter
+      padding-right: 5px
+
+.project-task-content
+  &__back-button
+    margin-right: 20px
+  &__create-subtask-button
+    margin-bottom: 20px
+  &__column-wrapper
+    display: flex
+    justify-content: space-between
+  &__main-column
+    width: 60%
+    display: flex
+    flex-direction: column
+  &__main-column-select
+    width: 45%
+  &__main-column-select-wrapper
+    justify-content: space-between
+    display: flex
+  &__main-column-textarea
+    height: 100%
+    .input__wrapper  , textarea
+      height: 96%
+  &__sub-column
+    width: 30%
+    display: flex
+    flex-direction: column
+  &__attachments
+    display: flex
+    justify-content: space-between
+    margin-bottom: 10px
+  &__attachments-label
+    text-align: center
+    margin-bottom: 15px
+  &__file-upload-form
+    margin-bottom: 15px

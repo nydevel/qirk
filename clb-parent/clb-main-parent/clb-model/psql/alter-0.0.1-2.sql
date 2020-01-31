@@ -1,0 +1,7 @@
+ALTER TABLE user_organization ADD COLUMN fired BOOL DEFAULT false;
+
+
+ALTER TABLE version ADD COLUMN record_version BIGINT NOT NULL DEFAULT 1;
+ALTER TABLE version ALTER COLUMN record_version DROP DEFAULT;
+ALTER TABLE version ADD COLUMN closed BOOL DEFAULT false;
+

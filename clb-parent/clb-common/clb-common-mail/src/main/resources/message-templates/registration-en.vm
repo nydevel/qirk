@@ -1,0 +1,7 @@
+Hello!<br>
+<br>
+You need to activate your email before you start using our services. Click the link below to activate (this link will expire in 72 hours):<br>
+<br>
+<a target="_blank" href="${url}" style="color: blue;text-decoration: underline;">${url}</a><br>
+<br>
+Use the following password to sign in: ${password}<br>

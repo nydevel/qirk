@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:component-scan base-package="org.wrkr.clb.services">
+		<context:exclude-filter type="regex"
+			expression="org.wrkr.clb.services.user.impl.DefaultPasswordActivationTokenService" />
+		<context:exclude-filter type="regex"
+			expression="org.wrkr.clb.services.api.elasticsearch.impl.DefaultElasticsearch[a-zA-Z]+Service" />
+		<context:exclude-filter type="regex" expression="org.wrkr.clb.services.scheduling.*" />
+	</context:component-scan>
+
+	<!-- copied from clb-services-ctx.xml START -->
+	<bean class="org.wrkr.clb.common.crypto.TokenGenerator">
+		<property name="key" value="${crypto.secret.key}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.common.mail.DevOpsMailService">
+		<property name="emailHost" value="${email.host}" />
+		<property name="emailPort" value="${email.port}" />
+		<property name="emailHostUser" value="${email.host.user}" />
+		<property name="emailHostPassword" value="${email.host.password}" />
+		<property name="emailFrom" value="${email.from}" />
+
+		<property name="devOpsEmails" value="${email.devops}" />
+		<property name="environment" value="${environment}" />
+		<property name="nodeId" value="${node.id}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.user.impl.DefaultAuthnService">
+		<property name="rememberMeTokenLifetimeSeconds" value="${rememberme.token.lifetime.seconds}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.user.impl.DefaultProfileService">
+		<property name="chatTokenNotBeforeToleranceSeconds" value="${chat.token.notbefore.tolerance.seconds}" />
+		<property name="chatTokenLifetimeSeconds" value="${chat.token.lifetime.seconds}" />
+		<property name="notificationTokenNotBeforeToleranceSeconds" value="${notif.token.notbefore.tolerance.seconds}" />
+		<property name="notificationTokenLifetimeSeconds" value="${notif.token.lifetime.seconds}" />
+		<property name="crdtTokenNotBeforeToleranceSeconds" value="${crdt.token.notbefore.tolerance.seconds}" />
+		<property name="crdtTokenLifetimeSeconds" value="${crdt.token.lifetime.seconds}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.project.impl.DefaultProjectService">
+		<property name="chatTokenNotBeforeToleranceSeconds" value="${chat.token.notbefore.tolerance.seconds}" />
+		<property name="chatTokenLifetimeSeconds" value="${chat.token.lifetime.seconds}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.project.task.impl.DefaultTaskService">
+		<property name="chatTokenNotBeforeToleranceSeconds" value="${chat.token.notbefore.tolerance.seconds}" />
+		<property name="chatTokenLifetimeSeconds" value="${chat.token.lifetime.seconds}" />
+		<property name="searchSize" value="${task.list.limit}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.file.impl.DefaultDropboxFileService">
+		<property name="frontUrl" value="${front.url}" />
+		<property name="taskUrl" value="${front.url.task}" />
+	</bean>
+	<bean class="org.wrkr.clb.services.file.impl.DefaultYandexCloudFileService">
+		<property name="frontUrl" value="${front.url}" />
+		<property name="taskUrl" value="${front.url.task}" />
+	</bean>
+
+	<bean class="org.wrkr.clb.services.project.task.impl.DefaultTemporaryAttachmentService">
+		<property name="temporaryAttachmentLifetimeSeconds" value="${attachment.tmp.lifetime.seconds}" />
+	</bean>
+
+	<bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
+		<property name="providerClass" value="org.hibernate.validator.HibernateValidator" />
+	</bean>
+	<bean class="org.springframework.validation.beanvalidation.MethodValidationPostProcessor">
+		<property name="validatorFactory" ref="validator" />
+	</bean>
+	<!-- copied from clb-services-ctx.xml FINISH -->
+
+	<bean class="org.wrkr.clb.common.mail.UserMailServiceStub">
+	</bean>
+	<bean class="org.wrkr.clb.services.api.dropbox.impl.DropboxApiServiceStub">
+	</bean>
+	<bean class="org.wrkr.clb.services.api.grecaptcha.impl.GRecaptchaServiceStub">
+	</bean>
+	<bean class="org.wrkr.clb.services.api.yandexcloud.impl.YandexCloudApiServiceStub">
+	</bean>
+
+	<bean id="elasticsearchUserService" class="org.wrkr.clb.test.util.EasyMockFactoryBean">
+		<property name="mockedClass" value="org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService" />
+	</bean>
+	<bean id="elasticsearchOrganizationService" class="org.wrkr.clb.test.util.EasyMockFactoryBean">
+		<property name="mockedClass" value="org.wrkr.clb.services.api.elasticsearch.ElasticsearchOrganizationService" />
+	</bean>
+	<bean id="elasticsearchProjectService" class="org.wrkr.clb.test.util.EasyMockFactoryBean">
+		<property name="mockedClass" value="org.wrkr.clb.services.api.elasticsearch.ElasticsearchProjectService" />
+	</bean>
+	<bean id="elasticsearchTaskService" class="org.wrkr.clb.test.util.EasyMockFactoryBean">
+		<property name="mockedClass" value="org.wrkr.clb.services.api.elasticsearch.ElasticsearchTaskService" />
+	</bean>
+
+</beans>

@@ -1,0 +1,1364 @@
+Response structure:
+{
+	"status_ok": true/false (true if request was successful)
+	"status_code": "OK", (string for front-end to determine what kind of error happened)
+	"status_reason": "" (human-readable)
+	"data": [], (requested entity/info will be here)
+	"meta": null (additional info, like pagination or external uuid)
+}
+
+/csrf/refresh
+GET: {}
+
+/authn/login/
+POST: {"username":"a@a.com", "password":"121212", "g_recaptcha_response":"", "license_accepted":true} // by email
+POST: {"username":"aaa", "password":"121212", "g_recaptcha_response":"", "license_accepted":true} // by username
+
+/authn/logout/
+POST: {}
+
+/authn/check/
+GET: {
+	"id":1 (null if not authenticated),
+	"email":"a@a.com",
+	"username":"aaa",
+	"full_name":"aaa"
+}
+
+/user/check-email/?email=&exclude_disabled=
+(exclude_disabled=false by default)
+GET: {"exists":false}
+
+/user/check-username/?username=
+GET: {"exists":false}
+
+/user/register/
+POST: {"email":"a@a.com", "license_accepted":true}
+
+/user/activate/
+POST: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
+
+/user/accept-license/
+POST: {}
+
+/user/reset-password/
+POST: {"email": "a@a.com"}
+
+/user/change-password/
+PUT: {
+	"password":"aaa",
+	"new_password":"aaa",
+	"token":"aaa"
+}
+
+/user/?id=
+GET: [{
+	"id":2,
+	"alias":"t1614668",
+	"first_name":"My humble name",
+	"last_name":"My humble second name",
+	"tags": [{"id":3, "name":"te2"}, {"id":4, "name":"te1"}],
+	"languages": [{"id":1,"name_code":""}, {"id":2,"name_code":""}]
+}]
+
+/user/list/?id=
+GET: [
+	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb"}
+]
+
+/user/profile/
+GET: {
+	"email":"",
+	"username":"",
+	"full_name":"a",
+	"tags":[{"id":1,"name":""}],
+	"languages": [{"id":1,"name_code":""}, {"id":2,"name_code":""}],
+	"about":"",
+	"dont_recommend":false,
+	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
+}
+
+/user/profile/
+PUT: {
+	"full_name":"",
+	"tags":["aaa","bbb"],
+	"languages":[1,2],
+	"about":"",
+	"dont_recommend":false,
+	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
+}
+
+/language/list/
+GET: [
+	{"id":1, "name_code":"EN_US"},
+	{"id":2, "name_code":"RU_RU"}
+]
+
+/user/chat-token/?id=1
+GET: {
+	"token":"aaa",
+	"IV":"aaa"
+}
+
+/user/notification-token/
+GET: {
+	"token":"aaa",
+	"IV":"aaa"
+}
+
+/user/credit-token/
+GET: {
+	"token":"aaa",
+	"IV":"aaa"
+}
+
+/user/search-for-organization/?prefix=aaa&organization_id=
+/user/search-for-organization/?prefix=aaa&organization_ui_id=
+GET: [
+	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb"}
+]
+
+/user/search-for-project/?prefix=aaa&project_id=
+/user/search-for-project/?prefix=aaa&project_ui_id=
+GET: [
+	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa", "is_member":false},
+	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb", "is_member":false}
+]
+
+/user/search/?prefix=a&include_tags=false
+GET: [
+	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	{"id":2, "alias":"abb", "first_name":"abb", "last_name":"abb"}
+]
+
+/organization/check-ui-id/?ui_id=
+GET: {"exists": false}
+
+/organization/
+POST: {
+	"name":"",
+	"ui_id":"",
+	"languages":[1,2]
+}
+
+/organization/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"name":"",
+	"ui_id":"",
+	"languages":[1,2],
+	"projects": {["id":1, "name":"aaa", "ui_id":"aaa"]}
+}
+
+/organization/dropbox/
+POST: {
+	"id":1,
+	"record_version":1,
+	"code":"aaa"
+}
+
+/organization/dropbox/
+DELETE: {
+	"id":1,
+	"record_version":1
+}
+
+/organization/?id=&include_can_leave=
+/organization/?ui_id=&include_can_leave=
+(include_can_leave=false by default)
+GET: {
+	"id":1,
+	"record_version":1,
+	"name":"",
+	"ui_id":"",
+	"private":false,
+	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"is_member":true,
+	"can_manage":false,
+	"is_owner":false,
+	"can_leave":true, (null if include_can_leave=false)
+	"languages":[1,2]
+}
+
+/organization/list/?can_create_project=
+(can_create_project=false by default)
+GET: [
+	{"id":1, "name":"aaa", "ui_id":"aaa"},
+	{"id":2, "name":"bbb", "ui_id":"bbb"}
+]
+
+/organization/search/?prefix=a
+GET: [
+	{"id":1, "name":"aaa", "ui_id":"aaa"},
+	{"id":2, "name":"abb", "ui_id":"abb"}
+]
+
+DEPRECATED
+/organization-member-group/
+POST: {
+	"name":"",
+	"organization":1,
+	"organization_members":[1,2]
+}
+
+DEPRECATED
+/organization-member-group/
+PUT: {
+	"id": 1,
+	"record_version":1,
+	"name":"",
+	"organization_members":[1,2]
+}
+
+DEPRECATED
+/organization-member-group/?id=
+GET: {
+	"id": 1,
+	"record_version":1,
+	"name":"",
+	"organization_members":[{"id":1, "alias":"aaa"}]
+}
+
+DEPRECATED
+/organization-member-group/list/?organization_id=
+GET: [
+	{"id":1, "name":"aaa"},
+	{"id":2, "name":"bbb"}
+]
+
+DEPRECATED
+/organization-member-group/list-by-project/?project_id=
+GET: [
+	{"id":1, "name":"aaa"},
+	{"id":2, "name":"bbb"}
+]
+
+DEPRECATED
+/organization-member-group/
+DELETE: {
+	"id":1
+}
+
+/organization-member/
+POST: {
+	"user":1,
+	"organization": {"id":1, "ui_id":"aaa"},
+	"role":"aaa",
+	"manager":false
+}
+
+/organization-member/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"role":"aaa",
+	"enabled":false,
+	"manager":false
+}
+
+/organization-member/?id=
+GET: {
+	"id":1,
+	"record_version":1,
+	"alias":"aaa",
+	"role":"aaa",
+	"enabled":false,
+	"manager":false
+}
+
+/organization-member/
+DELETE: {
+	"id":1
+}
+
+/organization-member/leave/
+DELETE: {
+	"organization": {"id":1, "ui_id":"aaa"}
+}
+
+/organization-member/list-by-organization/?organization_id=
+/organization-member/list-by-organization/?organization_ui_id=
+GET: [
+	{"id":1, "alias":"aaa", "role":"aaa", "enabled":true, "manager":false, "owner":false},
+	{"id":2, "alias":"bbb", "role":"bbb", "enabled":true, "manager":false, "owner":false}
+]
+
+/organization-member/list-by-ids/?organization_id=&ids=
+GET: [
+	{"id":1, "enabled":true, "user": {"id":1, "username":"aaa", "full_name":"aaa"}},
+	{"id":2, "enabled":true, "user": {"id":2, "username":"bbb", "full_name":"bbb"}},
+]
+
+/organization-member/search/?prefix=a&organization_id=&me_first=
+/organization-member/search/?prefix=a&organization_ui_id=&me_first=
+(me_first=false by default)
+GET: [
+	{"id":1, "username":"aaa", "full_name":"aaa"},
+	{"id":2, "username":"bbb", "full_name":"bbb"}
+]
+
+/organization-member/search-for-project/?prefix=a&project_id=&me_first=
+/organization-member/search-for-project/?prefix=a&project_ui_id=&me_first=
+(me_first=false by default)
+GET: [
+	{"id":1, "username":"aaa", "full_name":"aaa"},
+	{"id":2, "username":"bbb", "full_name":"bbb"}
+]
+
+/project/check-ui-id/?ui_id=
+GET: {"exists": false}
+
+/project/
+POST: {
+	"name":"",
+	"ui_id":"",
+	"key":"",
+	"organization": {"id":1, "ui_id":"aaa"},
+	"make_me_member":false,
+	"private":false,
+	"description":"",
+	"tags":["aaa","bbb"],
+	"languages":[1,2]
+}
+
+/project/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"name":"",
+	"ui_id":"",
+	"key":"",
+	"private":false,
+	"description":"",
+	"tags":["aaa","bbb"],
+	"languages":[1,2]
+}
+
+/project/documentation/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"documentation":"aaa"
+}
+
+/project/dropbox/
+POST: {
+	"id":1,
+	"record_version":1,
+	"code":"aaa"
+}
+
+/project/dropbox/?id=
+/project/dropbox/?ui_id=
+GET: {
+	"id":1,
+	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}
+}
+
+/project/dropbox/
+DELETE: {
+	"id":1,
+	"record_version":1,
+	"code":"aaa"
+}
+
+/project/?id=&include_application=
+/project/?ui_id=&include_application=
+(include_application=false by default)
+GET: {
+	"id":1,
+	"record_version":1,
+	"name":"",
+	"ui_id":"",
+	"key":"",
+	"private":false,
+	"can_be_public":true,
+	"description_md":"abc",
+	"description_html":"<p>abc</p>",
+	"documentation_md": "doc in here",
+	"documentation_html": "<p>doc in here</p>",
+	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"tags":[{"id":1,"name":""}],
+	"languages":[1,2],
+	"is_member":false,
+	"write_allowed":false,
+	"can_manage":false,
+	"application": {"id":1, "status": {"id":1, "name_code":"PENDING"}} (if include_application=true)
+}
+
+/project/list-by-organization/?organization_id=
+/project/list-by-organization/?organization_ui_id=
+GET: [{
+	"id":1,
+	"name":"aaa",
+	"ui_id":"aaa",
+	"private":false,
+	"can_be_public":true,
+	"description_md":"aaa",
+	"description_html":"<p>aaa</p>",
+	"documentation_md": "doc in here",
+	"documentation_html": "<p>doc in here</p>",
+	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
+	"tags":[{"id":1,"name":"aaa"}]
+}]
+
+/project/list-by-user/?managed=
+(managed=false by default)
+GET: [{
+	"id":1,
+	"name":"aaa",
+	"ui_id":"aaa",
+	"organization": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	}
+}]
+
+DEPRECATED
+/project/list-invite-options/?user_id=
+GET: [{
+	"id":1,
+	"name":"aaa",
+	"ui_id":"aaa",
+	"is_member":false,
+	"invite": { (nullable)
+		"id":1,
+		"status": {"id":1, "name_code":"PENDING"},
+	},
+	"organization": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	}
+}]
+
+/project/top/
+GET: [{
+	"id":1,
+	"name":"aaa",
+	"ui_id":"aaa",
+	"organization": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	}
+}]
+
+/project/search/?text=a&include_description=false
+GET: [{
+	"id":1,
+	"name":"aaa",
+	"ui_id":"aaa",
+	"organization": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	}
+}]
+
+/project/chat-token/?id=
+GET: {
+	"token": "aaa",
+	"IV": "aaa",
+	"can_read":true,
+	"can_write":false
+}
+
+/task/
+POST: {
+	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+	"description":"aaa",
+	"assignee":1, (nullable)
+	"assign_to_me":false, (nullable)
+	"task_type":"TYPE", (nullable)
+	"task_priority":"PRIORITY", (nullable)
+	"task_status":"STATUS",
+	"linked_tasks": [1, 2],
+	"hashtag_ids": [1, 2],
+	"hashtag_names": ["aaa", "bbb"]
+}
+
+/task/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"description":"aaa",
+	"assignee":1, (nullable)
+	"assign_to_me":false, (nullable)
+	"task_type":"TYPE", (nullable)
+	"task_priority":"PRIORITY", (nullable)
+	"task_status":"STATUS",
+	"hashtag_ids": [1, 2],
+	"hashtag_names": ["aaa", "bbb"]
+}
+
+/task/card/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"card":1 (nullable)
+}
+Response: {
+	"id":1,
+	"record_version":1,
+	"card":1 (nullable)
+}
+
+/task/link/
+POST: {
+	"task1":1,
+	"task2":2
+}
+Error codes:
+ALREADY_EXISTS
+
+/task/link/
+DELETE: {
+	"task1":1,
+	"task2":2
+}
+
+/task/?id=
+/task/?project_id=1&number=
+/task/?project_ui_id=aaa&number=
+GET: {
+	"id":2,
+	"record_version":1,
+	"number":2,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization": {"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"has_dropbox_settings": true,
+	"has_organization_dropbox_settings": true,
+	"description_html":"<p>aaa</p>",
+	"description_md":"aaa",
+	"reporter": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
+	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"task_type":{"id":1,"name_code":"TASK"},
+	"task_priority":{"id":1, "name_code":"TRIVIAL"},
+	"task_status":{"id":1, "name_code":"OPEN"},
+	"hashtags":[{"id":1, "name":"aaa"}],
+	"subscribed":true,
+	"subscribers_count":1
+}
+
+DEPRECATED
+/task/list-by-project/?project_id=&assigned_to_me=
+/task/list-by-project/?project_ui_id=&assigned_to_me=
+(assigned_to_me=false by default)
+(top 10 if assigned_to_me=true)
+GET: [{
+	"id":1,
+	"number":1,
+	"summary":"a...",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"task_priority":{"id":1, "name_code":"TRIVIAL"},
+	"task_status":{"id":1, "name_code":"OPEN"},
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"}
+}]
+
+/task/list-cardless/?project_id=
+/task/list-cardless/?project_ui_id=
+GET: [{
+	"id":1,
+	"number":1,
+	"summary":"a...",
+	"task_priority":{"id":1, "name_code":"TRIVIAL"},
+	"task_status":{"id":1, "name_code":"OPEN"}
+}]
+
+/task/list-link-options/?task_id=
+/task/list-link-options/?project_id=
+GET: [{
+	"id":1,
+	"number":1,
+	"summary":"a...",
+	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
+	"task_status": {"id":1, "name_code":"OPEN"}
+}]
+
+/task/text-search/
+?project_id=1
+&reported_by_me=false
+&assigned_to_me=false
+&assignee_id=1
+&type=type1,type2
+&priority=priority1,priority2
+&status=status1,status2
+&text=aaa&hashtag=aaa
+&sort_by=
+&ordering=
+&search_after=
+(reported_by_me, assigned_to_me, assignee and sort_by not required)
+(sort_by in: updated_at, assignee, created_at, number, priority, reporter, summary; sort_by=updated_at by default)
+(ordering in: asc, desc; ordering=desc by default)
+GET: {
+	"data": [{
+		"id":1,
+		"number":1,
+		"summary":"a...",
+		"reporter": {"id":1},
+		"assignee": {"id":1}, (nullable)
+		"created_at":"2019-03-20T17:12:36.3+0500",
+		"updated_at":"2019-03-20T17:12:36.3+0500",
+		"task_type":{"name_code":"TASK"},
+		"task_priority":{"name_code":"TRIVIAL"},
+		"task_status":{"name_code":"OPEN"}
+	}],
+	"meta": {"total":10}
+}
+
+/task/chat-token/?id=
+GET: {
+	"token": "aaa",
+	"IV": "aaa",
+	"can_read":true,
+	"can_write":false
+}
+
+/task-type/list/
+GET: [
+	{"id":1, "name_code":"AAA"},
+	{"id":2, "name_code":"BBB"}
+]
+
+/task-priority/list/
+GET: [
+	{"id":1, "name_code":"AAA"},
+	{"id":2, "name_code":"BBB"}
+]
+
+/task-status/list/
+GET: [
+	{"id":1, "name_code":"AAA"},
+	{"id":2, "name_code":"BBB"}
+]
+
+/file/upload/
+Content-Type: multipart/form-data
+POST: task_id=1&file=
+Response: {
+	"meta": {"external_uuid":"aaa"}
+}
+
+/file/upload/
+Content-Type: multipart/form-data
+POST: project_id=1&file=
+Response: {
+	"data": {"uuid":"aaa"},
+	"meta": {"external_uuid":"aaa"}
+}
+
+/file/upload-v2/
+Content-Type: multipart/form-data
+POST: task_id=1&file=
+Response: {
+	"meta": {"external_uuid":"aaa"}
+}
+
+/file/upload-v2/
+Content-Type: multipart/form-data
+POST: project_id=1&file=
+Response: {
+	"data": {"uuid":"aaa"},
+	"meta": {"external_uuid":"aaa"}
+}
+
+/file/get/{id}/{filename}/
+GET: downloads file
+
+/attachment/
+POST: {
+	"task":1,
+	"uuids": ["aaa","bbb"]
+}
+Response: [
+	{"id":1, "filename":"aaa.txt", "url": "/file/get/1/aaa.txt"},
+	{"id":2, "filename":"bbb.txt", "url": "/file/get/2/bbb.txt"}
+]
+
+/attachment/list/?task_id=
+GET: [
+	{"id":1, "filename":"aaa.txt", "url": "/file/get/1/aaa.txt"},
+	{"id":2, "filename":"bbb.txt", "url": "/file/get/2/bbb.txt"}
+]
+
+/attachment/thumbnail/?id=
+Accept: image/gif, image/jpeg, image/png
+GET: <bytes>
+Error codes:
+(400) UNSUPPORTED_EXTENSION - file is not an image
+(400) UNSUPPORTED_IMAGE - thumbnails not supported for this image
+
+/attachment/
+DELETE: {
+	"id":1
+}
+
+/user-favorite/
+POST: {
+	"project":1,
+}
+
+/user-favorite/move/
+PUT: {
+	"id":1,
+	"previous":2 (nullable)
+}
+
+/user-favorite/list/
+GET: [{
+	"id":1,
+	"project": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa",
+		"organization": {"id":1, "ui_id":"aaa"}
+	}
+}]
+
+/user-favorite/
+DELETE: {
+	"id":1,
+}
+
+/memo/
+POST: {
+	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+	"body":"aaa"
+}
+
+/memo/list/?project_id=
+/memo/list/?project_ui_id=
+GET: [{
+	"id":1,
+	"body":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"author": {"id":1, "username":"aaa"},
+	"can_delete":false
+}]
+
+/memo/
+DELETE: {
+	"id":1
+}
+
+/issue/
+POST: {
+	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+	"summary":"a",
+	"description":"aaa"
+}
+
+/issue/
+PUT: {
+	"id":1,
+	"summary":"a",
+	"description":"aaa"
+}
+
+/issue/?id=
+GET: {
+	"id":1,
+	"summary":"a",
+	"description":"aaa",
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"created_at":"2019-03-20T17:12:36.3+0500"
+}
+
+/issue/list/?project_id=
+/issue/list/?project_ui_id=
+GET: [{
+	"id":1,
+	"summary":"a",
+	"description":"aaa",
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"created_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+/issue/chat-token/?id=
+GET: {
+	"token": "aaa",
+	"IV": "aaa",
+	"can_read":true,
+	"can_write":false
+}
+
+DEPRECATED
+/project-invite/
+POST: {
+	"user":1,
+	"project":1,
+	"text":"aaa"
+}
+
+DEPRECATED
+/project-invite/?id=1
+GET: {
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"}
+}
+
+DEPRECATED
+/project-invite/list-by-user/
+GET: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+DEPRECATED
+/project-invite/accept/
+PUT: {
+	"id":1
+}
+
+DEPRECATED
+/project-invite/reject/
+PUT: {
+	"id":1,
+	"reported":false
+}
+
+DEPRECATED
+/project-invite/list-by-project/?project_id=1
+/project-invite/list-by-project/?project_ui_id=aaa
+GET: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"}
+}]
+
+DEPRECATED
+/project-invite/cancel/
+DELETE: {
+	"id":1
+}
+
+DEPRECATED
+/project-invite/execute/
+POST: {
+	"id":1,
+	"write_allowed":false,
+	"manager":false
+}
+
+/project-application/
+POST: {
+	"project":1,
+	"text":"aaa"
+}
+
+/project-application/list-by-project/?project_id=1
+/project-application/list-by-project/?project_ui_id=aaa
+GET: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+/project-application/reject/
+PUT: {
+	"id":1,
+	"reported":false
+}
+
+/project-application/accept/
+POST: {
+	"id":1,
+	"write_allowed":false,
+	"manager":false
+}
+
+/project-application/list-by-user/
+GET: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"}
+}]
+
+/project-application/cancel/
+DELETE: {
+	"id":1
+}
+
+/project-member/
+POST: {
+	"organization_member":1, (-1 for current user)
+	"project":1,
+	"write_allowed":false,
+	"manager":false
+}
+
+/project-member/create-batch/
+POST: {
+	"project":1,
+	"members": {
+		"organization_member":1,
+		"write_allowed":false,
+		"manager":false
+	}
+}
+
+/project-member/
+PUT: {
+	"id":1,
+	"write_allowed":false,
+	"manager":false
+}
+
+/project-member/list-by-project/?project_id=1
+/project-member/list-by-project/?project_ui_id=aaa
+GET: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-member/list-by-user/?user_id=1
+GET: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"hired_at":"2019-03-20T17:12:36.3+0500",
+	"fired_at":"2019-03-20T17:12:36.3+0500",
+	"fired":true
+}]
+
+/project-member/
+DELETE: {
+	"id":1
+}
+
+/project-member/leave/
+DELETE: {
+	"project":1
+}
+
+/granted-permissions-project-invite/
+POST: {
+	"user":1,
+	"project":1,
+	"text":"aaa",
+	"write_allowed":false,
+	"manager":false
+}
+
+/granted-permissions-project-invite/create-by-email/
+POST: {
+	"email":"a@a.com",
+	"project":1,
+	"write_allowed":false,
+	"manager":false
+}
+
+/granted-permissions-project-invite/
+PUT: {
+	"write_allowed":false,
+	"manager":false
+}
+
+/granted-permissions-project-invite/?id=
+GET: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"email": "a@a.com",
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/granted-permissions-project-invite/list-by-user/
+GET: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"write_allowed":false,
+	"manager":false
+}]
+
+/granted-permissions-project-invite/accept/
+POST: {
+	"id":1
+}
+
+/granted-permissions-project-invite/reject/
+PUT: {
+	"id":1,
+	"reported":false
+}
+
+/granted-permissions-project-invite/list-by-project/?project_id=1&include_email=
+/granted-permissions-project-invite/list-by-project/?project_ui_id=aaa&include_email=
+GET: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"email": "a@a.com",
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/granted-permissions-project-invite/cancel/
+DELETE: {
+	"id":1
+}
+
+/project-invite-token/check-token/?token=
+GET: {
+	"registered":false,
+}
+
+/project-invite-token/accept/
+POST: {
+	"token":"aaa",
+	"password":"aaa", (nullable)
+	"username":"aaa", (nullable)
+	"full_name":"aaa" (nullable)
+}
+
+/project-invite-token/reject/
+PUT: {
+	"token":"aaa",
+	"reported":false
+}
+
+/task-hashtag/search/?prefix=a&project_id=&include_used=
+/task-hashtag/search/?prefix=a&project_ui_id=&include_used=
+(include_used=false by default)
+GET: [
+	{"id":1, "name":"aaa", "used":true}, (no "used" field if include_used=false)
+	{"id":2, "name":"abb", "used":true}
+]
+
+/task-hashtag/
+DELETE: {
+	"id":1
+}
+
+/task-subscriber/
+POST: {
+	"task_id":1
+}
+
+/task-subscriber/list/?task_id=1
+GET: {
+	"users": [1, 2]
+}
+
+/task-subscriber/
+DELETE: {
+	"task_id":1
+}
+
+/static-data/changelog/
+Accept: text/html
+GET: <HTML file>
+
+/static-data/license/
+Accept: text/html
+GET: <HTML file>
+
+/road/
+POST: {
+	"project":1,
+	"name":"aaa"
+}
+
+/road/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"name":"aaa"
+}
+
+/road/move/
+PUT: {
+	"id":1,
+	"old_previous":1, (nullable)
+	"old_next":1, (nullable)
+	"previous":1, (nullable)
+	"next":1 (nullable)
+}
+
+/road/list/?project_id=
+/road/list/?project_ui_id=
+GET: [{
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"cards" [{
+		"id":1,
+		"record_version":1,
+		"name":"aaa",
+		"status":"ACTIVE",
+		"created_at":""2019-03-20T17:12:36.3+0500",
+		"tasks": [{
+			"id"1,
+			"record_version":1,
+			"number":1,
+			"summary":"aaa",
+			"task_priority":{"id":1, "name_code":"TRIVIAL"},
+			"task_status":{"id":1, "name_code":"OPEN"}
+		}]
+	}]
+}]
+
+/road/
+DELETE: {
+	"id":1
+}
+
+/task-card/
+POST: {
+	"road":1,
+	"name":"aaa",
+	"status":"ACTIVE"
+}
+
+/task-card/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"status":"ACTIVE"
+}
+
+/task-card/move/
+PUT: {
+	"id":1,
+	"old_previous":1, (nullable)
+	"old_next":1, (nullable)
+	"previous":1, (nullable)
+	"next":1, (nullable)
+	"road":1 (nullable)
+}
+
+/task-card/list/?project_id=
+/task-card/list/?project_ui_id=
+GET: [{
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"status":"ACTIVE",
+	"created_at":""2019-03-20T17:12:36.3+0500",
+	"archieved_at":""2019-03-20T17:12:36.3+0500",
+	"road": {"id":1, "record_version":1, "name":"aaa"}
+}]
+
+/task-card/archive/
+PUT: {
+	"id":1,
+	"record_version":1
+}
+
+/task-card/archive/?project_id=
+/task-card/archive/?project_ui_id=
+GET: [{
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"status":"ACTIVE",
+	"created_at":""2019-03-20T17:12:36.3+0500",
+	"archieved_at":""2019-03-20T17:12:36.3+0500",
+	"road": {"id":1, "record_version":1, "name":"aaa"}
+}]
+
+/task-card/
+DELETE: {
+	"id":1
+}
+
+/jira-import/upload/
+Content-Type: multipart/form-data
+POST: organization_id=1&file=
+Response:  {
+	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
+	"archive_filename":"aaa.zip",
+	"imported_projects" []
+}
+
+/jira-import/list-uploads/?organization_id=
+GET: [{
+	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
+	"archive_filename":"aaa.zip",
+	"imported_projects" [
+		{"id":1, "name":"aaa", "jira_id":10000, "jira_key":"AAA", "jira_name":"aaa", "updated_at": "2019-03-20T17:12:36.3+0500"},
+		{"id":2, "name":"bbb", "jira_id":10001, "jira_key":"BBB", "jira_name":"bbb", "updated_at": "2019-03-20T17:12:36.3+0500"}
+	]
+}]
+
+/jira-import/list-projects/?organization_id=&timestamp=
+GET: [
+	{"id":"10000", "key":"AAA", "name":"aaa"},
+	{"id":"10001", "key":"BBB", "name":"bbb"}
+]
+Error codes:
+ENTITIES_FILE_NOT_FOUND - file 'entities.xml' was not found in upload at said timestamp
+
+/jira-import/list-projects-data/?organization_id=&timestamp=&project_id=10000,10001
+GET: {
+	"projects": [
+		{"id":"10000", "key":"AAA", "name":"aaa"},
+		{"id":"10001", "key":"BBB", "name":"bbb"}
+	],
+	"users": [
+		{"id":"10000", "username":"aaa", "display_name":"aaa", "email":"a@a.com"},
+		{"id":"10002", "username":"bbb", "display_name":"bbb", "email":"b@b.com"}
+	],
+	"types": [
+		{"id":"10000", "name":"aaa"},
+		{"id":"10001", "name":"bbb"}
+	],
+	"priorities": [
+		{"id":"10000", "name":"aaa"},
+		{"id":"10001", "name":"bbb"}
+	],
+	"statuses": [
+		{"id":"10000", "name":"aaa"},
+		{"id":"10001", "name":"bbb"}
+	],
+	"qirk": {
+		"imported_projects": [
+			{"id":1, "name":"aaa", "ui_id":"aaa"},
+			{"id":2, "name":"bbb", "ui_id":"bbb"}
+		],
+		"members": [
+			{"id":1, "enabled":true, "user": {"id":1, "username":"aaa", "full_name":"aaa"}},
+			{"id":2, "enabled":true, "user": {"id":2, "username":"bbb", "full_name":"bbb"}}
+		],
+		"types": [
+			{"name_code":"TASK", "default":true},
+			{"name_code":"BUG", "default":false}
+		],
+		"priorities": [
+			{"name_code":"MAJOR", "default":true},
+			{"name_code":"MINOR", "default":false}
+		],
+		"statuses": [
+			{"name_code":"OPEN", "default":true},
+			{"name_code":"CLSOED", "default":false}
+		]
+	}
+}
+Error codes:
+ENTITIES_FILE_NOT_FOUND - file 'entities.xml' was not found in upload at said timestamp
+
+/jira-import/
+POST: {
+	"organization":1,
+	"timestamp":1,
+	"projects": ["10000", "10001"],
+	"private"false,
+	"override_tasks": "ALL"/"NON_UPDATED"/"NONE", ("ALL" by default)
+	"project_mapping": {
+		"10000":1 (jira id to qirk id)
+	}.
+	"members": {
+		"admin":1 (jira username to qirk id)
+	}.
+	"types": {
+		"10000":"TASK" (jira id to qirk name_code)
+	},
+	"priorities": {
+		"10000":"MAJOR" (jira id to qirk name_code)
+	},
+	"statuses": {
+		"10000":"OPEN" (jira id to qirk name_code)
+	}
+}
+Response: [
+	{"jira_project":"10000", "status":"CREATED"},
+	{"jira_project":"10001", "status":"UPDATED"},
+	{"jira_project":"10002", "status":"PARTIALLY_UPDATED", "failed_task_numbers":[1, 2]},
+	{"jira_project":"10003", "status":"CREATE_FAILED", "error_code": "ERROR"},
+	{"jira_project":"10004", "status":"UPDATE_FAILED", "error_code": "ERROR"}
+]
+
+/project-document/
+POST: {
+	"project":1,
+	"name":"A",
+	"body":"aaa"
+}
+
+/project-document/
+PUT: {
+	"id":1,
+	"record_version":1,
+	"name":"A",
+	"body":"aaa"
+}
+
+/project-document/move/
+POST: {
+	"id":1,
+	"old_previous":1, (nullable)
+	"old_next":1, (nullable)
+	"previous":1, (nullable)
+	"next":1, (nullable)
+}
+
+/project-document/
+DELETE: {
+	"id":1
+}
+
+/project-document/get/
+GET: {
+		"id":2,
+		"record_version":1,
+		"name":"A",
+		"body_md":"aaa",
+		"body_html":"aaa",
+		"previous":1 (nullable)
+}
+
+/project-document/list/?project_id=1
+GET: [{
+		"id":2,
+		"record_version":1,
+		"name":"A",
+		"previous":1 (nullable)
+}]
+
+/notification-settings/
+PUT: {
+	"token":"aaa",
+	"IV":"aaa",
+	"task_created":true,
+	"task_updated":true,
+	"task_commented":true
+}

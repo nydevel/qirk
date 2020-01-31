@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- uncomment in full version -->
+	<!-- <import resource="classpath:clb-chat-repo-persistence-ctx.xml" /> <import resource="classpath:clb-chat-services-ctx.xml" /> <import 
+		resource="classpath:clb-chat-services-jms-ctx.xml" /> -->
+	<import resource="clb-chat-web-config.xml" />
+
+</beans>

@@ -1,0 +1,196 @@
+ActiveMQ
+
+1. download the following jars:
+	http://central.maven.org/maven2/org/apache/activemq/activemq-client/5.15.9/activemq-client-5.15.9.jar
+	http://central.maven.org/maven2/commons-net/commons-net/3.6/commons-net-3.6.jar
+	http://central.maven.org/maven2/javax/jmdns/jmdns/3.4.1/jmdns-3.4.1.jar
+	http://central.maven.org/maven2/org/apache/geronimo/specs/geronimo-jms_1.1_spec/1.1.1/geronimo-jms_1.1_spec-1.1.1.jar
+	http://central.maven.org/maven2/org/apache/geronimo/specs/geronimo-j2ee-management_1.1_spec/1.0.1/geronimo-j2ee-management_1.1_spec-1.0.1.jar
+	http://central.maven.org/maven2/org/fusesource/hawtbuf/hawtbuf/1.11/hawtbuf-1.11.jar
+	http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar
+	http://central.maven.org/maven2/org/apache/logging/log4j/log4j-slf4j-impl/2.11.1/log4j-slf4j-impl-2.11.1.jar
+	http://central.maven.org/maven2/org/apache/logging/log4j/log4j-core/2.11.1/log4j-core-2.11.1.jar
+	http://central.maven.org/maven2/org/apache/logging/log4j/log4j-api/2.11.1/log4j-api-2.11.1.jar
+	and put it to <tomcat_home>/lib folder
+2. modify <tomcat_home>/conf/server.xml with
+<Resource
+ name="jms/ConnectionFactory"
+ auth="Container"
+ type="org.apache.activemq.ActiveMQConnectionFactory"
+ description="JMS Connection Factory"
+ factory="org.apache.activemq.jndi.JNDIReferenceFactory"
+ brokerURL="tcp://localhost:61616"
+ brokerName="LocalActiveMQBroker"
+ useEmbeddedBroker="false"/>
+
+ <Resource name="jms/topic/task.chat"
+ auth="Container"
+ type="org.apache.activemq.command.ActiveMQTopic"
+ factory="org.apache.activemq.jndi.JNDIReferenceFactory"
+ physicalName="task.chat"/> 
+ 
+3. modify <tomcat_home>/conf/context.xml
+<ResourceLink name="jms/ConnectionFactory" global="jms/ConnectionFactory" type="org.apache.activemq.ActiveMQConnectionFactory"/>
+<ResourceLink name="jms/topic/task.chat" global="jms/topic/task.chat" type="org.apache.activemq.command.ActiveMQTopic"/>
+4. download ActiveMQ http://activemq.apache.org/components/classic/download/
+5. run activemq from console
+6. http://127.0.0.1:8161/ admin/admin
+7. create topic task.chat
+
+
+PostgreSQL
+
+1. Download and install PostgreSQL from https://www.postgresql.org/download/
+2. Execute SQL scripts from .sql files from clb-model/psql via command line: 
+	psql -U postgres -d postgres -a -f _initial-1.sql
+	psql -U hibernate -d clb -a -f _initial-2.sql
+	psql -U hibernate -d clb -a -f alter-0.0.1-1.sql
+	psql -U hibernate -d clb -a -f alter-0.0.1-2.sql
+	psql -U hibernate -d clb -a -f alter-0.0.1-3.sql
+	psql -U hibernate -d clb -a -f alter-0.0.1-4.sql
+
+
+Apache HTTP Server
+
+1. Download and install Apache HTTP Server from https://httpd.apache.org/download.cgi
+2. Add the following code into httpd-vhosts.conf:
+ <VirtualHost *:*>
+ ProxyPreserveHost On
+ ProxyPass "/clb-web" "http://localhost:8000/clb-web" retry=0
+ ProxyPassReverse "/clb-web" "http://localhost:8000/clb-web"
+ ProxyPass "/" "http://localhost:8080/" retry=0
+ ProxyPassReverse "/" "http://localhost:8080/"
+ </VirtualHost>
+3. Set port to 8000 
+4. Enable proxy
+5. Add Apache HTTP Server's /bin directory as system Path variable
+6. Execute via command line: 
+ httpd.exe
+ 
+ 
+Backend build via Spring Tool Suite 3.9.7:
+
+STS 
+
+1. Import clb-parent as Maven project
+2. Right click on clb-parent > Run as > Run configurations
+3. New launch configuration (or just skip to step 6 and use existing if you created it already)
+4. Maven Buind > right click > new configuration
+5. Base directory: ${project_loc} Goals: -e clean install
+6. Run this configuration on clb-parent
+7. clb-parent > right click > Maven > update project
+8. File > New > Server > Apache Tomcat 9.0 (or skip to step 10 if you've done this already)
+9. Go to Server overview > Open launch configuration > Arguments.
+ VM Arguments: 
+ -Dcatalina.base="<sts_workspace_location>\.metadata\.plugins\org.eclipse.wst.server.core\tmp0" -Dcatalina.home="<tomcat_home>" -Dwtp.deploy="<sts_workspace_location>\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps" -Dlog4j.configurationFile="<tomcat_home>\conf\log4j2.xml"
+ Program arguments:
+ start
+10. <tomcat_home>/conf/server.xml: add following attributes to DB Connection Resource (<Resource> Tag):
+	closeMethod="close" 
+	singleton="true"
+11. clb-web > right click > run on server, select created tomcat server
+12. Create file setenv.sh (chmod +x for Linux) in <tomcat_directory>/bin with the following content: 
+ JAVA_OPTS="$JAVA_OPTS -Dlog4j.configurationFile=$CATALINA_HOME/conf/log4j2.xml"
+
+Backend build via command line: 
+
+Maven
+
+1. Download Maven binaries from https://maven.apache.org/download.cgi 
+2. Unzip and add Maven's /bin directory as system Path variable
+3. Go to memfis_back\clb-parent directory and execute via command line: 
+ mvn -e clean install
+
+
+Tomcat
+
+1. Go to <memfis_back_directory>/clb-parent/clb-web/src/main/resources
+
+2. Copy common.example.properties to <tomcat_home>/conf
+
+3. Rename it to "common.properties"
+
+4. Edit common.properties, replace example preferences with your own
+
+5. Insert the following code inside <GlobalNamingResources> tag in <tomcat_home>/conf/server.xml 	
+
+	<Resource name="UserDatabase" auth="Container"
+		type="org.apache.catalina.UserDatabase"
+		description="User database that can be updated and saved"
+		factory="org.apache.catalina.users.MemoryUserDatabaseFactory"
+		pathname="conf/tomcat-users.xml" />
+		
+	<Resource auth="Container" closeMethod="close" defaultAutoCommit="true"
+ defaultTransactionIsolation="REPEATABLE_READ" description="clb postgresql connection pool"
+ driverClassName="org.postgresql.Driver" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+ global="jdbc/postgresqldb" maxIdle="10" maxTotal="50" maxWaitMillis="10000" name="jdbc/postgresqldb" password="121212"
+ removeAbandonedTimeout="300" singleton="true" type="javax.sql.DataSource" url="jdbc:postgresql://localhost:5432/clb"
+ username="hibernate" />
+ <Resource auth="Container" closeMethod="close" defaultAutoCommit="true"
+ defaultTransactionIsolation="READ_COMMITTED" description="clb mariadb connection pool"
+ driverClassName="org.mariadb.jdbc.Driver" factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+ global="jdbc/mariadb" maxIdle="10" maxTotal="50" maxWaitMillis="10000" name="jdbc/mariadb" password="121212"
+ removeAbandonedTimeout="300" singleton="true" testOnBorrow="true" type="javax.sql.DataSource"
+ url="jdbc:mysql://localhost:3306/clb_chat" username="hibernate" validationQuery="SELECT 1" />
+ 
+	<Resource auth="Container" closeMethod="close" localDataCenter="datacenter1" nodes="localhost:9042"
+		factory="org.wrkr.clb.common.cassandra.CqlSessionFactory" keyspace="clb_chat" name="nosql/cassandra/cqlsession"
+		singleton="true" type="com.datastax.oss.driver.api.core.CqlSession" />
+		
+	<Resource
+		name="jms/ConnectionFactory"
+		auth="Container"
+		type="org.apache.activemq.ActiveMQConnectionFactory"
+		description="JMS Connection Factory"
+		factory="org.apache.activemq.jndi.JNDIReferenceFactory"
+		brokerURL="tcp://localhost:61616"
+		brokerName="LocalActiveMQBroker"
+		useEmbeddedBroker="false"
+		userName="clb"
+		password="121212" />
+		
+ <Resource auth="Container" factory="org.apache.activemq.jndi.JNDIReferenceFactory" name="jms/topic/task.chat"
+ physicalName="task.chat" type="org.apache.activemq.command.ActiveMQTopic" />
+ <Resource auth="Container" factory="org.apache.activemq.jndi.JNDIReferenceFactory" name="jms/topic/issue.chat"
+ physicalName="issue.chat" type="org.apache.activemq.command.ActiveMQTopic" />
+ <Resource auth="Container" factory="org.apache.activemq.jndi.JNDIReferenceFactory" name="jms/topic/project.chat"
+ physicalName="project.chat" type="org.apache.activemq.command.ActiveMQTopic" />
+ 
+ <Resource auth="Container" closeMethod="close"
+ factory="org.wrkr.clb.common.elasticsearch.ElasticsearchClientFactory" name="elasticsearch/client"
+ nodes="127.0.0.1:9200" password="121212" scheme="http" singleton="true"
+ type="org.elasticsearch.client.RestHighLevelClient" username="clb" />
+ 
+6. Insert the following code inside <Context> tag in <tomcat_home>/conf/context.xml
+
+	<ResourceLink type="javax.sql.DataSource" global="jdbc/postgresqldb" name="jdbc/postgresqldb"/>
+	<ResourceLink name="jdbc/mariadb" global="jdbc/mariadb" type="javax.sql.DataSource"/>
+	<ResourceLink name="nosql/cassandra/cqlsession" global="nosql/cassandra/cqlsession" type="com.datastax.oss.driver.api.core.CqlSession"/>
+	
+	<ResourceLink name="jms/ConnectionFactory" global="jms/ConnectionFactory" type="org.apache.activemq.ActiveMQConnectionFactory"/>
+	<ResourceLink name="jms/topic/task.chat" global="jms/topic/task.chat" type="org.apache.activemq.command.ActiveMQTopic"/>
+	<ResourceLink name="jms/topic/issue.chat" global="jms/topic/issue.chat" type="org.apache.activemq.command.ActiveMQTopic"/>
+	<ResourceLink name="jms/topic/project.chat" global="jms/topic/project.chat" type="org.apache.activemq.command.ActiveMQTopic"/>
+ 
+	<ResourceLink name="elasticsearch/client" global="elasticsearch/client" type="org.elasticsearch.client.RestHighLevelClient"/>
+	
+7. Copy jar with dependencies (...-jar-with-dependencies.jar) from every project starting with "clb-common-deps-"
+from (/target folder) into <tomcat_home>/lib
+
+8. Execute via command line: 
+ rm <tomcat_home>/webapps/memfis-web.war
+ cp <memfis_back_directory>/memfis-parent/memfis-web/target/memfis-web.war <tomcat_home>/webapps/
+ mv <tomcat_home>/webapps/memfis-web.war <tomcat_home>/webapps/memfis-web.war
+ <tomcat_home>/bin/startup.sh
+
+Log4j
+1. Copy log4j2.xml into <tomcat_home>/conf/ (xml's in the same directory as this instruction)
+
+Frontend: 
+
+NPM
+
+1. Download and install Node.js from https://nodejs.org/en/download/
+2. Go into memfis_front directory, and execute via command line: 
+	npm install 
+	npm start

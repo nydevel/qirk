@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:security="http://www.springframework.org/schema/security"
+    xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-4.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+    <!-- <bean id="jsonAuthenticationEntryPoint" class="org.wrkr.clb.web.authn.JsonAuthenticationEntryPoint" />
+    <bean id="jsonAuthenticationSuccessHandler" class="org.wrkr.clb.web.authn.JsonAuthenticationSuccessHandler" />
+    <bean id="jsonAuthenticationFailureHandler" class="org.wrkr.clb.web.authn.JsonAuthenticationFailureHandler" />
+    <bean id="jsonLogoutSuccessHandler" class="org.wrkr.clb.web.authn.JsonLogoutSuccessHandler" /> -->
+
+    <jee:jndi-lookup id="authDataSource" jndi-name="jdbc/postgresqldb/auth" />
+
+    <bean id="csrfTokenRepository" class="org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository" />
+    <!-- <bean id="jsonAccessDeniedHandler" class="org.wrkr.clb.web.csrf.JsonAccessDeniedHandler" />
+
+    <security:http use-expressions="true" entry-point-ref="jsonAuthenticationEntryPoint" create-session="always">
+        <security:form-login login-processing-url="/api/user/login" username-parameter="username"
+            password-parameter="password" authentication-success-handler-ref="jsonAuthenticationSuccessHandler"
+            authentication-failure-handler-ref="jsonAuthenticationFailureHandler" />
+        <security:logout logout-url="/api/user/logout" success-handler-ref="jsonLogoutSuccessHandler" />
+
+        <security:remember-me data-source-ref="authDataSource" token-validity-seconds="31622400" />
+
+        <security:intercept-url pattern="/**" access="permitAll" />
+
+        <security:csrf token-repository-ref="csrfTokenRepository" />
+        <security:access-denied-handler ref="jsonAccessDeniedHandler" />
+    </security:http>
+
+    <bean id="userAuthenticationProvider" class="org.wrkr.clb.web.authn.UserAuthenticationProvider" />
+    <bean id="userDetailsServiceImpl" class="org.wrkr.clb.services.authn.impl.UserDetailsServiceImpl" />
+    <bean id="passwordEncoder" class="org.wrkr.clb.common.crypto.HashPasswordEncoder" />
+
+    <security:authentication-manager>
+        <security:authentication-provider ref="userAuthenticationProvider" />
+    </security:authentication-manager> -->
+</beans>

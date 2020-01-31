@@ -1,0 +1,83 @@
+@import "../constants"
+// Стили для SignUpForm и SignInForm
+.grecaptcha-badge
+  visibility: hidden
+
+.google-info__recaptcha
+  margin: 24px 0
+  padding: 4px
+
+.auth-form
+  text-align: left
+  margin: auto
+  width: 100%
+  border: 0
+  padding: 0
+  &__header-wrapper
+    width: 100%
+    display: flex
+    justify-content: space-between
+    margin-bottom: 25px
+  &__header
+    font-size: 18px
+    text-align: left
+    margin: 0
+  &__separator
+    text-align: center
+    margin: 20px 0
+  &__social-buttons
+    display: flex
+    justify-content: space-between
+    margin-bottom: 30px
+    &--column
+      flex-direction: column
+      button
+        width: 100%
+        margin-bottom: 15px
+  &__form
+    margin: auto
+    width: 100%
+  &__input
+    margin: 5px auto 20px
+    width: 100%
+  &__form-button
+    width: 100%
+  &__reset_password_link_wrapper
+    text-align: center
+    padding-top: 15px
+  &__error-message
+    text-align: center
+    color: $red
+    margin-top: 15px
+  &__button
+    width: 100%
+    margin: auto
+    &--google
+      min-width: 100px
+      background-color: #dd4b39
+      &:hover
+        background-color: #c64333
+    &--vk
+      min-width: 100px
+      background-color: #4a76a8
+      &:hover
+        background-color: darken(#4a76a8, 5%)
+    &--fb
+      min-width: 100px
+      background-color: #3b5998
+      &:hover
+        background-color: darken(#3b5998, 5%)
+    &--github
+      min-width: 100px
+      background-color: #24292e
+      &:hover
+        background-color: darken(#24292e, 5%)
+
+@media screen and (max-width: $mediaMobile)
+  .auth-form
+    &__social-buttons
+      flex-direction: column
+      margin-bottom: 0
+      button
+        width: 100%
+        margin-bottom: 15px

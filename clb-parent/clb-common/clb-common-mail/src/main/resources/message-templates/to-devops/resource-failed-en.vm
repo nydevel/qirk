@@ -1,0 +1,2 @@
+Resource ${resourceName} failed on Qirk project in ${environment}-${nodeId} environment at ${timestamp}.<br>
+Exception stack-trace: ${exceptionMessage}

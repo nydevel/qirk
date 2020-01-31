@@ -1,0 +1,100 @@
+$criticalColor: #b71c1c
+$majorColor: green
+$minorColor: blue
+
+.all-project-tasks-content__item
+  display: flex
+  width: 100%
+  height: 100%
+  justify-content: space-between
+  margin-bottom: 15px
+  box-shadow: 1px 1px 4px -2px #000
+  border-radius: 5px
+  overflow: hidden
+  &__task-id
+    white-space: nowrap
+    padding-top: 15px
+    padding-left: 15px
+
+.left-part-of-item
+  width: 5px
+  &.bcGreen
+    background-color: $majorColor
+  &.bcBlue
+    background-color: $minorColor
+  &.bcRed
+    background-color: $criticalColor
+
+.right-part-of-item
+  display: flex
+  align-items: center
+  text-align: center
+  justify-content: center
+  width: 110px
+  padding: 10px
+  &.stat-open
+    background-color: green
+    color: white
+  &.stat-indev
+    background-color: #5e35b1
+    color: white
+  &.stat-waitqa
+    background-color: #bf360c
+    color: white
+  &.stat-inqarev
+    background-color: blue
+    color: white
+  &.stat-closed
+    background-color: #6d4c41
+    color: white
+
+.main-item-part
+  flex: 1
+  display: flex
+  flex-direction: column
+  word-break: break-word
+  padding: 15px
+  &__header
+    display: flex
+    justify-content: space-between
+    text-align: center
+    font-size: 15px
+    &__to-by
+      display: flex
+      flex-wrap: wrap
+      align-items: flex-start
+      flex: 1
+      text-align: start
+      padding-bottom: 20px 
+    &__reporter
+      padding: 0 20px 10px 0
+      & > span:first-child
+        font-weight: bold
+    &__assignee
+      padding: 0 10px 10px 0
+      & > span:first-child
+        font-weight: bold
+    &__dateofupdate
+      text-align: end
+      min-width: 120px
+      & > span:first-child
+        font-weight: bold
+  &__footer
+    display: flex
+    justify-content: space-between
+    padding-top: 30px
+    font-size: 15px
+    &__priority-and-type
+      &__priority
+        &.critical-priority
+          color: $criticalColor
+        &.major-priority
+          color: $majorColor
+        &.minor-priority
+          color: $minorColor
+      &__type
+        text-transform: lowercase
+    &__dateofcreate
+      text-align: end
+      & > span:first-child
+        font-weight: bold

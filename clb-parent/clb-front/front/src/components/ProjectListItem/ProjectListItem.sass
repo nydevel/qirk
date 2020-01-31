@@ -1,0 +1,23 @@
+.project-item
+    box-shadow: 1px 1px 4px -2px #000
+    background: #ececec
+    padding: 10px
+    border-radius: 5px
+    margin: 10px 0 0 0
+    display: flex
+    position: relative
+    &__is-fav
+        .project_add-to-fav
+            opacity: 1
+    &__is-not-fav
+        .project_add-to-fav
+            opacity: 1
+    &:hover
+        .project_add-to-fav
+            opacity: 1 
+    .project_content
+        flex: 1
+    .project_add-to-fav
+        width: 15px
+        height: 15px
+        transition: all 95ms ease

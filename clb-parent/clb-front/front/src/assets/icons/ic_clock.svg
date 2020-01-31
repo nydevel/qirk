@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 51.2 (57519) - http://www.bohemiancoding.com/sketch -->
+    <title>3. Icons/ic_schedule</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <path d="M14.99,5 C9.47,5 5,9.48 5,15 C5,20.52 9.47,25 14.99,25 C20.52,25 25,20.52 25,15 C25,9.48 20.52,5 14.99,5 L14.99,5 Z M15,23 C10.58,23 7,19.42 7,15 C7,10.58 10.58,7 15,7 C19.42,7 23,10.58 23,15 C23,19.42 19.42,23 15,23 Z M15.5,10 L14,10 L14,16 L19.25,19.15 L20,17.92 L15.5,15.25 L15.5,10 Z" id="path-1"></path>
+    </defs>
+    <g id="3.-Icons/ic_schedule" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <mask id="mask-2" fill="white">
+            <use xlink:href="#path-1"></use>
+        </mask>
+        <g id="Icon"></g>
+        <g id="5.-Colors/Gray-85" mask="url(#mask-2)" fill="#D8D8D8">
+            <g transform="translate(2.000000, 2.000000)" id="Gray-85">
+                <rect x="0" y="0" width="26" height="26"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

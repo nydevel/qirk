@@ -1,0 +1,68 @@
+@import "../../components/constants"
+
+.profile
+  max-width: 612px
+  width: 100%
+  margin: 0 auto
+  fieldset
+    padding: 0
+  h1
+    margin: 0
+    padding-bottom: 15px
+  &__column-wrapper
+    width: 100%
+    display: flex
+    flex-direction: row
+  input, textarea, .react-select, .react-creatable-select
+    margin: 10px 5px 10px 0
+  &__column
+    width: 100%
+    display: flex
+    flex-direction: column
+    //padding: 0 30px
+    //border-left: 1px solid #F5F5F5
+    h4
+      margin-bottom: 0
+      font-weight: bold
+    button
+      margin: 20px
+      margin-left: 0
+    
+  &__header
+    margin: 0 0 15px
+    text-align: center
+  &__header-left
+    margin: 0 0 15px
+    text-align: left
+  &__rating, &__status
+    text-align: center
+    padding: 20px 0
+  &__projects
+    margin-bottom: 20px
+  &__language-select
+    margin-top: 10px
+  &__update-button
+    align-self: flex-start
+    margin-top: 0px
+    margin-bottom: 30px
+  &__logout-button
+    align-self: flex-start
+    margin-left: 30px
+
+@media screen and (max-width: $mediaTablet)
+  .profile
+    h1
+      text-align: center
+    &__column-wrapper
+      flex-direction: column
+    &__column
+      width: 100%
+      border-left: none
+      padding: 0
+    &__header
+      margin: 30px 0 15px 0
+    &__update-button
+      width: 100%
+    &__logout-button
+      width: 100%
+      margin: 30px 0

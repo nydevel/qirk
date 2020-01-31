@@ -1,0 +1,3 @@
+ALTER TABLE imported_jira_project DROP CONSTRAINT imported_jira_project__organization_id__jira_project_id_uniq;
+ALTER TABLE imported_jira_project ADD CONSTRAINT imported_jira_project__organization_id__project_id_uniq UNIQUE (organization_id, project_id);
+

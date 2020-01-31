@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+    <context:annotation-config />
+
+    <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" />
+
+    <jee:jndi-lookup id="jmsNotificationQueue" jndi-name="jms/queue/clb.notif.source.q" />
+    <bean id="notificationSourceListener" class="org.wrkr.clb.notification.services.jms.NotificationSourceListener" />
+    <bean id="notificationSourceJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsNotificationQueue" />
+        <property name="messageListener" ref="notificationSourceListener" />
+    </bean>
+    <bean id="notificationSourceJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsNotificationQueue" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
+
+    <jee:jndi-lookup id="jmsNotificationTopic" jndi-name="jms/topic/clb.notif.destination" />
+    <bean id="notificationDestinationListener" class="org.wrkr.clb.notification.services.jms.NotificationDestinationListener" />
+    <bean id="notificationDestinationJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsNotificationTopic" />
+        <property name="messageListener" ref="notificationDestinationListener" />
+    </bean>
+    <bean id="notificationDestinationJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsNotificationTopic" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
+</beans>

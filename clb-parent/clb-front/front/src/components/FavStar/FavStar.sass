@@ -1,0 +1,28 @@
+.fav-star__wrapper
+    width: 15px
+    height: 15px
+    position: relative
+    cursor: pointer
+    img 
+        width: 100%
+        height: 100%
+        position: absolute
+        top: 0
+        right: 0
+        transition: all 95ms ease
+    img.fav-start__img_unactive
+        opacity: 1
+
+.fav-star__wrapper.fav-star__is-fav
+    img.fav-start__img_active
+        opacity: 1
+    &:hover
+        img.fav-start__img_active
+            opacity: 0
+
+.fav-star__wrapper.fav-star__is-not-fav
+    img.fav-start__img_active
+        opacity: 0
+    &:hover
+        img.fav-start__img_active
+            opacity: 1

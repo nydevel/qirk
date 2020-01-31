@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context" xmlns:jee="http://www.springframework.org/schema/jee"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+    xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+    <context:annotation-config />
+    <context:component-scan base-package="org.wrkr.clb.repo">
+        <context:exclude-filter type="regex" expression="org.wrkr.clb.repo.project.task.TaskSubscriberRepo" />
+    </context:component-scan>
+
+    <bean id="taskSubscriberRepo" class="org.wrkr.clb.test.util.EasyMockFactoryBean">
+        <property name="mockedClass" value="org.wrkr.clb.repo.project.task.TaskSubscriberRepo" />
+    </bean>
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+        <property name="url" value="jdbc:hsqldb:mem:clb" />
+    </bean>
+
+    <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="packagesToScan" value="org.wrkr.clb.model" />
+        <property name="jpaVendorAdapter">
+            <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />
+        </property>
+        <property name="jpaProperties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">create</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+                <prop key="hibernate.jdbc.batch_size">25</prop>
+                <!--<prop key="hibernate.use_sql_comments">true</prop> -->
+            </props>
+        </property>
+    </bean>
+
+    <bean class="org.wrkr.clb.test.util.TestDatabasePopulator">
+        <constructor-arg ref="testPopulator" />
+        <constructor-arg ref="dataSource" />
+    </bean>
+    <bean id="testPopulator" class="org.springframework.jdbc.datasource.init.ResourceDatabasePopulator"
+        depends-on="entityManagerFactory">
+        <property name="scripts" ref="testData" />
+    </bean>
+    <bean id="testData" class="org.springframework.core.io.ClassPathResource">
+        <constructor-arg value="unit-test-data.sql" />
+    </bean>
+
+    <bean id="jpaTransactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory" />
+    </bean>
+    <tx:annotation-driven transaction-manager="jpaTransactionManager" proxy-target-class="false" />
+
+    <bean class="org.wrkr.clb.test.repo.TestRepo">
+    </bean>
+
+    <bean id="authDataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="org.hsqldb.jdbcDriver" />
+        <property name="url" value="jdbc:hsqldb:mem:clb_auth" />
+    </bean>
+    <bean id="authTransactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="authDataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="authTransactionManager" proxy-target-class="false" />
+
+    <bean class="org.wrkr.clb.test.repo.JDBCTestRepo">
+    </bean>
+
+</beans>

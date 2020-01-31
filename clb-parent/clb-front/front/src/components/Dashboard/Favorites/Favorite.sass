@@ -1,0 +1,20 @@
+.favorite-item
+  &__project-name
+    width: 100%
+    span
+      width: 100%
+      display: inline-block
+  &__add-task-button
+    width: 100px
+    height: 25px
+    font-size: .75rem
+    display: none
+
+  .favorite-item__project-name
+    width: calc(100% - 100px)
+  .favorite-item__add-task-button
+    display: inline-block
+    opacity: 0.28
+  &:hover
+    .favorite-item__add-task-button
+      opacity: 1

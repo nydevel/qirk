@@ -1,0 +1,14 @@
+${senderName} has invited you to the ${projectName} project on <a target="_blank" href="${frontUrl}" style="color: blue;text-decoration: underline;">Qirk.org</a>.<br>
+<br>
+If you aren't registered on Qirk.org yet and accept this invitation, you will need to go through registration process after clicking the link below.<br>
+If you were not expecting this invitation, you can ignore this email.<br>
+<div style=" display: flex; padding-top: 30px ">
+  <a
+    style="display: inline-block; display: flex;margin: auto;text-decoration: none;cursor: pointer;background: #06ab74;color: white;padding: 8px 20px;border-radius: 4px;"
+    href="${acceptUrl}"
+    target="_blank"
+    >Accept
+  </a>
+</div>
+<br>
+Use the following password to sign in: ${password}<br>

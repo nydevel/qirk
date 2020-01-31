@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+                          http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
+                          http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+                          http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
+                          http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<context:annotation-config />
+
+	<jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" />
+
+	<jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/clb.stat.q" />
+	<bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.DefaultStatisticsSender" />
+	<bean id="statisticsJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="jmsConnectionFactory" />
+		<property name="defaultDestination">
+			<ref bean="jmsStatisticsQueue" />
+		</property>
+		<property name="sessionTransacted" value="false" />
+		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+	</bean>
+	<!-- <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.StatisticsSenderStub" /> -->
+
+	<jee:jndi-lookup id="jmsNotificationQueue" jndi-name="jms/queue/clb.notif.source.q" />
+	<bean id="notificationSender" class="org.wrkr.clb.common.jms.notification.NotificationSourceSender" />
+	<bean id="notificationSourceJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<constructor-arg ref="jmsConnectionFactory" />
+		<property name="defaultDestination">
+			<ref bean="jmsNotificationQueue" />
+		</property>
+		<property name="sessionTransacted" value="false" />
+		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+	</bean>
+
+	<!-- uncomment in full version -->
+	<!-- <jee:jndi-lookup id="jmsTaskLookupSubscribersQueue" jndi-name="jms/queue/clb.notif.task.lookupsuscribers.q" /> <bean id="taskLookupSubscribersListener" 
+		class="org.wrkr.clb.services.jms.TaskLookupSubscribersListener" /> <bean id="taskLookupSubscribersJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer"> 
+		<property name="connectionFactory" ref="jmsConnectionFactory" /> <property name="destination" ref="jmsTaskLookupSubscribersQueue" /> 
+		<property name="messageListener" ref="taskLookupSubscribersListener" /> </bean> <bean id="taskLookupSubscribersJmsTemplate" class="org.springframework.jms.core.JmsTemplate"> 
+		<constructor-arg ref="jmsConnectionFactory" /> <property name="defaultDestination"> <ref bean="jmsTaskLookupSubscribersQueue" /> </property> 
+		<property name="sessionTransacted" value="false" /> <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" /> </bean> -->
+
+	<jee:jndi-lookup id="jmsSelfCheckTopic" jndi-name="jms/topic/clb.selfcheck" />
+	<jee:jndi-lookup id="jmsSelfCheckQueue" jndi-name="jms/queue/clb.selfcheck.q" />
+
+</beans>

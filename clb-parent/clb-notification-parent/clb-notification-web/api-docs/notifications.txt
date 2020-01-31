@@ -1,0 +1,53 @@
+"notification_type":"TASK_CREATED"
+"json": {
+    "organization_id":1,
+    "organization_ui_id":"aaa",
+    "project_id":1,
+    "project_ui_id":"aaa",
+    "project_name":"aaa",
+    "task_id":1,
+    "task_number":1,
+    "updated_by_user_id":1,
+    "updated_at":1,
+    "new_assignee":1,
+    "new_assignee_name":"aaa @aaa",
+    "new_type":"TASK",
+    "new_priority":"MAJOR",
+    "new_status":"OPEN"
+}
+
+"notification_type":"TASK_UPDATED"
+"json": {
+    "organization_id":1,
+    "organization_ui_id":"aaa",
+    "project_id":1,
+    "project_ui_id":"aaa",
+    "project_name":"aaa",
+    "task_id":1,
+    "task_number":1,
+    "updated_by_user_id":1,
+    "updated_at":1,
+    "old_assignee":1,
+    "new_assignee":1,
+    "new_assignee_name":"aaa @aaa",
+    "old_type":"TASK",
+    "new_type":"TASK",
+    "old_priority":"MAJOR",
+    "new_priority":"MAJOR",
+    "old_status":"OPEN",
+    "new_status":"OPEN"
+}
+
+"notification_type":"TASK_COMMENTED"
+"json": {
+	"sender_username":"aaa",
+    "sender_full_name":"aaa",
+    "organization_id":1,
+    "organization_ui_id":"aaa",
+    "project_id":1,
+    "project_ui_id":"aaa",
+    "project_name":"aaa",
+    "task_id":1,
+    "task_number":1,
+    "message":"aaa…",
+}
