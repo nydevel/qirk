@@ -12,7 +12,7 @@
 
     <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" />
 
-    <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/clb.stat.q" />
+    <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/qirk.stat.q" />
     <bean id="statisticsListener" class="org.wrkr.clb.statistics.services.jms.StatisticsListener" />
     <bean id="statisticsJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
         <property name="connectionFactory" ref="jmsConnectionFactory" />

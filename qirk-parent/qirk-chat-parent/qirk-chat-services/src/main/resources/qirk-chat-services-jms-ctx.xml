@@ -1,97 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    xmlns:jee="http://www.springframework.org/schema/jee" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
                           http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd
                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
                           http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd
                           http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-	<context:annotation-config />
+    <context:annotation-config />
 
-	<jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" />
+    <jee:jndi-lookup id="jmsConnectionFactory" jndi-name="jms/ConnectionFactory" />
 
-	<jee:jndi-lookup id="jmsTaskChatTopic" jndi-name="jms/topic/task.chat" />
-	<bean id="taskMessageListener" class="org.wrkr.clb.chat.services.jms.TaskChatListener" />
-	<bean id="taskJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="jmsTaskChatTopic" />
-		<property name="messageListener" ref="taskMessageListener" />
-	</bean>
-	<bean id="taskJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<constructor-arg ref="jmsConnectionFactory" />
-		<property name="defaultDestination">
-			<ref bean="jmsTaskChatTopic" />
-		</property>
-		<property name="sessionTransacted" value="false" />
-		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
-	</bean>
+    <jee:jndi-lookup id="jmsTaskChatTopic" jndi-name="jms/topic/task.chat" />
+    <bean id="taskMessageListener" class="org.wrkr.clb.chat.services.jms.TaskChatListener" />
+    <bean id="taskJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsTaskChatTopic" />
+        <property name="messageListener" ref="taskMessageListener" />
+    </bean>
+    <bean id="taskJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsTaskChatTopic" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
 
-	<jee:jndi-lookup id="jmsIssueChatTopic" jndi-name="jms/topic/issue.chat" />
-	<bean id="issueMessageListener" class="org.wrkr.clb.chat.services.jms.IssueChatListener" />
-	<bean id="issueJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="jmsIssueChatTopic" />
-		<property name="messageListener" ref="issueMessageListener" />
-	</bean>
-	<bean id="issueJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<constructor-arg ref="jmsConnectionFactory" />
-		<property name="defaultDestination">
-			<ref bean="jmsIssueChatTopic" />
-		</property>
-		<property name="sessionTransacted" value="false" />
-		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
-	</bean>
+    <jee:jndi-lookup id="jmsIssueChatTopic" jndi-name="jms/topic/issue.chat" />
+    <bean id="issueMessageListener" class="org.wrkr.clb.chat.services.jms.IssueChatListener" />
+    <bean id="issueJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsIssueChatTopic" />
+        <property name="messageListener" ref="issueMessageListener" />
+    </bean>
+    <bean id="issueJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsIssueChatTopic" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
 
-	<jee:jndi-lookup id="jmsProjectChatTopic" jndi-name="jms/topic/project.chat" />
-	<bean id="projectMessageListener" class="org.wrkr.clb.chat.services.jms.ProjectChatListener" />
-	<bean id="projectJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="jmsProjectChatTopic" />
-		<property name="messageListener" ref="projectMessageListener" />
-	</bean>
-	<bean id="projectJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<constructor-arg ref="jmsConnectionFactory" />
-		<property name="defaultDestination">
-			<ref bean="jmsProjectChatTopic" />
-		</property>
-		<property name="sessionTransacted" value="false" />
-		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
-	</bean>
+    <jee:jndi-lookup id="jmsProjectChatTopic" jndi-name="jms/topic/project.chat" />
+    <bean id="projectMessageListener" class="org.wrkr.clb.chat.services.jms.ProjectChatListener" />
+    <bean id="projectJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsProjectChatTopic" />
+        <property name="messageListener" ref="projectMessageListener" />
+    </bean>
+    <bean id="projectJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsProjectChatTopic" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
 
-	<jee:jndi-lookup id="jmsDialogChatTopic" jndi-name="jms/topic/dialog.chat" />
-	<bean id="dialogMessageListener" class="org.wrkr.clb.chat.services.jms.DialogChatListener" />
-	<bean id="dialogJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
-		<property name="connectionFactory" ref="jmsConnectionFactory" />
-		<property name="destination" ref="jmsDialogChatTopic" />
-		<property name="messageListener" ref="dialogMessageListener" />
-	</bean>
-	<bean id="dialogJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<constructor-arg ref="jmsConnectionFactory" />
-		<property name="defaultDestination">
-			<ref bean="jmsDialogChatTopic" />
-		</property>
-		<property name="sessionTransacted" value="false" />
-		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
-	</bean>
+    <jee:jndi-lookup id="jmsDialogChatTopic" jndi-name="jms/topic/dialog.chat" />
+    <bean id="dialogMessageListener" class="org.wrkr.clb.chat.services.jms.DialogChatListener" />
+    <bean id="dialogJmsContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+        <property name="connectionFactory" ref="jmsConnectionFactory" />
+        <property name="destination" ref="jmsDialogChatTopic" />
+        <property name="messageListener" ref="dialogMessageListener" />
+    </bean>
+    <bean id="dialogJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsDialogChatTopic" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
 
-	<!-- uncomment in full version -->
-	<!-- <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/clb.stat.q" /> <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.DefaultStatisticsSender" 
-		/> <bean id="statisticsJmsTemplate" class="org.springframework.jms.core.JmsTemplate"> <constructor-arg ref="jmsConnectionFactory" /> 
-		<property name="defaultDestination"> <ref bean="jmsStatisticsQueue" /> </property> <property name="sessionTransacted" value="false" 
-		/> <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" /> </bean> -->
-	<!-- comment in full version -->
-	<bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.StatisticsSenderStub" />
+    <!-- uncomment in full version -->
+    <!-- <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/qirk.stat.q" /> <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.DefaultStatisticsSender" 
+        /> <bean id="statisticsJmsTemplate" class="org.springframework.jms.core.JmsTemplate"> <constructor-arg ref="jmsConnectionFactory" /> 
+        <property name="defaultDestination"> <ref bean="jmsStatisticsQueue" /> </property> <property name="sessionTransacted" value="false" 
+        /> <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" /> </bean> -->
+    <!-- comment in full version -->
+    <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.StatisticsSenderStub" />
 
-	<jee:jndi-lookup id="jmsTaskLookupSubscribersQueue" jndi-name="jms/queue/clb.notif.task.lookupsuscribers.q" />
-	<bean id="taskLookupSubscribersSender" class="org.wrkr.clb.common.jms.notification.TaskLookupSubscribersSender" />
-	<bean id="taskLookupSubscribersJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
-		<constructor-arg ref="jmsConnectionFactory" />
-		<property name="defaultDestination">
-			<ref bean="jmsTaskLookupSubscribersQueue" />
-		</property>
-		<property name="sessionTransacted" value="false" />
-		<property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
-	</bean>
+    <jee:jndi-lookup id="jmsTaskLookupSubscribersQueue" jndi-name="jms/queue/qirk.notif.task.lookupsuscribers.q" />
+    <bean id="taskLookupSubscribersSender" class="org.wrkr.clb.common.jms.notification.TaskLookupSubscribersSender" />
+    <bean id="taskLookupSubscribersJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+        <constructor-arg ref="jmsConnectionFactory" />
+        <property name="defaultDestination">
+            <ref bean="jmsTaskLookupSubscribersQueue" />
+        </property>
+        <property name="sessionTransacted" value="false" />
+        <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" />
+    </bean>
 </beans>
