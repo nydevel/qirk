@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- uncomment in full version -->
+    <!-- <import resource="classpath:qirk-chat-repo-persistence-ctx.xml" /> <import resource="classpath:qirk-chat-services-ctx.xml" 
+        /> <import resource="classpath:qirk-chat-services-jms-ctx.xml" /> -->
+    <import resource="qirk-chat-web-config.xml" />
+
+</beans>

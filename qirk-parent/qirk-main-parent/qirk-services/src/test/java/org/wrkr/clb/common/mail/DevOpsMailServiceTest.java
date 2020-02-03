@@ -27,7 +27,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
-@ContextConfiguration({ "classpath:clb-services-test-root-ctx.xml" })
+@ContextConfiguration({ "classpath:qirk-services-test-root-ctx.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DevOpsMailServiceTest {
 

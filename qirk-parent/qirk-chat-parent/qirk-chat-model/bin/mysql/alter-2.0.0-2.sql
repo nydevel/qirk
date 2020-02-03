@@ -1,8 +1,0 @@
-ALTER TABLE task_message CHARACTER SET = 'utf8mb4';
-ALTER TABLE task_message MODIFY message VARCHAR(1023) CHARACTER SET utf8mb4 NOT NULL;
-
-ALTER TABLE issue_message CHARACTER SET = 'utf8mb4';
-ALTER TABLE issue_message MODIFY message VARCHAR(1023) CHARACTER SET utf8mb4 NOT NULL;
-
-ALTER TABLE project_message CHARACTER SET = 'utf8mb4';
-ALTER TABLE project_message MODIFY message VARCHAR(1023) CHARACTER SET utf8mb4 NOT NULL;

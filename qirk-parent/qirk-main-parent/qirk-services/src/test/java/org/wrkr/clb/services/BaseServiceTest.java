@@ -50,7 +50,7 @@ import org.wrkr.clb.test.repo.JDBCTestRepo;
 import org.wrkr.clb.test.repo.TestRepo;
 
 
-@ContextConfiguration({ "classpath:clb-services-test-root-ctx.xml" })
+@ContextConfiguration({ "classpath:qirk-services-test-root-ctx.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class BaseServiceTest {
 

@@ -31,8 +31,8 @@ public class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
-    private static final String CONFIG_CONTEXT_LOCATION = "clb-datasync-config.xml";
-    private static final String ROOT_CONTEXT_LOCATION = "clb-datasync-root-ctx.xml";
+    private static final String CONFIG_CONTEXT_LOCATION = "qirk-datasync-config.xml";
+    private static final String ROOT_CONTEXT_LOCATION = "qirk-datasync-root-ctx.xml";
 
     private static final String DATABASE_URL_PROPERTY_KEY = "database.url";
     private static final String DATABASE_AUTH_URL_PROPERTY_KEY = "database.auth.url";
