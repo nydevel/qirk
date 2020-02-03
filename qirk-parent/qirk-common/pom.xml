@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wrkr.clb</groupId>
+        <artifactId>qirk-parent</artifactId>
+        <version>3.14.0-RELEASE</version>
+    </parent>
+    <artifactId>qirk-common</artifactId>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>qirk-common-deps-logging</module>
+        <module>qirk-common-deps-jms</module>
+        <module>qirk-common-deps-sql</module>
+        <module>qirk-common-deps-jackson</module>
+        <module>qirk-common-deps-httpclient</module>
+        <module>qirk-common-deps-elasticsearch</module>
+        <module>qirk-common-deps-amazonaws</module>
+        <module>qirk-common-util</module>
+        <module>qirk-common-crypto</module>
+        <module>qirk-common-jms</module>
+        <module>qirk-common-mail</module>
+        <module>qirk-common-validation</module>
+        <module>qirk-common-jdbc</module>
+    </modules>
+</project>

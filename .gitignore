@@ -30,7 +30,9 @@ yarn-error.log*
 ### front dependencies ### 
 node_modules/
 npm/
+.npm/
 tmp/
+.tmp/
 .pnp
 .pnp.js
 package-lock.json

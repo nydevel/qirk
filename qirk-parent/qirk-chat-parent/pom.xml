@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.wrkr.clb</groupId>
+        <artifactId>qirk-parent</artifactId>
+        <version>3.14.0-RELEASE</version>
+    </parent>
+    <artifactId>qirk-chat-parent</artifactId>
+    <packaging>pom</packaging>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-common-util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-common-crypto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-chat-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-chat-repo</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-chat-services-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wrkr.clb</groupId>
+                <artifactId>qirk-chat-services</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>servlet-api</artifactId>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <modules>
+        <module>qirk-chat-model</module>
+        <module>qirk-chat-repo</module>
+        <module>qirk-chat-services-api</module>
+        <module>qirk-chat-services</module>
+        <module>qirk-chat-web</module>
+    </modules>
+</project>

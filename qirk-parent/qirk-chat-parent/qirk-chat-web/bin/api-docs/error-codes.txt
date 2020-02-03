@@ -1,0 +1,3 @@
+INVALID_TOKEN - token is missing or invalid
+INVALID_TOKEN_FOR_WRITE - token is valid for read, but invalid for write
+ERROR - an internal server error occured
