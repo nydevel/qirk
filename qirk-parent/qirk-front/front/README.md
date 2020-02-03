@@ -1,4 +1,4 @@
-# Colaba_front
+# Qirk front
 
 To change configuration for development/production, change files development-env.js and production-env.js.
 
