@@ -44,7 +44,6 @@ import org.elasticsearch.script.Script;
 import org.elasticsearch.script.ScriptType;
 import org.elasticsearch.search.SearchHits;
 import org.springframework.stereotype.Service;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedOrganizationDTO;
@@ -56,12 +55,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class DefaultElasticsearchUserService extends DefaultElasticsearchService<User> implements ElasticsearchUserService {
 
     public static final String INDEX = "user";
-
-    private static class Scripts {
-        private static final String ADD_ORGANIZATION = "user_add_organization";
-        private static final String UPDATE_ORGANIZATION_MEMBER = "user_update_organization_member";
-        private static final String REMOVE_ORGANIZATION = "user_remove_organization";
-    }
 
     private static final String[] DEFAULT_SEARCH_EXCLUDE_FIELDS = {
             ElasticsearchUserDTO.NAME_SEARCH_FIELD,
@@ -88,73 +81,10 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public void setOrganizations(User user) throws IOException {
-        UpdateRequest request = new UpdateRequest(getIndex(), user.getId().toString());
-
-        Map<String, Object> source = new HashMap<String, Object>(1);
-        source.put(ElasticsearchUserDTO.ORGANIZATIONS,
-                ElasticsearchNestedOrganizationDTO.fromEntities(user.getOrganizationMembership()));
-        request.doc(source, XContentType.JSON);
-
-        UpdateResponse response = client.update(request, RequestOptions.DEFAULT);
-        logResponse(response);
-    }
-
-    @Override
-    public void addOrganization(User user, OrganizationMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
-        updateRequest.script(
-                new Script(ScriptType.STORED, null, Scripts.ADD_ORGANIZATION,
-                        ElasticsearchNestedOrganizationDTO.fromEntity(member)));
-
-        UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
-        logResponse(updateResponse);
-    }
-
-    private Map<String, Object> getUpdateOrganizationMemberParams(OrganizationMember member) {
-        Map<String, Object> map = new HashMap<String, Object>(2);
-
-        map.put(ElasticsearchNestedOrganizationDTO.MEMBER_ID, member.getId());
-        map.put(ElasticsearchNestedOrganizationDTO.ENABLED, member.isEnabled());
-
-        return map;
-    }
-
-    @Override
-    public void updateOrganizationMember(User user, OrganizationMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
-        updateRequest.script(
-                new Script(ScriptType.STORED, null, Scripts.UPDATE_ORGANIZATION_MEMBER,
-                        getUpdateOrganizationMemberParams(member)));
-
-        UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
-        logResponse(updateResponse);
-    }
-
-    private Map<String, Object> getRemoveOrganizationParams(OrganizationMember member) {
-        Map<String, Object> map = new HashMap<String, Object>(1);
-        map.put(ElasticsearchNestedOrganizationDTO.MEMBER_ID, member.getId());
-        return map;
-    }
-
-    @Override
-    public void removeOrganization(User user, OrganizationMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
-        updateRequest.script(
-                new Script(ScriptType.STORED, null, Scripts.REMOVE_ORGANIZATION,
-                        getRemoveOrganizationParams(member)));
-
-        UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
-        logResponse(updateResponse);
-    }
-
-    @Override
-    public void setOrganizationsAndProjects(User user, List<Long> projectIds throws IOException {
+    public void setProjects(User user, List<Long> projectIds) throws IOException {
         UpdateRequest request = new UpdateRequest(getIndex(), user.getId().toString());
 
         Map<String, Object> source = new HashMap<String, Object>(3);
-        source.put(ElasticsearchUserDTO.ORGANIZATIONS,
-                ElasticsearchNestedOrganizationDTO.fromEntities(user.getOrganizationMembership()));
         source.put(ElasticsearchUserDTO.PROJECTS, projectIds);
         request.doc(source, XContentType.JSON);
 

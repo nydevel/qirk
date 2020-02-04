@@ -25,7 +25,6 @@ import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.services.dto.DropboxSettingsDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -34,7 +33,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ProjectReadDTO extends ProjectWithOrganizationDTO {
 
     @JsonInclude(Include.NON_NULL)
-    public NameAndUiIdDTO organization;
+    public ProjectNameAndUiIdDTO organization;
 
     @JsonProperty(value = "record_version")
     public Long recordVersion;
@@ -114,7 +113,7 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
         }
 
         if (includeOrganization) {
-            dto.organization = NameAndUiIdDTO.fromEntity(project.getOrganization());
+            dto.organization = ProjectNameAndUiIdDTO.fromEntity(project.getOrganization());
         }
 
         if (includeTags) {

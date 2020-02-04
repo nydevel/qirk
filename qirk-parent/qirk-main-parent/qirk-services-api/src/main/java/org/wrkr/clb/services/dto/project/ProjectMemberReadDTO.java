@@ -25,7 +25,6 @@ import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -38,7 +37,7 @@ public class ProjectMemberReadDTO extends IdDTO {
     public PublicUserDTO user;
 
     @JsonInclude(Include.NON_NULL)
-    public NameAndUiIdDTO project;
+    public ProjectNameAndUiIdDTO project;
 
     @JsonProperty(value = "write_allowed")
     @JsonInclude(Include.NON_NULL)
@@ -69,7 +68,7 @@ public class ProjectMemberReadDTO extends IdDTO {
         }
 
         if (includeProject) {
-            dto.project = NameAndUiIdDTO.fromEntity(member.getProject());
+            dto.project = ProjectNameAndUiIdDTO.fromEntity(member.getProject());
         }
 
         if (includePermissions) {
@@ -112,7 +111,7 @@ public class ProjectMemberReadDTO extends IdDTO {
         List<ProjectMemberReadDTO> dtoList = new ArrayList<ProjectMemberReadDTO>();
         for (Tuple member : memberList) {
             ProjectMemberReadDTO dto = fromEntityWithTimestamps(member.get(0, ProjectMember.class));
-            dto.project = NameAndUiIdDTO.fromEntity(member.get(1, Project.class));
+            dto.project = ProjectNameAndUiIdDTO.fromEntity(member.get(1, Project.class));
             dtoList.add(dto);
         }
         return dtoList;

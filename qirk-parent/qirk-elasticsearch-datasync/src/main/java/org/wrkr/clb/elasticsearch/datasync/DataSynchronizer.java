@@ -122,7 +122,7 @@ public class DataSynchronizer {
             user.setTags(databaseService.getTagsByUser(user));
             try {
                 userService.datasync(user);
-                userService.setOrganizationsAndProjects(
+                userService.setProjects(
                         user, databaseService.getProjectIdsByMemberUser(user));
             } catch (Exception e) {
                 logElasticsearchUpdateError(user, e);

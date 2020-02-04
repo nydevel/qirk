@@ -23,15 +23,15 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
+import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class QirkOrganizationDTO {
 
     @JsonProperty(value = "imported_projects")
-    public List<NameAndUiIdDTO> importedProjects;
+    public List<ProjectNameAndUiIdDTO> importedProjects;
     public List<OrganizationMemberUserDTO> members;
 
     public List<TaskAttributeDTO> types;
@@ -41,7 +41,7 @@ public class QirkOrganizationDTO {
     public static QirkOrganizationDTO fromEntities(List<Project> projectList, List<OrganizationMember> memberList) {
         QirkOrganizationDTO dto = new QirkOrganizationDTO();
 
-        dto.importedProjects = NameAndUiIdDTO.fromProjects(projectList);
+        dto.importedProjects = ProjectNameAndUiIdDTO.fromEntities(projectList);
         dto.members = OrganizationMemberUserDTO.fromEntitiesWithEmail(memberList);
 
         dto.types = TaskAttributeDTO.fromTypes(TaskType.Type.values());

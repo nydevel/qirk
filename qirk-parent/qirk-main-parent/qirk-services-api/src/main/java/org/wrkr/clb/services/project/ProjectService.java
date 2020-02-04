@@ -32,11 +32,11 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
+import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
@@ -95,7 +95,7 @@ public interface ProjectService {
     @Deprecated
     public List<ProjectReadDTO> listTop();
 
-    public List<NameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
+    public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
             OrganizationMember currentMember);
 
     public ChatPermissionsDTO getChatToken(User currentUser,

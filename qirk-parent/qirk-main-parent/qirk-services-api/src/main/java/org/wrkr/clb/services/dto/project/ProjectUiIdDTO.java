@@ -14,14 +14,24 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.api.elasticsearch;
+package org.wrkr.clb.services.dto.project;
 
-import org.elasticsearch.search.SearchHits;
-import org.wrkr.clb.model.organization.Organization;
+import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.services.dto.IdDTO;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Deprecated
-public interface ElasticsearchOrganizationService extends ElasticsearchService<Organization> {
+public class ProjectUiIdDTO extends IdDTO {
 
-    public SearchHits searchByName(String prefix) throws Exception;
+    @JsonProperty(value = "ui_id")
+    public String uiId;
+
+    public static ProjectUiIdDTO fromEntity(Project project) {
+        ProjectUiIdDTO dto = new ProjectUiIdDTO();
+
+        dto.id = project.getId();
+        dto.uiId = project.getUiId();
+
+        return dto;
+    }
 }

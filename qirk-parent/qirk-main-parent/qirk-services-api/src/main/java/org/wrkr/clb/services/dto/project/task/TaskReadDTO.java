@@ -26,8 +26,8 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
+import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -124,7 +124,7 @@ public class TaskReadDTO extends IdDTO {
         }
 
         if (includeProject) {
-            dto.project = NameAndUiIdDTO.fromEntity(task.getProject());
+            dto.project = ProjectNameAndUiIdDTO.fromEntity(task.getProject());
         }
 
         if (includeReporterAndAssignee) {

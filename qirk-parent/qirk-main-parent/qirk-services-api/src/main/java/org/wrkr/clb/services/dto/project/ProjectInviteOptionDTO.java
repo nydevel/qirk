@@ -23,13 +23,12 @@ import javax.persistence.Tuple;
 
 import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProjectInviteOptionDTO extends ProjectWithOrganizationDTO {
 
-    public NameAndUiIdDTO organization;
+    public ProjectNameAndUiIdDTO organization;
 
     @JsonProperty(value = "is_member")
     public boolean isMember = false;
@@ -44,7 +43,7 @@ public class ProjectInviteOptionDTO extends ProjectWithOrganizationDTO {
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = NameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
+        dto.organization = ProjectNameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
 
         return dto;
     }

@@ -24,8 +24,6 @@ import javax.persistence.Tuple;
 import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
-import org.wrkr.clb.services.dto.UiIdDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -36,7 +34,7 @@ public class ProjectWithOrganizationDTO extends IdDTO {
     @JsonProperty(value = "ui_id")
     public String uiId;
 
-    public UiIdDTO organization;
+    public ProjectUiIdDTO organization;
 
     public static ProjectWithOrganizationDTO fromEntity(Project project) {
         ProjectWithOrganizationDTO dto = new ProjectWithOrganizationDTO();
@@ -44,7 +42,7 @@ public class ProjectWithOrganizationDTO extends IdDTO {
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = UiIdDTO.fromEntity(project.getOrganization());
+        dto.organization = ProjectUiIdDTO.fromEntity(project.getOrganization());
 
         return dto;
     }
@@ -55,7 +53,7 @@ public class ProjectWithOrganizationDTO extends IdDTO {
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = NameAndUiIdDTO.fromEntity(project.getOrganization());
+        dto.organization = ProjectNameAndUiIdDTO.fromEntity(project.getOrganization());
 
         return dto;
     }
@@ -75,7 +73,7 @@ public class ProjectWithOrganizationDTO extends IdDTO {
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = NameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
+        dto.organization = ProjectNameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
 
         return dto;
     }

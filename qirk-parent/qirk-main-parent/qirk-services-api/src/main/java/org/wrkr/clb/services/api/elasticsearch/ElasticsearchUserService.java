@@ -19,20 +19,11 @@ package org.wrkr.clb.services.api.elasticsearch;
 import java.util.List;
 
 import org.elasticsearch.search.SearchHits;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.user.User;
 
 public interface ElasticsearchUserService extends ElasticsearchService<User> {
 
-    public void setOrganizations(User user) throws Exception;
-
-    public void addOrganization(User user, OrganizationMember member) throws Exception;
-
-    public void updateOrganizationMember(User user, OrganizationMember member) throws Exception;
-
-    public void removeOrganization(User user, OrganizationMember member) throws Exception;
-
-    public void setOrganizationsAndProjects(User user, List<Long> projectIds) throws Exception;
+    public void setProjects(User user, List<Long> projectIds) throws Exception;
 
     public void addProject(Long userId, Long projectId) throws Exception;
 
@@ -57,6 +48,6 @@ public interface ElasticsearchUserService extends ElasticsearchService<User> {
             throws Exception;
 
     public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long organizationId, Long projectId) throws Exception;
-    
+
     public SearchHits searchByNameOrTags(String searchValue) throws Exception;
 }

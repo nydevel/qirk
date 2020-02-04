@@ -61,7 +61,6 @@ import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
 import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
-import org.wrkr.clb.services.dto.NameAndUiIdDTO;
 import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.ProjectApplicationStatusDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
@@ -69,6 +68,7 @@ import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteStatusDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
+import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 import org.wrkr.clb.services.impl.BaseVersionedEntityService;
@@ -555,25 +555,25 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.MANDATORY)
-    public List<NameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
+    public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
             OrganizationMember organizationMember) {
         if (organizationMember == null) {
             if (!organization.isPrivate()) {
                 List<Project> projectList = projectRepo.listPublicByOrganization(organization);
-                return NameAndUiIdDTO.fromProjects(projectList);
+                return ProjectNameAndUiIdDTO.fromEntities(projectList);
             }
-            return new ArrayList<NameAndUiIdDTO>();
+            return new ArrayList<ProjectNameAndUiIdDTO>();
         }
 
         if (organizationMember.isManager()) {
             List<Project> projectList = projectRepo.listByOrganization(organization);
-            return NameAndUiIdDTO.fromProjects(projectList);
+            return ProjectNameAndUiIdDTO.fromEntities(projectList);
 
         }
 
         List<Project> projectList = projectRepo.listAvailableToOrganizationMemberByOrganization(organization,
                 organizationMember, !organization.isPrivate());
-        return NameAndUiIdDTO.fromProjects(projectList);
+        return ProjectNameAndUiIdDTO.fromEntities(projectList);
     }
 
     @Override

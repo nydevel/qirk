@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.dto;
+package org.wrkr.clb.services.dto.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,26 +25,15 @@ import org.elasticsearch.action.get.MultiGetItemResponse;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.wrkr.clb.common.util.strings.JsonUtils;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNameAndUiIdDTO;
 
-public class NameAndUiIdDTO extends UiIdDTO {
+public class ProjectNameAndUiIdDTO extends ProjectUiIdDTO {
 
     public String name;
 
-    public static NameAndUiIdDTO fromEntity(Organization organization) {
-        NameAndUiIdDTO dto = new NameAndUiIdDTO();
-
-        dto.id = organization.getId();
-        dto.name = organization.getName();
-        dto.uiId = organization.getUiId();
-
-        return dto;
-    }
-
-    public static NameAndUiIdDTO fromEntity(Project project) {
-        NameAndUiIdDTO dto = new NameAndUiIdDTO();
+    public static ProjectNameAndUiIdDTO fromEntity(Project project) {
+        ProjectNameAndUiIdDTO dto = new ProjectNameAndUiIdDTO();
 
         dto.id = project.getId();
         dto.name = project.getName();
@@ -53,28 +42,16 @@ public class NameAndUiIdDTO extends UiIdDTO {
         return dto;
     }
 
-    public static List<NameAndUiIdDTO> fromOrganizations(
-            Organization predefinedOrganizaiton, List<Organization> organizationList) {
-        List<NameAndUiIdDTO> dtoList = new ArrayList<NameAndUiIdDTO>(organizationList.size() + 1);
-        if (predefinedOrganizaiton != null) {
-            dtoList.add(fromEntity(predefinedOrganizaiton));
-        }
-        for (Organization organization : organizationList) {
-            dtoList.add(fromEntity(organization));
-        }
-        return dtoList;
-    }
-
-    public static List<NameAndUiIdDTO> fromProjects(List<Project> projectList) {
-        List<NameAndUiIdDTO> dtoList = new ArrayList<NameAndUiIdDTO>(projectList.size());
+    public static List<ProjectNameAndUiIdDTO> fromEntities(List<Project> projectList) {
+        List<ProjectNameAndUiIdDTO> dtoList = new ArrayList<ProjectNameAndUiIdDTO>(projectList.size());
         for (Project project : projectList) {
             dtoList.add(fromEntity(project));
         }
         return dtoList;
     }
 
-    public static NameAndUiIdDTO fromSearchHit(SearchHit hit) throws IOException {
-        NameAndUiIdDTO dto = new NameAndUiIdDTO();
+    public static ProjectNameAndUiIdDTO fromSearchHit(SearchHit hit) throws IOException {
+        ProjectNameAndUiIdDTO dto = new ProjectNameAndUiIdDTO();
         // can't use getSourceAsMap() because it uses int for numbers
         Map<String, Object> source = JsonUtils.convertJsonToMapUsingLongForInts(hit.getSourceAsString());
 
@@ -85,16 +62,16 @@ public class NameAndUiIdDTO extends UiIdDTO {
         return dto;
     }
 
-    public static List<NameAndUiIdDTO> fromSearchHits(SearchHits hits) throws IOException {
-        List<NameAndUiIdDTO> dtoList = new ArrayList<NameAndUiIdDTO>(hits.getHits().length);
+    public static List<ProjectNameAndUiIdDTO> fromSearchHits(SearchHits hits) throws IOException {
+        List<ProjectNameAndUiIdDTO> dtoList = new ArrayList<ProjectNameAndUiIdDTO>(hits.getHits().length);
         for (SearchHit hit : hits) {
             dtoList.add(fromSearchHit(hit));
         }
         return dtoList;
     }
 
-    public static NameAndUiIdDTO fromMultiGetItemResponse(MultiGetItemResponse item) throws IOException {
-        NameAndUiIdDTO dto = new NameAndUiIdDTO();
+    public static ProjectNameAndUiIdDTO fromMultiGetItemResponse(MultiGetItemResponse item) throws IOException {
+        ProjectNameAndUiIdDTO dto = new ProjectNameAndUiIdDTO();
         // can't use getSourceAsMap() because it uses int for numbers
         Map<String, Object> source = JsonUtils.convertJsonToMapUsingLongForInts(item.getResponse().getSourceAsString());
 
