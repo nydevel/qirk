@@ -29,7 +29,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.client.HttpClientErrorException;
 import org.wrkr.clb.common.util.strings.JsonUtils;
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.Task;

@@ -14,31 +14,39 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.security;
+package org.wrkr.clb.repo.mapper.project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.repo.mapper.organization.OrganizationMemberWithProjectMemberMapper;
 
-public class SecurityProjectWithOrgMapper extends SecurityProjectMapper {
+public class ShortProjectWithSecurityMembershipMapper extends ShortProjectMapper {
 
-    private SecurityOrganizationMapper organizationMapper;
+    private OrganizationMemberWithProjectMemberMapper organizationMemberMapper;
 
-    public SecurityProjectWithOrgMapper(String projectTableName, String orgTableName) {
+    public ShortProjectWithSecurityMembershipMapper(String projectTableName,
+            String orgMemberTableName, String projectMemberTableName) {
         super(projectTableName);
-        this.organizationMapper = new SecurityOrganizationMapper(orgTableName);
+        this.organizationMemberMapper = new OrganizationMemberWithProjectMemberMapper(orgMemberTableName, projectMemberTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return super.generateSelectColumnsStatement() + ", " + organizationMapper.generateSelectColumnsStatement();
+        return super.generateSelectColumnsStatement() + ", " +
+                organizationMemberMapper.generateSelectColumnsStatement();
     }
 
     @Override
     public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
         Project project = super.mapRow(rs, rowNum);
-        project.setOrganization(organizationMapper.mapRow(rs, rowNum));
+
+        if (rs.getObject(organizationMemberMapper.generateColumnAlias(OrganizationMemberMeta.id)) != null) {
+            project.getOrganizationMembers().add(organizationMemberMapper.mapRow(rs, rowNum));
+        }
+
         return project;
     }
 }

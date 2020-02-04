@@ -20,8 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.organization.DropboxSettings;
-import org.wrkr.clb.model.organization.DropboxSettingsMeta;
+import org.wrkr.clb.model.project.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettingsMeta;
 
 public class DropboxSettingsMapper extends BaseMapper<DropboxSettings> {
 

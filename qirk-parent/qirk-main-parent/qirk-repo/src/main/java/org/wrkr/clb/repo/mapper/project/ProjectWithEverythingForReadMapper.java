@@ -22,10 +22,10 @@ import java.sql.SQLException;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMeta;
 
-public class ProjectWithEverythingForReadMapper extends ProjectNameAndUiIdWithOrganizationMapper {
+public class ProjectWithEverythingForReadMapper extends ProjectNameAndUiIdMapper {
 
-    public ProjectWithEverythingForReadMapper(String projectTableName, String orgTableName) {
-        super(projectTableName, orgTableName);
+    public ProjectWithEverythingForReadMapper(String projectTableName) {
+        super(projectTableName);
     }
 
     @Override

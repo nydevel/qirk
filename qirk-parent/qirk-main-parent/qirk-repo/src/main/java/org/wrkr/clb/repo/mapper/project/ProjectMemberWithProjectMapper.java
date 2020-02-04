@@ -20,25 +20,20 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.model.project.ProjectMember;
-import org.wrkr.clb.repo.mapper.organization.OrganizationMemberMapper;
-import org.wrkr.clb.repo.mapper.security.SecurityProjectWithOrgMapper;
+import org.wrkr.clb.repo.mapper.security.SecurityProjectMapper;
 
-public class ProjectMemberWithOrgMemberAndProjectMapper extends ProjectMemberMapper {
+public class ProjectMemberWithProjectMapper extends ProjectMemberMapper {
 
-    private OrganizationMemberMapper organizationMemberMapper;
-    private SecurityProjectWithOrgMapper projectMapper;
+    private SecurityProjectMapper projectMapper;
 
-    public ProjectMemberWithOrgMemberAndProjectMapper(String projectMemberTableName, String orgMemberTableName,
-            String projectTableName, String orgTableName) {
+    public ProjectMemberWithProjectMapper(String projectMemberTableName, String projectTableName) {
         super(projectMemberTableName);
-        this.organizationMemberMapper = new OrganizationMemberMapper(orgMemberTableName);
-        this.projectMapper = new SecurityProjectWithOrgMapper(projectTableName, orgTableName);
+        this.projectMapper = new SecurityProjectMapper(projectTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
         return super.generateSelectColumnsStatement() + ", " +
-                organizationMemberMapper.generateSelectColumnsStatement() + ", " +
                 projectMapper.generateSelectColumnsStatement();
     }
 
@@ -46,7 +41,6 @@ public class ProjectMemberWithOrgMemberAndProjectMapper extends ProjectMemberMap
     public ProjectMember mapRow(ResultSet rs, int rowNum) throws SQLException {
         ProjectMember member = super.mapRow(rs, rowNum);
 
-        member.setOrganizationMember(organizationMemberMapper.mapRow(rs, rowNum));
         member.setProject(projectMapper.mapRow(rs, rowNum));
 
         return member;

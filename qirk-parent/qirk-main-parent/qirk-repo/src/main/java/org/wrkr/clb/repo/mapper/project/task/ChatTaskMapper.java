@@ -20,15 +20,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdWithOrganizationMapper;
+import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
 
 public class ChatTaskMapper extends TaskNumberMapper {
 
-    private ProjectNameAndUiIdWithOrganizationMapper projectMapper;
+    private ProjectNameAndUiIdMapper projectMapper;
 
-    public ChatTaskMapper(String taskTableName, String projectTableName, String orgTableName) {
+    public ChatTaskMapper(String taskTableName, String projectTableName) {
         super(taskTableName);
-        projectMapper = new ProjectNameAndUiIdWithOrganizationMapper(projectTableName, orgTableName);
+        projectMapper = new ProjectNameAndUiIdMapper(projectTableName);
     }
 
     @Override

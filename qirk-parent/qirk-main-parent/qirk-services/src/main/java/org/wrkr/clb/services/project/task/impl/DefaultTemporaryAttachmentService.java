@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;

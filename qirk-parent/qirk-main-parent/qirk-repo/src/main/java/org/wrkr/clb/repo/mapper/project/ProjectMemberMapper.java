@@ -52,7 +52,6 @@ public class ProjectMemberMapper extends BaseMapper<ProjectMember> {
 
         member.setId(rs.getLong(generateColumnAlias(ProjectMemberMeta.id)));
         member.setUserId(rs.getLong(generateColumnAlias(ProjectMemberMeta.userId)));
-        member.setOrganizationMemberId(rs.getLong(generateColumnAlias(ProjectMemberMeta.organizationMemberId)));
         member.setProjectId(rs.getLong(generateColumnAlias(ProjectMemberMeta.projectId)));
         member.setWriteAllowed(rs.getBoolean(generateColumnAlias(ProjectMemberMeta.writeAllowed)));
         member.setManager(rs.getBoolean(generateColumnAlias(ProjectMemberMeta.manager)));

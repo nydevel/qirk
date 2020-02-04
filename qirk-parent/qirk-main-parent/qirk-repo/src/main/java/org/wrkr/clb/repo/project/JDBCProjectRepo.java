@@ -23,10 +23,10 @@ import java.util.List;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.DropboxSettingsMeta;
 import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.organization.OrganizationMeta;
+import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
@@ -35,10 +35,8 @@ import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.DropboxProjectMapper;
-import org.wrkr.clb.repo.mapper.project.OrganizationIdMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectDocMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
-import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdWithOrganizationMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectWithEverythingForReadAndSecurityMembershipMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectWithEverythingForReadMapper;
 
@@ -57,25 +55,15 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
             "FROM " + ProjectMeta.TABLE_NAME + " " +
             "WHERE " + ProjectMeta.id + " = ?;"; // 1
 
-    private static final OrganizationIdMapper ORGANIZATION_ID_MAPPER = new OrganizationIdMapper(ProjectMeta.TABLE_NAME);
+    private static final String SELECT_PROJECT_ID_BY_ROAD_ID = "SELECT " + RoadMeta.projectId + " " +
+            "FROM " + RoadMeta.TABLE_NAME + " " +
+            "WHERE " + RoadMeta.id + " = ?;"; // 1
 
-    private static final String SELECT_ORGANIZATION_ID_BY_ROAD_ID = "SELECT " +
-            ORGANIZATION_ID_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "INNER JOIN " + RoadMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            RoadMeta.TABLE_NAME + "." + RoadMeta.projectId + " " +
-            "WHERE " + RoadMeta.TABLE_NAME + "." + RoadMeta.id + " = ?;"; // 1
+    private static final ProjectNameAndUiIdMapper NAME_AND_UI_ID_MAPPER = new ProjectNameAndUiIdMapper(ProjectMeta.TABLE_NAME);
 
-    private static final ProjectNameAndUiIdWithOrganizationMapper NAME_AND_UI_ID_MAPPER = new ProjectNameAndUiIdWithOrganizationMapper(
-            ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME);
-
-    private static final String SELECT_NAME_AND_UI_ID_BY_TASK_ID_AND_FETCH_ORGANIZATION = "SELECT " +
+    private static final String SELECT_NAME_AND_UI_ID_BY_TASK_ID = "SELECT " +
             NAME_AND_UI_ID_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
             "INNER JOIN " + TaskMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " " +
@@ -270,12 +258,12 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
 
     }
 
-    public Project getOrganizationIdByRoadId(Long roadId) {
-        return queryForObjectOrNull(SELECT_ORGANIZATION_ID_BY_ROAD_ID, ORGANIZATION_ID_MAPPER, roadId);
+    public Long getProjectIdByRoadId(Long roadId) {
+        return queryForObjectOrNull(SELECT_PROJECT_ID_BY_ROAD_ID, Long.class, roadId);
     }
 
-    public Project getUiIdByTaskIdAndFetchOrganization(Long taskId) {
-        return queryForObjectOrNull(SELECT_NAME_AND_UI_ID_BY_TASK_ID_AND_FETCH_ORGANIZATION, NAME_AND_UI_ID_MAPPER,
+    public Project getNameAndUiIdByTaskId(Long taskId) {
+        return queryForObjectOrNull(SELECT_NAME_AND_UI_ID_BY_TASK_ID, NAME_AND_UI_ID_MAPPER,
                 taskId);
     }
 

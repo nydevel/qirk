@@ -34,24 +34,20 @@ import javax.persistence.Transient;
 import org.wrkr.clb.model.BaseUiIdEntity;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
-import org.wrkr.clb.model.organization.DropboxSettings;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.Task;
+import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserFavorite;
 
 @Entity
 @Table(name = ProjectMeta.TABLE_NAME)
 public class Project extends BaseUiIdEntity {
 
-    public static final long MIN_PRIVATE_PROJECT_MEMBERS_TO_CHARGE = 6L;
-
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization;
+    @JoinColumn(name = "user_owner_id", nullable = false)
+    private User owner;
     @Transient
-    private Long organizationId;
+    private Long ownerId;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_number_sequence_id", nullable = false)
@@ -103,9 +99,6 @@ public class Project extends BaseUiIdEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> members = new ArrayList<ProjectMember>();
 
-    @Transient
-    private List<OrganizationMember> organizationMembers = new ArrayList<OrganizationMember>();
-
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Task> tasks = new ArrayList<Task>();
 
@@ -113,19 +106,26 @@ public class Project extends BaseUiIdEntity {
     private List<UserFavorite> favorites = new ArrayList<UserFavorite>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectInvite> invites = new ArrayList<ProjectInvite>();
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<GrantedPermissionsProjectInvite> grantedPermissionsInvites = new ArrayList<GrantedPermissionsProjectInvite>();
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-    private List<ProjectApplication> applications = new ArrayList<ProjectApplication>();
-
-    @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Memo> memos = new ArrayList<Memo>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Issue> issues = new ArrayList<Issue>();
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public Long getOwnerId() {
+        return ownerId;
+    }
+
+    public void setOwnerId(Long ownerId) {
+        this.ownerId = ownerId;
+    }
 
     public String getName() {
         return name;
@@ -184,28 +184,12 @@ public class Project extends BaseUiIdEntity {
         this.frozen = frozen;
     }
 
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-    }
-
     public DropboxSettings getDropboxSettings() {
         return dropboxSettings;
     }
 
     public void setDropboxSettings(DropboxSettings dropboxSettings) {
         this.dropboxSettings = dropboxSettings;
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 
     public Long getDropboxSettingsId() {
@@ -256,14 +240,6 @@ public class Project extends BaseUiIdEntity {
         this.members = members;
     }
 
-    public List<OrganizationMember> getOrganizationMembers() {
-        return organizationMembers;
-    }
-
-    public void setOrganizationMembers(List<OrganizationMember> organizationMembers) {
-        this.organizationMembers = organizationMembers;
-    }
-
     public ProjectTaskNumberSequence getTaskNumberSequence() {
         return taskNumberSequence;
     }
@@ -286,30 +262,6 @@ public class Project extends BaseUiIdEntity {
 
     public void setFavorites(List<UserFavorite> favorites) {
         this.favorites = favorites;
-    }
-
-    public List<ProjectInvite> getInvites() {
-        return invites;
-    }
-
-    public void setInvites(List<ProjectInvite> invites) {
-        this.invites = invites;
-    }
-
-    public List<GrantedPermissionsProjectInvite> getGrantedPermissionsInvites() {
-        return grantedPermissionsInvites;
-    }
-
-    public void setGrantedPermissionsInvites(List<GrantedPermissionsProjectInvite> grantedPermissionsInvites) {
-        this.grantedPermissionsInvites = grantedPermissionsInvites;
-    }
-
-    public List<ProjectApplication> getApplications() {
-        return applications;
-    }
-
-    public void setApplications(List<ProjectApplication> applications) {
-        this.applications = applications;
     }
 
     public List<Memo> getMemos() {

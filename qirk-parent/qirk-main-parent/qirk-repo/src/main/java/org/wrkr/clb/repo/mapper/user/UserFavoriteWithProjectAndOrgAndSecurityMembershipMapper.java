@@ -23,17 +23,17 @@ import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.user.UserFavorite;
 import org.wrkr.clb.model.user.UserFavoriteMeta;
-import org.wrkr.clb.repo.mapper.project.ShortProjectWithOrgAndSecurityMembershipMapper;
+import org.wrkr.clb.repo.mapper.project.ShortProjectWithSecurityMembershipMapper;
 
 public class UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper extends BaseMapper<UserFavorite> {
 
-    protected ShortProjectWithOrgAndSecurityMembershipMapper projectMapper;
+    protected ShortProjectWithSecurityMembershipMapper projectMapper;
 
     public UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper(String userFavoriteTableName,
             String projectTableName, String orgTableName,
             String orgMemberTableName, String projectMemberTableName) {
         super(userFavoriteTableName);
-        this.projectMapper = new ShortProjectWithOrgAndSecurityMembershipMapper(projectTableName, orgTableName,
+        this.projectMapper = new ShortProjectWithSecurityMembershipMapper(projectTableName, orgTableName,
                 orgMemberTableName, projectMemberTableName);
     }
 

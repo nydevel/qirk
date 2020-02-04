@@ -30,19 +30,11 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseVersionedEntity;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.task.TaskCard;
-
 
 @Entity
 @Table(name = RoadMeta.TABLE_NAME)
 public class Road extends BaseVersionedEntity {
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization;
-    @Transient
-    private Long organizationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -70,24 +62,6 @@ public class Road extends BaseVersionedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "road")
     private List<TaskCard> cards = new ArrayList<TaskCard>();
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-        this.organizationId = organization.getId();
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
-        this.organization = null;
-    }
 
     public Project getProject() {
         return project;

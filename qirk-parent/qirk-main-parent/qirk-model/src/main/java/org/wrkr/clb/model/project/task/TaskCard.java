@@ -33,12 +33,10 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseVersionedEntity;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.Road;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 
 @Entity
 @Table(name = TaskCardMeta.TABLE_NAME)
@@ -57,12 +55,6 @@ public class TaskCard extends BaseVersionedEntity {
             this.nameCode = nameCode;
         }
     }
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "organization_id", nullable = false)
-    private Organization organization;
-    @Transient
-    private Long organizationId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -107,24 +99,6 @@ public class TaskCard extends BaseVersionedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card")
     private List<Task> tasks = new ArrayList<Task>();
-
-    public Organization getOrganization() {
-        return organization;
-    }
-
-    public void setOrganization(Organization organization) {
-        this.organization = organization;
-        this.organizationId = organization.getId();
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
-        this.organization = null;
-    }
 
     public Project getProject() {
         return project;

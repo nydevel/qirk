@@ -52,7 +52,6 @@ import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchUserDTO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-
 @Service
 public class DefaultElasticsearchUserService extends DefaultElasticsearchService<User> implements ElasticsearchUserService {
 
@@ -150,14 +149,13 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public void setOrganizationsAndProjects(User user, List<Long> projectIds, List<Long> invitedProjectIds) throws IOException {
+    public void setOrganizationsAndProjects(User user, List<Long> projectIds throws IOException {
         UpdateRequest request = new UpdateRequest(getIndex(), user.getId().toString());
 
         Map<String, Object> source = new HashMap<String, Object>(3);
         source.put(ElasticsearchUserDTO.ORGANIZATIONS,
                 ElasticsearchNestedOrganizationDTO.fromEntities(user.getOrganizationMembership()));
         source.put(ElasticsearchUserDTO.PROJECTS, projectIds);
-        source.put(ElasticsearchUserDTO.INVITED_PROJECTS, invitedProjectIds);
         request.doc(source, XContentType.JSON);
 
         UpdateResponse response = client.update(request, RequestOptions.DEFAULT);

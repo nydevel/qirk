@@ -22,7 +22,7 @@ public class ProjectMeta extends BaseUiIdEntityMeta {
 
     public static final String TABLE_NAME = "project";
 
-    public static final String organizationId = "organization_id";
+    public static final String ownerId = "user_owner_id";
     public static final String taskNumberSequenceId = "task_number_sequence_id";
     public static final String name = "name";
     public static final String key = "key";

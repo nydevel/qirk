@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.model.organization;
+package org.wrkr.clb.model.project;
 
 import org.wrkr.clb.model.BaseIdEntityMeta;
 

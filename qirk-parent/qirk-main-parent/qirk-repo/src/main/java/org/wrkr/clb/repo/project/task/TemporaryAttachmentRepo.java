@@ -21,7 +21,7 @@ import java.sql.JDBCType;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.DropboxSettingsMeta;
+import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;

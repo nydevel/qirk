@@ -32,7 +32,7 @@ public interface ElasticsearchUserService extends ElasticsearchService<User> {
 
     public void removeOrganization(User user, OrganizationMember member) throws Exception;
 
-    public void setOrganizationsAndProjects(User user, List<Long> projectIds, List<Long> invitedProjectIds) throws Exception;
+    public void setOrganizationsAndProjects(User user, List<Long> projectIds) throws Exception;
 
     public void addProject(Long userId, Long projectId) throws Exception;
 

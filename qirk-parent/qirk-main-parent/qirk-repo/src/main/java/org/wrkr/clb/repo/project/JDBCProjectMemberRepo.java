@@ -27,12 +27,12 @@ import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
-import org.wrkr.clb.repo.mapper.project.ProjectMemberWithOrgMemberAndProjectMapper;
+import org.wrkr.clb.repo.mapper.project.ProjectMemberWithProjectMapper;
 
 @Repository
 public class JDBCProjectMemberRepo extends JDBCBaseMainRepo {
 
-    private static final ProjectMemberWithOrgMemberAndProjectMapper PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER = new ProjectMemberWithOrgMemberAndProjectMapper(
+    private static final ProjectMemberWithProjectMapper PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER = new ProjectMemberWithProjectMapper(
             ProjectMemberMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME);
 
     private static final String SELECT_NOT_FIRED_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG_PREFIX = "SELECT " +

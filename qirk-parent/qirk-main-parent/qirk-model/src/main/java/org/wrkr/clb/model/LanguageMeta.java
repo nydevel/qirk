@@ -16,7 +16,6 @@
  */
 package org.wrkr.clb.model;
 
-import org.wrkr.clb.model.organization.OrganizationToLanguageMeta;
 import org.wrkr.clb.model.project.ProjectToLanguageMeta;
 import org.wrkr.clb.model.user.UserToLanguageMeta;
 
@@ -27,6 +26,5 @@ public class LanguageMeta extends BaseIdEntityMeta {
     public static final String nameCode = "name_code";
 
     public static final UserToLanguageMeta users = new UserToLanguageMeta();
-    public static final OrganizationToLanguageMeta organizations = new OrganizationToLanguageMeta();
     public static final ProjectToLanguageMeta projects = new ProjectToLanguageMeta();
 }

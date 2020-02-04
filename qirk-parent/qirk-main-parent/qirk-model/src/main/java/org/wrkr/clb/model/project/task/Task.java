@@ -32,8 +32,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseVersionedEntity;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectMember;
 
 @Entity
 @Table(name = TaskMeta.TABLE_NAME)
@@ -59,19 +59,15 @@ public class Task extends BaseVersionedEntity {
     @Column(name = "summary", nullable = false, length = SUMMARY_LENGTH)
     private String summary;
 
-    @Deprecated
-    @Transient
-    private Task parentTask;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reporter_user_organization_id", nullable = false)
-    private OrganizationMember reporter;
+    private ProjectMember reporter;
     @Transient
     private Long reporterId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assignee_user_organization_id", nullable = true)
-    private OrganizationMember assignee;
+    private ProjectMember assignee;
     @Transient
     private Long assigneeId;
 
@@ -110,10 +106,6 @@ public class Task extends BaseVersionedEntity {
 
     @Transient
     private Long jiraTaskId;
-
-    @Deprecated
-    @Transient
-    private List<Task> childTasks = new ArrayList<Task>();
 
     @Transient
     private List<Task> linkedTasks = new ArrayList<Task>();
@@ -168,30 +160,20 @@ public class Task extends BaseVersionedEntity {
         this.projectId = project.getId();
     }
 
-    @Deprecated
-    public Task getParentTask() {
-        return parentTask;
-    }
-
-    @Deprecated
-    public void setParentTask(Task parentTask) {
-        this.parentTask = parentTask;
-    }
-
-    public OrganizationMember getReporter() {
+    public ProjectMember getReporter() {
         return reporter;
     }
 
-    public void setReporter(OrganizationMember reporter) {
+    public void setReporter(ProjectMember reporter) {
         this.reporter = reporter;
         this.reporterId = reporter.getId();
     }
 
-    public OrganizationMember getAssignee() {
+    public ProjectMember getAssignee() {
         return assignee;
     }
 
-    public void setAssignee(OrganizationMember assignee) {
+    public void setAssignee(ProjectMember assignee) {
         this.assignee = assignee;
         this.assigneeId = (assignee == null ? null : assignee.getId());
     }
@@ -346,16 +328,6 @@ public class Task extends BaseVersionedEntity {
 
     public void setJiraTaskId(Long jiraTaskId) {
         this.jiraTaskId = jiraTaskId;
-    }
-
-    @Deprecated
-    public List<Task> getChildTasks() {
-        return childTasks;
-    }
-
-    @Deprecated
-    public void setChildTasks(List<Task> childTasks) {
-        this.childTasks = childTasks;
     }
 
     public List<Task> getLinkedTasks() {

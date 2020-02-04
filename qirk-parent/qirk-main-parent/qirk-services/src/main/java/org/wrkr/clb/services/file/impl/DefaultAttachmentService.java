@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;

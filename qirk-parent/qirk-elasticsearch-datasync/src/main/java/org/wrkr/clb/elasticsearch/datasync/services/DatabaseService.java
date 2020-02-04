@@ -16,24 +16,15 @@
  */
 package org.wrkr.clb.elasticsearch.datasync.services;
 
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.Tag;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.InviteStatusRepo;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.organization.OrganizationRepo;
-import org.wrkr.clb.repo.project.JDBCGrantedPermissionsProjectInviteRepo;
-import org.wrkr.clb.repo.project.JDBCProjectInviteRepo;
 import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
@@ -48,29 +39,13 @@ public class DatabaseService {
     private TagRepo tagRepo;
 
     @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
     private ProjectRepo projectRepo;
 
     @Autowired
     private JDBCProjectMemberRepo projectMemberRepo;
 
     @Autowired
-    private JDBCProjectInviteRepo projectInviteRepo;
-
-    @Autowired
-    private JDBCGrantedPermissionsProjectInviteRepo grantedPermsProjectInviteRepo;
-
-    @Autowired
     private TaskRepo taskRepo;
-
-    @Autowired
-    private InviteStatusRepo inviteStatusRepo;
-
-    public InviteStatus getInviteStatus(InviteStatus.Status status) {
-        return inviteStatusRepo.getByNameCode(status);
-    }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<User> getAllUsers() {
@@ -85,19 +60,6 @@ public class DatabaseService {
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<Long> getProjectIdsByMemberUser(User user) {
         return projectMemberRepo.listProjectIdsByNotFiredUserId(user.getId());
-    }
-
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<Long> getInvitedProjectIdsByUser(User user, InviteStatus status) {
-        Set<Long> invitedProjectIds = new HashSet<Long>(projectInviteRepo.listProjectIdsByUserIdAndStatusId(
-                user.getId(), status.getId()));
-        invitedProjectIds.addAll(grantedPermsProjectInviteRepo.listProjectIdsByUserIdAndStatusId(user.getId(), status.getId()));
-        return new ArrayList<Long>(invitedProjectIds);
-    }
-
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<Organization> getAllOrganizations() {
-        return organizationRepo.list();
     }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)

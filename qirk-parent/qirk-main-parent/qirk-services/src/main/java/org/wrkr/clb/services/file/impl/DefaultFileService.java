@@ -18,13 +18,16 @@ package org.wrkr.clb.services.file.impl;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.text.StringSubstitutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.organization.Organization;
+import org.wrkr.clb.common.util.collections.MapBuilder;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
@@ -33,7 +36,6 @@ import org.wrkr.clb.services.file.AttachmentService;
 import org.wrkr.clb.services.file.FileService;
 import org.wrkr.clb.services.project.task.TemporaryAttachmentService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
-
 
 //@Service configured in clb-services-ctx.xml
 @Validated
@@ -116,8 +118,16 @@ public abstract class DefaultFileService implements FileService {
 
     @Override
     public String generateTaskUrl(Task task) {
-        Project project = projectRepo.getUiIdByTaskIdAndFetchOrganization(task.getId());
-        Organization organization = project.getOrganization();
-        return frontUrl + String.format(taskUrl, organization.getUiId(), project.getUiId(), task.getNumber());
+        Project project = projectRepo.getNameAndUiIdByTaskId(task.getId());
+        Map<String, String> values = new HashMap<String, String>();
+        values.put("organizationUiId", "");
+        values.put("projectUiId", project.getUiId());
+        values.put("taskNumber", task.getNumber().toString());
+        return frontUrl + StringSubstitutor.replace(taskUrl,
+                new MapBuilder<String, String>()
+                        .put("organizationUiId", "")
+                        .put("projectUiId", project.getUiId())
+                        .put("taskNumber", task.getNumber().toString()).build(),
+                "{", "}");
     }
 }

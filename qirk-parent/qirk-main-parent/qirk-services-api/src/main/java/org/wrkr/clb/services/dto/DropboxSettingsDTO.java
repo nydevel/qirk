@@ -16,7 +16,7 @@
  */
 package org.wrkr.clb.services.dto;
 
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -27,11 +27,9 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
 
 @Entity
 @Table(name = ProjectMemberMeta.TABLE_NAME)
@@ -43,13 +41,6 @@ public class ProjectMember extends BaseIdEntity {
     private User user;
     @Transient
     private Long userId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_organization_id", nullable = false)
-    @JsonIgnore
-    private OrganizationMember organizationMember;
-    @Transient
-    private Long organizationMemberId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -81,14 +72,6 @@ public class ProjectMember extends BaseIdEntity {
         this.user = user;
     }
 
-    public OrganizationMember getOrganizationMember() {
-        return organizationMember;
-    }
-
-    public void setOrganizationMember(OrganizationMember organizationMember) {
-        this.organizationMember = organizationMember;
-    }
-
     public Project getProject() {
         return project;
     }
@@ -106,14 +89,6 @@ public class ProjectMember extends BaseIdEntity {
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
-
-    public Long getOrganizationMemberId() {
-        return organizationMemberId;
-    }
-
-    public void setOrganizationMemberId(Long organizationMemberId) {
-        this.organizationMemberId = organizationMemberId;
     }
 
     public Long getProjectId() {

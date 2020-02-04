@@ -27,7 +27,7 @@ import java.util.Map;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.DropboxSettingsMeta;
+import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.AttachmentMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;

@@ -27,13 +27,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.TaskCard;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.RoadRepo;
-import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.TaskCardRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.MoveToRoadDTO;
 import org.wrkr.clb.services.dto.project.task.TaskCardDTO;
@@ -46,7 +45,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.ConflictException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
-
 
 @Validated
 @Service
@@ -87,16 +85,15 @@ public class DefaultTaskCardService extends BaseVersionedEntityService implement
 
         TaskCard.Status status = getStatus(cardDTO.statusNameCode);
 
-        Project project = projectRepo.getOrganizationIdByRoadId(cardDTO.roadId);
-        if (project == null) {
+        Long projectId = projectRepo.getProjectIdByRoadId(cardDTO.roadId);
+        if (projectId == null) {
             throw new NotFoundException("Project");
         }
 
         Long nextId = cardRepo.getFirstIdByRoadId(cardDTO.roadId);
 
         TaskCard card = new TaskCard();
-        card.setOrganizationId(project.getOrganizationId());
-        card.setProjectId(project.getId());
+        card.setProjectId(projectId);
         card.setRoadId(cardDTO.roadId);
         card.setName(cardDTO.name);
         card.setStatus(status);

@@ -27,8 +27,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
-import org.wrkr.clb.model.organization.OrganizationMember;
-
 
 @Entity
 @Table(name = MemoMeta.TABLE_NAME)
@@ -45,7 +43,7 @@ public class Memo extends BaseIdEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_user_organization_id", nullable = false)
-    private OrganizationMember author;
+    private ProjectMember author;
     @Transient
     private Long authorId;
 
@@ -68,7 +66,7 @@ public class Memo extends BaseIdEntity {
         this.project = project;
     }
 
-    public OrganizationMember getAuthor() {
+    public ProjectMember getAuthor() {
         return author;
     }
 
@@ -88,7 +86,7 @@ public class Memo extends BaseIdEntity {
         this.authorId = authorId;
     }
 
-    public void setAuthor(OrganizationMember author) {
+    public void setAuthor(ProjectMember author) {
         this.author = author;
     }
 

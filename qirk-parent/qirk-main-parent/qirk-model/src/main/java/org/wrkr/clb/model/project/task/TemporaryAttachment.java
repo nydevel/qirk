@@ -17,7 +17,7 @@
 package org.wrkr.clb.model.project.task;
 
 import org.wrkr.clb.model.BaseEntity;
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 
 public class TemporaryAttachment extends BaseEntity {

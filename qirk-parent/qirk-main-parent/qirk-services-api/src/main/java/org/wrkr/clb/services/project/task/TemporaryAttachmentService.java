@@ -19,7 +19,7 @@ package org.wrkr.clb.services.project.task;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.organization.DropboxSettings;
+import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 
 

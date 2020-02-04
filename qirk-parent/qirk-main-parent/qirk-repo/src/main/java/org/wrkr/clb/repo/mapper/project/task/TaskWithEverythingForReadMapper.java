@@ -24,11 +24,11 @@ import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.repo.mapper.organization.ShortOrganizationMemberWithUserMapper;
-import org.wrkr.clb.repo.mapper.project.ShortProjectWithShortOrgMapper;
+import org.wrkr.clb.repo.mapper.project.ShortProjectMapper;
 
 public class TaskWithEverythingForReadMapper extends BaseMapper<Task> {
 
-    private ShortProjectWithShortOrgMapper projectMapper;
+    private ShortProjectMapper projectMapper;
 
     private ShortOrganizationMemberWithUserMapper reporterMapper;
     private ShortOrganizationMemberWithUserMapper assigneeMapper;
@@ -37,13 +37,12 @@ public class TaskWithEverythingForReadMapper extends BaseMapper<Task> {
     private TaskPriorityMapper priorityMapper;
     private TaskStatusMapper statusMapper;
 
-    public TaskWithEverythingForReadMapper(String taskTableName,
-            String projectTableName, String organizationTableName,
+    public TaskWithEverythingForReadMapper(String taskTableName, String projectTableName,
             String reporterMemberTableName, String reporterUserTableName,
             String assigneeMemberTableName, String assigneeUserTableName,
             String typeTableName, String priorityTableName, String statusTableName) {
         super(taskTableName);
-        projectMapper = new ShortProjectWithShortOrgMapper(projectTableName, organizationTableName);
+        projectMapper = new ShortProjectMapper(projectTableName);
         reporterMapper = new ShortOrganizationMemberWithUserMapper(reporterMemberTableName, reporterUserTableName);
         assigneeMapper = new ShortOrganizationMemberWithUserMapper(assigneeMemberTableName, assigneeUserTableName);
         typeMapper = new TaskTypeMapper(typeTableName);

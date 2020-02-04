@@ -38,10 +38,7 @@ import javax.persistence.Transient;
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
-import org.wrkr.clb.model.organization.OrganizationMember;
-import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
 import org.wrkr.clb.model.project.Issue;
-import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
 
 @Entity
@@ -96,22 +93,13 @@ public class User extends BaseIdEntity {
             @JoinColumn(name = "language_id") })
     private List<Language> languages = new ArrayList<Language>();
 
-    // Organizations and Projects
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<OrganizationMember> organizationMembership = new ArrayList<OrganizationMember>();
+    // Projects
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<ProjectMember> projectMembership = new ArrayList<ProjectMember>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<UserFavorite> favorites = new ArrayList<UserFavorite>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<ProjectInvite> projectInvites = new ArrayList<ProjectInvite>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    private List<GrantedPermissionsProjectInvite> grantedPermissionsProjectInvites = new ArrayList<GrantedPermissionsProjectInvite>();
 
     @OneToMany(mappedBy = "reporter", fetch = FetchType.LAZY)
     private List<Issue> issues = new ArrayList<Issue>();
@@ -222,14 +210,6 @@ public class User extends BaseIdEntity {
         this.dontRecommend = dontRecommend;
     }
 
-    public List<OrganizationMember> getOrganizationMembership() {
-        return organizationMembership;
-    }
-
-    public void setOrganizationMembership(List<OrganizationMember> organizationMembership) {
-        this.organizationMembership = organizationMembership;
-    }
-
     public List<ProjectMember> getProjectMembership() {
         return projectMembership;
     }
@@ -244,22 +224,6 @@ public class User extends BaseIdEntity {
 
     public void setFavorites(List<UserFavorite> favorites) {
         this.favorites = favorites;
-    }
-
-    public List<ProjectInvite> getProjectInvites() {
-        return projectInvites;
-    }
-
-    public void setProjectInvites(List<ProjectInvite> projectInvites) {
-        this.projectInvites = projectInvites;
-    }
-
-    public List<GrantedPermissionsProjectInvite> getGrantedPermissionsProjectInvites() {
-        return grantedPermissionsProjectInvites;
-    }
-
-    public void setGrantedPermissionsProjectInvites(List<GrantedPermissionsProjectInvite> grantedPermissionsProjectInvites) {
-        this.grantedPermissionsProjectInvites = grantedPermissionsProjectInvites;
     }
 
     public List<Issue> getIssues() {
