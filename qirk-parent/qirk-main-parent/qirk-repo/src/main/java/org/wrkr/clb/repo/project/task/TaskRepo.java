@@ -65,7 +65,7 @@ import org.wrkr.clb.repo.mapper.project.task.UpdateCardTaskMapper;
 import org.wrkr.clb.repo.sort.SortingOption;
 
 @Repository
-public class JDBCTaskRepo extends JDBCBaseIdRepo {
+public class TaskRepo extends JDBCBaseIdRepo {
 
     private static final String INSERT = "INSERT INTO " + TaskMeta.TABLE_NAME + " " +
             "(" + TaskMeta.recordVersion + ", " + // 1

@@ -60,7 +60,7 @@ import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
 import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
 import org.wrkr.clb.repo.project.task.TaskCardRepo;
 import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
@@ -128,7 +128,7 @@ public class DefaultTaskService extends BaseVersionedEntityService implements Ta
     }
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private ProjectRepo projectRepo;

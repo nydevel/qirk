@@ -28,7 +28,7 @@ import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.task.AttachmentRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
 import org.wrkr.clb.services.api.dropbox.DropboxApiService;
 import org.wrkr.clb.services.dto.AttachmentDTO;
@@ -50,7 +50,7 @@ public class DefaultAttachmentService implements AttachmentService {
     private TemporaryAttachmentRepo temporaryAttachmentRepo;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private DropboxApiService dropboxService;

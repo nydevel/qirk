@@ -36,7 +36,7 @@ import org.wrkr.clb.repo.project.JDBCGrantedPermissionsProjectInviteRepo;
 import org.wrkr.clb.repo.project.JDBCProjectInviteRepo;
 import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 
 public class DatabaseService {
@@ -63,7 +63,7 @@ public class DatabaseService {
     private JDBCGrantedPermissionsProjectInviteRepo grantedPermsProjectInviteRepo;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private InviteStatusRepo inviteStatusRepo;

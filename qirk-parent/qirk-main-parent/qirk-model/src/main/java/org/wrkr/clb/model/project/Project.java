@@ -90,12 +90,6 @@ public class Project extends BaseUiIdEntity {
     @Transient
     private Long dropboxSettingsId;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "external_repo_id", nullable = true)
-    private ExternalRepo externalRepo;
-    @Transient
-    private Long externalRepoId;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_tag", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
             @JoinColumn(name = "tag_id") })
@@ -206,14 +200,6 @@ public class Project extends BaseUiIdEntity {
         this.dropboxSettings = dropboxSettings;
     }
 
-    public ExternalRepo getExternalRepo() {
-        return externalRepo;
-    }
-
-    public void setExternalRepo(ExternalRepo externalRepo) {
-        this.externalRepo = externalRepo;
-    }
-
     public Long getOrganizationId() {
         return organizationId;
     }
@@ -236,14 +222,6 @@ public class Project extends BaseUiIdEntity {
 
     public void setTaskNumberSequenceId(Long taskNumberSequenceId) {
         this.taskNumberSequenceId = taskNumberSequenceId;
-    }
-
-    public Long getExternalRepoId() {
-        return externalRepoId;
-    }
-
-    public void setExternalRepoId(Long externalRepoId) {
-        this.externalRepoId = externalRepoId;
     }
 
     public List<Tag> getTags() {

@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.project.imprt.jira.ImportedJiraTaskRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
 import org.wrkr.clb.services.project.imprt.jira.ImportedJiraTaskService;
 
@@ -35,7 +35,7 @@ public class DefaultImportedJiraTaskService implements ImportedJiraTaskService {
     private ImportedJiraTaskRepo importedTaskRepo;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private ProjectTaskNumberSequenceRepo sequenceRepo;

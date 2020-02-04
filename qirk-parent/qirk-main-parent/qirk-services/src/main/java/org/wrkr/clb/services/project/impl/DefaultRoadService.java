@@ -31,7 +31,7 @@ import org.wrkr.clb.model.project.task.TaskCard;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.RoadRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.TaskCardRepo;
 import org.wrkr.clb.services.dto.MoveDTO;
 import org.wrkr.clb.services.dto.project.RoadDTO;
@@ -63,7 +63,7 @@ public class DefaultRoadService extends BaseVersionedEntityService implements Ro
     private TaskCardService cardService;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private ProjectSecurityService securityService;

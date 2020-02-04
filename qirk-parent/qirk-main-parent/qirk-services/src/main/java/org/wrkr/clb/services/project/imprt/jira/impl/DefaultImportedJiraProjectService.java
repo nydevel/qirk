@@ -43,7 +43,7 @@ import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.imprt.jira.ImportedJiraProjectRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchTaskService;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
@@ -97,7 +97,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
     private ImportedJiraTaskRetryWrapperService importedTaskRWService;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private YandexCloudApiService yandexCloudService;

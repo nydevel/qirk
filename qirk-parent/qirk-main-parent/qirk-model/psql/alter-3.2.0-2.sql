@@ -1,2 +1,0 @@
-ALTER TABLE road ADD COLUMN deleted BOOL NOT NULL DEFAULT false;
-

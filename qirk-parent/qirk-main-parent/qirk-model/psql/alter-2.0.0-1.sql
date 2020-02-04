@@ -1,2 +1,0 @@
-ALTER TABLE issue ALTER COLUMN source_url DROP NOT NULL;
-

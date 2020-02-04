@@ -28,7 +28,7 @@ import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.services.file.AttachmentService;
 import org.wrkr.clb.services.file.FileService;
 import org.wrkr.clb.services.project.task.TemporaryAttachmentService;
@@ -55,7 +55,7 @@ public abstract class DefaultFileService implements FileService {
     protected JDBCProjectRepo projectRepo;
 
     @Autowired
-    protected JDBCTaskRepo taskRepo;
+    protected TaskRepo taskRepo;
 
     @Autowired
     protected AttachmentService attachmentService;

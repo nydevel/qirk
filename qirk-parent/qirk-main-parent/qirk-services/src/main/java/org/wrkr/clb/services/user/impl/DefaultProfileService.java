@@ -45,7 +45,7 @@ import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
 import org.wrkr.clb.repo.project.IssueRepo;
 import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
-import org.wrkr.clb.repo.project.task.JDBCTaskRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
@@ -128,7 +128,7 @@ public class DefaultProfileService implements ProfileService {
     private JDBCProjectMemberRepo projectMemberRepo;
 
     @Autowired
-    private JDBCTaskRepo taskRepo;
+    private TaskRepo taskRepo;
 
     @Autowired
     private IssueRepo issueRepo;
