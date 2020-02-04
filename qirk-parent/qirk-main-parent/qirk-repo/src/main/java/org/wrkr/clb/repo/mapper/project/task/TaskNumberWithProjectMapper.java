@@ -14,38 +14,33 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper;
+package org.wrkr.clb.repo.mapper.project.task;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.InviteStatus;
-import org.wrkr.clb.model.InviteStatusMeta;
+import org.wrkr.clb.model.project.task.Task;
+import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
 
-public class InviteStatusMapper extends BaseMapper<InviteStatus> {
+public class TaskNumberWithProjectMapper extends TaskNumberMapper {
 
-    public InviteStatusMapper() {
-        super();
-    }
+    private ProjectNameAndUiIdMapper projectMapper;
 
-    public InviteStatusMapper(String tableName) {
-        super(tableName);
+    public TaskNumberWithProjectMapper(String taskTableName, String projectTableName) {
+        super(taskTableName);
+        projectMapper = new ProjectNameAndUiIdMapper(projectTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return generateSelectColumnStatement(InviteStatusMeta.id) + ", " +
-                generateSelectColumnStatement(InviteStatusMeta.nameCode);
+        return super.generateSelectColumnsStatement() + ", " +
+                projectMapper.generateSelectColumnsStatement();
     }
 
     @Override
-    public InviteStatus mapRow(ResultSet rs, @SuppressWarnings("unused") int rowNum) throws SQLException {
-        InviteStatus status = new InviteStatus();
-
-        status.setId(rs.getLong(generateColumnAlias(InviteStatusMeta.id)));
-        status.setNameCode(InviteStatus.Status.valueOf(rs.getString(generateColumnAlias(InviteStatusMeta.nameCode))));
-
-        return status;
+    public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
+        Task task = super.mapRow(rs, rowNum);
+        task.setProject(projectMapper.mapRow(rs, rowNum));
+        return task;
     }
 }

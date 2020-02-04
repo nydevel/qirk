@@ -17,11 +17,11 @@
 package org.wrkr.clb.repo.security;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskMeta;
+import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.security.SecurityTaskWithProjectAndMembershipMapper;
 import org.wrkr.clb.repo.mapper.security.SecurityTaskWithProjectMapper;
@@ -30,7 +30,7 @@ import org.wrkr.clb.repo.mapper.security.SecurityTaskWithProjectMapper;
 public class SecurityTaskRepo extends JDBCBaseMainRepo {
 
     private static final SecurityTaskWithProjectMapper SECURITY_TASK_MAPPER = new SecurityTaskWithProjectMapper(
-            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
+            TaskMeta.TABLE_NAME, ProjectMeta.DEFAULT);
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY = "SELECT " +
             SECURITY_TASK_MAPPER.generateSelectColumnsStatement() + " " +
@@ -59,7 +59,7 @@ public class SecurityTaskRepo extends JDBCBaseMainRepo {
             "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ?;"; // 1
 
     private static final SecurityTaskWithProjectAndMembershipMapper SECURITY_TASK_WITH_MEMBERSHIP_MAPPER = new SecurityTaskWithProjectAndMembershipMapper(
-            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
+            TaskMeta.TABLE_NAME, ProjectMeta.DEFAULT, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
     private static final String SELECT_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY_PREFIX = "SELECT "
             + SECURITY_TASK_WITH_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
@@ -67,17 +67,7 @@ public class SecurityTaskRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = ? " + // 1
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + " " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " ";
+            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " ";
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY = ""
             + SELECT_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY_PREFIX +

@@ -19,18 +19,23 @@ package org.wrkr.clb.repo.mapper.security;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMeta;
+import org.wrkr.clb.repo.mapper.BaseEntityMapper;
 
-public class SecurityProjectMapper extends BaseMapper<Project> {
+public class SecurityProjectMapper extends BaseEntityMapper<Project> {
 
     public SecurityProjectMapper() {
         super();
     }
 
+    @Deprecated
     public SecurityProjectMapper(String tableName) {
         super(tableName);
+    }
+
+    public SecurityProjectMapper(ProjectMeta projectMeta) {
+        super(projectMeta);
     }
 
     @Override

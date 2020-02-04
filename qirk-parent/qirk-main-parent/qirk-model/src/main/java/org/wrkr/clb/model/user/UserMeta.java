@@ -35,4 +35,10 @@ public class UserMeta extends BaseIdEntityMeta {
 
     public static final UserToTagMeta tags = new UserToTagMeta();
     public static final UserToLanguageMeta languages = new UserToLanguageMeta();
+
+    public static final UserMeta DEFAULT = new UserMeta(TABLE_NAME);
+
+    public UserMeta(String tableAlias) {
+        super(tableAlias);
+    };
 }

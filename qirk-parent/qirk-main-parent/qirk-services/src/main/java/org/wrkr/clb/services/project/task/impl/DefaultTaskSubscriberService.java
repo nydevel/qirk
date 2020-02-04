@@ -82,7 +82,7 @@ public class DefaultTaskSubscriberService implements TaskSubscriberService {
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<User> listWithEmail(Long taskId, NotificationSettings.Setting notifSetting) {
-        return userRepo.listUsersByTaskIdAndFetchNotificationSetting(taskId, notifSetting);
+        return userRepo.listByTaskIdAndFetchNotificationSetting(taskId, notifSetting);
     }
 
     @Override

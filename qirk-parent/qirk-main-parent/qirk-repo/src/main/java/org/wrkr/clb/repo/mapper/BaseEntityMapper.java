@@ -1,9 +1,6 @@
-/**
- * Copyright Shifu.group 2019
- */
 /*
  * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis LLC, Russia
+ * Copyright (C) 2020 Memfis Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either version 3
@@ -17,9 +14,23 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.model;
+package org.wrkr.clb.repo.mapper;
 
-public abstract class BaseUiIdEntityMeta extends BaseVersionedEntityMeta {
+import org.wrkr.clb.common.jdbc.BaseMapper;
+import org.wrkr.clb.model.BaseEntity;
+import org.wrkr.clb.model.BaseEntityMeta;
 
-    public static final String uiId = "ui_id";
+public abstract class BaseEntityMapper<E extends BaseEntity> extends BaseMapper<E> {
+
+    public BaseEntityMapper() {
+    }
+
+    @Deprecated
+    public BaseEntityMapper(String tableName) {
+        super(tableName);
+    }
+
+    public BaseEntityMapper(BaseEntityMeta entityMeta) {
+        super(entityMeta.getTableAlias());
+    }
 }

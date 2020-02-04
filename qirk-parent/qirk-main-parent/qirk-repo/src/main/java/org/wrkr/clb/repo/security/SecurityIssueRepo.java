@@ -14,26 +14,26 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.project;
+package org.wrkr.clb.repo.security;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.IssueMeta;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
+import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.security.SecurityIssueWithProjectAndMembershipMapper;
 import org.wrkr.clb.repo.mapper.security.SecurityIssueWithProjectMapper;
 
 @Repository
-public class JDBCIssueRepo extends JDBCBaseMainRepo {
+public class SecurityIssueRepo extends JDBCBaseMainRepo {
 
-    private static final SecurityIssueWithProjectMapper SECURITY_ISSUE_MAPPER = new SecurityIssueWithProjectMapper(
-            IssueMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
+    private static final SecurityIssueWithProjectMapper MAPPER = new SecurityIssueWithProjectMapper(
+            IssueMeta.TABLE_NAME, ProjectMeta.DEFAULT);
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY = "SELECT " +
-            SECURITY_ISSUE_MAPPER.generateSelectColumnsStatement() + " " +
+            MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + IssueMeta.TABLE_NAME + " " +
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + IssueMeta.TABLE_NAME + "." + IssueMeta.projectId + " = " +
@@ -41,7 +41,7 @@ public class JDBCIssueRepo extends JDBCBaseMainRepo {
             "WHERE " + IssueMeta.TABLE_NAME + "." + IssueMeta.id + " = ?;"; // 1
 
     private static final SecurityIssueWithProjectAndMembershipMapper SECURITY_ISSUE_WITH_MEMBERSHIP_MAPPER = new SecurityIssueWithProjectAndMembershipMapper(
-            IssueMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
+            IssueMeta.TABLE_NAME, ProjectMeta.DEFAULT, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY = "SELECT "
             + SECURITY_ISSUE_WITH_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
@@ -49,21 +49,11 @@ public class JDBCIssueRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + IssueMeta.TABLE_NAME + "." + IssueMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = ? " + // 1
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + " " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " " +
+            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + IssueMeta.TABLE_NAME + "." + IssueMeta.id + " = ?;"; // 2
 
     public Issue getByIdAndFetchProjectForSecurity(Long issueId) {
-        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY, SECURITY_ISSUE_MAPPER,
+        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY, MAPPER,
                 issueId);
     }
 

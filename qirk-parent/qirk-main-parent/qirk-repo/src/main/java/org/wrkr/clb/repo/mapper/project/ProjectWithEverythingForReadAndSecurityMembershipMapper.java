@@ -19,34 +19,33 @@ package org.wrkr.clb.repo.mapper.project;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.repo.mapper.organization.OrganizationMemberWithProjectMemberMapper;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
+import org.wrkr.clb.model.user.UserMeta;
 
 public class ProjectWithEverythingForReadAndSecurityMembershipMapper extends ProjectWithEverythingForReadMapper {
 
-    private OrganizationMemberWithProjectMemberMapper organizationMemberMapper;
+    private ProjectMemberWithUserMapper projectMemberMapper;
 
-    public ProjectWithEverythingForReadAndSecurityMembershipMapper(String projectTableName, String orgTableName,
-            String orgMemberTableName, String projectMemberTableName) {
-        super(projectTableName, orgTableName);
-        this.organizationMemberMapper = new OrganizationMemberWithProjectMemberMapper(orgMemberTableName, projectMemberTableName);
+    public ProjectWithEverythingForReadAndSecurityMembershipMapper(String projectTableName,
+            ProjectMemberMeta projectMemberMeta, UserMeta userMeta) {
+        super(projectTableName);
+        this.projectMemberMapper = new ProjectMemberWithUserMapper(projectMemberMeta, userMeta);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
         return super.generateSelectColumnsStatement() + ", " +
-                organizationMemberMapper.generateSelectColumnsStatement();
+                projectMemberMapper.generateSelectColumnsStatement();
     }
 
     @Override
     public Project mapRow(ResultSet rs, int rowNum) throws SQLException {
         Project project = super.mapRow(rs, rowNum);
 
-        if (rs.getObject(organizationMemberMapper.generateColumnAlias(OrganizationMemberMeta.id)) != null) {
-            project.getOrganizationMembers().add(organizationMemberMapper.mapRow(rs, rowNum));
+        if (rs.getObject(projectMemberMapper.generateColumnAlias(ProjectMemberMeta.id)) != null) {
+            project.getMembers().add(projectMemberMapper.mapRow(rs, rowNum));
         }
-        project.getOrganization().setMembers(project.getOrganizationMembers());
 
         return project;
     }

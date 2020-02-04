@@ -39,14 +39,13 @@ public class TaskCardRepo extends JDBCBaseIdRepo {
     private static final String INSERT = "INSERT INTO " +
             TaskCardMeta.TABLE_NAME + " " +
             "(" + RoadMeta.recordVersion + ", " + // 1
-            TaskCardMeta.organizationId + ", " + // 2
-            TaskCardMeta.projectId + ", " + // 3
-            TaskCardMeta.roadId + ", " + // 4
-            TaskCardMeta.name + ", " + // 5
-            TaskCardMeta.status + ", " + // 6
-            TaskCardMeta.active + ", " + // 7
-            TaskCardMeta.createdAt + ") " + // 8
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?) " +
+            TaskCardMeta.projectId + ", " + // 2
+            TaskCardMeta.roadId + ", " + // 3
+            TaskCardMeta.name + ", " + // 4
+            TaskCardMeta.status + ", " + // 5
+            TaskCardMeta.active + ", " + // 6
+            TaskCardMeta.createdAt + ") " + // 7
+            "VALUES (?, ?, ?, ?, ?, ?, ?) " +
             "RETURNING " + TaskCardMeta.id + ";";
 
     private static final String EXISTS_BY_ROAD_ID = "SELECT 1 FROM " + TaskCardMeta.TABLE_NAME + " " +
@@ -186,13 +185,12 @@ public class TaskCardRepo extends JDBCBaseIdRepo {
         getJdbcTemplate().update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT, new String[] { TaskCardMeta.id });
             ps.setLong(1, card.getRecordVersion());
-            ps.setLong(2, card.getOrganizationId());
-            ps.setLong(3, card.getProjectId());
-            ps.setLong(4, card.getRoadId());
-            ps.setString(5, card.getName());
-            ps.setString(6, card.getStatus().toString());
-            ps.setBoolean(7, card.isActive());
-            ps.setTimestamp(8, Timestamp.from(card.getCreatedAt().toInstant()));
+            ps.setLong(2, card.getProjectId());
+            ps.setLong(3, card.getRoadId());
+            ps.setString(4, card.getName());
+            ps.setString(5, card.getStatus().toString());
+            ps.setBoolean(6, card.isActive());
+            ps.setTimestamp(7, Timestamp.from(card.getCreatedAt().toInstant()));
             return ps;
         }, keyHolder);
 

@@ -37,7 +37,7 @@ public class ImportedJiraProjectMapper extends BaseMapper<ImportedJiraProject> {
 
     @Override
     public String generateColumnAlias(String columnLabel) {
-        return (tableName.isEmpty() ? columnLabel : TABLE_NAME_SHORT + "__" + columnLabel);
+        return (tableAlias.isEmpty() ? columnLabel : TABLE_NAME_SHORT + "__" + columnLabel);
     }
 
     @Override

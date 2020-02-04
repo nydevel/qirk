@@ -47,11 +47,10 @@ public class RoadRepo extends JDBCBaseIdRepo {
     private static final String INSERT = "INSERT INTO " +
             RoadMeta.TABLE_NAME + " " +
             "(" + RoadMeta.recordVersion + ", " + // 1
-            RoadMeta.organizationId + ", " + // 2
-            RoadMeta.projectId + ", " + // 3
-            RoadMeta.name + ", " + // 4
-            RoadMeta.previousId + ") " + // 5
-            "VALUES (?, ?, ?, ?, ?) " +
+            RoadMeta.projectId + ", " + // 2
+            RoadMeta.name + ", " + // 3
+            RoadMeta.previousId + ") " + // 4
+            "VALUES (?, ?, ?, ?) " +
             "RETURNING " + RoadMeta.id + ";";
 
     private static final String EXISTS_NOT_DELETED_BY_ID_AND_PROJECT_ID = "SELECT 1 FROM " + RoadMeta.TABLE_NAME + " " +
@@ -186,10 +185,9 @@ public class RoadRepo extends JDBCBaseIdRepo {
         getJdbcTemplate().update(connection -> {
             PreparedStatement ps = connection.prepareStatement(INSERT, new String[] { RoadMeta.id });
             ps.setLong(1, road.getRecordVersion());
-            ps.setLong(2, road.getOrganizationId());
-            ps.setLong(3, road.getProjectId());
-            ps.setString(4, road.getName());
-            ps.setObject(5, road.getPreviousId(), Types.BIGINT); // nullable
+            ps.setLong(2, road.getProjectId());
+            ps.setString(3, road.getName());
+            ps.setObject(4, road.getPreviousId(), Types.BIGINT); // nullable
             return ps;
         }, keyHolder);
 

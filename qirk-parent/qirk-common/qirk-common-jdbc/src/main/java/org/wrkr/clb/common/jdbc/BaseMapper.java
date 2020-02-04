@@ -29,21 +29,21 @@ import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 
 public abstract class BaseMapper<T extends Object> implements RowMapper<T> {
 
-    protected String tableName = "";
+    protected String tableAlias = "";
 
     public BaseMapper() {
     }
 
     public BaseMapper(String tableName) {
-        this.tableName = tableName;
+        this.tableAlias = tableName;
     }
 
     public String generateColumnAlias(String columnLabel) {
-        return (tableName.isEmpty() ? columnLabel : tableName + "__" + columnLabel);
+        return (tableAlias.isEmpty() ? columnLabel : tableAlias + "__" + columnLabel);
     }
 
     protected String generateSelectColumnStatement(String columnLabel) {
-        return (tableName.isEmpty() ? columnLabel : tableName + "." + columnLabel + " AS " + generateColumnAlias(columnLabel));
+        return (tableAlias.isEmpty() ? columnLabel : tableAlias + "." + columnLabel + " AS " + generateColumnAlias(columnLabel));
     }
 
     public abstract String generateSelectColumnsStatement();

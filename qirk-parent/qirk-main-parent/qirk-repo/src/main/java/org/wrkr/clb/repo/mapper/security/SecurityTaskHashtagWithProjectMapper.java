@@ -19,6 +19,7 @@ package org.wrkr.clb.repo.mapper.security;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.repo.mapper.project.task.TaskHashtagMapper;
 
@@ -30,9 +31,9 @@ public class SecurityTaskHashtagWithProjectMapper extends TaskHashtagMapper {
         super(hashtagTableName);
     }
 
-    public SecurityTaskHashtagWithProjectMapper(String hashtagTableName, String projectTableName) {
+    public SecurityTaskHashtagWithProjectMapper(String hashtagTableName, ProjectMeta projectMeta) {
         super(hashtagTableName);
-        this.projectMapper = new SecurityProjectMapper(projectTableName);
+        this.projectMapper = new SecurityProjectMapper(projectMeta);
     }
 
     @Override

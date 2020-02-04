@@ -20,9 +20,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.user.UserFavorite;
 import org.wrkr.clb.model.user.UserFavoriteMeta;
+import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.mapper.project.ShortProjectWithSecurityMembershipMapper;
 
 public class UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper extends BaseMapper<UserFavorite> {
@@ -30,11 +32,9 @@ public class UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper extends Ba
     protected ShortProjectWithSecurityMembershipMapper projectMapper;
 
     public UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper(String userFavoriteTableName,
-            String projectTableName, String orgTableName,
-            String orgMemberTableName, String projectMemberTableName) {
+            String projectTableName, ProjectMemberMeta projectMemberMeta, UserMeta userMeta) {
         super(userFavoriteTableName);
-        this.projectMapper = new ShortProjectWithSecurityMembershipMapper(projectTableName, orgTableName,
-                orgMemberTableName, projectMemberTableName);
+        this.projectMapper = new ShortProjectWithSecurityMembershipMapper(projectTableName, projectMemberMeta, userMeta);
     }
 
     @Override

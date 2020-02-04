@@ -18,12 +18,10 @@ package org.wrkr.clb.repo.user;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
 import org.wrkr.clb.model.project.task.TaskSubscriberMeta;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.NotificationSettingsMeta;
@@ -33,9 +31,9 @@ import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.user.AccountUserMapper;
 import org.wrkr.clb.repo.mapper.user.EmailUserMapper;
 import org.wrkr.clb.repo.mapper.user.ProfileUserMapper;
-import org.wrkr.clb.repo.mapper.user.PublicProfileUserMapper;
 import org.wrkr.clb.repo.mapper.user.ProfileUserWithNotificationSettingsMapper;
-import org.wrkr.clb.repo.mapper.user.PublicUserWithOrgMembershipMapper;
+import org.wrkr.clb.repo.mapper.user.PublicProfileUserMapper;
+import org.wrkr.clb.repo.mapper.user.PublicUserMapper;
 import org.wrkr.clb.repo.mapper.user.UserWithNotificationSettingMapper;
 
 @Repository
@@ -106,17 +104,12 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.id + " IN ("; // 1
 
-    private static final PublicUserWithOrgMembershipMapper PUBLIC_USER_WITH_ORG_MEMBERSHIP_MAPPER = new PublicUserWithOrgMembershipMapper(
-            UserMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME);
+    private static final PublicUserMapper PUBLIC_USER_MAPPER = new PublicUserMapper();
 
     private static final String SELECT_AND_FETCH_ORGANIZATION_MEMBERSHIP = "SELECT " +
-            PUBLIC_USER_WITH_ORG_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
+            PUBLIC_USER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON (" + UserMeta.TABLE_NAME + "." + UserMeta.id + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " " +
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + ") " +
-            "ORDER BY " + UserMeta.TABLE_NAME + "." + UserMeta.id + " ASC;";
+            "ORDER BY " + UserMeta.id + " ASC;";
 
     private static final UserWithNotificationSettingMapper USER_TASK_CREATED_MAPPER = new UserWithNotificationSettingMapper(
             UserMeta.TABLE_NAME, NotificationSettingsMeta.TABLE_NAME, NotificationSettingsMeta.taskCreated);
@@ -215,26 +208,11 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
         return queryForList(insertNBindValues(SELECT_EMAILS_BY_IDS_PREFIX, ids.size(), ");"), EMAIL_USER_MAPPER, ids.toArray());
     }
 
-    public List<User> listAndFetchOrganizationMembership() {
-        List<User> results = new ArrayList<User>();
-
-        for (Map<String, Object> row : getJdbcTemplate()
-                .queryForList(SELECT_AND_FETCH_ORGANIZATION_MEMBERSHIP)) {
-            User lastUser = (results.isEmpty() ? null : results.get(results.size() - 1));
-
-            if (lastUser == null || !lastUser.getId().equals(
-                    (Long) row.get(PUBLIC_USER_WITH_ORG_MEMBERSHIP_MAPPER.generateColumnAlias(UserMeta.id)))) {
-                results.add(PUBLIC_USER_WITH_ORG_MEMBERSHIP_MAPPER.mapRow(row));
-
-            } else {
-                lastUser.getOrganizationMembership().add(PUBLIC_USER_WITH_ORG_MEMBERSHIP_MAPPER.mapRowForOrgMember(row));
-            }
-        }
-
-        return results;
+    public List<User> list() {
+        return queryForList(SELECT_AND_FETCH_ORGANIZATION_MEMBERSHIP, PUBLIC_USER_MAPPER);
     }
 
-    public List<User> listUsersByTaskIdAndFetchNotificationSetting(
+    public List<User> listByTaskIdAndFetchNotificationSetting(
             Long taskId, NotificationSettings.Setting notifSetting) {
         switch (notifSetting) {
             case TASK_CREATED:

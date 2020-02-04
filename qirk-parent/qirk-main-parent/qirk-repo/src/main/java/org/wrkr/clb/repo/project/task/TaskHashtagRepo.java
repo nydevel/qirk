@@ -32,8 +32,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 import org.wrkr.clb.common.util.collections.ExtendedArrayUtils;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
-import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.project.task.TaskHashtagMeta;
@@ -41,8 +39,6 @@ import org.wrkr.clb.model.project.task.TaskHashtagToTaskMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TaskHashtagMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskHashtagWithTaskCountMapper;
-import org.wrkr.clb.repo.mapper.security.SecurityTaskHashtagWithProjectAndMembershipMapper;
-import org.wrkr.clb.repo.mapper.security.SecurityTaskHashtagWithProjectMapper;
 
 @Repository
 public class TaskHashtagRepo extends JDBCBaseMainRepo {
@@ -50,39 +46,6 @@ public class TaskHashtagRepo extends JDBCBaseMainRepo {
     private static final String SELECT_1_BY_TASK_HASHTAG_ID = "SELECT 1 FROM " + TaskHashtagToTaskMeta.TABLE_NAME + " " +
             "WHERE " + TaskHashtagToTaskMeta.taskHashtagId + " = ? " + // 1
             "LIMIT 1;";
-
-    private static final SecurityTaskHashtagWithProjectMapper SECURITY_TASK_HASHTAG_MAPPER = new SecurityTaskHashtagWithProjectMapper(
-            TaskHashtagMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
-
-    private static final String SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY = "SELECT " +
-            SECURITY_TASK_HASHTAG_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskHashtagMeta.TABLE_NAME + " " +
-            "JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "WHERE " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + " = ?;"; // 1
-
-    private static final SecurityTaskHashtagWithProjectAndMembershipMapper SECURITY_TASK_HASHTAG_WITH_MEMBERSHIP_MAPPER = new SecurityTaskHashtagWithProjectAndMembershipMapper(
-            TaskHashtagMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
-
-    private static final String SELECT_BY_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY = "SELECT "
-            + SECURITY_TASK_HASHTAG_WITH_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskHashtagMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = ? " + // 1
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + " " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " " +
-            "WHERE " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + " = ?;"; // 2
 
     private static final String SELECT_IDS_BY_TASK_ID = "SELECT " +
             TaskHashtagToTaskMeta.taskHashtagId + " " +
@@ -189,17 +152,6 @@ public class TaskHashtagRepo extends JDBCBaseMainRepo {
 
     public boolean existsTaskIdByTaskHashtagId(Long hashtagId) {
         return exists(SELECT_1_BY_TASK_HASHTAG_ID, hashtagId);
-    }
-
-    public TaskHashtag getByIdAndFetchProjectForSecurity(Long hashtagId) {
-        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_PROJECT_FOR_SECURITY, SECURITY_TASK_HASHTAG_MAPPER,
-                hashtagId);
-    }
-
-    public TaskHashtag getByIdAndFetchProjectAndMembershipByUserIdForSecurity(Long hashtagId, Long userId) {
-        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY,
-                SECURITY_TASK_HASHTAG_WITH_MEMBERSHIP_MAPPER,
-                userId, hashtagId);
     }
 
     public TaskHashtag getByProjectIdAndName(Long projectId, String hashtagName) {

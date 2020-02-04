@@ -20,11 +20,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 
-import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserMeta;
+import org.wrkr.clb.repo.mapper.BaseEntityMapper;
 
-public class BaseUserMapper extends BaseMapper<User> {
+public class BaseUserMapper extends BaseEntityMapper<User> {
 
     public BaseUserMapper() {
         super();
@@ -32,6 +32,10 @@ public class BaseUserMapper extends BaseMapper<User> {
 
     public BaseUserMapper(String tableName) {
         super(tableName);
+    }
+
+    public BaseUserMapper(UserMeta userMeta) {
+        super(userMeta);
     }
 
     @Override

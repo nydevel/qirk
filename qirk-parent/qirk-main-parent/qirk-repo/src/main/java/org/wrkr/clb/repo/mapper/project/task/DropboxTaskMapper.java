@@ -22,7 +22,6 @@ import java.sql.SQLException;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.mapper.project.DropboxProjectMapper;
 
-
 @Deprecated
 public class DropboxTaskMapper extends TaskNumberMapper {
 
@@ -31,8 +30,7 @@ public class DropboxTaskMapper extends TaskNumberMapper {
     public DropboxTaskMapper(String taskTableName, String projectTableName, String projectDropboxSettingsTableName,
             String orgTableName, String orgDropboxSettingsTableName) {
         super(taskTableName);
-        projectMapper = new DropboxProjectMapper(projectTableName, projectDropboxSettingsTableName,
-                orgTableName, orgDropboxSettingsTableName);
+        projectMapper = new DropboxProjectMapper(projectTableName, projectDropboxSettingsTableName);
     }
 
     @Override

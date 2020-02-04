@@ -1,6 +1,3 @@
-/**
- * Copyright Shifu.group 2019
- */
 /*
  * This file is part of the Java API to Qirk.
  * Copyright (C) 2020 Memfis LLC, Russia

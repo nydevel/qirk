@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
-import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.model.project.task.TaskSubscriberMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
@@ -58,28 +57,6 @@ public class TaskSubscriberRepo extends JDBCBaseMainRepo {
             "FROM " + TaskMeta.TABLE_NAME + " " +
             "WHERE " + TaskMeta.projectId + " = ?);"; // 2
 
-    private static final String DELETE_BY_USER_ID_AND_ORGANIZATION_ID = "DELETE FROM " + TaskSubscriberMeta.TABLE_NAME + " " +
-            "WHERE " + TaskSubscriberMeta.userId + " = ? " + // 1
-            "AND " + TaskSubscriberMeta.taskId + " IN ( " +
-            "SELECT " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = ?);"; // 2
-
-    private static final String DELETE_PRIVATE_BY_USER_ID_AND_ORGANIZATION_ID = "DELETE FROM " +
-            TaskSubscriberMeta.TABLE_NAME + " " +
-            "WHERE " + TaskSubscriberMeta.userId + " = ? " + // 1
-            "AND " + TaskSubscriberMeta.taskId + " IN ( " +
-            "SELECT " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = ? " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.isPrivate + ");"; // 2
-
     private static final String DELETE_NOT_MEMBERS_BY_PROJECT_ID = "DELETE FROM " + TaskSubscriberMeta.TABLE_NAME + " " +
             "WHERE " + TaskSubscriberMeta.userId + " NOT IN (" +
             "SELECT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " " +
@@ -113,14 +90,6 @@ public class TaskSubscriberRepo extends JDBCBaseMainRepo {
 
     public void deleteByUserIdAndProjectId(long userId, Long projectId) {
         getJdbcTemplate().update(DELETE_BY_USER_ID_AND_PROJECT_ID, userId, projectId);
-    }
-
-    public void deleteByUserIdAndOrganizationId(long userId, Long organizationId) {
-        getJdbcTemplate().update(DELETE_BY_USER_ID_AND_ORGANIZATION_ID, userId, organizationId);
-    }
-
-    public void deletePrivateByUserIdAndOrganizationId(long userId, Long organizationId) {
-        getJdbcTemplate().update(DELETE_PRIVATE_BY_USER_ID_AND_ORGANIZATION_ID, userId, organizationId);
     }
 
     public void deleteNonMembersByProjectId(Long projectId) {

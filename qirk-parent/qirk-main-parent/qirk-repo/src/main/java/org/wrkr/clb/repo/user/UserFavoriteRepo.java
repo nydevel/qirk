@@ -31,7 +31,6 @@ import org.wrkr.clb.model.user.UserFavorite_;
 import org.wrkr.clb.model.user.User_;
 import org.wrkr.clb.repo.JPABaseDeletingRepo;
 
-
 @Repository
 public class UserFavoriteRepo extends JPABaseDeletingRepo<UserFavorite> {
 
@@ -79,7 +78,7 @@ public class UserFavoriteRepo extends JPABaseDeletingRepo<UserFavorite> {
         CriteriaQuery<UserFavorite> query = cb.createQuery(UserFavorite.class);
 
         Root<UserFavorite> root = query.from(UserFavorite.class);
-        root.fetch(UserFavorite_.project, JoinType.LEFT).fetch(Project_.organization, JoinType.LEFT);
+        root.fetch(UserFavorite_.project, JoinType.LEFT);
         root.fetch(UserFavorite_.previous, JoinType.LEFT);
         root.fetch(UserFavorite_.next, JoinType.LEFT);
 

@@ -19,11 +19,11 @@ package org.wrkr.clb.repo.mapper.project;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
+import org.wrkr.clb.repo.mapper.BaseEntityMapper;
 
-public class ProjectMemberMapper extends BaseMapper<ProjectMember> {
+public class ProjectMemberMapper extends BaseEntityMapper<ProjectMember> {
 
     public ProjectMemberMapper() {
         super();
@@ -33,11 +33,14 @@ public class ProjectMemberMapper extends BaseMapper<ProjectMember> {
         super(tableName);
     }
 
+    public ProjectMemberMapper(ProjectMemberMeta projectMemberMeta) {
+        super(projectMemberMeta);
+    }
+
     @Override
     public String generateSelectColumnsStatement() {
         return generateSelectColumnStatement(ProjectMemberMeta.id) + ", " +
                 generateSelectColumnStatement(ProjectMemberMeta.userId) + ", " +
-                generateSelectColumnStatement(ProjectMemberMeta.organizationMemberId) + ", " +
                 generateSelectColumnStatement(ProjectMemberMeta.projectId) + ", " +
                 generateSelectColumnStatement(ProjectMemberMeta.writeAllowed) + ", " +
                 generateSelectColumnStatement(ProjectMemberMeta.manager) + ", " +

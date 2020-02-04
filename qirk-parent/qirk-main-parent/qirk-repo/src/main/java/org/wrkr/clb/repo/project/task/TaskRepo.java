@@ -56,7 +56,7 @@ import org.wrkr.clb.repo.mapper.project.task.JiraImportTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.LinkedTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.ShortTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.ShortTaskWithPriorityAndStatusMapper;
-import org.wrkr.clb.repo.mapper.project.task.TaskNumberWithProjectUiIdMapper;
+import org.wrkr.clb.repo.mapper.project.task.TaskNumberWithProjectMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForDatasyncMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForListMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForReadMapper;
@@ -118,7 +118,7 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "WHERE " + TaskMeta.id + " = ? " + // 1
             "AND " + TaskMeta.projectId + " = ?;"; // 2
 
-    private static final TaskNumberWithProjectUiIdMapper SHORT_TASK_WITH_PROJECT_MAPPER = new TaskNumberWithProjectUiIdMapper(
+    private static final TaskNumberWithProjectMapper SHORT_TASK_WITH_PROJECT_MAPPER = new TaskNumberWithProjectMapper(
             TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT = "SELECT " +

@@ -1,6 +1,3 @@
-/**
- * Copyright Shifu.group 2019
- */
 /*
  * This file is part of the Java API to Qirk.
  * Copyright (C) 2020 Memfis LLC, Russia
@@ -30,11 +27,9 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMember_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
 import org.wrkr.clb.repo.JPABaseIdRepo;
-
 
 @Repository
 public class UserRepo extends JPABaseIdRepo<User> {
@@ -138,16 +133,5 @@ public class UserRepo extends JPABaseIdRepo<User> {
                         cb.equal(root.get(User_.username), usernameOrEmail),
                         cb.equal(root.get(User_.emailAddress), usernameOrEmail.toLowerCase())));
         return getSingleResultOrNull(query);
-    }
-
-    @Deprecated
-    public List<User> listEnabledAndFetchOrganizationMembershipAndOrganizations() {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<User> query = cb.createQuery(User.class);
-
-        Root<User> root = query.from(User.class);
-        root.fetch(User_.organizationMembership, JoinType.LEFT).fetch(OrganizationMember_.organization, JoinType.LEFT);
-
-        return getResultList(query);
     }
 }

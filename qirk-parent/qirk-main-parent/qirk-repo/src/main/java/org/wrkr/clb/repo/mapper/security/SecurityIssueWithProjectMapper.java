@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.IssueMeta;
+import org.wrkr.clb.model.project.ProjectMeta;
 
 public class SecurityIssueWithProjectMapper extends BaseMapper<Issue> {
 
@@ -31,9 +32,9 @@ public class SecurityIssueWithProjectMapper extends BaseMapper<Issue> {
         super(issueTableName);
     }
 
-    public SecurityIssueWithProjectMapper(String issueTableName, String projectTableName) {
+    public SecurityIssueWithProjectMapper(String issueTableName, ProjectMeta projectMeta) {
         super(issueTableName);
-        this.projectMapper = new SecurityProjectMapper(projectTableName);
+        this.projectMapper = new SecurityProjectMapper(projectMeta);
     }
 
     @Override

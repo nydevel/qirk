@@ -27,9 +27,9 @@ import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.project.JDBCIssueRepo;
-import org.wrkr.clb.repo.project.JDBCMemoRepo;
 import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
+import org.wrkr.clb.repo.security.SecurityIssueRepo;
+import org.wrkr.clb.repo.security.SecurityMemoRepo;
 import org.wrkr.clb.repo.security.SecurityProjectRepo;
 import org.wrkr.clb.repo.security.SecurityTaskRepo;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
@@ -44,10 +44,10 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
     private SecurityTaskRepo taskRepo;
 
     @Autowired
-    private JDBCIssueRepo issueRepo;
+    private SecurityIssueRepo issueRepo;
 
     @Autowired
-    private JDBCMemoRepo memoRepo;
+    private SecurityMemoRepo memoRepo;
 
     @Autowired
     protected TaskHashtagRepo taskHashtagRepo;

@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.MemoMeta;
+import org.wrkr.clb.model.project.ProjectMeta;
 
 public class SecurityMemoWithProjectMapper extends BaseMapper<Memo> {
 
@@ -31,9 +32,9 @@ public class SecurityMemoWithProjectMapper extends BaseMapper<Memo> {
         super(memoTableName);
     }
 
-    public SecurityMemoWithProjectMapper(String memoTableName, String projectTableName) {
+    public SecurityMemoWithProjectMapper(String memoTableName, ProjectMeta projectMeta) {
         super(memoTableName);
-        this.projectMapper = new SecurityProjectMapper(projectTableName);
+        this.projectMapper = new SecurityProjectMapper(projectMeta);
     }
 
     @Override

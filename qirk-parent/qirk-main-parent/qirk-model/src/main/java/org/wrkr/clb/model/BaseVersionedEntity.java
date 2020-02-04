@@ -22,7 +22,7 @@ import javax.persistence.MappedSuperclass;
 @MappedSuperclass
 public abstract class BaseVersionedEntity extends BaseIdEntity {
 
-    @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
+    @Column(name = "record_version", nullable = false)
     private Long recordVersion = 1L;
 
     public Long getRecordVersion() {

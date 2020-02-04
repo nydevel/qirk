@@ -14,30 +14,35 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper;
+package org.wrkr.clb.repo.mapper.project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.BaseUiIdEntity;
-import org.wrkr.clb.model.BaseUiIdEntityMeta;
+import org.wrkr.clb.model.project.ProjectMember;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
+import org.wrkr.clb.model.user.UserMeta;
+import org.wrkr.clb.repo.mapper.user.BaseUserMapper;
 
-public abstract class UiIdMapper<E extends BaseUiIdEntity> extends BaseMapper<E> {
+public class ProjectMemberWithUserMapper extends ProjectMemberMapper {
 
-    public UiIdMapper(String tableName) {
-        super(tableName);
+    private BaseUserMapper userMapper;
+
+    public ProjectMemberWithUserMapper(ProjectMemberMeta projectMemberMeta, UserMeta userMeta) {
+        super(projectMemberMeta);
+        this.userMapper = new BaseUserMapper(userMeta);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return generateSelectColumnStatement(BaseUiIdEntityMeta.id) + ", " +
-                generateSelectColumnStatement(BaseUiIdEntityMeta.uiId);
+        return super.generateSelectColumnsStatement() + ", " +
+                userMapper.generateSelectColumnsStatement();
     }
 
-    @SuppressWarnings("unused")
     @Override
-    public E mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException();
+    public ProjectMember mapRow(ResultSet rs, int rowNum) throws SQLException {
+        ProjectMember member = super.mapRow(rs, rowNum);
+        member.setUser(userMapper.mapRow(rs, rowNum));
+        return member;
     }
 }

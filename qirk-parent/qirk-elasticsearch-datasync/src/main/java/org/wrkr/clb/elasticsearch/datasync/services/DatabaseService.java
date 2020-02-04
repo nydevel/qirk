@@ -49,7 +49,7 @@ public class DatabaseService {
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<User> getAllUsers() {
-        return userRepo.listAndFetchOrganizationMembership();
+        return userRepo.list();
     }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
