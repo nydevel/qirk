@@ -44,7 +44,6 @@ import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
 
-
 @Entity
 @Table(name = UserMeta.TABLE_NAME)
 public class User extends BaseIdEntity {
@@ -91,9 +90,6 @@ public class User extends BaseIdEntity {
     @JoinTable(name = "user_tag", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
             @JoinColumn(name = "tag_id") })
     private List<Tag> tags = new ArrayList<Tag>();
-
-//	@OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-//	private List<ProfileLink> links = new ArrayList<ProfileLink>();
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_language", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
