@@ -1,6 +1,7 @@
 export const applyLoggingSettings = () => {
-  const debug = process.env.DEBUG_LOGS;
-  const error = process.env.ERROR_LOGS;
+  console.log(process.env);
+  const debug = process.env.REACT_APP_DEBUG_LOGS;
+  const error = process.env.REACT_APP_ERROR_LOGS;
   const errorMethods = ["warn", "error"];
   const debugMethods = ["log", "debug", "info"];
 

@@ -10,6 +10,7 @@ import Loading from "../../components/Loading/Loading";
 import endpoints from "../../utils/endpoints";
 import paths from "../../routes/paths";
 import { toast } from "react-toastify";
+import { t } from "i18next";
 
 const JiraImportMappingPage = ({
   orgId,

@@ -1,4 +1,4 @@
-import pathToRegexp, { compile } from "path-to-regexp";
+import { compile, pathToRegexp } from "path-to-regexp";
 
 function UrlInstance(url) {
   this.url = url;
