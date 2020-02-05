@@ -243,7 +243,7 @@ function Dashboard({
             countOfFoundedTasks &&
             tasks.length < countOfFoundedTasks
           ) {
-            const { searchCol } = queryString.parse(location.search);
+            const { searchCol } = queryString.parse(window.location.search);
             searchCol === constants.TASK_SORT_BY.UPDATED_AT
               ? setTaskSearchFilterSearchAfterDispatch(
                   unixMillisecondTimestamp(tasks[tasks.length - 1].updated_at)
@@ -283,13 +283,10 @@ const mapStateToProps = state => ({
 });
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      fetchFavorites,
-      addProjectToFavorites,
-      removeFavorite,
-      setTaskSearchFilterSearchAfterDispatch
-    }
-  )(Dashboard)
+  connect(mapStateToProps, {
+    fetchFavorites,
+    addProjectToFavorites,
+    removeFavorite,
+    setTaskSearchFilterSearchAfterDispatch
+  })(Dashboard)
 );

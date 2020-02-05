@@ -3,10 +3,6 @@ import { connect } from "react-redux";
 import Message from "./Message";
 
 function MessagesList(props) {
-  if (!props.messages || props.messages.length === 0) {
-    return null;
-  }
-
   const refMessages = useRef([]);
 
   const PREPENDED = "PREPENDED";
@@ -138,6 +134,10 @@ function MessagesList(props) {
       refMessages.current = [...props.messages];
     }
   }, [props.messages]);
+
+  if (!props.messages || props.messages.length === 0) {
+    return null;
+  }
 
   return (
     <div className="messages-list-wrapper">

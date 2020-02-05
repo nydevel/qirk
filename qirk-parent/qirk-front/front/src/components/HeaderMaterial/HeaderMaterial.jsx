@@ -15,7 +15,6 @@ import Button from "@material/react-button";
 import constants from "../../utils/constants";
 import ic_arrow_down_v from "./../../assets/icons/ic_arrow_down_v.svg";
 import defaultAvatar from "./../../assets/pictures/defaultAvatar.jpg";
-import ic_search from "./../../assets/icons/ic_search.svg";
 import paths from "../../routes/paths";
 import { uiUserFromUser } from "../../utils/variousUtils";
 import { Animated } from "react-animated-css";
@@ -62,9 +61,9 @@ function HeaderMaterial({
   const handleClickOutside = e => {
     if (
       profileMenuRef &&
-      (profileMenuRef.current && !profileMenuRef.current.contains(e.target)) &&
-      (profileMenuIconRef.current &&
-        !profileMenuIconRef.current.contains(e.target))
+      profileMenuRef.current && !profileMenuRef.current.contains(e.target) &&
+      profileMenuIconRef.current &&
+        !profileMenuIconRef.current.contains(e.target)
     ) {
       setIsProfileMenuOpen(false);
     }
@@ -160,7 +159,7 @@ function HeaderMaterial({
         )}
       </TopAppBarSection>
       <TopAppBarSection align="center" role="toolbar">
-        {1 === 2 && (
+        {/* && (
           <form ref={searchRef} onSubmit={submit}>
             <fieldset disabled={2 == 1}>
               <div className="main">
@@ -220,7 +219,7 @@ function HeaderMaterial({
               )}
             </fieldset>
           </form>
-        )}
+                  ) */}
       </TopAppBarSection>
       <TopAppBarSection align="end" className="end" role="toolbar">
         {isSignedIn ? (
@@ -339,8 +338,8 @@ function HeaderMaterial({
 }
 
 export default withRouter(
-  connect(
-    state => ({ isSignedIn: state.auth.isSignedIn, user: state.user }),
-    { logoutUser, changeDashboardSizeDispatch }
-  )(HeaderMaterial)
+  connect(state => ({ isSignedIn: state.auth.isSignedIn, user: state.user }), {
+    logoutUser,
+    changeDashboardSizeDispatch
+  })(HeaderMaterial)
 );

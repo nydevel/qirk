@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import AsyncSelect from "react-select/lib/Async";
+import AsyncSelect from "react-select/async";
 import PropTypes from "prop-types";
 import { t } from "i18next";
 import List, { ListItem, ListItemText } from "@material/react-list";
