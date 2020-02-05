@@ -425,11 +425,11 @@ public class DefaultJiraImportService implements JiraImportService {
         for (OrganizationMember orgMember : orgMembers) {
             idToOrgMember.put(orgMember.getId(), orgMember);
         }
-        importDTO.jiraUserNameToQirkOrgMember = new HashMap<String, OrganizationMember>();
-        for (String jiraUserName : importDTO.jiraUserNameToQirkOrgMember.keySet()) {
+        importDTO.jiraUserNameToQirkUser = new HashMap<String, OrganizationMember>();
+        for (String jiraUserName : importDTO.jiraUserNameToQirkUser.keySet()) {
             OrganizationMember orgMember = idToOrgMember.get(importDTO.jiraUserNameToQirkOrgMemberId.get(jiraUserName));
             if (orgMember != null) {
-                importDTO.jiraUserNameToQirkOrgMember.put(jiraUserName.toLowerCase(), orgMember);
+                importDTO.jiraUserNameToQirkUser.put(jiraUserName.toLowerCase(), orgMember);
             }
         }
 

@@ -14,16 +14,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.notification;
+package org.wrkr.clb.common.jms.message.notification;
 
 import java.util.Collection;
 
+import org.wrkr.clb.common.util.strings.JSONifiable;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public abstract class BaseNotificationMessage {
+public abstract class BaseNotificationMessage implements JSONifiable {
 
     public static class Type {
         public static final String SERVICE_NEWS = "SERVICE_NEWS";
@@ -55,8 +56,6 @@ public abstract class BaseNotificationMessage {
         this.subscriberIds = subscriberIds;
         this.subscriberEmails = subscriberEmails;
     }
-
-    public abstract String toJson() throws JsonProcessingException;
 
     @Override
     public String toString() {

@@ -33,13 +33,13 @@ import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.model.BaseVersionedEntityMeta;
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 
 @Entity
 @Table(name = TaskMeta.TABLE_NAME)
-public class Task extends BaseIdEntity implements VersionedEntity {
+public class Task extends BaseIdEntity implements VersionedIdEntity {
 
     public static final int SUMMARY_LENGTH = 80;
 

@@ -14,7 +14,9 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.services;
+
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
 
 public interface StatisticsSender {
 

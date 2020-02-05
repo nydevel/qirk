@@ -26,7 +26,7 @@ import org.elasticsearch.search.SearchHits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wrkr.clb.common.util.strings.JsonUtils;
-import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedOrganizationDTO;
+import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedProjectDTO;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchUserDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -43,7 +43,7 @@ public class PublicUserMembershipDTO extends PublicUserDTO {
 
     @JsonProperty(value = "organization_member")
     @JsonInclude(Include.NON_NULL)
-    public ElasticsearchNestedOrganizationDTO organizationMember;
+    public ElasticsearchNestedProjectDTO projectMember;
 
     public static PublicUserMembershipDTO fromSearchHit(SearchHit hit, Long organizationId) throws IOException {
         PublicUserMembershipDTO dto = new PublicUserMembershipDTO();
@@ -56,11 +56,11 @@ public class PublicUserMembershipDTO extends PublicUserDTO {
         dto.dontRecommend = (Boolean) userSource.get(ElasticsearchUserDTO.DONT_RECOMMEND);
 
         if (organizationId != null) {
-            for (SearchHit memberHit : hit.getInnerHits().get(ElasticsearchUserDTO.ORGANIZATIONS)) {
+            for (SearchHit memberHit : hit.getInnerHits().get(ElasticsearchUserDTO.PROJECTS)) {
                 Map<String, Object> memberSource = JsonUtils.convertJsonToMapUsingLongForInts(memberHit.getSourceAsString());
-                if (((Long) memberSource.get(ElasticsearchNestedOrganizationDTO.ORGANIZATION_ID)).equals(organizationId)) {
+                if (((Long) memberSource.get(ElasticsearchNestedProjectDTO.PROJECT_ID)).equals(organizationId)) {
                     dto.isMember = true;
-                    dto.organizationMember = ElasticsearchNestedOrganizationDTO.fromMap(memberSource);
+                    dto.projectMember = ElasticsearchNestedProjectDTO.fromMap(memberSource);
                     break;
                 }
             }

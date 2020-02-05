@@ -14,32 +14,28 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class NewMessageStatisticsMessage extends BaseStatisticsMessage {
+public class NewMemoMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewMessageStatisticsMessage.class);
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewMemoMessage.class);
 
-    public static final String OWNER_TYPE = "owner_type";
-    public static final String OWNER_ID = "owner_id";
+    public static final String AUTHOR_USER_ID = "author_user_id";
     public static final String CREATED_AT = "created_at";
 
-    @JsonProperty(value = OWNER_TYPE)
-    public String ownerType;
-    @JsonProperty(value = OWNER_ID)
-    public long ownerId;
+    @JsonProperty(value = AUTHOR_USER_ID)
+    public long authorUserId;
     @JsonProperty(value = CREATED_AT)
     public long createdAt;
 
-    public NewMessageStatisticsMessage(String ownerType, long ownerId, long createdAt) {
-        super(Code.NEW_MESSAGE);
-        this.ownerType = ownerType;
-        this.ownerId = ownerId;
+    public NewMemoMessage(long authorUserId, long createdAt) {
+        super(BaseStatisticsMessage.Code.NEW_MEMO);
+        this.authorUserId = authorUserId;
         this.createdAt = createdAt;
     }
 

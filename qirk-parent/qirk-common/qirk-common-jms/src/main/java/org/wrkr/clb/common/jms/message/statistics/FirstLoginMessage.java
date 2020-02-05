@@ -14,27 +14,27 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import org.wrkr.clb.common.util.strings.JsonUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-public class NotificationUnsubscriptionMessage extends BaseStatisticsMessage {
+public class FirstLoginMessage extends BaseStatisticsMessage {
 
     public static final String USER_ID = "user_id";
-    public static final String NOTIFICATION_TYPE = "notification_type";
+    public static final String LOGIN_AT = "login_at";
 
     @JsonProperty(value = USER_ID)
     public long userId;
-    @JsonProperty(value = NOTIFICATION_TYPE)
-    public String notificationType;
+    @JsonProperty(value = LOGIN_AT)
+    public long loginAt;
 
-    public NotificationUnsubscriptionMessage(long userId, String notificationType) {
-        super(BaseStatisticsMessage.Code.NOTIFICATION_UNSUBSCRIPTION);
+    public FirstLoginMessage(long userId, long loginAt) {
+        super(BaseStatisticsMessage.Code.FIRST_LOGIN);
         this.userId = userId;
-        this.notificationType = notificationType;
+        this.loginAt = loginAt;
     }
 
     @Override

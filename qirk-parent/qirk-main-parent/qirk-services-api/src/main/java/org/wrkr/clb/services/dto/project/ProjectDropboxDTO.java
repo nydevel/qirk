@@ -28,17 +28,12 @@ public class ProjectDropboxDTO extends IdDTO {
     @JsonProperty(value = "dropbox_settings")
     public DropboxSettingsDTO dropboxSettings;
 
-    @JsonProperty(value = "organization_dropbox_settings")
-    public DropboxSettingsDTO organizationDropboxSettings;
-
     public static ProjectDropboxDTO fromEntity(Project project) {
         ProjectDropboxDTO dto = new ProjectDropboxDTO();
 
         dto.id = project.getId();
         if (project.getDropboxSettings() != null) {
             dto.dropboxSettings = DropboxSettingsDTO.fromEntity(project.getDropboxSettings());
-        } else if (project.getOrganization().getDropboxSettings() != null) {
-            dto.organizationDropboxSettings = DropboxSettingsDTO.fromEntity(project.getOrganization().getDropboxSettings());
         }
 
         return dto;

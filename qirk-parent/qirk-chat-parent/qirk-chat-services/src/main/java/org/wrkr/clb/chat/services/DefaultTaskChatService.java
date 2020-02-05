@@ -25,8 +25,8 @@ import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.chat.services.sql.SQLTaskChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
 import org.wrkr.clb.common.crypto.token.chat.TaskChatTokenData;
-import org.wrkr.clb.common.jms.notification.TaskCommentMessage;
-import org.wrkr.clb.common.jms.notification.TaskLookupSubscribersSender;
+import org.wrkr.clb.common.jms.message.notification.TaskCommentMessage;
+import org.wrkr.clb.common.jms.services.TaskLookupSubscribersSender;
 
 @Component
 public class DefaultTaskChatService extends DefaultChatService implements TaskChatService {

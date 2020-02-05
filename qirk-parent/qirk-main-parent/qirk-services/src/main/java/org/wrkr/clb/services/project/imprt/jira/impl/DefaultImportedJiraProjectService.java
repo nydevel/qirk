@@ -189,9 +189,9 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         task.setSummary(
                 MarkdownUtils.descriptionToSummary(task.getDescriptionMd(), task.getDescriptionHtml(), Task.SUMMARY_LENGTH));
 
-        task.setReporter(importDTO.jiraUserNameToQirkOrgMember.getOrDefault(
+        task.setReporter(importDTO.jiraUserNameToQirkUser.getOrDefault(
                 taskElement.getAttribute("reporter").toLowerCase(), importingMember));
-        task.setAssignee(importDTO.jiraUserNameToQirkOrgMember.get(taskElement.getAttribute("assignee").toLowerCase()));
+        task.setAssignee(importDTO.jiraUserNameToQirkUser.get(taskElement.getAttribute("assignee").toLowerCase()));
 
         task.setCreatedAt(getOffsetDateTime(taskElement, "created"));
         task.setUpdatedAt(getOffsetDateTime(taskElement, "updated"));
@@ -254,7 +254,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         importedProject.setUpdatedAt(DateTimeUtils.now());
         importedProjectRepo.save(importedProject);
 
-        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkOrgMember.values());
+        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkUser.values());
 
         NodeList taskNodes = DOMUtils.getNodes(entitiesDoc, "/entity-engine-xml/Issue[@project=" + jiraProjectId + "]");
         List<Task> tasks = new ArrayList<Task>(taskNodes.getLength());
@@ -286,7 +286,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         task.setSummary(
                 MarkdownUtils.descriptionToSummary(task.getDescriptionMd(), task.getDescriptionHtml(), Task.SUMMARY_LENGTH));
 
-        task.setAssignee(importDTO.jiraUserNameToQirkOrgMember.get(taskElement.getAttribute("assignee").toLowerCase()));
+        task.setAssignee(importDTO.jiraUserNameToQirkUser.get(taskElement.getAttribute("assignee").toLowerCase()));
 
         task.setType(importDTO.jiraTypeIdToQirkType.getOrDefault(taskElement.getAttribute("type"), importDTO.defaultType));
         task.setPriority(importDTO.jiraPriorityIdToQirkPriority.getOrDefault(
@@ -317,7 +317,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         importedProject.setUpdatedAt(DateTimeUtils.now());
         importedProjectRepo.save(importedProject);
 
-        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkOrgMember.values());
+        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkUser.values());
 
         Map<Long, Task> jiraTaskIdToTask = taskRepo.mapJiraTaskIdToTaskByprojectId(project.getId());
 

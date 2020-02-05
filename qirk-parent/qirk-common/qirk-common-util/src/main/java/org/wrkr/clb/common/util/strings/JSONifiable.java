@@ -14,12 +14,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.util.strings;
 
-@SuppressWarnings("unused")
-public class StatisticsSenderStub implements StatisticsSender {
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-    @Override
-    public void send(BaseStatisticsMessage message) {
-    }
+public interface JSONifiable {
+
+    public String toJson() throws JsonProcessingException;
 }

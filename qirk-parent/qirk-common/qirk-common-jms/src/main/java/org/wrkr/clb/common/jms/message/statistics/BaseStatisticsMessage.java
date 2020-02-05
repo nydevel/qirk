@@ -14,12 +14,13 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
+
+import org.wrkr.clb.common.util.strings.JSONifiable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-public abstract class BaseStatisticsMessage {
+public abstract class BaseStatisticsMessage implements JSONifiable {
 
     public static class Code {
         public static final String NEW_USER = "STAT_NEW_USER";
@@ -44,8 +45,6 @@ public abstract class BaseStatisticsMessage {
     public BaseStatisticsMessage(String code) {
         this.code = code;
     }
-
-    public abstract String toJson() throws JsonProcessingException;
 
     @Override
     public String toString() {

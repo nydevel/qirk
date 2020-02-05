@@ -36,7 +36,7 @@ import org.wrkr.clb.model.BaseVersionedEntityMeta;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.UiIdEntity;
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
@@ -44,7 +44,7 @@ import org.wrkr.clb.model.user.UserFavorite;
 
 @Entity
 @Table(name = ProjectMeta.TABLE_NAME)
-public class Project extends BaseIdEntity implements VersionedEntity, UiIdEntity {
+public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEntity {
 
     @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
     private Long recordVersion = 1L;

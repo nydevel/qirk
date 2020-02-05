@@ -35,8 +35,8 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.jms.statistics.ProjectDocUpdateMessage;
-import org.wrkr.clb.common.jms.statistics.StatisticsSender;
+import org.wrkr.clb.common.jms.message.statistics.ProjectDocUpdateMessage;
+import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.common.util.strings.MarkdownUtils;
 import org.wrkr.clb.model.InviteStatus;
@@ -282,7 +282,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
             taskSubscriberRepo.deleteNonMembersByProjectId(project.getId());
         }
 
-        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocsAndDropboxSettings(project);
+        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocs(project);
 
         return dto;
     }

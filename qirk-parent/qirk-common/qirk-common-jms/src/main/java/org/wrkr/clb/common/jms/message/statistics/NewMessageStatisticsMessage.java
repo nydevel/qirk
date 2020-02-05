@@ -14,35 +14,33 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
-
-import java.time.OffsetDateTime;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class UserRegisteredMessage extends BaseStatisticsMessage {
+public class NewMessageStatisticsMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(UserRegisteredMessage.class);
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewMessageStatisticsMessage.class);
 
-    public static final String UUID = "uuid";
-    public static final String USER_ID = "user_id";
-    public static final String REGISTERED_AT = "registered_at";
+    public static final String OWNER_TYPE = "owner_type";
+    public static final String OWNER_ID = "owner_id";
+    public static final String CREATED_AT = "created_at";
 
-    @JsonProperty(value = UUID)
-    public String uuid;
-    @JsonProperty(value = USER_ID)
-    public long userId;
-    @JsonProperty(value = REGISTERED_AT)
-    public long registeredAt;
+    @JsonProperty(value = OWNER_TYPE)
+    public String ownerType;
+    @JsonProperty(value = OWNER_ID)
+    public long ownerId;
+    @JsonProperty(value = CREATED_AT)
+    public long createdAt;
 
-    public UserRegisteredMessage(String uuid, long userId, OffsetDateTime registeredAt) {
-        super(Code.USER_REGISTERED);
-        this.uuid = uuid;
-        this.userId = userId;
-        this.registeredAt = registeredAt.toInstant().toEpochMilli();
+    public NewMessageStatisticsMessage(String ownerType, long ownerId, long createdAt) {
+        super(Code.NEW_MESSAGE);
+        this.ownerType = ownerType;
+        this.ownerId = ownerId;
+        this.createdAt = createdAt;
     }
 
     @Override

@@ -49,7 +49,6 @@ import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.test.repo.JDBCTestRepo;
 import org.wrkr.clb.test.repo.TestRepo;
 
-
 @ContextConfiguration({ "classpath:qirk-services-test-root-ctx.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public abstract class BaseServiceTest {
@@ -175,21 +174,23 @@ public abstract class BaseServiceTest {
         return invite;
     }
 
-    protected ProjectApplication saveProjectApplication(User user, Project project, ApplicationStatus status) {
-        ProjectApplication application = new ProjectApplication();
-
-        application.setUser(user);
-        application.setProject(project);
-        application.setStatus(status);
-        application.setText("");
-
-        OffsetDateTime now = DateTimeUtils.now();
-        application.setCreatedAt(now);
-        application.setUpdatedAt(now);
-
-        testRepo.persistEntity(application);
-        return application;
-    }
+    /*
+     * protected ProjectApplication saveProjectApplication(User user, Project project, ApplicationStatus status) {
+     * ProjectApplication application = new ProjectApplication();
+     * 
+     * application.setUser(user);
+     * application.setProject(project);
+     * application.setStatus(status);
+     * application.setText("");
+     * 
+     * OffsetDateTime now = DateTimeUtils.now();
+     * application.setCreatedAt(now);
+     * application.setUpdatedAt(now);
+     * 
+     * testRepo.persistEntity(application);
+     * return application;
+     * }
+     */
 
     protected ProjectMember saveProjectMember(OrganizationMember organizationMember, Project project,
             boolean manager, boolean writeAllowed) {

@@ -14,9 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.notification;
-
-import java.util.Map;
+package org.wrkr.clb.common.jms.services;
 
 import javax.jms.Queue;
 
@@ -25,25 +23,23 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
-import org.wrkr.clb.common.util.strings.JsonUtils;
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
 
-public class NotificationSourceSender {
+public class DefaultStatisticsSender implements StatisticsSender {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NotificationSourceSender.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultStatisticsSender.class);
 
     @Autowired
-    @Qualifier("notificationSourceJmsTemplate")
+    @Qualifier("statisticsJmsTemplate")
     private JmsTemplate jmsTemplate;
 
     @Autowired
-    @Qualifier("jmsNotificationQueue")
+    @Qualifier("jmsStatisticsQueue")
     private Queue queue;
 
-    public void send(BaseNotificationMessage message) {
+    @Override
+    public void send(BaseStatisticsMessage message) {
         long startTime = System.currentTimeMillis();
-        if (message.subscriberIds.isEmpty()) {
-            return;
-        }
 
         try {
             String json = message.toJson();
@@ -54,24 +50,7 @@ public class NotificationSourceSender {
 
         if (LOG.isInfoEnabled()) {
             long resultTime = System.currentTimeMillis() - startTime;
-            LOG.info("processed jms send for message with type " + message.type + " in " +
-                    resultTime + " ms");
-        }
-    }
-
-    public void send(Map<String, Object> message) {
-        long startTime = System.currentTimeMillis();
-
-        try {
-            String json = JsonUtils.convertMapToJson(message);
-            jmsTemplate.send(queue, s -> s.createTextMessage(json));
-        } catch (Exception e) {
-            LOG.error("Could not send message " + message + " to mq", e);
-        }
-
-        if (LOG.isDebugEnabled()) {
-            long resultTime = System.currentTimeMillis() - startTime;
-            LOG.debug("processed jms send for message with type " + message.get(BaseNotificationMessage.TYPE) + " in " +
+            LOG.info("processed jms send for message with code " + message.code + " in " +
                     resultTime + " ms");
         }
     }

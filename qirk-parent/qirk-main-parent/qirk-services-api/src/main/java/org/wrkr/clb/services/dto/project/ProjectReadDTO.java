@@ -21,7 +21,6 @@ import java.util.List;
 
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.services.dto.DropboxSettingsDTO;
@@ -44,6 +43,7 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
     @JsonProperty(value = "private")
     public Boolean isPrivate;
 
+    @Deprecated
     @JsonProperty(value = "can_be_public")
     public Boolean canBePublic;
 
@@ -89,12 +89,12 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
     @JsonInclude(Include.NON_NULL)
     public boolean canManage = false;
 
-    @JsonProperty(value = "application")
-    @JsonInclude(Include.NON_NULL)
-    public ProjectApplicationStatusDTO application;
+    // @JsonProperty(value = "application")
+    // @JsonInclude(Include.NON_NULL)
+    // public ProjectApplicationStatusDTO application;
 
-    public static ProjectReadDTO fromEntity(Project project, boolean includeDescAndDocs, boolean includeOrganization,
-            @SuppressWarnings("unused") boolean includeDropboxSettings, boolean includeTags, boolean includeLanguages) {
+    public static ProjectReadDTO fromEntity(Project project,
+            boolean includeDescAndDocs, boolean includeTags, boolean includeLanguages) {
         ProjectReadDTO dto = new ProjectReadDTO();
 
         dto.id = project.getId();
@@ -102,7 +102,7 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
         dto.name = project.getName();
         dto.uiId = project.getUiId();
         dto.key = project.getKey();
-        dto.canBePublic = !project.getOrganization().isPrivate();
+        dto.canBePublic = true;
         dto.isPrivate = project.isPrivate();
 
         if (includeDescAndDocs) {
@@ -110,10 +110,6 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
             dto.descriptionMd = project.getDescriptionMd();
             dto.documentationHtml = project.getDocumentationHtml();
             dto.documentationMd = project.getDocumentationMd();
-        }
-
-        if (includeOrganization) {
-            dto.organization = ProjectNameAndUiIdDTO.fromEntity(project.getOrganization());
         }
 
         if (includeTags) {
@@ -127,49 +123,41 @@ public class ProjectReadDTO extends ProjectWithOrganizationDTO {
     }
 
     public static ProjectReadDTO fromEntity(Project project) {
-        return fromEntity(project, false, false, false, false, false);
+        return fromEntity(project, false, false, false);
     }
 
     public static ProjectReadDTO fromEntityWithDescAndDocs(Project project) {
-        return fromEntity(project, true, false, false, false, false);
-    }
-
-    public static ProjectReadDTO fromEntityWithDescAndDocsAndDropboxSettings(Project project) {
-        return fromEntity(project, true, false, true, false, false);
+        return fromEntity(project, true, false, false);
     }
 
     public static ProjectReadDTO fromEntityWithEverythingForRead(Project project) {
-        ProjectReadDTO dto = fromEntity(project, true, true, true, true, true);
+        ProjectReadDTO dto = fromEntity(project, true, true, true);
 
-        OrganizationMember currentOrgMember = (project.getOrganizationMembers().isEmpty()
+        ProjectMember currentProjectMember = (project.getMembers().isEmpty()
                 ? null
-                : project.getOrganizationMembers().get(0));
-        ProjectMember currentProjectMember = ((currentOrgMember == null || currentOrgMember.getProjectMembership().isEmpty())
-                ? null
-                : currentOrgMember.getProjectMembership().get(0));
+                : project.getMembers().get(0));
 
         dto.isMember = (currentProjectMember != null);
-        dto.canManage = ((currentOrgMember != null && currentOrgMember.isManager())
-                || (currentProjectMember != null && currentProjectMember.isManager()));
+        dto.canManage = (currentProjectMember != null && currentProjectMember.isManager());
         dto.writeAllowed = (dto.canManage || (currentProjectMember != null && currentProjectMember.isWriteAllowed()));
 
         return dto;
     }
 
     public static List<ProjectReadDTO> fromEntities(List<Project> projectList,
-            boolean includeOrganization, boolean includeDropboxSettings, boolean includeTags, boolean includeLanguages) {
+            boolean includeTags, boolean includeLanguages) {
         List<ProjectReadDTO> dtoList = new ArrayList<ProjectReadDTO>(projectList.size());
         for (Project project : projectList) {
-            dtoList.add(fromEntity(project, false, includeOrganization, includeDropboxSettings, includeTags, includeLanguages));
+            dtoList.add(fromEntity(project, false, includeTags, includeLanguages));
         }
         return dtoList;
     }
 
     public static List<ProjectReadDTO> fromEntitiesWithOrganization(List<Project> projectList) {
-        return fromEntities(projectList, true, false, false, false);
+        return fromEntities(projectList, false, false);
     }
 
     public static List<ProjectReadDTO> fromEntitiesWithDropboxSettingsAndTags(List<Project> projectList) {
-        return fromEntities(projectList, false, true, true, false);
+        return fromEntities(projectList, true, false);
     }
 }

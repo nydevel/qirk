@@ -20,11 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -35,7 +33,7 @@ public class MemoReadDTO extends IdDTO {
     @JsonProperty(value = "created_at")
     public String createdAt;
 
-    public OrganizationMemberUserDTO author;
+    public ProjectMemberUserDTO author;
 
     @JsonProperty(value = "can_delete")
     public boolean canDelete = false;
@@ -46,25 +44,22 @@ public class MemoReadDTO extends IdDTO {
         dto.id = memo.getId();
         dto.body = memo.getBody();
         dto.createdAt = memo.getCreatedAt().format(DateTimeUtils.WEB_DATETIME_FORMATTER);
-        dto.author = OrganizationMemberUserDTO.fromEntity(memo.getAuthor());
+        dto.author = ProjectMemberUserDTO.fromEntity(memo.getAuthor());
         dto.canDelete = canDelete;
 
         return dto;
     }
 
-    public static MemoReadDTO fromEntity(Memo memo,
-            OrganizationMember currentOrganizationMember, ProjectMember currentProjectMember) {
-        boolean canDelete = (currentOrganizationMember != null &&
-                (currentOrganizationMember.isManager() || currentProjectMember.isManager() ||
-                        currentOrganizationMember.getId().equals(memo.getAuthor().getId())));
+    public static MemoReadDTO fromEntity(Memo memo, ProjectMember currentProjectMember) {
+        boolean canDelete = (currentProjectMember != null &&
+                (currentProjectMember.isManager() || currentProjectMember.getId().equals(memo.getAuthor().getId())));
         return fromEntity(memo, canDelete);
     }
 
-    public static List<MemoReadDTO> fromEntities(List<Memo> memoList,
-            OrganizationMember currentOrganizationMember, ProjectMember currentProjectMember) {
+    public static List<MemoReadDTO> fromEntities(List<Memo> memoList, ProjectMember currentProjectMember) {
         List<MemoReadDTO> dtoList = new ArrayList<MemoReadDTO>(memoList.size());
         for (Memo memo : memoList) {
-            dtoList.add(fromEntity(memo, currentOrganizationMember, currentProjectMember));
+            dtoList.add(fromEntity(memo, currentProjectMember));
         }
         return dtoList;
     }

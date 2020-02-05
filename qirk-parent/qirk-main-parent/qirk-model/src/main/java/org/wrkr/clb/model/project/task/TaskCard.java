@@ -34,7 +34,7 @@ import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.model.BaseVersionedEntityMeta;
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.Road;
 
@@ -42,7 +42,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = TaskCardMeta.TABLE_NAME)
-public class TaskCard extends BaseIdEntity implements VersionedEntity {
+public class TaskCard extends BaseIdEntity implements VersionedIdEntity {
 
     @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
     private Long recordVersion = 1L;

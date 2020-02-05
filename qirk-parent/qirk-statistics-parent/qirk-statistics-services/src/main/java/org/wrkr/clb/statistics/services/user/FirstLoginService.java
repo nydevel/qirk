@@ -21,8 +21,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.common.jms.statistics.BaseStatisticsMessage;
-import org.wrkr.clb.common.jms.statistics.FirstLoginMessage;
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.FirstLoginMessage;
 import org.wrkr.clb.statistics.repo.user.FirstLoginRepo;
 import org.wrkr.clb.statistics.services.BaseEventService;
 

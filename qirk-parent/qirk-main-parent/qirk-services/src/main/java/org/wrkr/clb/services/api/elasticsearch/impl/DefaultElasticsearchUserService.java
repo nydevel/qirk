@@ -46,7 +46,7 @@ import org.elasticsearch.search.SearchHits;
 import org.springframework.stereotype.Service;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
-import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedOrganizationDTO;
+import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedProjectDTO;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchUserDTO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -182,7 +182,7 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
 
     private NestedQueryBuilder buildOrganizationIdQuery(Long organizationId) {
         TermQueryBuilder nestedQuery = new TermQueryBuilder(
-                ElasticsearchUserDTO.ORGANIZATIONS + "." + ElasticsearchNestedOrganizationDTO.ORGANIZATION_ID, organizationId);
+                ElasticsearchUserDTO.ORGANIZATIONS + "." + ElasticsearchNestedProjectDTO.ORGANIZATION_ID, organizationId);
         return new NestedQueryBuilder(ElasticsearchUserDTO.ORGANIZATIONS, nestedQuery, ScoreMode.None);
     }
 

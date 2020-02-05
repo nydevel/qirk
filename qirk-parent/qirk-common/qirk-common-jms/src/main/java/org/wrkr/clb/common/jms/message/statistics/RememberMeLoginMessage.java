@@ -14,29 +14,29 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class NewMemoMessage extends BaseStatisticsMessage {
+public class RememberMeLoginMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewMemoMessage.class);
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(RememberMeLoginMessage.class);
 
-    public static final String AUTHOR_USER_ID = "author_user_id";
-    public static final String CREATED_AT = "created_at";
+    public static final String USER_ID = "user_id";
+    public static final String LOGIN_AT = "login_at";
 
-    @JsonProperty(value = AUTHOR_USER_ID)
-    public long authorUserId;
-    @JsonProperty(value = CREATED_AT)
-    public long createdAt;
+    @JsonProperty(value = USER_ID)
+    public long userId;
+    @JsonProperty(value = LOGIN_AT)
+    public long loginAt;
 
-    public NewMemoMessage(long authorUserId, long createdAt) {
-        super(BaseStatisticsMessage.Code.NEW_MEMO);
-        this.authorUserId = authorUserId;
-        this.createdAt = createdAt;
+    public RememberMeLoginMessage(long userId, long loginAt) {
+        super(BaseStatisticsMessage.Code.REMEMBER_ME_LOGIN);
+        this.userId = userId;
+        this.loginAt = loginAt;
     }
 
     @Override

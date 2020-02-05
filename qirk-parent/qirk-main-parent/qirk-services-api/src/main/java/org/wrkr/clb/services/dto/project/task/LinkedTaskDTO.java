@@ -22,11 +22,11 @@ import java.util.List;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
+import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LinkedTaskDTO extends IdDTO {
 
@@ -34,7 +34,7 @@ public class LinkedTaskDTO extends IdDTO {
 
     public String summary;
 
-    public OrganizationMemberUserDTO assignee;
+    public ProjectMemberUserDTO assignee;
 
     @JsonProperty(value = "task_status")
     @JsonInclude(Include.NON_NULL)
@@ -47,7 +47,7 @@ public class LinkedTaskDTO extends IdDTO {
         dto.number = task.getNumber();
         dto.summary = task.getSummary();
         if (task.getAssignee() != null) {
-            dto.assignee = OrganizationMemberUserDTO.fromEntity(task.getAssignee());
+            dto.assignee = ProjectMemberUserDTO.fromEntity(task.getAssignee());
         }
         dto.taskStatus = task.getStatus();
 

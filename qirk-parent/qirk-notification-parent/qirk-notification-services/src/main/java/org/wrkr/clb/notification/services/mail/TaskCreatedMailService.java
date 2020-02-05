@@ -21,7 +21,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.wrkr.clb.common.jms.notification.BaseNotificationMessage;
+import org.wrkr.clb.common.jms.message.notification.BaseNotificationMessage;
 import org.wrkr.clb.common.mail.UserMailService;
 import org.wrkr.clb.notification.services.BaseNotificationMailService;
 

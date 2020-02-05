@@ -31,12 +31,12 @@ import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.model.BaseVersionedEntityMeta;
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.task.TaskCard;
 
 @Entity
 @Table(name = RoadMeta.TABLE_NAME)
-public class Road extends BaseIdEntity implements VersionedEntity {
+public class Road extends BaseIdEntity implements VersionedIdEntity {
 
     @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
     private Long recordVersion = 1L;

@@ -30,9 +30,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
 import org.wrkr.clb.common.crypto.token.notification.NotificationSettingsTokenData;
-import org.wrkr.clb.common.jms.notification.BaseTaskNotificationMessage;
-import org.wrkr.clb.common.jms.notification.TaskCommentMessage;
-import org.wrkr.clb.common.jms.notification.TaskUpdateNotificationMessage;
+import org.wrkr.clb.common.jms.message.notification.BaseTaskNotificationMessage;
+import org.wrkr.clb.common.jms.message.notification.TaskCommentMessage;
+import org.wrkr.clb.common.jms.message.notification.TaskUpdateNotificationMessage;
 import org.wrkr.clb.common.util.strings.CharSet;
 
 public class UserMailService extends BaseMailService {

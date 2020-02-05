@@ -29,10 +29,10 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberListDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberReadDTO;
+import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 
 @Validated
 public interface ProjectMemberService {
@@ -70,7 +70,7 @@ public interface ProjectMemberService {
     public void leave(User currentUser,
             @NotNull(message = "projectId in ProjectMemberService must not be null") Long projectId) throws Exception;
 
-    public List<OrganizationMemberUserDTO> search(User currentUser,
+    public List<ProjectMemberUserDTO> search(User currentUser,
             @NotNull(message = "prefix in ProjectMemberService must not be null") String prefix,
             @Valid IdOrUiIdDTO projectDTO, boolean meFirst)
             throws Exception;

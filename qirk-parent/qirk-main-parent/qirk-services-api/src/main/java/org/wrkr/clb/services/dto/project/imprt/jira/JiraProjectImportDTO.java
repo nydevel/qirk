@@ -24,11 +24,11 @@ import java.util.Set;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
+import org.wrkr.clb.model.user.User;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -119,5 +119,5 @@ public class JiraProjectImportDTO {
     @JsonIgnore
     public Map<String, String> jiraUserNameToJiraUserId;
     @JsonIgnore
-    public Map<String, OrganizationMember> jiraUserNameToQirkOrgMember;
+    public Map<String, User> jiraUserNameToQirkUser;
 }

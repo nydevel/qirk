@@ -14,25 +14,35 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
+
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class ProjectDocUpdateMessage extends BaseStatisticsMessage {
+public class UserRegisteredMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(ProjectDocUpdateMessage.class);
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(UserRegisteredMessage.class);
 
-    public static final String UPDATED_BY_USER_ID = "updated_by_user_id";
+    public static final String UUID = "uuid";
+    public static final String USER_ID = "user_id";
+    public static final String REGISTERED_AT = "registered_at";
 
-    @JsonProperty(value = UPDATED_BY_USER_ID)
-    public long updatedByUserId;
+    @JsonProperty(value = UUID)
+    public String uuid;
+    @JsonProperty(value = USER_ID)
+    public long userId;
+    @JsonProperty(value = REGISTERED_AT)
+    public long registeredAt;
 
-    public ProjectDocUpdateMessage(long updatedByUserId) {
-        super(BaseStatisticsMessage.Code.PROJECT_DOC_UPDATE);
-        this.updatedByUserId = updatedByUserId;
+    public UserRegisteredMessage(String uuid, long userId, OffsetDateTime registeredAt) {
+        super(Code.USER_REGISTERED);
+        this.uuid = uuid;
+        this.userId = userId;
+        this.registeredAt = registeredAt.toInstant().toEpochMilli();
     }
 
     @Override

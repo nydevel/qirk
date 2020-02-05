@@ -16,17 +16,10 @@
  */
 package org.wrkr.clb.services.dto.project;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import org.elasticsearch.action.get.MultiGetItemResponse;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.wrkr.clb.common.util.strings.JsonUtils;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNameAndUiIdDTO;
 
 public class ProjectNameAndUiIdDTO extends ProjectUiIdDTO {
 
@@ -48,37 +41,5 @@ public class ProjectNameAndUiIdDTO extends ProjectUiIdDTO {
             dtoList.add(fromEntity(project));
         }
         return dtoList;
-    }
-
-    public static ProjectNameAndUiIdDTO fromSearchHit(SearchHit hit) throws IOException {
-        ProjectNameAndUiIdDTO dto = new ProjectNameAndUiIdDTO();
-        // can't use getSourceAsMap() because it uses int for numbers
-        Map<String, Object> source = JsonUtils.convertJsonToMapUsingLongForInts(hit.getSourceAsString());
-
-        dto.id = Long.parseLong(hit.getId());
-        dto.name = (String) source.get(ElasticsearchNameAndUiIdDTO.NAME);
-        dto.uiId = (String) source.get(ElasticsearchNameAndUiIdDTO.UI_ID);
-
-        return dto;
-    }
-
-    public static List<ProjectNameAndUiIdDTO> fromSearchHits(SearchHits hits) throws IOException {
-        List<ProjectNameAndUiIdDTO> dtoList = new ArrayList<ProjectNameAndUiIdDTO>(hits.getHits().length);
-        for (SearchHit hit : hits) {
-            dtoList.add(fromSearchHit(hit));
-        }
-        return dtoList;
-    }
-
-    public static ProjectNameAndUiIdDTO fromMultiGetItemResponse(MultiGetItemResponse item) throws IOException {
-        ProjectNameAndUiIdDTO dto = new ProjectNameAndUiIdDTO();
-        // can't use getSourceAsMap() because it uses int for numbers
-        Map<String, Object> source = JsonUtils.convertJsonToMapUsingLongForInts(item.getResponse().getSourceAsString());
-
-        dto.id = Long.parseLong(item.getId());
-        dto.name = (String) source.get(ElasticsearchNameAndUiIdDTO.NAME);
-        dto.uiId = (String) source.get(ElasticsearchNameAndUiIdDTO.UI_ID);
-
-        return dto;
     }
 }

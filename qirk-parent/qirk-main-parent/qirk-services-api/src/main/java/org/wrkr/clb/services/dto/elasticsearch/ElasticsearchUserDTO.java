@@ -26,10 +26,10 @@ import org.wrkr.clb.model.user.User;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
 
@@ -43,7 +43,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
 
     public static final String TAGS = "tags";
 
-    public static final String ORGANIZATIONS = "organizations";
     public static final String PROJECTS = "projects";
     public static final String INVITED_PROJECTS = "invited_projects";
 
@@ -60,12 +59,9 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
     @JsonProperty(value = TAGS)
     public List<String> tags;
 
-    @JsonProperty(value = ORGANIZATIONS)
-    @JsonInclude(Include.NON_NULL)
-    public List<Map<String, Object>> organizations;
     @JsonProperty(value = PROJECTS)
     @JsonInclude(Include.NON_NULL)
-    public List<Long> projects;
+    public List<Map<String, Object>> projects;
     @JsonProperty(value = INVITED_PROJECTS)
     @JsonInclude(Include.NON_NULL)
     public List<Long> invitedProjects;

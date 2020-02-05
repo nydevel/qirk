@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.wrkr.clb.common.jms.statistics.BaseStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
 
 
 @Service

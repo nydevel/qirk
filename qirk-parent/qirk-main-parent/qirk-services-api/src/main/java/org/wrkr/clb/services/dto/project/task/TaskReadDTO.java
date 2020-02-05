@@ -26,7 +26,7 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
+import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
@@ -68,15 +68,11 @@ public class TaskReadDTO extends IdDTO {
     @JsonInclude(Include.NON_NULL)
     public Boolean hasDropboxSettings;
 
-    @JsonProperty(value = "has_organization_dropbox_settings")
     @JsonInclude(Include.NON_NULL)
-    public Boolean hasOrganizationDropboxSettings;
+    public ProjectMemberUserDTO reporter;
 
     @JsonInclude(Include.NON_NULL)
-    public OrganizationMemberUserDTO reporter;
-
-    @JsonInclude(Include.NON_NULL)
-    public OrganizationMemberUserDTO assignee;
+    public ProjectMemberUserDTO assignee;
 
     @JsonProperty(value = "task_type")
     @JsonInclude(Include.NON_NULL)
@@ -128,9 +124,9 @@ public class TaskReadDTO extends IdDTO {
         }
 
         if (includeReporterAndAssignee) {
-            dto.reporter = OrganizationMemberUserDTO.fromEntity(task.getReporter());
+            dto.reporter = ProjectMemberUserDTO.fromEntity(task.getReporter());
             if (task.getAssignee() != null) {
-                dto.assignee = OrganizationMemberUserDTO.fromEntity(task.getAssignee());
+                dto.assignee = ProjectMemberUserDTO.fromEntity(task.getAssignee());
             }
         }
 
@@ -170,7 +166,6 @@ public class TaskReadDTO extends IdDTO {
 
         dto.project = ProjectWithOrganizationDTO.fromEntity(task.getProject());
         dto.hasDropboxSettings = (task.getProject().getDropboxSettingsId() != null);
-        dto.hasOrganizationDropboxSettings = (task.getProject().getOrganization().getDropboxSettingsId() != null);
         dto.linkedTasks = LinkedTaskDTO.fromEntities(task.getLinkedTasks());
         dto.hashtags = task.getHashtags();
         dto.subscribed = false;

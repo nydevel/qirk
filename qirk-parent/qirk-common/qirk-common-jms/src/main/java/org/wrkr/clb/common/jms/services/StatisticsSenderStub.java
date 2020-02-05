@@ -14,17 +14,14 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.dto.elasticsearch;
+package org.wrkr.clb.common.jms.services;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
 
-public abstract class ElasticsearchNameAndUiIdDTO extends ElasticsearchEntityDTO {
+@SuppressWarnings("unused")
+public class StatisticsSenderStub implements StatisticsSender {
 
-    public static final String NAME = "name";
-    public static final String UI_ID = "ui_id";
-
-    @JsonProperty(value = NAME)
-    public String name;
-    @JsonProperty(value = UI_ID)
-    public String uiId;
+    @Override
+    public void send(BaseStatisticsMessage message) {
+    }
 }

@@ -16,9 +16,7 @@
  */
 package org.wrkr.clb.services.dto.elasticsearch;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.wrkr.clb.common.util.strings.JSONifiable;
 
-public abstract class ElasticsearchEntityDTO {
-
-    public abstract String toJson() throws JsonProcessingException;
+public abstract class ElasticsearchEntityDTO implements JSONifiable {
 }

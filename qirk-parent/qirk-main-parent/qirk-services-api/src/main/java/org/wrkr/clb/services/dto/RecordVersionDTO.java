@@ -18,7 +18,7 @@ package org.wrkr.clb.services.dto;
 
 import javax.validation.constraints.NotNull;
 
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -31,7 +31,7 @@ public class RecordVersionDTO {
     @NotNull(message = "record_version in RecordVersionDTO must not be null")
     public Long recordVersion;
 
-    public static RecordVersionDTO fromEntity(VersionedEntity entity) {
+    public static RecordVersionDTO fromEntity(VersionedIdEntity entity) {
         RecordVersionDTO dto = new RecordVersionDTO();
 
         dto.id = entity.getId();

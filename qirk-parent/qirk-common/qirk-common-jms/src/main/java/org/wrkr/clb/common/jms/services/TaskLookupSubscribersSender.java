@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.notification;
+package org.wrkr.clb.common.jms.services;
 
 import javax.jms.Queue;
 
@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jms.core.JmsTemplate;
+import org.wrkr.clb.common.jms.message.notification.TaskCommentMessage;
 
 public class TaskLookupSubscribersSender {
 

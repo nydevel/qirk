@@ -14,29 +14,25 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class RememberMeLoginMessage extends BaseStatisticsMessage {
+public class ProjectDocUpdateMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(RememberMeLoginMessage.class);
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(ProjectDocUpdateMessage.class);
 
-    public static final String USER_ID = "user_id";
-    public static final String LOGIN_AT = "login_at";
+    public static final String UPDATED_BY_USER_ID = "updated_by_user_id";
 
-    @JsonProperty(value = USER_ID)
-    public long userId;
-    @JsonProperty(value = LOGIN_AT)
-    public long loginAt;
+    @JsonProperty(value = UPDATED_BY_USER_ID)
+    public long updatedByUserId;
 
-    public RememberMeLoginMessage(long userId, long loginAt) {
-        super(BaseStatisticsMessage.Code.REMEMBER_ME_LOGIN);
-        this.userId = userId;
-        this.loginAt = loginAt;
+    public ProjectDocUpdateMessage(long updatedByUserId) {
+        super(BaseStatisticsMessage.Code.PROJECT_DOC_UPDATE);
+        this.updatedByUserId = updatedByUserId;
     }
 
     @Override

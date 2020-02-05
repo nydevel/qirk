@@ -25,7 +25,7 @@ import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.chat.services.sql.SQLDialogChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.jms.statistics.NewMessageStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.NewMessageStatisticsMessage;
 
 @Component
 public class DefaultDialogChatService extends DefaultChatService implements DialogChatService {

@@ -20,10 +20,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.BaseVersionedEntityMeta;
 
-public abstract class RecordVersionMapper<E extends VersionedEntity> extends BaseMapper<E> {
+public abstract class RecordVersionMapper<E extends VersionedIdEntity> extends BaseMapper<E> {
 
     public RecordVersionMapper() {
         super();

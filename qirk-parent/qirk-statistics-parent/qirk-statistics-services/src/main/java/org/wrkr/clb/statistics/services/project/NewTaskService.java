@@ -21,8 +21,8 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.common.jms.statistics.BaseStatisticsMessage;
-import org.wrkr.clb.common.jms.statistics.NewTaskMessage;
+import org.wrkr.clb.common.jms.message.statistics.BaseStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.NewTaskMessage;
 import org.wrkr.clb.statistics.repo.project.NewTaskRepo;
 import org.wrkr.clb.statistics.services.BaseEventService;
 

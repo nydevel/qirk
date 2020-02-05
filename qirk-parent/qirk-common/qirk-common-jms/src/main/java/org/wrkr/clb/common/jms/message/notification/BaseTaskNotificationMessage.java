@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.notification;
+package org.wrkr.clb.common.jms.message.notification;
 
 import java.util.Collection;
 

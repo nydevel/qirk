@@ -14,33 +14,31 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
+package org.wrkr.clb.common.jms.message.statistics;
+
+import org.wrkr.clb.common.util.strings.JsonUtils;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class NewUserMessage extends BaseStatisticsMessage {
+public class NotificationUnsubscriptionMessage extends BaseStatisticsMessage {
 
-    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewUserMessage.class);
+    public static final String USER_ID = "user_id";
+    public static final String NOTIFICATION_TYPE = "notification_type";
 
-    public static final String UUID = "uuid";
-    public static final String VISITED_AT = "visited_at";
+    @JsonProperty(value = USER_ID)
+    public long userId;
+    @JsonProperty(value = NOTIFICATION_TYPE)
+    public String notificationType;
 
-    @JsonProperty(value = UUID)
-    public String uuid;
-    @JsonProperty(value = VISITED_AT)
-    public long visitedAt;
-
-    public NewUserMessage(String uuid, long visitedAt) {
-        super(Code.NEW_USER);
-        this.uuid = uuid;
-        this.visitedAt = visitedAt;
+    public NotificationUnsubscriptionMessage(long userId, String notificationType) {
+        super(BaseStatisticsMessage.Code.NOTIFICATION_UNSUBSCRIPTION);
+        this.userId = userId;
+        this.notificationType = notificationType;
     }
 
     @Override
     public String toJson() throws JsonProcessingException {
-        return MESSAGE_WRITER.writeValueAsString(this);
+        return JsonUtils.convertObjectToJson(this);
     }
 }

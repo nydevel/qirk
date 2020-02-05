@@ -29,8 +29,8 @@ import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.jms.statistics.NewMessageStatisticsMessage;
-import org.wrkr.clb.common.jms.statistics.StatisticsSender;
+import org.wrkr.clb.common.jms.message.statistics.NewMessageStatisticsMessage;
+import org.wrkr.clb.common.jms.services.StatisticsSender;
 
 public abstract class DefaultChatService implements ChatService {
 

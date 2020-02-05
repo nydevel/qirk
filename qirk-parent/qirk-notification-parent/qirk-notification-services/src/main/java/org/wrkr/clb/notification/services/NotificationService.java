@@ -24,7 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wrkr.clb.common.jms.notification.BaseNotificationMessage;
+import org.wrkr.clb.common.jms.message.notification.BaseNotificationMessage;
 import org.wrkr.clb.common.util.strings.JsonUtils;
 import org.wrkr.clb.notification.repo.NotificationRepo;
 import org.wrkr.clb.notification.repo.dto.NotificationDTO;

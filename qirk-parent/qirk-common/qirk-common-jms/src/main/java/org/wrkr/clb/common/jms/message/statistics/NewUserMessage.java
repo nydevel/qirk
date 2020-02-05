@@ -14,31 +14,33 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.common.jms.statistics;
-
-import org.wrkr.clb.common.util.strings.JsonUtils;
+package org.wrkr.clb.common.jms.message.statistics;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class FirstLoginMessage extends BaseStatisticsMessage {
+public class NewUserMessage extends BaseStatisticsMessage {
 
-    public static final String USER_ID = "user_id";
-    public static final String LOGIN_AT = "login_at";
+    private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(NewUserMessage.class);
 
-    @JsonProperty(value = USER_ID)
-    public long userId;
-    @JsonProperty(value = LOGIN_AT)
-    public long loginAt;
+    public static final String UUID = "uuid";
+    public static final String VISITED_AT = "visited_at";
 
-    public FirstLoginMessage(long userId, long loginAt) {
-        super(BaseStatisticsMessage.Code.FIRST_LOGIN);
-        this.userId = userId;
-        this.loginAt = loginAt;
+    @JsonProperty(value = UUID)
+    public String uuid;
+    @JsonProperty(value = VISITED_AT)
+    public long visitedAt;
+
+    public NewUserMessage(String uuid, long visitedAt) {
+        super(Code.NEW_USER);
+        this.uuid = uuid;
+        this.visitedAt = visitedAt;
     }
 
     @Override
     public String toJson() throws JsonProcessingException {
-        return JsonUtils.convertObjectToJson(this);
+        return MESSAGE_WRITER.writeValueAsString(this);
     }
 }
