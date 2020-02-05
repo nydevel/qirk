@@ -26,8 +26,6 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.RegExpPattern;
 import org.wrkr.clb.common.validation.groups.OnCreate;
 import org.wrkr.clb.common.validation.groups.OnUpdate;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
@@ -48,7 +46,7 @@ public interface ProjectService {
                     + "+", message = "uiId in ProjectService must be slug") String uiId)
             throws Exception;
 
-    public Project create(Organization organization, @Valid ProjectDTO projectDTO,
+    public Project create(User creator, @Valid ProjectDTO projectDTO,
             @NotNull(message = "membersToCreate in ProjectService must not be null") List<User> membersToCreate) throws Exception;
 
     @Validated(OnCreate.class)
@@ -91,8 +89,7 @@ public interface ProjectService {
     @Deprecated
     public List<ProjectInviteOptionDTO> listInviteOptions(User currentUser, long userId);
 
-    public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
-            OrganizationMember currentMember);
+    public List<ProjectNameAndUiIdDTO> listAvailableToUser(User user);
 
     public ChatPermissionsDTO getChatToken(User currentUser,
             @NotNull(message = "id in ProjectService must not be null") Long id) throws Exception;

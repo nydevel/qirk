@@ -76,7 +76,6 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo {
             "WHERE " + ProjectMeta.uiId + " = ?;"; // 1
 
     private static final String PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS = "proj_dropbox_settings";
-    private static final String ORG_DROPBOX_SETTINGS_TABLE_ALIAS = "org_dropbox_settings";
     @Deprecated
     private static final DropboxProjectMapper DROPBOX_PROJECT_MAPPER = new DropboxProjectMapper(
             ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS);

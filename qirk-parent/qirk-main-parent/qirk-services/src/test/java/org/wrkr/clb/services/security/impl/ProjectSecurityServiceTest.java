@@ -26,7 +26,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wrkr.clb.model.ApplicationStatus;
 import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.organization.OrganizationMember;
@@ -47,7 +46,6 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.ApplicationStatusRepo;
 import org.wrkr.clb.repo.InviteStatusRepo;
 import org.wrkr.clb.repo.organization.OrganizationRepo;
 import org.wrkr.clb.repo.project.ProjectMemberRepo;
@@ -102,8 +100,8 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
     @Autowired
     private InviteStatusRepo inviteStatusRepo;
 
-    @Autowired
-    private ApplicationStatusRepo applicationStatusRepo;
+    // @Autowired
+    // private ApplicationStatusRepo applicationStatusRepo;
 
     @Autowired
     private TaskHashtagRepo hashtagRepo;
@@ -140,8 +138,8 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
                 inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING));
         saveGrantedPermissionsProjectInvite(nonMemberUser, privateProject, projectMemberUser,
                 inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING));
-        saveProjectApplication(nonMemberUser, privateProject,
-                applicationStatusRepo.getByNameCode(ApplicationStatus.Status.PENDING));
+        // saveProjectApplication(nonMemberUser, privateProject,
+        // applicationStatusRepo.getByNameCode(ApplicationStatus.Status.PENDING));
 
         saveProjectMember(projectManager, privateProject, true, true);
         saveProjectMember(projectMember, privateProject, false, true);

@@ -64,7 +64,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 
-
 @Service
 public class DefaultImportedJiraProjectService implements ImportedJiraProjectService {
 
@@ -234,7 +233,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public void importNewProject(OrganizationMember importingMember, Organization organization,
+    public void importNewProject(User importingUser,
             Document entitiesDoc, ImportedJiraProject importedProject, JiraProjectImportDTO importDTO,
             String uploadFolderPath, char uploadFolderDelimeter) throws Exception {
         long jiraProjectId = importedProject.getJiraProjectId();
@@ -300,7 +299,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
     }
 
     @Override // no global transaction
-    public ImportStatusDTO importProjectUpdate(OrganizationMember importingMember,
+    public ImportStatusDTO importProjectUpdate(User importingUser,
             Document entitiesDoc, ImportedJiraProject importedProject, JiraProjectImportDTO importDTO,
             String uploadFolderPath, char uploadFolderDelimeter) throws Exception {
         long jiraProjectId = importedProject.getJiraProjectId();

@@ -172,7 +172,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
-    public Project create(Organization organization, ProjectDTO projectDTO, List<User> membersToCreate)
+    public Project create(User creator, ProjectDTO projectDTO, List<User> membersToCreate)
             throws Exception {
         Project project = new Project();
         project.setOrganization(organization);
@@ -448,10 +448,10 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         project.setLanguages(languageRepo.listByProjectId(project.getId()));
 
         ProjectReadDTO dto = ProjectReadDTO.fromEntityWithEverythingForRead(project);
-        if (includeApplication) {
-            ProjectApplication application = projectApplicationRepo.getLastByUserAndProject(currentUser, project);
-            dto.application = ProjectApplicationStatusDTO.fromEntity(application);
-        }
+        // if (includeApplication) {
+        // ProjectApplication application = projectApplicationRepo.getLastByUserAndProject(currentUser, project);
+        // dto.application = ProjectApplicationStatusDTO.fromEntity(application);
+        // }
         return dto;
     }
 
@@ -545,8 +545,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.MANDATORY)
-    public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
-            OrganizationMember organizationMember) {
+    public List<ProjectNameAndUiIdDTO> listAvailableToUser(User user) {
         if (organizationMember == null) {
             if (!organization.isPrivate()) {
                 List<Project> projectList = projectRepo.listPublicAndOrderAscByName();

@@ -30,6 +30,9 @@ public interface ProjectSecurityService {
     public void authzCanCreateProject(User user,
             @Valid IdOrUiIdDTO organizationDTO) throws SecurityException;
 
+    public void authzCanImportProjects(User user,
+            @NotNull(message = "organizationId is null") Long organizationId) throws SecurityException;
+    
     public void authzCanReadProject(User user,
             @NotNull(message = "projectId is null") Long projectId) throws SecurityException;
 

@@ -148,13 +148,4 @@ public class DefaultOrganizationSecurityService extends BaseOrganizationSecurity
         }
         requireOrganizationManagerOrThrowException(currentMembership, user);
     }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void authzCanImportProjects(User user, Long organizationId) throws SecurityException {
-        requireAuthnOrThrowException(user);
-
-        Organization organization = getOrganizationWithMemberByUserAndOrganizationId(user, organizationId);
-        requireOrganizationOwnerOrThrowException(organization.getMembers(), user);
-    }
 }

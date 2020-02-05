@@ -40,7 +40,6 @@ import org.wrkr.clb.services.file.DropboxFileService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 //@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultDropboxFileService extends DefaultFileService implements DropboxFileService {
@@ -114,9 +113,6 @@ public class DefaultDropboxFileService extends DefaultFileService implements Dro
         }
 
         DropboxSettings dropboxSettings = task.getProject().getDropboxSettings();
-        if (dropboxSettings == null) {
-            dropboxSettings = task.getProject().getOrganization().getDropboxSettings();
-        }
 
         String dropboxPath = upload(file, dropboxSettings, generatePathPrefix(task));
 
@@ -142,9 +138,6 @@ public class DefaultDropboxFileService extends DefaultFileService implements Dro
         }
 
         DropboxSettings dropboxSettings = project.getDropboxSettings();
-        if (dropboxSettings == null) {
-            dropboxSettings = project.getOrganization().getDropboxSettings();
-        }
 
         String dropboxPath = upload(file, dropboxSettings, generatePathPrefix(project));
 
