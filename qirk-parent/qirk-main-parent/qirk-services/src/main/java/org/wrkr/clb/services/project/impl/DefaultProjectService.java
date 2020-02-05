@@ -497,14 +497,14 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     public List<ProjectWithOrganizationDTO> listManagedByUser(User currentUser) {
         List<Project> projectList = projectRepo
                 .listByNotFiredManagerProjectMemberUser(currentUser);
-        return ProjectWithOrganizationDTO.fromEntitiesWithOrganizationName(projectList);
+        return ProjectWithOrganizationDTO.fromEntities(projectList);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<ProjectWithOrganizationDTO> listByUser(User currentUser) {
         List<Project> projectList = projectRepo.listByNotFiredProjectMemberUserAndOrderAscByName(currentUser);
-        return ProjectWithOrganizationDTO.fromEntitiesWithOrganizationName(projectList);
+        return ProjectWithOrganizationDTO.fromEntities(projectList);
     }
 
     @Deprecated

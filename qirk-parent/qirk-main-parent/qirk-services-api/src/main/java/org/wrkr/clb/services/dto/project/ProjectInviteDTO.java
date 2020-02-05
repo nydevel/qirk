@@ -16,36 +16,30 @@
  */
 package org.wrkr.clb.services.dto.project;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 
-import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.common.validation.groups.OnCreate;
+import org.wrkr.clb.common.validation.groups.OnCreateByEmail;
 import org.wrkr.clb.services.dto.IdDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProjectWithOrganizationDTO extends IdDTO {
+/**
+ * @author Evgeny Poreykin
+ *
+ */
+public class ProjectInviteDTO extends IdDTO {
 
-    public String name;
+    @JsonProperty(value = "user")
+    @NotNull(message = "user in ProjectInviteDTO must not be null", groups = OnCreate.class)
+    public Long userId;
 
-    @JsonProperty(value = "ui_id")
-    public String uiId;
+    @JsonProperty(value = "project")
+    @NotNull(message = "project in ProjectInviteDTO must not be null", groups = { OnCreate.class, OnCreateByEmail.class })
+    public Long projectId;
 
-    public static ProjectWithOrganizationDTO fromEntity(Project project) {
-        ProjectWithOrganizationDTO dto = new ProjectWithOrganizationDTO();
-
-        dto.id = project.getId();
-        dto.name = project.getName();
-        dto.uiId = project.getUiId();
-
-        return dto;
-    }
-
-    public static List<ProjectWithOrganizationDTO> fromEntities(List<Project> projectList) {
-        List<ProjectWithOrganizationDTO> dtoList = new ArrayList<ProjectWithOrganizationDTO>(projectList.size());
-        for (Project project : projectList) {
-            dtoList.add(fromEntity(project));
-        }
-        return dtoList;
-    }
+    @NotNull(message = "text in ProjectInviteDTO must not be null", groups = OnCreate.class)
+    @Null(message = "text in ProjectInviteDTO must be null", groups = OnCreateByEmail.class)
+    public String text;
 }
