@@ -74,9 +74,9 @@ function TaskLinks({
   /*selectedTaskLinksList---------->data*/
   const [linkedTask, setLinkedTask] = useState(""); //выбраный сейчас линкованный таск
   const [linkedTasksList, setLinkedTasksList] = useState([]); //доступные линкованые таски
-  const [selectedTaskLinksList, setSelectedTaskLinksList] = isTaskCreate
-    ? useState(takeItemFromLocalStorageSafe("selected_task_links_list", []))
-    : [data, null]; //выбранные линковые таски
+  const [selectedTaskLinksList, setSelectedTaskLinksList] = useState(
+    data || takeItemFromLocalStorageSafe("selected_task_links_list", [])
+  );
   const [postTaskInProgress, setPostTaskInProgress] = useState(false);
 
   //пост линков
@@ -253,34 +253,6 @@ function TaskLinks({
       taskId && fetchListLinks();
     }
   }, [projectId, taskId]);
-
-  useOutsideClickListener(
-    deleteBtnRef,
-    isTaskCreate
-      ? (
-          isDialog = dialogRef &&
-            dialogRef.current &&
-            dialogRef.current.contains(event.target)
-        ) => {
-          !isDialog &&
-            setSelectedTaskLinksList(
-              selectedTaskLinksList.map(task => ({
-                ...task,
-                deleteBtnArmed: false
-              }))
-            );
-        }
-      : (
-          isDialog = dialogRef &&
-            dialogRef.current &&
-            dialogRef.current.contains(event.target)
-        ) => {
-          !isDialog && disarmAllDeleteLinkedTaskButtonsDispatch();
-        },
-    () => {
-      return;
-    }
-  );
 
   return (
     <div>

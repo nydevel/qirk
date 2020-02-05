@@ -22,13 +22,13 @@ const AddBalance = ({ userId, email, addToBalanceDispatch }) => {
       return alert(`Minimal amount is $${uiMoney(MIN_ADD_FUNDS_AMOUNT)}`);
     }
 
-    const exchangeRate = process.env.RUB_PER_LOCAL_USD || 60;
+    const exchangeRate = process.env.REACT_APP_RUB_PER_LOCAL_USD || 60;
 
-    var widget = new cp.CloudPayments({ language: "en-US" });
+    var widget = new window.cp.CloudPayments({ language: "en-US" });
 
     widget.charge(
       {
-        publicId: process.env.CLOUD_PAYMENTS_PUBLIC_ID,
+        publicId: process.env.REACT_APP_CLOUD_PAYMENTS_PUBLIC_ID,
         description: `$${uiAmount} deposit`,
         amount: amountInt * exchangeRate,
         currency: "RUB",

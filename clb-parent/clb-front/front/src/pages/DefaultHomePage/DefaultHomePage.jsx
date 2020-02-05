@@ -17,7 +17,7 @@ import queryString from "query-string";
 import { IconButton, Icon } from "@material-ui/core";
 
 function DefaultHomePage() {
-  const { project_uiid } = queryString.parse(location.search);
+  const { project_uiid } = queryString.parse(window.location.search);
   const [organizationUiid, setOrganizationUiid] = useState(null);
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(true);

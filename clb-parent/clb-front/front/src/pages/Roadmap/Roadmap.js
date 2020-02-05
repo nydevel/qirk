@@ -240,11 +240,11 @@ const DraggableRoad = ({
   onOpenCreateCardForm = () =>
     console.error("onOpenCreateCardForm prop is not present at DraggableRoad")
 }) => {
+  const [open, setOpen] = useState(false);
+
   if (!r) {
     return null;
   }
-
-  const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -613,10 +613,6 @@ const CardDraggable = ({
 
   const enterPressed = useKeyPress("Enter");
 
-  if (!c) {
-    return null;
-  }
-
   const lightColor = grey[50];
 
   const cardHeaderStyles = {
@@ -655,7 +651,9 @@ const CardDraggable = ({
       setEditing(false);
     }
   }, [enterPressed, editing]);
-
+  if (!c) {
+    return null;
+  }
   return (
     <Draggable draggableId={`card${idDelimiter}${c.id}`} index={index}>
       {provided => (

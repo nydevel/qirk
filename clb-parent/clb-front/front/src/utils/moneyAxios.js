@@ -6,7 +6,7 @@ const headers = {
 };
 
 const instance = axios.create({
-  baseURL: `${process.env.MONEY_SERVER_URL}${process.env.MONEY_SERVER_API_PREFIX}`,
+  baseURL: `${process.env.MONEY_SERVER_URL}${process.env.REACT_APP_MONEY_SERVER_API_PREFIX}`,
   withCredentials: true,
   headers
 });

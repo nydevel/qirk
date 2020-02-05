@@ -58,17 +58,18 @@ function Attachments({
 }) {
   const deleteBtnRef = useRef();
   const [xHoveredOver, setXHoveredOver] = useState(null);
-  const [_attachments, setAttachments] = isTaskCreate
-    ? useState(() => {
-        const currentDateInSeconds = Date.now() / 1000;
-        return takeItemFromLocalStorageSafe("attachments", []).filter(
-          item =>
-            item.created_at &&
-            process.env.REACT_APP_ATTACHMENT_ACTIVE_TIME >
-              currentDateInSeconds - item.created_at
-        );
-      })
-    : [attachments, null];
+  const [_attachments, setAttachments] = useState(() => {
+    if (!isTaskCreate) {
+      return attachments;
+    }
+    const currentDateInSeconds = Date.now() / 1000;
+    return takeItemFromLocalStorageSafe("attachments", []).filter(
+      item =>
+        item.created_at &&
+        process.env.REACT_APP_ATTACHMENT_ACTIVE_TIME >
+          currentDateInSeconds - item.created_at
+    );
+  });
 
   useOutsideClickListener(
     deleteBtnRef,
