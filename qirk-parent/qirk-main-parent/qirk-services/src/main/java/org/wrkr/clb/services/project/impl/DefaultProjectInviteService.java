@@ -28,7 +28,6 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.InviteStatus.Status;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
@@ -40,12 +39,10 @@ import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.RejectDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberPermissionsDTO;
-import org.wrkr.clb.services.organization.OrganizationMemberService;
 import org.wrkr.clb.services.project.ProjectInviteService;
 import org.wrkr.clb.services.project.ProjectMemberService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
@@ -53,7 +50,6 @@ import org.wrkr.clb.services.security.SecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
-
 
 @Validated
 @Service
@@ -82,9 +78,6 @@ public class DefaultProjectInviteService implements ProjectInviteService {
     private ProjectMemberRepo projectMemberRepo;
 
     @Autowired
-    private OrganizationMemberService organizationMemberService;
-
-    @Autowired
     private ProjectMemberService projectMemberService;
 
     @Autowired
@@ -109,7 +102,7 @@ public class DefaultProjectInviteService implements ProjectInviteService {
             throw new NotFoundException("User");
         }
 
-        Project project = projectRepo.getAndFetchOrganization(projectInviteDTO.projectId);
+        Project project = projectRepo.get(projectInviteDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -300,9 +293,7 @@ public class DefaultProjectInviteService implements ProjectInviteService {
                     "Invite with this status cannot be executed");
         }
 
-        OrganizationMember organizationMember = organizationMemberService.create(
-                invite.getUser(), invite.getProject().getOrganization(), new OrganizationMemberDTO(), true);
-        projectMemberService.create(invite.getProject(), organizationMember,
+        projectMemberService.create(invite.getUser(), invite.getProject(),
                 new ProjectMemberDTO(inviteDTO.writeAllowed, inviteDTO.manager));
 
         delete(invite);

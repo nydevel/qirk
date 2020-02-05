@@ -38,7 +38,6 @@ import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 @Validated
 @Service
 public class DefaultAttachmentService implements AttachmentService {

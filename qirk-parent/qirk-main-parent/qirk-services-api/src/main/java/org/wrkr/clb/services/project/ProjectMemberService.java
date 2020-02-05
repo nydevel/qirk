@@ -38,8 +38,8 @@ import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 public interface ProjectMemberService {
 
     public ProjectMember create(
-            @NotNull(message = "project in ProjectMemberService must not be null") Project project,
             @NotNull(message = "user in ProjectMemberService must not be null") User user,
+            @NotNull(message = "project in ProjectMemberService must not be null") Project project,
             @Valid ProjectMemberDTO projectMemberDTO);
 
     @Validated(OnCreate.class)

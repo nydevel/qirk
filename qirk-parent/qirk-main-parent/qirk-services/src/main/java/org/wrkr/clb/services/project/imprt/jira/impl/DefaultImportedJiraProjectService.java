@@ -224,10 +224,10 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
 
     public void createProjectMembers(
             Project project, OrganizationMember importingMember, Collection<OrganizationMember> orgMembers) {
-        projectMemberService.create(project, importingMember, new ProjectMemberDTO(true, true));
+        projectMemberService.create(importingMember, project, new ProjectMemberDTO(true, true));
         ProjectMemberDTO defaultProjectPermissions = new ProjectMemberDTO(true, false);
         for (OrganizationMember orgMember : orgMembers) {
-            projectMemberService.create(project, orgMember, defaultProjectPermissions);
+            projectMemberService.create(orgMember, project, defaultProjectPermissions);
         }
     }
 
@@ -247,7 +247,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         projectDTO.isPrivate = importDTO.isPrivate;
         projectDTO.description = "";
 
-        Project project = projectService.create(organization, projectDTO, new ArrayList<User>());
+        Project project = projectService.create(projectDTO, organization, new ArrayList<User>());
 
         importedProject.setProjectId(project.getId());
         importedProject.setUpdatedAt(DateTimeUtils.now());

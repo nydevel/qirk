@@ -42,9 +42,7 @@ import org.wrkr.clb.common.util.strings.MarkdownUtils;
 import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.user.User;
@@ -53,7 +51,6 @@ import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.organization.JDBCOrganizationRepo;
 import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
-import org.wrkr.clb.repo.project.ProjectApplicationRepo;
 import org.wrkr.clb.repo.project.ProjectInviteRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
@@ -62,7 +59,6 @@ import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.RecordVersionDTO;
-import org.wrkr.clb.services.dto.project.ProjectApplicationStatusDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
@@ -121,8 +117,8 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     @Autowired
     private ProjectInviteRepo projectInviteRepo;
 
-    @Autowired
-    private ProjectApplicationRepo projectApplicationRepo;
+    // @Autowired
+    // private ProjectApplicationRepo projectApplicationRepo;
 
     @Autowired
     private JDBCOrganizationRepo organizationRepo;
@@ -208,7 +204,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         projectRepo.persist(project);
 
         for (User user : membersToCreate) {
-            projectMemberService.create(project, user, new ProjectMemberDTO(true, true));
+            projectMemberService.create(user, project, new ProjectMemberDTO(true, true));
         }
 
         return project;
@@ -236,7 +232,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
             membersToCreate.add(currentUser);
         }
 
-        Project project = create(organization, projectDTO, membersToCreate);
+        Project project = create(projectDTO, organization, membersToCreate);
         ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocs(project);
 
         return dto;

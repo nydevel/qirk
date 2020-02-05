@@ -25,12 +25,11 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.jms.message.statistics.NewMemoMessage;
 import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
+import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.MemoRepo;
 import org.wrkr.clb.repo.project.ProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
@@ -55,7 +54,7 @@ public class DefaultMemoService implements MemoService {
     private ProjectMemberRepo projectMemberRepo;
 
     @Autowired
-    private OrganizationMemberRepo organizationMemberRepo;
+    private JDBCProjectMemberRepo jdbcProjectMemberRepo;
 
     @Autowired
     private ProjectSecurityService securityService;
@@ -84,8 +83,7 @@ public class DefaultMemoService implements MemoService {
         memo.setProject(project);
         memo.setBody(memoDTO.body.strip());
 
-        OrganizationMember author = organizationMemberRepo.getNotFiredByUserAndOrganizationId(
-                currentUser, project.getOrganization().getId());
+        ProjectMember author = jdbcProjectMemberRepo.getNotFiredByUserIdAndProjectId(currentUser.getId(), project.getId());
         memo.setAuthor(author);
 
         memo.setCreatedAt(DateTimeUtils.now());
@@ -112,7 +110,7 @@ public class DefaultMemoService implements MemoService {
             currentProjectMember = projectMemberRepo.getNotFiredByUserAndProjectId(
                     currentUser, projectId);
         }
-        return MemoReadDTO.fromEntities(memoList, currentOrganizationMember, currentProjectMember);
+        return MemoReadDTO.fromEntities(memoList, currentProjectMember);
     }
 
     @Override
@@ -129,7 +127,7 @@ public class DefaultMemoService implements MemoService {
             currentProjectMember = projectMemberRepo.getNotFiredByUserAndProjectUiId(
                     currentUser, projectUiId);
         }
-        return MemoReadDTO.fromEntities(memoList, currentOrganizationMember, currentProjectMember);
+        return MemoReadDTO.fromEntities(memoList, currentProjectMember);
     }
 
     @Override

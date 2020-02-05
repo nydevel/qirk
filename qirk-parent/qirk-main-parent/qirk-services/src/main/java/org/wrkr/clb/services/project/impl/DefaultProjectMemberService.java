@@ -111,7 +111,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
-    public ProjectMember create(Project project, User user, ProjectMemberDTO projectMemberDTO) {
+    public ProjectMember create(User user, Project project, ProjectMemberDTO projectMemberDTO) {
         ProjectMember member = projectMemberRepo.getNotFiredByUserAndProject(user, project);
         if (member != null) {
             return member;
@@ -167,7 +167,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
             throw new NotFoundException("Organization member");
         }
 
-        ProjectMember projectMember = create(project, organizationMember, projectMemberDTO);
+        ProjectMember projectMember = create(organizationMember, project, projectMemberDTO);
         return ProjectMemberReadDTO.fromEntityWithUserAndProjectAndPermissions(projectMember);
     }
 
@@ -193,7 +193,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
                 throw new NotFoundException("Organization member");
             }
 
-            ProjectMember projectMember = create(project, organizationMember, projectMemberDTO);
+            ProjectMember projectMember = create(organizationMember, project, projectMemberDTO);
             readDTOList.add(ProjectMemberReadDTO.fromEntityWithUserAndProjectAndPermissions(projectMember));
         }
         return readDTOList;
@@ -322,7 +322,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         securityService.authzCanModifyProjectMember(currentUser, memberId);
         // security finish
 
-        ProjectMember member = jdbcProjectMemberRepo.getNotFiredByIdAndFetchOrganizationMemberAndProject(memberId);
+        ProjectMember member = jdbcProjectMemberRepo.getNotFiredByIdAndFetchProject(memberId);
         if (member == null) {
             throw new NotFoundException("Project member");
         }
@@ -337,7 +337,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         // security finish
 
         ProjectMember member = jdbcProjectMemberRepo
-                .getNotFiredByUserIdAndProjectIdAndFetchOrgMemberAndProject(
+                .getNotFiredByUserIdAndProjectIdAndFetchProject(
                         currentUser.getId(), projectId);
         if (member == null) {
             throw new NotFoundException("Project member");

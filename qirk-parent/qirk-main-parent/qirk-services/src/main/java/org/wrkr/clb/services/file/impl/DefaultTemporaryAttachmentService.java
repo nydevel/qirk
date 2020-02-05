@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.project.task.impl;
+package org.wrkr.clb.services.file.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +32,7 @@ import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
 import org.wrkr.clb.services.api.dropbox.DropboxApiService;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
-import org.wrkr.clb.services.project.task.TemporaryAttachmentService;
-
+import org.wrkr.clb.services.file.TemporaryAttachmentService;
 
 //@Service configured in clb-services-ctx.xml
 @Validated

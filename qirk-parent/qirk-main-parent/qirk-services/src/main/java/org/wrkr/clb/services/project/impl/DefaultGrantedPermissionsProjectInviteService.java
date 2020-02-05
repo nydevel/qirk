@@ -30,7 +30,6 @@ import org.wrkr.clb.common.mail.UserMailService;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.InviteStatus.Status;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectInviteToken;
@@ -45,12 +44,10 @@ import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.RejectDTO;
 import org.wrkr.clb.services.dto.TokenRejectDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberDTO;
 import org.wrkr.clb.services.dto.project.GrantedPermissionsProjectInviteDTO;
 import org.wrkr.clb.services.dto.project.GrantedPermissionsProjectInviteReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.user.TokenRegisterDTO;
-import org.wrkr.clb.services.organization.OrganizationMemberService;
 import org.wrkr.clb.services.project.GrantedPermissionsProjectInviteService;
 import org.wrkr.clb.services.project.ProjectInviteTokenService;
 import org.wrkr.clb.services.project.ProjectMemberService;
@@ -60,7 +57,6 @@ import org.wrkr.clb.services.user.RegistrationService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
-
 
 @Validated
 @Service
@@ -91,9 +87,6 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
 
     @Autowired
     private ProjectInviteTokenRepo inviteTokenRepo;
-
-    @Autowired
-    private OrganizationMemberService organizationMemberService;
 
     @Autowired
     private ProjectMemberService projectMemberService;
@@ -161,7 +154,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
             throw new NotFoundException("User");
         }
 
-        Project project = projectRepo.getAndFetchOrganization(projectInviteDTO.projectId);
+        Project project = projectRepo.get(projectInviteDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -207,7 +200,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
             throw new BadRequestException(JsonStatusCode.ALREADY_REGISTERED, "User already registered.");
         }
 
-        Project project = projectRepo.getAndFetchOrganization(projectInviteDTO.projectId);
+        Project project = projectRepo.get(projectInviteDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -287,11 +280,8 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
     }
 
     private void accept(User user, GrantedPermissionsProjectInvite invite) throws Exception {
-        OrganizationMember organizationMember = organizationMemberService.create(
-                user, invite.getProject().getOrganization(), new OrganizationMemberDTO(), true);
-        projectMemberService.create(invite.getProject(), organizationMember,
+        projectMemberService.create(user, invite.getProject(),
                 new ProjectMemberDTO(invite.isWriteAllowed(), invite.isManager()));
-
         delete(invite, user);
     }
 
