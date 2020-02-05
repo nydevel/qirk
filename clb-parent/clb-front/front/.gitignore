@@ -4,15 +4,12 @@
 /node_modules
 /.pnp
 .pnp.js
-/package-lock.json
-
 
 # testing
 /coverage
 
 # production
 /build
-build.zip
 
 # misc
 .DS_Store
@@ -24,15 +21,3 @@ build.zip
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Editor directories and files
-.idea
-.vscode
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-
-# GitLab CI
-.gitlab-ci.yml
-/.gitlab-ci.yml
