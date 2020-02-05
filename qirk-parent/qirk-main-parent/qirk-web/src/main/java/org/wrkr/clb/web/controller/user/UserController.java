@@ -3,7 +3,7 @@
  */
 /*
  * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis LLC, Russia
+ * Copyright (C) 2020 Memfis Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under the terms of
  * the GNU General Public License as published by the Free Software Foundation, either version 3
