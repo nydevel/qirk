@@ -37,7 +37,7 @@ import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.MoveToRoadDTO;
 import org.wrkr.clb.services.dto.project.task.TaskCardDTO;
 import org.wrkr.clb.services.dto.project.task.TaskCardReadDTO;
-import org.wrkr.clb.services.impl.BaseVersionedEntityService;
+import org.wrkr.clb.services.impl.VersionedEntityService;
 import org.wrkr.clb.services.project.task.TaskCardService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
@@ -48,7 +48,7 @@ import org.wrkr.clb.services.util.http.JsonStatusCode;
 
 @Validated
 @Service
-public class DefaultTaskCardService extends BaseVersionedEntityService implements TaskCardService {
+public class DefaultTaskCardService extends VersionedEntityService implements TaskCardService {
 
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTaskCardService.class);

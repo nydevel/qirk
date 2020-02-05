@@ -30,7 +30,6 @@ import javax.persistence.Table;
 
 import org.wrkr.clb.model.user.User;
 
-
 @Entity
 @Table(name = GrantedPermissionsProjectInviteMeta.TABLE_NAME)
 public class GrantedPermissionsProjectInvite extends BaseProjectInvite {

@@ -36,7 +36,6 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
 import org.wrkr.clb.repo.JPABaseDeletingRepo;
 
-
 @Repository
 public class ProjectInviteRepo extends JPABaseDeletingRepo<ProjectInvite> {
 
@@ -68,13 +67,12 @@ public class ProjectInviteRepo extends JPABaseDeletingRepo<ProjectInvite> {
         return getSingleResultOrNull(query);
     }
 
-    public ProjectInvite getAndFetchUserAndOrganizationAndStatus(Long id) {
+    public ProjectInvite getAndFetchUserAndStatus(Long id) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ProjectInvite> query = cb.createQuery(ProjectInvite.class);
 
         Root<ProjectInvite> inviteRoot = query.from(ProjectInvite.class);
         inviteRoot.fetch(ProjectInvite_.user);
-        inviteRoot.fetch(ProjectInvite_.project).fetch(Project_.organization);
         inviteRoot.fetch(ProjectInvite_.status);
 
         query.where(cb.equal(inviteRoot.get(ProjectInvite_.id), id));
@@ -119,12 +117,11 @@ public class ProjectInviteRepo extends JPABaseDeletingRepo<ProjectInvite> {
         return getSingleResultOrNull(query);
     }
 
-    public List<ProjectInvite> listNotReportedByUserAndFetchProjectAndOrganizationAndStatus(User user) {
+    public List<ProjectInvite> listNotReportedByUserAndFetchProjectAndStatus(User user) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ProjectInvite> query = cb.createQuery(ProjectInvite.class);
 
         Root<ProjectInvite> inviteRoot = query.from(ProjectInvite.class);
-        inviteRoot.fetch(ProjectInvite_.project).fetch(Project_.organization);
         inviteRoot.fetch(ProjectInvite_.status);
 
         query.where(cb.equal(inviteRoot.get(ProjectInvite_.user), user),

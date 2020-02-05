@@ -29,12 +29,17 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wrkr.clb.model.BaseVersionedEntity;
+import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.BaseVersionedEntityMeta;
+import org.wrkr.clb.model.VersionedEntity;
 import org.wrkr.clb.model.project.task.TaskCard;
 
 @Entity
 @Table(name = RoadMeta.TABLE_NAME)
-public class Road extends BaseVersionedEntity {
+public class Road extends BaseIdEntity implements VersionedEntity {
+
+    @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
+    private Long recordVersion = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -62,6 +67,16 @@ public class Road extends BaseVersionedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "road")
     private List<TaskCard> cards = new ArrayList<TaskCard>();
+
+    @Override
+    public Long getRecordVersion() {
+        return recordVersion;
+    }
+
+    @Override
+    public void setRecordVersion(Long recordVersion) {
+        this.recordVersion = recordVersion;
+    }
 
     public Project getProject() {
         return project;

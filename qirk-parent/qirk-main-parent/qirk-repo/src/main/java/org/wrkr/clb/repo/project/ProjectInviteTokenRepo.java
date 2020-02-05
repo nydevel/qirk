@@ -31,9 +31,7 @@ import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite_;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectInviteToken;
 import org.wrkr.clb.model.project.ProjectInviteToken_;
-import org.wrkr.clb.model.project.Project_;
 import org.wrkr.clb.repo.JPABaseDeletingRepo;
-
 
 @Repository
 public class ProjectInviteTokenRepo extends JPABaseDeletingRepo<ProjectInviteToken> {
@@ -65,7 +63,7 @@ public class ProjectInviteTokenRepo extends JPABaseDeletingRepo<ProjectInviteTok
         return getSingleResultOrNull(query);
     }
 
-    public ProjectInviteToken getByTokenAndFetchInviteAndUserAndProjectAndOrganizationAndStatus(String token) {
+    public ProjectInviteToken getByTokenAndFetchInviteAndUserAndProjectAndStatus(String token) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<ProjectInviteToken> query = cb.createQuery(ProjectInviteToken.class);
 
@@ -73,7 +71,6 @@ public class ProjectInviteTokenRepo extends JPABaseDeletingRepo<ProjectInviteTok
         Fetch<ProjectInviteToken, GrantedPermissionsProjectInvite> inviteFetch = inviteTokenRoot
                 .fetch(ProjectInviteToken_.invite);
         inviteFetch.fetch(GrantedPermissionsProjectInvite_.user, JoinType.LEFT);
-        inviteFetch.fetch(GrantedPermissionsProjectInvite_.project).fetch(Project_.organization);
         inviteFetch.fetch(GrantedPermissionsProjectInvite_.status);
 
         query.where(cb.equal(inviteTokenRoot.get(ProjectInviteToken_.token), token));

@@ -31,9 +31,12 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wrkr.clb.model.BaseUiIdEntity;
+import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.BaseVersionedEntityMeta;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
+import org.wrkr.clb.model.UiIdEntity;
+import org.wrkr.clb.model.VersionedEntity;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
@@ -41,7 +44,10 @@ import org.wrkr.clb.model.user.UserFavorite;
 
 @Entity
 @Table(name = ProjectMeta.TABLE_NAME)
-public class Project extends BaseUiIdEntity {
+public class Project extends BaseIdEntity implements VersionedEntity, UiIdEntity {
+
+    @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
+    private Long recordVersion = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_owner_id", nullable = false)
@@ -57,6 +63,9 @@ public class Project extends BaseUiIdEntity {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "ui_id", nullable = false, unique = true)
+    protected String uiId;
 
     @Column(name = "key", nullable = false)
     private String key;
@@ -111,6 +120,16 @@ public class Project extends BaseUiIdEntity {
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<Issue> issues = new ArrayList<Issue>();
 
+    @Override
+    public Long getRecordVersion() {
+        return recordVersion;
+    }
+
+    @Override
+    public void setRecordVersion(Long recordVersion) {
+        this.recordVersion = recordVersion;
+    }
+
     public User getOwner() {
         return owner;
     }
@@ -133,6 +152,16 @@ public class Project extends BaseUiIdEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String getUiId() {
+        return uiId;
+    }
+
+    @Override
+    public void setUiId(String uiId) {
+        this.uiId = uiId;
     }
 
     public String getKey() {

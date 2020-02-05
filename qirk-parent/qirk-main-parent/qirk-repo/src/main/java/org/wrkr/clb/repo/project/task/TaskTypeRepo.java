@@ -24,12 +24,12 @@ import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.project.task.TaskType.Type;
 import org.wrkr.clb.model.project.task.TaskTypeMeta;
-import org.wrkr.clb.repo.EnumRepo;
+import org.wrkr.clb.repo.EnumEntityRepo;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TaskTypeMapper;
 
 @Repository
-public class TaskTypeRepo extends JDBCBaseMainRepo implements EnumRepo<TaskType, TaskType.Type> {
+public class TaskTypeRepo extends JDBCBaseMainRepo implements EnumEntityRepo<TaskType, TaskType.Type> {
 
     private static final TaskTypeMapper TYPE_MAPPER = new TaskTypeMapper();
 

@@ -266,7 +266,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
         // security finish
 
         GrantedPermissionsProjectInvite invite = projectInviteRepo
-                .getPendingAndFetchUserAndProjectAndOrganizationAndToken(id);
+                .getPendingAndFetchUserAndProjectAndToken(id);
         if (invite == null) {
             throw new NotFoundException("Project invite");
         }
@@ -282,7 +282,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
         // security finish
 
         List<GrantedPermissionsProjectInvite> inviteList = projectInviteRepo
-                .listPendingByUserAndFetchProjectAndOrganizationAndSender(currentUser);
+                .listPendingByUserAndFetchProjectAndSender(currentUser);
         return GrantedPermissionsProjectInviteReadDTO.fromGrantedPermissionsInvitesForUser(inviteList);
     }
 
@@ -303,7 +303,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
         // security finish
 
         GrantedPermissionsProjectInvite invite = projectInviteRepo
-                .getByIdAndUserAndFetchProjectAndOrganizationAndStatus(
+                .getByIdAndUserAndFetchProjectAndStatus(
                         id, currentUser);
         if (invite == null) {
             throw new NotFoundException("Project invite");
@@ -320,7 +320,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public void acceptByToken(TokenRegisterDTO dto) throws Exception {
         ProjectInviteToken inviteToken = inviteTokenRepo
-                .getByTokenAndFetchInviteAndUserAndProjectAndOrganizationAndStatus(dto.token.strip());
+                .getByTokenAndFetchInviteAndUserAndProjectAndStatus(dto.token.strip());
         if (inviteToken == null) {
             throw new NotFoundException("Project invite token");
         }
@@ -389,7 +389,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
         // security finish
 
         GrantedPermissionsProjectInvite invite = projectInviteRepo
-                .getByIdAndUserAndFetchProjectAndOrganizationAndStatus(
+                .getByIdAndUserAndFetchProjectAndStatus(
                         rejectDTO.id, currentUser);
         if (invite == null) {
             throw new NotFoundException("Project invite");
@@ -401,7 +401,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public GrantedPermissionsProjectInviteReadDTO rejectByToken(TokenRejectDTO rejectDTO) throws Exception {
         ProjectInviteToken inviteToken = inviteTokenRepo
-                .getByTokenAndFetchInviteAndUserAndProjectAndOrganizationAndStatus(rejectDTO.token.strip());
+                .getByTokenAndFetchInviteAndUserAndProjectAndStatus(rejectDTO.token.strip());
         if (inviteToken == null) {
             throw new NotFoundException("Project invite token");
         }

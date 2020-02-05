@@ -37,7 +37,6 @@ import org.wrkr.clb.model.project.Project_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.JPABaseDeletingRepo;
 
-
 @Repository
 public class GrantedPermissionsProjectInviteRepo extends JPABaseDeletingRepo<GrantedPermissionsProjectInvite> {
 
@@ -69,13 +68,12 @@ public class GrantedPermissionsProjectInviteRepo extends JPABaseDeletingRepo<Gra
         return getSingleResultOrNull(query);
     }
 
-    public GrantedPermissionsProjectInvite getPendingAndFetchUserAndProjectAndOrganizationAndToken(Long id) {
+    public GrantedPermissionsProjectInvite getPendingAndFetchUserAndProjectAndToken(Long id) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<GrantedPermissionsProjectInvite> query = cb.createQuery(GrantedPermissionsProjectInvite.class);
 
         Root<GrantedPermissionsProjectInvite> inviteRoot = query.from(GrantedPermissionsProjectInvite.class);
         inviteRoot.fetch(GrantedPermissionsProjectInvite_.user, JoinType.LEFT);
-        inviteRoot.fetch(GrantedPermissionsProjectInvite_.project).fetch(Project_.organization);
         Join<GrantedPermissionsProjectInvite, InviteStatus> statusJoin = inviteRoot.join(GrantedPermissionsProjectInvite_.status);
 
         query.where(cb.equal(inviteRoot.get(GrantedPermissionsProjectInvite_.id), id),
@@ -83,12 +81,11 @@ public class GrantedPermissionsProjectInviteRepo extends JPABaseDeletingRepo<Gra
         return getSingleResultOrNull(query);
     }
 
-    public GrantedPermissionsProjectInvite getByIdAndUserAndFetchProjectAndOrganizationAndStatus(Long id, User user) {
+    public GrantedPermissionsProjectInvite getByIdAndUserAndFetchProjectAndStatus(Long id, User user) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<GrantedPermissionsProjectInvite> query = cb.createQuery(GrantedPermissionsProjectInvite.class);
 
         Root<GrantedPermissionsProjectInvite> inviteRoot = query.from(GrantedPermissionsProjectInvite.class);
-        inviteRoot.fetch(GrantedPermissionsProjectInvite_.project).fetch(Project_.organization);
         inviteRoot.fetch(GrantedPermissionsProjectInvite_.status);
 
         query.where(cb.equal(inviteRoot.get(GrantedPermissionsProjectInvite_.id), id),
@@ -114,12 +111,11 @@ public class GrantedPermissionsProjectInviteRepo extends JPABaseDeletingRepo<Gra
         return getSingleResultOrNull(query);
     }
 
-    public List<GrantedPermissionsProjectInvite> listPendingByUserAndFetchProjectAndOrganizationAndSender(User user) {
+    public List<GrantedPermissionsProjectInvite> listPendingByUserAndFetchProjectAndSender(User user) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<GrantedPermissionsProjectInvite> query = cb.createQuery(GrantedPermissionsProjectInvite.class);
 
         Root<GrantedPermissionsProjectInvite> inviteRoot = query.from(GrantedPermissionsProjectInvite.class);
-        inviteRoot.fetch(GrantedPermissionsProjectInvite_.project).fetch(Project_.organization);
         inviteRoot.fetch(GrantedPermissionsProjectInvite_.sender);
         Join<GrantedPermissionsProjectInvite, InviteStatus> statusJoin = inviteRoot.join(GrantedPermissionsProjectInvite_.status);
 

@@ -24,7 +24,7 @@ import org.wrkr.clb.repo.mapper.InviteStatusMapper;
 
 
 @Repository
-public class InviteStatusRepo extends JDBCBaseMainRepo implements EnumRepo<InviteStatus, InviteStatus.Status> {
+public class InviteStatusRepo extends JDBCBaseMainRepo implements EnumEntityRepo<InviteStatus, InviteStatus.Status> {
 
     private static final InviteStatusMapper STATUS_MAPPER = new InviteStatusMapper();
 

@@ -158,7 +158,7 @@ public class DefaultProjectInviteService implements ProjectInviteService {
         securityService.authzCanModifyProjectInvite(currentUser, id);
         // security finish
 
-        ProjectInvite invite = projectInviteRepo.getAndFetchUserAndOrganizationAndStatus(id);
+        ProjectInvite invite = projectInviteRepo.getAndFetchUserAndStatus(id);
         if (invite == null) {
             throw new NotFoundException("Project invite");
         }
@@ -173,7 +173,7 @@ public class DefaultProjectInviteService implements ProjectInviteService {
         // security finish
 
         List<ProjectInvite> inviteList = projectInviteRepo
-                .listNotReportedByUserAndFetchProjectAndOrganizationAndStatus(currentUser);
+                .listNotReportedByUserAndFetchProjectAndStatus(currentUser);
         return ProjectInviteReadDTO.fromInvitesForUser(inviteList);
     }
 
@@ -291,7 +291,7 @@ public class DefaultProjectInviteService implements ProjectInviteService {
         securityService.authzCanModifyProjectInvite(currentUser, inviteDTO.id);
         // security finish
 
-        ProjectInvite invite = projectInviteRepo.getAndFetchUserAndOrganizationAndStatus(inviteDTO.id);
+        ProjectInvite invite = projectInviteRepo.getAndFetchUserAndStatus(inviteDTO.id);
         if (invite == null) {
             throw new NotFoundException("Project invite");
         }

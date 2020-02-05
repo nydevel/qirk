@@ -20,28 +20,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.VersionedEntity;
-import org.wrkr.clb.model.BaseVersionedEntityMeta;
+import org.wrkr.clb.model.InviteStatus;
+import org.wrkr.clb.model.InviteStatusMeta;
 
-public abstract class RecordVersionMapper<E extends VersionedEntity> extends BaseMapper<E> {
+public class InviteStatusMapper extends BaseMapper<InviteStatus> {
 
-    public RecordVersionMapper() {
+    public InviteStatusMapper() {
         super();
     }
 
-    public RecordVersionMapper(String tableName) {
+    public InviteStatusMapper(String tableName) {
         super(tableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return generateSelectColumnStatement(BaseVersionedEntityMeta.id) + ", " +
-                generateSelectColumnStatement(BaseVersionedEntityMeta.recordVersion);
+        return generateSelectColumnStatement(InviteStatusMeta.id) + ", " +
+                generateSelectColumnStatement(InviteStatusMeta.nameCode);
     }
 
-    @SuppressWarnings("unused")
     @Override
-    public E mapRow(ResultSet rs, int rowNum) throws SQLException {
-        throw new UnsupportedOperationException();
+    public InviteStatus mapRow(ResultSet rs, @SuppressWarnings("unused") int rowNum) throws SQLException {
+        InviteStatus status = new InviteStatus();
+
+        status.setId(rs.getLong(generateColumnAlias(InviteStatusMeta.id)));
+        status.setNameCode(InviteStatus.Status.valueOf(rs.getString(generateColumnAlias(InviteStatusMeta.nameCode))));
+
+        return status;
     }
 }

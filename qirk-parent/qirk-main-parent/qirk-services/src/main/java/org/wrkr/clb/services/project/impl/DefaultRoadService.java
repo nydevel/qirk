@@ -37,7 +37,7 @@ import org.wrkr.clb.services.dto.MoveDTO;
 import org.wrkr.clb.services.dto.project.RoadDTO;
 import org.wrkr.clb.services.dto.project.RoadReadDTO;
 import org.wrkr.clb.services.dto.project.task.TaskCardReadDTO;
-import org.wrkr.clb.services.impl.BaseVersionedEntityService;
+import org.wrkr.clb.services.impl.VersionedEntityService;
 import org.wrkr.clb.services.project.RoadService;
 import org.wrkr.clb.services.project.task.TaskCardService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
@@ -47,7 +47,7 @@ import org.wrkr.clb.services.util.exception.NotFoundException;
 
 @Validated
 @Service
-public class DefaultRoadService extends BaseVersionedEntityService implements RoadService {
+public class DefaultRoadService extends VersionedEntityService implements RoadService {
 
     @Autowired
     private RoadRepo roadRepo;

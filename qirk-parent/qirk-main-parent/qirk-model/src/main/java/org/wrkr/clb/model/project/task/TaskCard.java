@@ -32,7 +32,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wrkr.clb.model.BaseVersionedEntity;
+import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.BaseVersionedEntityMeta;
+import org.wrkr.clb.model.VersionedEntity;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.Road;
 
@@ -40,7 +42,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name = TaskCardMeta.TABLE_NAME)
-public class TaskCard extends BaseVersionedEntity {
+public class TaskCard extends BaseIdEntity implements VersionedEntity {
+
+    @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
+    private Long recordVersion = 1L;
 
     public static enum Status {
         STOPPED("STOPPED"),
@@ -99,6 +104,16 @@ public class TaskCard extends BaseVersionedEntity {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "card")
     private List<Task> tasks = new ArrayList<Task>();
+
+    @Override
+    public Long getRecordVersion() {
+        return recordVersion;
+    }
+
+    @Override
+    public void setRecordVersion(Long recordVersion) {
+        this.recordVersion = recordVersion;
+    }
 
     public Project getProject() {
         return project;

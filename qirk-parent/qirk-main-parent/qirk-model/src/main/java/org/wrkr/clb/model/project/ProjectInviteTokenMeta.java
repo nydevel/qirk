@@ -14,27 +14,16 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.model;
+package org.wrkr.clb.model.project;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import org.wrkr.clb.model.BaseIdEntityMeta;
 
-@MappedSuperclass
-public abstract class BaseVersionedEntity extends BaseIdEntity {
+public class ProjectInviteTokenMeta extends BaseIdEntityMeta {
 
-    @Column(name = "record_version", nullable = false)
-    private Long recordVersion = 1L;
+    public static final String TABLE_NAME = "project_invite_token";
 
-    public Long getRecordVersion() {
-        return recordVersion;
-    }
-
-    public void setRecordVersion(Long recordVersion) {
-        this.recordVersion = recordVersion;
-    }
-
-    @Override
-    public String toString() {
-        return getClass() + " [id=" + getId() + "; recordVersion=" + recordVersion + "]";
-    }
+    public static final String inviteId = "invite_id";
+    public static final String token = "token";
+    public static final String emailAddress = "email_address";
+    public static final String createdAt = "created_at";
 }

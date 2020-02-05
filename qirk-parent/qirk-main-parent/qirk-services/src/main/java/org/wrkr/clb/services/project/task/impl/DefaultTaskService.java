@@ -79,7 +79,7 @@ import org.wrkr.clb.services.dto.project.task.TaskCardIdDTO;
 import org.wrkr.clb.services.dto.project.task.TaskDTO;
 import org.wrkr.clb.services.dto.project.task.TaskLinkDTO;
 import org.wrkr.clb.services.dto.project.task.TaskReadDTO;
-import org.wrkr.clb.services.impl.BaseVersionedEntityService;
+import org.wrkr.clb.services.impl.VersionedEntityService;
 import org.wrkr.clb.services.project.task.TaskService;
 import org.wrkr.clb.services.project.task.TaskSubscriberService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
@@ -90,7 +90,7 @@ import org.wrkr.clb.services.util.exception.NotFoundException;
 
 //@Service configured in clb-services-ctx.xml
 @Validated
-public class DefaultTaskService extends BaseVersionedEntityService implements TaskService {
+public class DefaultTaskService extends VersionedEntityService implements TaskService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultTaskService.class);
 

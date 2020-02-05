@@ -14,9 +14,18 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo;
+package org.wrkr.clb.services.impl;
 
-public interface EnumRepo<T, E extends Enum<E>> {
+import org.wrkr.clb.model.VersionedEntity;
+import org.wrkr.clb.services.util.exception.ConflictException;
 
-    public T getByNameCode(E enumNameCode);
+public abstract class VersionedEntityService {
+
+    protected <E extends VersionedEntity> E checkRecordVersion(E entity, Long recordVersion) throws ConflictException {
+        if (!entity.getRecordVersion().equals(recordVersion)) {
+            throw new ConflictException("Concurrent modification occured.");
+        }
+        entity.setRecordVersion(entity.getRecordVersion() + 1);
+        return entity;
+    }
 }

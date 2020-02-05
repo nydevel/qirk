@@ -71,7 +71,7 @@ import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
-import org.wrkr.clb.services.impl.BaseVersionedEntityService;
+import org.wrkr.clb.services.impl.VersionedEntityService;
 import org.wrkr.clb.services.project.ProjectMemberService;
 import org.wrkr.clb.services.project.ProjectService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
@@ -84,7 +84,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 //@Service configured in clb-services-ctx.xml
 @Validated
-public class DefaultProjectService extends BaseVersionedEntityService implements ProjectService {
+public class DefaultProjectService extends VersionedEntityService implements ProjectService {
 
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(DefaultProjectService.class);

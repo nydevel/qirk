@@ -24,12 +24,12 @@ import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskPriority.Priority;
 import org.wrkr.clb.model.project.task.TaskPriorityMeta;
-import org.wrkr.clb.repo.EnumRepo;
+import org.wrkr.clb.repo.EnumEntityRepo;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TaskPriorityMapper;
 
 @Repository
-public class TaskPriorityRepo extends JDBCBaseMainRepo implements EnumRepo<TaskPriority, TaskPriority.Priority> {
+public class TaskPriorityRepo extends JDBCBaseMainRepo implements EnumEntityRepo<TaskPriority, TaskPriority.Priority> {
 
     private static final TaskPriorityMapper PRIORITY_MAPPER = new TaskPriorityMapper();
 

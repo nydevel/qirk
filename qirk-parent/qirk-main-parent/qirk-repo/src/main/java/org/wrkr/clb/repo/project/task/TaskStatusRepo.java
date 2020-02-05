@@ -24,12 +24,12 @@ import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskStatus.Status;
 import org.wrkr.clb.model.project.task.TaskStatusMeta;
-import org.wrkr.clb.repo.EnumRepo;
+import org.wrkr.clb.repo.EnumEntityRepo;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TaskStatusMapper;
 
 @Repository
-public class TaskStatusRepo extends JDBCBaseMainRepo implements EnumRepo<TaskStatus, TaskStatus.Status> {
+public class TaskStatusRepo extends JDBCBaseMainRepo implements EnumEntityRepo<TaskStatus, TaskStatus.Status> {
 
     private static final TaskStatusMapper STATUS_MAPPER = new TaskStatusMapper();
 

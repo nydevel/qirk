@@ -31,15 +31,20 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.wrkr.clb.model.BaseVersionedEntity;
+import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.BaseVersionedEntityMeta;
+import org.wrkr.clb.model.VersionedEntity;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 
 @Entity
 @Table(name = TaskMeta.TABLE_NAME)
-public class Task extends BaseVersionedEntity {
+public class Task extends BaseIdEntity implements VersionedEntity {
 
     public static final int SUMMARY_LENGTH = 80;
+
+    @Column(name = BaseVersionedEntityMeta.recordVersion, nullable = false)
+    private Long recordVersion = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -118,6 +123,16 @@ public class Task extends BaseVersionedEntity {
 
     @OneToMany(mappedBy = "task", fetch = FetchType.LAZY)
     private List<Attachment> attachments = new ArrayList<Attachment>();
+
+    @Override
+    public Long getRecordVersion() {
+        return recordVersion;
+    }
+
+    @Override
+    public void setRecordVersion(Long recordVersion) {
+        this.recordVersion = recordVersion;
+    }
 
     public Long getNumber() {
         return number;
