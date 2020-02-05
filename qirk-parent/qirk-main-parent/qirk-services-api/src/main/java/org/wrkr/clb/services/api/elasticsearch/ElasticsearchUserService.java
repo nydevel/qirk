@@ -19,17 +19,20 @@ package org.wrkr.clb.services.api.elasticsearch;
 import java.util.List;
 
 import org.elasticsearch.search.SearchHits;
+import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.user.User;
 
 public interface ElasticsearchUserService extends ElasticsearchService<User> {
 
-    public void setProjects(User user, List<Long> projectIds) throws Exception;
+    public void setProjects(User user) throws Exception;
 
-    public void addProject(Long userId, Long projectId) throws Exception;
+    public void addProject(User user, ProjectMember member) throws Exception;
 
-    public void removeProject(Long userId, Long projectId) throws Exception;
+    public void updateProject(User user, ProjectMember member) throws Exception;
 
-    public void removeProjects(Long userId, List<Long> projectIds) throws Exception;
+    public void removeProject(User user, ProjectMember member) throws Exception;
+
+    public void setInvitedProjects(Long userId, List<Long> projectIds) throws Exception;
 
     public void addInvitedProject(Long userId, Long projectId) throws Exception;
 
@@ -37,17 +40,7 @@ public interface ElasticsearchUserService extends ElasticsearchService<User> {
 
     public SearchHits searchByName(String prefix) throws Exception;
 
-    public SearchHits searchByNameAndExcludeOrganization(String prefix, Long organizationId) throws Exception;
+    public SearchHits searchByNameAndExcludeProject(String prefix, Long projectId) throws Exception;
 
-    public SearchHits searchByNameAndExcludeOrganizationAndProject(String prefix, Long organizationId, Long projectId)
-            throws Exception;
-
-    public SearchHits searchByNameAndOrganization(String prefix, Long organizationId) throws Exception;
-
-    public SearchHits searchByNameAndOrganizationAndExcludeProject(String prefix, Long organizationId, Long projectId)
-            throws Exception;
-
-    public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long projectId) throws Exception;
-
-    public SearchHits searchByNameOrTags(String searchValue) throws Exception;
+    public SearchHits searchByNameAndProject(String prefix, Long projectId) throws Exception;
 }

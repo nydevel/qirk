@@ -18,6 +18,7 @@ package org.wrkr.clb.repo.mapper.project;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Map;
 
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
@@ -61,6 +62,21 @@ public class ProjectMemberMapper extends BaseEntityMapper<ProjectMember> {
         member.setHiredAt(getOffsetDateTime(rs, generateColumnAlias(ProjectMemberMeta.hiredAt)));
         member.setFiredAt(getOffsetDateTime(rs, generateColumnAlias(ProjectMemberMeta.firedAt)));
         member.setFired(rs.getBoolean(generateColumnAlias(ProjectMemberMeta.fired)));
+
+        return member;
+    }
+
+    public ProjectMember mapRow(Map<String, Object> result) {
+        ProjectMember member = new ProjectMember();
+
+        member.setId((Long) result.get(generateColumnAlias(ProjectMemberMeta.id)));
+        member.setUserId((Long) result.get(generateColumnAlias(ProjectMemberMeta.userId)));
+        member.setProjectId((Long) result.get(generateColumnAlias(ProjectMemberMeta.projectId)));
+        member.setWriteAllowed((boolean) result.get(generateColumnAlias(ProjectMemberMeta.writeAllowed)));
+        member.setManager((boolean) result.get(generateColumnAlias(ProjectMemberMeta.manager)));
+        member.setHiredAt(getOffsetDateTime(result, generateColumnAlias(ProjectMemberMeta.hiredAt)));
+        member.setFiredAt(getOffsetDateTime(result, generateColumnAlias(ProjectMemberMeta.firedAt)));
+        member.setFired((boolean) result.get(generateColumnAlias(ProjectMemberMeta.fired)));
 
         return member;
     }

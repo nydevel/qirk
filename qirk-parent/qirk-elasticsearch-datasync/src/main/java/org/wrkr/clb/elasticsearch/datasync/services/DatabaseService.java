@@ -20,13 +20,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.Tag;
-import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
-import org.wrkr.clb.repo.project.ProjectRepo;
+import org.wrkr.clb.repo.project.JDBCGrantedPermissionsProjectInviteRepo;
+import org.wrkr.clb.repo.project.JDBCProjectInviteRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 
@@ -39,17 +39,17 @@ public class DatabaseService {
     private TagRepo tagRepo;
 
     @Autowired
-    private ProjectRepo projectRepo;
+    private JDBCGrantedPermissionsProjectInviteRepo grantedPermissionsProjectInviteRepo;
 
     @Autowired
-    private JDBCProjectMemberRepo projectMemberRepo;
+    private JDBCProjectInviteRepo projectInviteRepo;
 
     @Autowired
     private TaskRepo taskRepo;
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<User> getAllUsers() {
-        return userRepo.list();
+        return userRepo.listAndFetchProjectMembership();
     }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
@@ -58,13 +58,11 @@ public class DatabaseService {
     }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<Long> getProjectIdsByMemberUser(User user) {
-        return projectMemberRepo.listProjectIdsByNotFiredUserId(user.getId());
-    }
-
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<Project> getAllProjects() {
-        return projectRepo.listAndFetchTags();
+    public List<Long> getInvitedProjectIdsByUser(User user, InviteStatus status) {
+        List<Long> invitedProjectIds = grantedPermissionsProjectInviteRepo.listProjectIdsByUserIdAndStatusId(user.getId(),
+                status.getId());
+        invitedProjectIds.addAll(projectInviteRepo.listProjectIdsByUserIdAndStatusId(user.getId(), status.getId()));
+        return invitedProjectIds;
     }
 
     @Transactional(value = "jpaTransactionManager", readOnly = true)

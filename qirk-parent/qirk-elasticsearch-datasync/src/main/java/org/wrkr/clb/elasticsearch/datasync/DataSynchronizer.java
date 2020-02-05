@@ -29,8 +29,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.wrkr.clb.elasticsearch.datasync.services.DatabaseService;
 import org.wrkr.clb.model.BaseEntity;
 import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
+import org.wrkr.clb.repo.InviteStatusRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchService;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchTaskService;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
@@ -43,6 +45,9 @@ public class DataSynchronizer {
 
     private static final String USER = DefaultElasticsearchUserService.INDEX;
     private static final String TASK = DefaultElasticsearchTaskService.INDEX;
+
+    @Autowired
+    private InviteStatusRepo inviteStatusRepo;
 
     @Autowired
     private DatabaseService databaseService;
@@ -116,14 +121,16 @@ public class DataSynchronizer {
     public void synchronizeUsers() {
         LOG.info("Synchronizing users: start");
 
+        InviteStatus pendingStatus = inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING);
+
         List<String> databaseIds = new ArrayList<String>();
         for (User user : databaseService.getAllUsers()) {
             databaseIds.add(user.getId().toString());
             user.setTags(databaseService.getTagsByUser(user));
             try {
                 userService.datasync(user);
-                userService.setProjects(
-                        user, databaseService.getProjectIdsByMemberUser(user));
+                userService.setProjects(user);
+                userService.setInvitedProjects(user.getId(), databaseService.getInvitedProjectIdsByUser(user, pendingStatus));
             } catch (Exception e) {
                 logElasticsearchUpdateError(user, e);
             }
