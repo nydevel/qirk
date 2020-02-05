@@ -45,7 +45,6 @@ import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.ConflictException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 @Validated
 @Service
 public class DefaultRoadService extends BaseVersionedEntityService implements RoadService {
@@ -75,15 +74,13 @@ public class DefaultRoadService extends BaseVersionedEntityService implements Ro
         securityService.authzCanModifyRoads(currentUser, roadDTO.projectId);
         // security
 
-        Long organizationId = projectRepo.getOrganizationIdById(roadDTO.projectId);
-        if (organizationId == null) {
+        if (!projectRepo.exists(roadDTO.projectId)) {
             throw new NotFoundException("Project");
         }
 
         Long previousId = roadRepo.getLastIdByProjectId(roadDTO.projectId);
 
         Road road = new Road();
-        road.setOrganizationId(organizationId);
         road.setProjectId(roadDTO.projectId);
         road.setName(roadDTO.name);
         road.setPreviousId(previousId);

@@ -49,7 +49,7 @@ public class SecurityMemoRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + MemoMeta.TABLE_NAME + "." + MemoMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + MemoMeta.TABLE_NAME + "." + MemoMeta.id + " = ?;"; // 2
 
     public Memo getByIdAndFetchProjectForSecurity(Long memoId) {

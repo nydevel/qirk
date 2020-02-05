@@ -41,7 +41,6 @@ import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 @Validated
 @Service
 public class DefaultMemoService implements MemoService {
@@ -73,9 +72,9 @@ public class DefaultMemoService implements MemoService {
 
         Project project = null;
         if (memoDTO.project.id != null) {
-            project = projectRepo.getAndFetchOrganization(memoDTO.project.id);
+            project = projectRepo.get(memoDTO.project.id);
         } else if (memoDTO.project.uiId != null) {
-            project = projectRepo.getByUiIdAndFetchOrganization(memoDTO.project.uiId.strip());
+            project = projectRepo.getByUiId(memoDTO.project.uiId.strip());
         }
         if (project == null) {
             throw new NotFoundException("Project");
@@ -108,14 +107,10 @@ public class DefaultMemoService implements MemoService {
 
         List<Memo> memoList = memoRepo.listByProjectIdAndFetchAuthor(projectId);
 
-        OrganizationMember currentOrganizationMember = null;
         ProjectMember currentProjectMember = null;
         if (currentUser != null) {
-            currentOrganizationMember = organizationMemberRepo.getNotFiredByUserAndProjectId(currentUser, projectId);
-            if (currentOrganizationMember == null || !currentOrganizationMember.isManager()) {
-                currentProjectMember = projectMemberRepo.getNotFiredByOrganizationMemberAndProjectId(currentOrganizationMember,
-                        projectId);
-            }
+            currentProjectMember = projectMemberRepo.getNotFiredByUserAndProjectId(
+                    currentUser, projectId);
         }
         return MemoReadDTO.fromEntities(memoList, currentOrganizationMember, currentProjectMember);
     }
@@ -129,14 +124,10 @@ public class DefaultMemoService implements MemoService {
 
         List<Memo> memoList = memoRepo.listByProjectUiIdAndFetchAuthor(projectUiId);
 
-        OrganizationMember currentOrganizationMember = null;
         ProjectMember currentProjectMember = null;
         if (currentUser != null) {
-            currentOrganizationMember = organizationMemberRepo.getNotFiredByUserAndProjectUiId(currentUser, projectUiId);
-            if (currentOrganizationMember == null || !currentOrganizationMember.isManager()) {
-                currentProjectMember = projectMemberRepo.getNotFiredByOrganizationMemberAndProjectUiId(currentOrganizationMember,
-                        projectUiId);
-            }
+            currentProjectMember = projectMemberRepo.getNotFiredByUserAndProjectUiId(
+                    currentUser, projectUiId);
         }
         return MemoReadDTO.fromEntities(memoList, currentOrganizationMember, currentProjectMember);
     }

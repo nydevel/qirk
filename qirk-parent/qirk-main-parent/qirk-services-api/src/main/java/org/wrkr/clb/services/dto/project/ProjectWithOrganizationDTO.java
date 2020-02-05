@@ -19,9 +19,6 @@ package org.wrkr.clb.services.dto.project;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Tuple;
-
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.services.dto.IdDTO;
 
@@ -34,26 +31,12 @@ public class ProjectWithOrganizationDTO extends IdDTO {
     @JsonProperty(value = "ui_id")
     public String uiId;
 
-    public ProjectUiIdDTO organization;
-
     public static ProjectWithOrganizationDTO fromEntity(Project project) {
         ProjectWithOrganizationDTO dto = new ProjectWithOrganizationDTO();
 
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = ProjectUiIdDTO.fromEntity(project.getOrganization());
-
-        return dto;
-    }
-
-    public static ProjectWithOrganizationDTO fromEntityWithOrganizationName(Project project) {
-        ProjectWithOrganizationDTO dto = new ProjectWithOrganizationDTO();
-
-        dto.id = project.getId();
-        dto.name = project.getName();
-        dto.uiId = project.getUiId();
-        dto.organization = ProjectNameAndUiIdDTO.fromEntity(project.getOrganization());
 
         return dto;
     }
@@ -61,27 +44,7 @@ public class ProjectWithOrganizationDTO extends IdDTO {
     public static List<ProjectWithOrganizationDTO> fromEntitiesWithOrganizationName(List<Project> projectList) {
         List<ProjectWithOrganizationDTO> dtoList = new ArrayList<ProjectWithOrganizationDTO>(projectList.size());
         for (Project project : projectList) {
-            dtoList.add(fromEntityWithOrganizationName(project));
-        }
-        return dtoList;
-    }
-
-    public static ProjectWithOrganizationDTO fromTupleWithOrganizationName(Tuple tuple) {
-        ProjectWithOrganizationDTO dto = new ProjectWithOrganizationDTO();
-
-        Project project = tuple.get(0, Project.class);
-        dto.id = project.getId();
-        dto.name = project.getName();
-        dto.uiId = project.getUiId();
-        dto.organization = ProjectNameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
-
-        return dto;
-    }
-
-    public static List<ProjectWithOrganizationDTO> fromTuplesWithOrganizationName(List<Tuple> tupleList) {
-        List<ProjectWithOrganizationDTO> dtoList = new ArrayList<ProjectWithOrganizationDTO>();
-        for (Tuple tuple : tupleList) {
-            dtoList.add(fromTupleWithOrganizationName(tuple));
+            dtoList.add(fromEntity(project));
         }
         return dtoList;
     }

@@ -32,9 +32,8 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
-import org.wrkr.clb.model.organization.OrganizationMeta;
 import org.wrkr.clb.model.project.DropboxSettingsMeta;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraTaskMeta;
 import org.wrkr.clb.model.project.task.Task;
@@ -130,11 +129,9 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
     private static final String PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS = "proj_dropbox_settings";
-    private static final String ORG_DROPBOX_SETTINGS_TABLE_ALIAS = "org_dropbox_settings";
     @Deprecated
     private static final DropboxTaskMapper DROPBOX_TASK_MAPPER = new DropboxTaskMapper(
-            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS,
-            OrganizationMeta.TABLE_NAME, ORG_DROPBOX_SETTINGS_TABLE_ALIAS);
+            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS);
 
     @Deprecated
     private static final String SELECT_BY_ID_FOR_DROPBOX_AND_FETCH_PROJECT = "SELECT " +
@@ -146,16 +143,10 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
             PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + ORG_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.dropboxSettingsId + " = " +
-            ORG_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
     private static final ChatTaskMapper CHAT_TASK_MAPPER = new ChatTaskMapper(
-            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME);
+            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT_AND_ORGANIZATION = "SELECT " +
             CHAT_TASK_MAPPER.generateSelectColumnsStatement() + " " +
@@ -163,20 +154,24 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
-    private static final String REPORTER_ORG_MEMBER_TABLE_ALIAS = "reporter";
+    private static final String REPORTER_PROJECT_MEMBER_TABLE_ALIAS = "reporter";
     private static final String REPORTER_USER_TABLE_ALIAS = "reporter_user";
-    private static final String ASSIGNEE_ORG_MEMBER_TABLE_ALIAS = "assignee";
+    private static final String ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS = "assignee";
     private static final String ASSIGNEE_USER_TABLE_ALIAS = "assignee_user";
+
+    private static final ProjectMemberMeta REPORTER_PROJECT_MEMBER_META = new ProjectMemberMeta(
+            REPORTER_PROJECT_MEMBER_TABLE_ALIAS);
+    private static final UserMeta REPORTER_USER_META = new UserMeta(REPORTER_USER_TABLE_ALIAS);
+    private static final ProjectMemberMeta ASSIGNEE_PROJECT_MEMBER_META = new ProjectMemberMeta(
+            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS);
+    private static final UserMeta ASSIGNEE_USER_META = new UserMeta(ASSIGNEE_USER_TABLE_ALIAS);
+
     private static final TaskWithEverythingForUpdateMapper UPDATE_TASK_MAPPER = new TaskWithEverythingForUpdateMapper(
-            TaskMeta.TABLE_NAME,
-            ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME,
-            REPORTER_ORG_MEMBER_TABLE_ALIAS, REPORTER_USER_TABLE_ALIAS,
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS, ASSIGNEE_USER_TABLE_ALIAS,
+            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME,
+            REPORTER_PROJECT_MEMBER_META, REPORTER_USER_META,
+            ASSIGNEE_PROJECT_MEMBER_META, ASSIGNEE_USER_META,
             TaskTypeMeta.TABLE_NAME, TaskPriorityMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME, TaskCardMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_AND_FETCH_EVERYTHING_FOR_UPDATE = "SELECT " +
@@ -185,20 +180,17 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + REPORTER_ORG_MEMBER_TABLE_ALIAS + " " +
+            "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.reporterId + " = " +
-            REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "INNER JOIN " + UserMeta.TABLE_NAME + " AS " + REPORTER_USER_TABLE_ALIAS + " " +
-            "ON " + REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             REPORTER_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " AS " + ASSIGNEE_USER_TABLE_ALIAS + " " +
-            "ON " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             ASSIGNEE_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskTypeMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.typeId + " = " +
@@ -215,10 +207,9 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
     private static final TaskWithEverythingForReadMapper TASK_WITH_EVERYTHING_FOR_READ_MAPPER = new TaskWithEverythingForReadMapper(
-            TaskMeta.TABLE_NAME,
-            ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME,
-            REPORTER_ORG_MEMBER_TABLE_ALIAS, REPORTER_USER_TABLE_ALIAS,
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS, ASSIGNEE_USER_TABLE_ALIAS,
+            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME,
+            REPORTER_PROJECT_MEMBER_META, REPORTER_USER_META,
+            ASSIGNEE_PROJECT_MEMBER_META, ASSIGNEE_USER_META,
             TaskTypeMeta.TABLE_NAME, TaskPriorityMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_AND_FETCH_EVERYTHING_FOR_READ = "SELECT " +
@@ -227,20 +218,17 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + REPORTER_ORG_MEMBER_TABLE_ALIAS + " " +
+            "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.reporterId + " = " +
-            REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "INNER JOIN " + UserMeta.TABLE_NAME + " AS " + REPORTER_USER_TABLE_ALIAS + " " +
-            "ON " + REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             REPORTER_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " AS " + ASSIGNEE_USER_TABLE_ALIAS + " " +
-            "ON " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             ASSIGNEE_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskTypeMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.typeId + " = " +
@@ -260,31 +248,31 @@ public class TaskRepo extends JDBCBaseIdRepo {
     private static final String SELECT_ALIVE_NON_HIDDEN_TASK_IDS_BY_REPORTER_OR_ASSIGNEE_USER_ID = "SELECT " +
             TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
             "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + REPORTER_ORG_MEMBER_TABLE_ALIAS + " " +
+            "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.reporterId + " = " +
-            REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + " " +
+            REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
             TaskStatusMeta.TABLE_NAME + "." + TaskStatusMeta.id + " " +
-            "WHERE (" + REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = ? " + // 1
-            "OR" + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = ?) " + // 2
+            "WHERE (" + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = ? " + // 1
+            "OR" + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = ?) " + // 2
             "AND NOT " + TaskMeta.TABLE_NAME + "." + TaskMeta.hidden + " " +
             "AND " + ALIVE_PREDICATE + ";";
 
     private static final LinkedTaskMapper LINKED_TASK_MAPPER = new LinkedTaskMapper(
-            TaskMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, UserMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME);
+            TaskMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
     private static final String SELECT_BY_PROJECT_ID_AND_IDS_AND_FETCH_ASSIGNEE_AND_STATUS = "SELECT " +
             LINKED_TASK_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + TaskMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " " +
+            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " = " +
             UserMeta.TABLE_NAME + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
@@ -298,11 +286,11 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + TaskMeta.TABLE_NAME + " " +
             "ON " + TaskLinkMeta.TABLE_NAME + "." + TaskLinkMeta.task2Id + " = " +
             TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " " +
+            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " = " +
             UserMeta.TABLE_NAME + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
@@ -312,11 +300,11 @@ public class TaskRepo extends JDBCBaseIdRepo {
     private static final String SELECT_ALIVE_NON_HIDDEN_BY_PROJECT_ID_AND_FETCH_ASSIGNEE_AND_STATUS = "SELECT " +
             LINKED_TASK_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + TaskMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " " +
+            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " = " +
             UserMeta.TABLE_NAME + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
@@ -325,44 +313,15 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "AND NOT " + TaskMeta.TABLE_NAME + "." + TaskMeta.hidden + " " +
             "AND " + ALIVE_PREDICATE + ";";
 
-    private static final ShortTaskMapper SHORT_TASK_MAPPER = new ShortTaskMapper(TaskMeta.TABLE_NAME);
-
-    @Deprecated
-    private static final String SELECT_ALIVE_NON_HIDDEN_NON_CHILD_BY_PROJECT_ID = "SELECT " +
-            SHORT_TASK_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
-            TaskStatusMeta.TABLE_NAME + "." + TaskStatusMeta.id + " " +
-            "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.parentTaskId + " IS NULL " +
-            "AND " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = ? " + // 1
-            "AND NOT " + TaskMeta.TABLE_NAME + "." + TaskMeta.hidden + " " +
-            "AND " + ALIVE_PREDICATE + ";";
-
-    @Deprecated
-    private static final String SELECT_ALIVE_NON_HIDDEN_NON_CHILD_BY_PROJECT_UI_ID = "SELECT " +
-            SHORT_TASK_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
-            TaskStatusMeta.TABLE_NAME + "." + TaskStatusMeta.id + " " +
-            "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.parentTaskId + " IS NULL " +
-            "AND NOT " + TaskMeta.TABLE_NAME + "." + TaskMeta.hidden + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ? " + // 1
-            "AND " + ALIVE_PREDICATE + ";";
-
     private static final String SELECT_ALIVE_NON_HIDDEN_BY_PROJECT_ID_AND_NOT_LINKED_TASK_ID_AND_FETCH_ASSIGNEE_AND_STATUS = "" +
             "SELECT " +
             LINKED_TASK_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + TaskMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " " +
+            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " = " +
             UserMeta.TABLE_NAME + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
@@ -411,8 +370,8 @@ public class TaskRepo extends JDBCBaseIdRepo {
 
     private static final TaskWithEverythingForListMapper TASK_WITH_EVERYTHING_FOR_LIST_MAPPER = new TaskWithEverythingForListMapper(
             TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME,
-            REPORTER_ORG_MEMBER_TABLE_ALIAS, REPORTER_USER_TABLE_ALIAS,
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS, ASSIGNEE_USER_TABLE_ALIAS,
+            REPORTER_PROJECT_MEMBER_META, REPORTER_USER_META,
+            ASSIGNEE_PROJECT_MEMBER_META, ASSIGNEE_USER_META,
             TaskTypeMeta.TABLE_NAME, TaskPriorityMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME);
 
     private static final String SELECT_BY_SEARCH_CONTEXT_PREFIX = "SELECT " +
@@ -421,17 +380,17 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + REPORTER_ORG_MEMBER_TABLE_ALIAS + " " +
+            "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.reporterId + " = " +
-            REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "INNER JOIN " + UserMeta.TABLE_NAME + " AS " + REPORTER_USER_TABLE_ALIAS + " " +
-            "ON " + REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             REPORTER_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + " " +
+            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " " +
+            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
             "LEFT JOIN " + UserMeta.TABLE_NAME + " AS " + ASSIGNEE_USER_TABLE_ALIAS + " " +
-            "ON " + ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.userId + " = " +
+            "ON " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = " +
             ASSIGNEE_USER_TABLE_ALIAS + "." + UserMeta.id + " " +
             "INNER JOIN " + TaskTypeMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.typeId + " = " +
@@ -632,16 +591,6 @@ public class TaskRepo extends JDBCBaseIdRepo {
                 projectId);
     }
 
-    @Deprecated
-    public List<Task> listAliveNonHiddenNonChildByProjectId(Long projectId) {
-        return queryForList(SELECT_ALIVE_NON_HIDDEN_NON_CHILD_BY_PROJECT_ID, SHORT_TASK_MAPPER, projectId);
-    }
-
-    @Deprecated
-    public List<Task> listAliveNonHiddenNonChildByProjectUiId(String projectUiId) {
-        return queryForList(SELECT_ALIVE_NON_HIDDEN_NON_CHILD_BY_PROJECT_UI_ID, SHORT_TASK_MAPPER, projectUiId);
-    }
-
     public List<Task> listAliveNonHiddenByProjectIdAndNotLinkedTaskId(Long projectId, Long notLinkedTaskId) {
         return queryForList(SELECT_ALIVE_NON_HIDDEN_BY_PROJECT_ID_AND_NOT_LINKED_TASK_ID_AND_FETCH_ASSIGNEE_AND_STATUS,
                 LINKED_TASK_MAPPER,
@@ -693,14 +642,14 @@ public class TaskRepo extends JDBCBaseIdRepo {
         }
 
         if (searchContext.reporterId != null) {
-            predicates.add(REPORTER_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " = ? ");
+            predicates.add(REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " = ? ");
             args.add(searchContext.reporterId);
         }
         if (searchContext.assigneeId != null) {
             if (TaskSearchContext.UNASSIGNED_ID.equals(searchContext.assigneeId)) {
-                predicates.add(ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " IS NULL ");
+                predicates.add(ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " IS NULL ");
             } else {
-                predicates.add(ASSIGNEE_ORG_MEMBER_TABLE_ALIAS + "." + OrganizationMemberMeta.id + " = ? ");
+                predicates.add(ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " = ? ");
                 args.add(searchContext.assigneeId);
             }
         }

@@ -82,7 +82,6 @@ import org.wrkr.clb.services.util.exception.NotFoundException;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-
 //@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultProjectService extends BaseVersionedEntityService implements ProjectService {
@@ -209,8 +208,7 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
         projectRepo.persist(project);
 
         for (User user : membersToCreate) {
-            OrganizationMember orgMember = organizationMemberRepo.getNotFiredByUserAndProjectId(user, project.getId());
-            projectMemberService.create(project, orgMember, new ProjectMemberDTO(true, true));
+            projectMemberService.create(project, user, new ProjectMemberDTO(true, true));
         }
 
         return project;
@@ -251,7 +249,7 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
         securityService.authzCanUpdateProject(currentUser, projectDTO.id);
         // security finish
 
-        Project project = projectRepo.getAndFetchOrganizationAndDropboxSettings(projectDTO.id);
+        Project project = projectRepo.get(projectDTO.id);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -325,7 +323,7 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
         securityService.authzCanUpdateProject(currentUser, documentationDTO.id);
         // security finish
 
-        Project project = projectRepo.getAndFetchOrganization(documentationDTO.id);
+        Project project = projectRepo.get(documentationDTO.id);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -497,15 +495,15 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<ProjectWithOrganizationDTO> listManagedByUser(User currentUser) {
-        List<Tuple> projectList = projectRepo
-                .listByNotFiredManagerOrganizationOrProjectMemberUserAndFetchOrganization(currentUser);
-        return ProjectWithOrganizationDTO.fromTuplesWithOrganizationName(projectList);
+        List<Project> projectList = projectRepo
+                .listByNotFiredManagerProjectMemberUser(currentUser);
+        return ProjectWithOrganizationDTO.fromEntitiesWithOrganizationName(projectList);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<ProjectWithOrganizationDTO> listByUser(User currentUser) {
-        List<Project> projectList = projectRepo.listByNotFiredProjectMemberUserAndFetchOrganization(currentUser);
+        List<Project> projectList = projectRepo.listByNotFiredProjectMemberUserAndOrderAscByName(currentUser);
         return ProjectWithOrganizationDTO.fromEntitiesWithOrganizationName(projectList);
     }
 
@@ -513,13 +511,13 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<ProjectInviteOptionDTO> listInviteOptions(User currentUser, long userId) {
-        List<Tuple> projectsWithOrganizations = projectRepo
-                .listByNotFiredManagerOrganizationOrProjectMemberUserAndFetchOrganization(currentUser);
+        List<Project> projects = projectRepo
+                .listByNotFiredManagerProjectMemberUser(currentUser);
 
         List<Long> projectIds = new ArrayList<Long>();
         List<ProjectInviteOptionDTO> dtoList = new ArrayList<ProjectInviteOptionDTO>();
-        for (Tuple tuple : projectsWithOrganizations) {
-            ProjectInviteOptionDTO dto = ProjectInviteOptionDTO.fromTuple(tuple);
+        for (Project project : projects) {
+            ProjectInviteOptionDTO dto = ProjectInviteOptionDTO.fromEntity(project);
             projectIds.add(dto.id);
             dtoList.add(dto);
         }
@@ -545,34 +543,26 @@ public class DefaultProjectService extends BaseVersionedEntityService implements
         return dtoList;
     }
 
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ProjectReadDTO> listTop() {
-        List<Project> projectList = projectRepo.listPublicAndFetchOrganizationAndOrderDescById();
-        return ProjectReadDTO.fromEntitiesWithOrganization(projectList);
-    }
-
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.MANDATORY)
     public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
             OrganizationMember organizationMember) {
         if (organizationMember == null) {
             if (!organization.isPrivate()) {
-                List<Project> projectList = projectRepo.listPublicByOrganization(organization);
+                List<Project> projectList = projectRepo.listPublicAndOrderAscByName();
                 return ProjectNameAndUiIdDTO.fromEntities(projectList);
             }
             return new ArrayList<ProjectNameAndUiIdDTO>();
         }
 
         if (organizationMember.isManager()) {
-            List<Project> projectList = projectRepo.listByOrganization(organization);
+            List<Project> projectList = projectRepo.listAndOrderAscByName();
             return ProjectNameAndUiIdDTO.fromEntities(projectList);
 
         }
 
-        List<Project> projectList = projectRepo.listAvailableToOrganizationMemberByOrganization(organization,
-                organizationMember, !organization.isPrivate());
+        List<Project> projectList = projectRepo.listAvailableToUserAndOrderAscByName(organizationMember,
+                !organization.isPrivate());
         return ProjectNameAndUiIdDTO.fromEntities(projectList);
     }
 

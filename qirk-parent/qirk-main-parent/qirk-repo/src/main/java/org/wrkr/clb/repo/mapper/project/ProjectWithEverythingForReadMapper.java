@@ -35,9 +35,7 @@ public class ProjectWithEverythingForReadMapper extends ProjectNameAndUiIdMapper
                 generateSelectColumnStatement(ProjectMeta.key) + ", " +
                 generateSelectColumnStatement(ProjectMeta.isPrivate) + ", " +
                 generateSelectColumnStatement(ProjectMeta.descriptionHtml) + ", " +
-                generateSelectColumnStatement(ProjectMeta.descriptionMd) + ", " +
-                generateSelectColumnStatement(ProjectMeta.documentationHtml) + ", " +
-                generateSelectColumnStatement(ProjectMeta.documentationMd);
+                generateSelectColumnStatement(ProjectMeta.descriptionMd) + ", ";
     }
 
     @Override
@@ -49,8 +47,6 @@ public class ProjectWithEverythingForReadMapper extends ProjectNameAndUiIdMapper
         project.setPrivate(rs.getBoolean(generateColumnAlias(ProjectMeta.isPrivate)));
         project.setDescriptionHtml(rs.getString(generateColumnAlias(ProjectMeta.descriptionHtml)));
         project.setDescriptionMd(rs.getString(generateColumnAlias(ProjectMeta.descriptionMd)));
-        project.setDocumentationHtml(rs.getString(generateColumnAlias(ProjectMeta.documentationHtml)));
-        project.setDocumentationMd(rs.getString(generateColumnAlias(ProjectMeta.documentationMd)));
 
         return project;
     }

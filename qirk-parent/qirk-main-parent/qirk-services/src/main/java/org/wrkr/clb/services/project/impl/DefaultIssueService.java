@@ -40,7 +40,6 @@ import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 //@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultIssueService implements IssueService {
@@ -90,9 +89,9 @@ public class DefaultIssueService implements IssueService {
 
         Project project = null;
         if (issueDTO.project.id != null) {
-            project = projectRepo.getAndFetchOrganizationAndTaskNumberSequence(issueDTO.project.id);
+            project = projectRepo.get(issueDTO.project.id);
         } else if (issueDTO.project.uiId != null) {
-            project = projectRepo.getByUiIdAndFetchOrganizationAndTaskNumberSequence(issueDTO.project.uiId.strip());
+            project = projectRepo.getByUiId(issueDTO.project.uiId.strip());
         }
         if (project == null) {
             throw new NotFoundException("Project");

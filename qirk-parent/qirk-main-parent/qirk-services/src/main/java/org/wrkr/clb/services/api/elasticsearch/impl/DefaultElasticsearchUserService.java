@@ -264,7 +264,7 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long organizationId, Long projectId)
+    public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long projectId)
             throws IOException {
         QueryBuilder organizationIdQueryBuilder = buildOrganizationIdQueryWithInnerHits(organizationId);
         QueryBuilder projectIdQueryBuilder = buildProjectIdQuery(projectId);

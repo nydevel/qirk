@@ -168,7 +168,7 @@ public class TaskReadDTO extends IdDTO {
     public static TaskReadDTO fromEntityWithEverythingForReadAndOrganizationAndSubscription(Task task) {
         TaskReadDTO dto = fromEntity(task, false, false, true);
 
-        dto.project = ProjectWithOrganizationDTO.fromEntityWithOrganizationName(task.getProject());
+        dto.project = ProjectWithOrganizationDTO.fromEntity(task.getProject());
         dto.hasDropboxSettings = (task.getProject().getDropboxSettingsId() != null);
         dto.hasOrganizationDropboxSettings = (task.getProject().getOrganization().getDropboxSettingsId() != null);
         dto.linkedTasks = LinkedTaskDTO.fromEntities(task.getLinkedTasks());

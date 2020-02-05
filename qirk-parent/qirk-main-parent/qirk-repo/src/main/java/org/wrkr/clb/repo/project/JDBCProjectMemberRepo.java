@@ -16,13 +16,9 @@
  */
 package org.wrkr.clb.repo.project;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
-import org.wrkr.clb.model.organization.OrganizationMeta;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
@@ -32,37 +28,25 @@ import org.wrkr.clb.repo.mapper.project.ProjectMemberWithProjectMapper;
 @Repository
 public class JDBCProjectMemberRepo extends JDBCBaseMainRepo {
 
-    private static final ProjectMemberWithProjectMapper PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER = new ProjectMemberWithProjectMapper(
-            ProjectMemberMeta.TABLE_NAME, OrganizationMemberMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME);
+    private static final ProjectMemberWithProjectMapper PROJECT_MEMBER_WITH_PROJECT_MAPPER = new ProjectMemberWithProjectMapper(
+            ProjectMemberMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
     private static final String SELECT_NOT_FIRED_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG_PREFIX = "SELECT " +
-            PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
+            PROJECT_MEMBER_WITH_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMemberMeta.TABLE_NAME + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " " +
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
             "WHERE NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " ";
 
     private static final String SELECT_NOT_FIRED_BY_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG = "" +
             SELECT_NOT_FIRED_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG_PREFIX +
             "AND " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " = ?;"; // 1
 
-    private static final String SELECT_NOT_FIRED_BY_USER_ID_AND_PROJECT_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG = "" +
+    private static final String SELECT_NOT_FIRED_BY_USER_ID_AND_PROJECT_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT = "" +
             SELECT_NOT_FIRED_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG_PREFIX +
             "AND " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.userId + " = ? " + // 1
             "AND " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " = ?;"; // 2
-
-    private static final String SELECT_PROJECT_IDS_BY_NOT_FIRED_ORG_MEMBER_ID = "SELECT " +
-            ProjectMemberMeta.projectId + " " +
-            "FROM " + ProjectMemberMeta.TABLE_NAME + " " +
-            "WHERE " + ProjectMemberMeta.organizationMemberId + " = ? " + // 1
-            "AND NOT " + ProjectMemberMeta.fired + ";";
 
     private static final String SELECT_PROJECT_IDS_BY_NOT_FIRED_USER_ID = "SELECT " +
             ProjectMemberMeta.projectId + " " +
@@ -80,35 +64,21 @@ public class JDBCProjectMemberRepo extends JDBCBaseMainRepo {
             SET_FIRED_TRUE_AND_FIRED_AT_NOW_FOR_NOT_FIRED_PREFIX +
             "AND " + ProjectMemberMeta.id + " = ?;"; // 1
 
-    private static final String SET_FIRED_TRUE_AND_FIRED_AT_NOW_FOR_NOT_FIRED_BY_ORGANIZATION_MEMBER_ID = "" +
-            SET_FIRED_TRUE_AND_FIRED_AT_NOW_FOR_NOT_FIRED_PREFIX +
-            "AND " + ProjectMemberMeta.organizationMemberId + " = ?;"; // 1
-
     private static final String DELETE_NOT_FIRED_BY_ID = "DELETE FROM " +
             ProjectMemberMeta.TABLE_NAME + " " +
             "WHERE NOT " + ProjectMemberMeta.fired + " " +
             "AND " + ProjectMemberMeta.id + " = ?;"; // 2
 
-    private static final String DELETE_NOT_FIRED_BY_HIRED_AT_AND_ORGANIZATION_MEMBER_ID = "DELETE FROM " +
-            ProjectMemberMeta.TABLE_NAME + " " +
-            "WHERE NOT " + ProjectMemberMeta.fired + " " +
-            "AND " + ProjectMemberMeta.hiredAt + " >= ? " + // 1
-            "AND " + ProjectMemberMeta.organizationMemberId + " = ?;"; // 2
-
     public ProjectMember getNotFiredByIdAndFetchOrganizationMemberAndProject(Long projectMemberId) {
         return queryForObjectOrNull(SELECT_NOT_FIRED_BY_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG,
-                PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER,
+                PROJECT_MEMBER_WITH_PROJECT_MAPPER,
                 projectMemberId);
     }
 
-    public ProjectMember getNotFiredByUserIdAndProjectIdAndFetchOrgMemberAndProjectAndOrganization(Long userId, Long projectId) {
-        return queryForObjectOrNull(SELECT_NOT_FIRED_BY_USER_ID_AND_PROJECT_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT_AND_ORG,
-                PROJECT_MEMBER_WITH_ORG_MEMBER_AND_PROJECT_MAPPER,
+    public ProjectMember getNotFiredByUserIdAndProjectIdAndFetchOrgMemberAndProject(Long userId, Long projectId) {
+        return queryForObjectOrNull(SELECT_NOT_FIRED_BY_USER_ID_AND_PROJECT_ID_AND_FETCH_ORG_MEMBER_AND_PROJECT,
+                PROJECT_MEMBER_WITH_PROJECT_MAPPER,
                 userId, projectId);
-    }
-
-    public List<Long> listProjectIdsByNotFiredOrgMemberId(Long organizationMemberId) {
-        return getJdbcTemplate().queryForList(SELECT_PROJECT_IDS_BY_NOT_FIRED_ORG_MEMBER_ID, Long.class, organizationMemberId);
     }
 
     public List<Long> listProjectIdsByNotFiredUserId(Long userId) {
@@ -119,17 +89,7 @@ public class JDBCProjectMemberRepo extends JDBCBaseMainRepo {
         updateSingleRow(SET_FIRED_TRUE_AND_FIRED_AT_NOW_FOR_NOT_FIRED_BY_ID, projectMemberId);
     }
 
-    public void setFiredToTrueAndFiredAtToNowForNotFiredByOrganizationMemberId(Long organizationMemberId) {
-        getJdbcTemplate().update(SET_FIRED_TRUE_AND_FIRED_AT_NOW_FOR_NOT_FIRED_BY_ORGANIZATION_MEMBER_ID,
-                organizationMemberId);
-    }
-
     public void deleteNotFiredById(Long projectMemberId) {
         updateSingleRow(DELETE_NOT_FIRED_BY_ID, projectMemberId);
-    }
-
-    public void deleteNotFiredByHiredAtAndOrganizationMemberId(Long hiredAtSince, Long organizationMemberId) {
-        getJdbcTemplate().update(DELETE_NOT_FIRED_BY_HIRED_AT_AND_ORGANIZATION_MEMBER_ID,
-                Timestamp.from(Instant.ofEpochMilli(hiredAtSince)), organizationMemberId);
     }
 }

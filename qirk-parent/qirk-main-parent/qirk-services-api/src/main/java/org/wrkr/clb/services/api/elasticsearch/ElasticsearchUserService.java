@@ -47,7 +47,7 @@ public interface ElasticsearchUserService extends ElasticsearchService<User> {
     public SearchHits searchByNameAndOrganizationAndExcludeProject(String prefix, Long organizationId, Long projectId)
             throws Exception;
 
-    public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long organizationId, Long projectId) throws Exception;
+    public SearchHits searchByNameAndOrganizationAndProject(String prefix, Long projectId) throws Exception;
 
     public SearchHits searchByNameOrTags(String searchValue) throws Exception;
 }

@@ -49,7 +49,7 @@ public class SecurityIssueRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + IssueMeta.TABLE_NAME + "." + IssueMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + IssueMeta.TABLE_NAME + "." + IssueMeta.id + " = ?;"; // 2
 
     public Issue getByIdAndFetchProjectForSecurity(Long issueId) {

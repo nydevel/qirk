@@ -81,7 +81,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
     private static final SecurityProjectWithMembershipMapper PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER = new SecurityProjectWithMembershipMapper(
             ProjectMeta.DEFAULT, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
-    public static final String JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID = "LEFT JOIN " +
+    public static final String JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID = "LEFT JOIN " +
             ProjectMemberMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
@@ -94,7 +94,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
     private static final String SELECT_AND_FETCH_NOT_FIRED_PROJECT_MEMBER_AND_USER_BY_USER_ID_FOR_SECURITY_PREFIX = "SELECT "
             + PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
-            JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " ";
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " ";
 
     private static final String SELECT_BY_ID_AND_FETCH_NOT_FIRED_PROJECT_MEMBER_AND_USER_BY_USER_ID_FOR_SECURITY = ""
             + SELECT_AND_FETCH_NOT_FIRED_PROJECT_MEMBER_AND_USER_BY_USER_ID_FOR_SECURITY_PREFIX +
@@ -111,7 +111,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + OTHER_PROJECT_MEMBER_TABLE_ALIAS + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             OTHER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.projectId + " " +
-            JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + OTHER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " = ?;"; // 2
 
     private static final String SELECT_BY_ROAD_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
@@ -120,7 +120,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + RoadMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             RoadMeta.TABLE_NAME + "." + RoadMeta.projectId + " " +
-            JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + RoadMeta.TABLE_NAME + "." + RoadMeta.id + " = ?;"; // 2
 
     private static final String SELECT_BY_CARD_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
@@ -129,7 +129,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + TaskCardMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             TaskCardMeta.TABLE_NAME + "." + TaskCardMeta.projectId + " " +
-            JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + TaskCardMeta.TABLE_NAME + "." + TaskCardMeta.id + " = ?;"; // 2
 
     private static final String SELECT_BY_TASK_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
@@ -138,7 +138,7 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + TaskMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
             TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " " +
-            JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 2
 
     public Project getByIdForSecurity(Long projectId) {

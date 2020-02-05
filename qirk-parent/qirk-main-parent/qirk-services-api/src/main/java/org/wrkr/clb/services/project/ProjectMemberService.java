@@ -25,7 +25,6 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.validation.groups.OnCreate;
 import org.wrkr.clb.common.validation.groups.OnCreateBatch;
 import org.wrkr.clb.common.validation.groups.OnUpdate;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.user.User;
@@ -35,13 +34,12 @@ import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberListDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberReadDTO;
 
-
 @Validated
 public interface ProjectMemberService {
 
     public ProjectMember create(
             @NotNull(message = "project in ProjectMemberService must not be null") Project project,
-            @NotNull(message = "organizationMember in ProjectMemberService must not be null") OrganizationMember organizationMember,
+            @NotNull(message = "user in ProjectMemberService must not be null") User user,
             @Valid ProjectMemberDTO projectMemberDTO);
 
     @Validated(OnCreate.class)
@@ -71,9 +69,6 @@ public interface ProjectMemberService {
 
     public void leave(User currentUser,
             @NotNull(message = "projectId in ProjectMemberService must not be null") Long projectId) throws Exception;
-
-    public void deleteBatchByOrganizationMember(
-            @NotNull(message = "organizationMember in ProjectMemberService must not be null") OrganizationMember organizationMember);
 
     public List<OrganizationMemberUserDTO> search(User currentUser,
             @NotNull(message = "prefix in ProjectMemberService must not be null") String prefix,

@@ -345,9 +345,9 @@ public class DefaultTaskService extends BaseVersionedEntityService implements Ta
 
         Project project = null;
         if (taskDTO.project.id != null) {
-            project = projectRepo.getAndFetchOrganizationAndTaskNumberSequence(taskDTO.project.id);
+            project = projectRepo.getAndFetchTaskNumberSequence(taskDTO.project.id);
         } else if (taskDTO.project.uiId != null) {
-            project = projectRepo.getByUiIdAndFetchOrganizationAndTaskNumberSequence(taskDTO.project.uiId);
+            project = projectRepo.getByUiIdAndFetchTaskNumberSequence(taskDTO.project.uiId);
         }
         if (project == null) {
             throw new NotFoundException("Project");

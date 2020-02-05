@@ -40,7 +40,6 @@ import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
 import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
-
 @Validated
 public interface ProjectService {
 
@@ -91,9 +90,6 @@ public interface ProjectService {
 
     @Deprecated
     public List<ProjectInviteOptionDTO> listInviteOptions(User currentUser, long userId);
-
-    @Deprecated
-    public List<ProjectReadDTO> listTop();
 
     public List<ProjectNameAndUiIdDTO> listAvailableToMemberByOrganization(Organization organization,
             OrganizationMember currentMember);

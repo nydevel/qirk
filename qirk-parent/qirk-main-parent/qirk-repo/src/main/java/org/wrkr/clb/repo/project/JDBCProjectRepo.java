@@ -16,16 +16,9 @@
  */
 package org.wrkr.clb.repo.project;
 
-import java.sql.Array;
-import java.sql.Connection;
-import java.sql.JDBCType;
 import java.util.List;
 
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
-import org.wrkr.clb.model.organization.OrganizationMeta;
 import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
@@ -33,23 +26,24 @@ import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.RoadMeta;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
+import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.DropboxProjectMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectDocMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectWithEverythingForReadAndSecurityMembershipMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectWithEverythingForReadMapper;
+import org.wrkr.clb.repo.security.SecurityProjectRepo;
 
 @Repository
-public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBean {
+public class JDBCProjectRepo extends JDBCBaseMainRepo {
+
+    private static final String EXISTS_BY_ID = "SELECT 1 FROM " + ProjectMeta.TABLE_NAME + " " +
+            "WHERE " + ProjectMeta.id + " = ?;"; // 1
 
     private static final String SELECT_PROJECT_ID_BY_UI_ID = "SELECT " + ProjectMeta.id + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
             "WHERE " + ProjectMeta.uiId + " = ?;"; // 1
-
-    private static final String SELECT_ORGANIZATION_ID_BY_ID = "SELECT " + ProjectMeta.organizationId + " " +
-            "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "WHERE " + ProjectMeta.id + " = ?;"; // 1
 
     private static final String SELECT_UI_ID_BY_ID = "SELECT " + ProjectMeta.uiId + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
@@ -85,8 +79,7 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
     private static final String ORG_DROPBOX_SETTINGS_TABLE_ALIAS = "org_dropbox_settings";
     @Deprecated
     private static final DropboxProjectMapper DROPBOX_PROJECT_MAPPER = new DropboxProjectMapper(
-            ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS,
-            OrganizationMeta.TABLE_NAME, ORG_DROPBOX_SETTINGS_TABLE_ALIAS);
+            ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS);
 
     @Deprecated
     private static final String SELECT_AND_FETCH_DROPBOX_SETTINGS_PREFIX = "SELECT " +
@@ -94,13 +87,7 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
             "FROM " + ProjectMeta.TABLE_NAME + " " +
             "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
-            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + ORG_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.dropboxSettingsId + " = " +
-            ORG_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id;
+            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id;
 
     @Deprecated
     private static final String SELECT_BY_ID_AND_FETCH_DROPBOX_SETTINGS = SELECT_AND_FETCH_DROPBOX_SETTINGS_PREFIX + " " +
@@ -111,138 +98,42 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
             "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ?;"; // 1
 
     private static final ProjectWithEverythingForReadMapper PROJECT_WITH_EVERYTHING_FOR_READ_MAPPER = new ProjectWithEverythingForReadMapper(
-            ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME);
+            ProjectMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_WITH_EVERYTHING_FOR_READ = "SELECT " +
             PROJECT_WITH_EVERYTHING_FOR_READ_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
-            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + ORG_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.dropboxSettingsId + " = " +
-            ORG_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
             "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = ?;"; // 1
 
     private static final ProjectWithEverythingForReadAndSecurityMembershipMapper PROJECT_WITH_EVERYTHING_FOR_READ_AND_SECURITY_MEMBERSHIP_MAPPER = new ProjectWithEverythingForReadAndSecurityMembershipMapper(
-            ProjectMeta.TABLE_NAME, OrganizationMeta.TABLE_NAME,
-            OrganizationMemberMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
+            ProjectMeta.TABLE_NAME, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
     private static final String SELECT_BY_ID_WITH_EVERYTHING_FOR_READ_AND_FETCH_MEMBERSHIP_FOR_SECURITY = "SELECT " +
             PROJECT_WITH_EVERYTHING_FOR_READ_AND_SECURITY_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
-            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
-            "INNER JOIN " + OrganizationMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.id + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + ORG_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + OrganizationMeta.TABLE_NAME + "." + OrganizationMeta.dropboxSettingsId + " = " +
-            ORG_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
-            "LEFT JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.userId + " = ? " + // 1
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + " " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " " +
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = ?;"; // 2
-
-    private static final String SELECT_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT = "SELECT " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON (" + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + ") " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON (" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + ") " +
-            "WHERE (" + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = ? " + // 1
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.isPrivate + " " +
-            "AND (" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.manager + " " +
-            "OR " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " IS NOT NULL)) " +
-            "GROUP BY " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "HAVING COUNT(DISTINCT(" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + ")) >= ?;"; // 2
-
-    private static final String SELECT_FROZEN_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT = "SELECT " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "INNER JOIN " + OrganizationMemberMeta.TABLE_NAME + " " +
-            "ON (" + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = " +
-            OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.organizationId + " " +
-            "AND NOT " + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.fired + ") " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " " +
-            "ON (" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.organizationMemberId + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.projectId + " " +
-            "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + ") " +
-            "WHERE (" + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = ? " + // 1
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.isPrivate + " " +
-            "AND " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.frozen + " " +
-            "AND (" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.manager + " " +
-            "OR " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.id + " IS NOT NULL)) " +
-            "GROUP BY " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "HAVING COUNT(DISTINCT(" + OrganizationMemberMeta.TABLE_NAME + "." + OrganizationMemberMeta.id + ")) >= ?;"; // 2
 
     private static final ProjectNameAndUiIdMapper PROJECT_NAME_AND_UI_ID_MAPPER = new ProjectNameAndUiIdMapper(
             ProjectMeta.TABLE_NAME);
 
-    private static final String SELECT_BY_ORGANIZATION_ID_INNER_JOIN_IMPORTED_JIRA_PROJECT = "SELECT " +
+    private static final String SELECT_IMPORTED_FROM_JIRA = "SELECT " +
             PROJECT_NAME_AND_UI_ID_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
             "INNER JOIN " + ImportedJiraProjectMeta.TABLE_NAME + " " +
             "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
-            ImportedJiraProjectMeta.TABLE_NAME + "." + ImportedJiraProjectMeta.projectId + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.organizationId + " = ?;";
+            ImportedJiraProjectMeta.TABLE_NAME + "." + ImportedJiraProjectMeta.projectId;
 
     private static final String UPDATE_FROZEN_BY_ID = "UPDATE " + ProjectMeta.TABLE_NAME + " " +
             "SET " + ProjectMeta.frozen + " = ? " +
             "WHERE " + ProjectMeta.id + " = ?;";
 
-    private static final String UPDATE_FROZEN_SET_TRUE_FOR_PRIVATE_BY_ORGANIZATION_ID_AND_IDS = "UPDATE " +
-            ProjectMeta.TABLE_NAME + " " +
-            "SET " + ProjectMeta.frozen + " = true " +
-            "WHERE " + ProjectMeta.organizationId + " = ? " + // 1
-            "AND " + ProjectMeta.isPrivate + " " +
-            "AND NOT " + ProjectMeta.frozen + " " +
-            "AND " + ProjectMeta.id + " = ANY(?);"; // 2
-
-    private static final String UPDATE_FROZEN_SET_FALSE_BY_ORGANIZATION_ID = "UPDATE " +
-            ProjectMeta.TABLE_NAME + " " +
-            "SET " + ProjectMeta.frozen + " = false " +
-            "WHERE " + ProjectMeta.organizationId + " = ? " + // 1
-            "AND " + ProjectMeta.frozen + ";";
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        Connection connection = getJdbcTemplate().getDataSource().getConnection();
-
-        connection.prepareStatement(SELECT_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT);
-        connection.prepareStatement(SELECT_FROZEN_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT);
-        connection.prepareStatement(UPDATE_FROZEN_SET_FALSE_BY_ORGANIZATION_ID);
-
-        connection.close();
+    public boolean exists(Long projectId) {
+        return exists(EXISTS_BY_ID, projectId);
     }
 
     public Long getProjectIdByUiId(String projectUiId) {
         return queryForObjectOrNull(SELECT_PROJECT_ID_BY_UI_ID, Long.class, projectUiId);
-    }
-
-    public Long getOrganizationIdById(Long projectId) {
-        return queryForObjectOrNull(SELECT_ORGANIZATION_ID_BY_ID, Long.class, projectId);
     }
 
     public Project getUiIdById(Long projectId) {
@@ -300,33 +191,12 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo implements InitializingBea
                 userId, projectId);
     }
 
-    public List<Long> listPrivateIdsByOrganizationIdAndMinMembersCount(Organization organization, long minMembersCount) {
-        return queryForList(SELECT_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT, Long.class,
-                organization.getId(), minMembersCount);
-    }
-
-    public List<Long> listFrozenPrivateIdsByOrganizationIdAndMinMembersCount(Organization organization, long minMembersCount) {
-        return queryForList(SELECT_FROZEN_PRIVATE_IDS_BY_ORGANIZATION_ID_AND_MIN_MEMBERS_COUNT, Long.class,
-                organization.getId(), minMembersCount);
-    }
-
-    public List<Project> listImportedByOrganizationId(long organizationId) {
-        return queryForList(SELECT_BY_ORGANIZATION_ID_INNER_JOIN_IMPORTED_JIRA_PROJECT, PROJECT_NAME_AND_UI_ID_MAPPER,
-                organizationId);
+    public List<Project> listImportedFromJira() {
+        return queryForList(SELECT_IMPORTED_FROM_JIRA, PROJECT_NAME_AND_UI_ID_MAPPER);
     }
 
     @Deprecated
     public void updateFrozen(Project project) {
         updateSingleRow(UPDATE_FROZEN_BY_ID, project.isFrozen(), project.getId());
-    }
-
-    public void freezePrivateByOrganizationIdAndIds(Organization organization, List<Long> projectIds) {
-        Array projectIdArray = createArrayOf(JDBCType.BIGINT.getName(), projectIds.toArray());
-        getJdbcTemplate().update(UPDATE_FROZEN_SET_TRUE_FOR_PRIVATE_BY_ORGANIZATION_ID_AND_IDS,
-                organization.getId(), projectIdArray);
-    }
-
-    public void unfreezeByOrganizationId(Organization organization) {
-        getJdbcTemplate().update(UPDATE_FROZEN_SET_FALSE_BY_ORGANIZATION_ID, organization.getId());
     }
 }

@@ -19,18 +19,20 @@ package org.wrkr.clb.repo.mapper.project.task;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.repo.mapper.organization.ShortOrganizationMemberWithUserMapper;
+import org.wrkr.clb.model.user.UserMeta;
+import org.wrkr.clb.repo.mapper.project.ProjectMemberWithUserMapper;
 
 public class LinkedTaskMapper extends ShortTaskMapper {
 
-    private ShortOrganizationMemberWithUserMapper assigneeMapper;
+    private ProjectMemberWithUserMapper assigneeMapper;
     private TaskStatusMapper statusMapper;
 
-    public LinkedTaskMapper(String taskTableName, String orgMemberTableName, String userTableName, String statusTableName) {
+    public LinkedTaskMapper(String taskTableName, String statusTableName,
+            ProjectMemberMeta projectMemberMeta, UserMeta userMeta) {
         super(taskTableName);
-        assigneeMapper = new ShortOrganizationMemberWithUserMapper(orgMemberTableName, userTableName);
+        assigneeMapper = new ProjectMemberWithUserMapper(projectMemberMeta, userMeta);
         statusMapper = new TaskStatusMapper(statusTableName);
     }
 
@@ -45,7 +47,7 @@ public class LinkedTaskMapper extends ShortTaskMapper {
     public Task mapRow(ResultSet rs, int rowNum) throws SQLException {
         Task task = super.mapRow(rs, rowNum);
 
-        if (rs.getObject(assigneeMapper.generateColumnAlias(OrganizationMemberMeta.id)) != null) {
+        if (rs.getObject(assigneeMapper.generateColumnAlias(ProjectMemberMeta.id)) != null) {
             task.setAssignee(assigneeMapper.mapRow(rs, rowNum));
         }
         task.setStatus(statusMapper.mapRow(rs, rowNum));

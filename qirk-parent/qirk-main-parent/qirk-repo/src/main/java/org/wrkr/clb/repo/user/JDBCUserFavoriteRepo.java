@@ -40,7 +40,7 @@ public class JDBCUserFavoriteRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + UserFavoriteMeta.TABLE_NAME + "." + UserFavoriteMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + UserFavoriteMeta.TABLE_NAME + "." + UserFavoriteMeta.userId + " = ?;"; // 2
 
     public List<UserFavorite> listByUserIdAndFetchProjectAndOrganizationAndMembershipForSecurity(Long userId) {

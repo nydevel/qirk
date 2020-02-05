@@ -25,14 +25,13 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.organization.OrganizationMember;
-import org.wrkr.clb.model.organization.OrganizationMember_;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Memo_;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectMember;
+import org.wrkr.clb.model.project.ProjectMember_;
 import org.wrkr.clb.model.project.Project_;
 import org.wrkr.clb.repo.JPABaseDeletingRepo;
-
 
 @Repository
 public class MemoRepo extends JPABaseDeletingRepo<Memo> {
@@ -46,14 +45,13 @@ public class MemoRepo extends JPABaseDeletingRepo<Memo> {
         deleteById(Memo.class, id);
     }
 
-    public Memo getAndFetchAuthorUserAndOrganization(Long id) {
+    public Memo getAndFetchAuthorUser(Long id) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Memo> query = cb.createQuery(Memo.class);
 
         Root<Memo> memoRoot = query.from(Memo.class);
-        Fetch<Memo, OrganizationMember> organizationMemberFetch = memoRoot.fetch(Memo_.author);
-        organizationMemberFetch.fetch(OrganizationMember_.user);
-        organizationMemberFetch.fetch(OrganizationMember_.organization);
+        Fetch<Memo, ProjectMember> projectMemberFetch = memoRoot.fetch(Memo_.author);
+        projectMemberFetch.fetch(ProjectMember_.user);
 
         query.where(cb.equal(memoRoot.get(Memo_.id), id));
         return getSingleResultOrNull(query);

@@ -49,7 +49,7 @@ public class SecurityTaskHashtagRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + " = ?;"; // 2
 
     public TaskHashtag getByIdAndFetchProjectForSecurity(Long hashtagId) {

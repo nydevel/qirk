@@ -67,7 +67,7 @@ public class SecurityTaskRepo extends JDBCBaseMainRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            SecurityProjectRepo.JOIN_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " ";
+            SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " ";
 
     private static final String SELECT_BY_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY = ""
             + SELECT_AND_FETCH_PROJECT_AND_MEMBERSHIP_BY_USER_ID_FOR_SECURITY_PREFIX +

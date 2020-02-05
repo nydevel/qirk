@@ -54,7 +54,6 @@ import org.wrkr.clb.services.user.UserFavoriteService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 @Validated
 @Service
 public class DefaultProjectMemberService implements ProjectMemberService {
@@ -112,9 +111,8 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
-    public ProjectMember create(Project project, OrganizationMember organizationMember,
-            ProjectMemberDTO projectMemberDTO) {
-        ProjectMember member = projectMemberRepo.getNotFiredByOrganizationMemberAndProject(organizationMember, project);
+    public ProjectMember create(Project project, User user, ProjectMemberDTO projectMemberDTO) {
+        ProjectMember member = projectMemberRepo.getNotFiredByUserAndProject(user, project);
         if (member != null) {
             return member;
         }
@@ -151,7 +149,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         securityService.authzCanModifyProjectMembers(currentUser, projectMemberDTO.projectId);
         // security finish
 
-        Project project = projectRepo.getAndFetchOrganization(projectMemberDTO.projectId);
+        Project project = projectRepo.get(projectMemberDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -181,7 +179,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         securityService.authzCanModifyProjectMembers(currentUser, projectMemberListDTO.projectId);
         // security finish
 
-        Project project = projectRepo.getAndFetchOrganization(projectMemberListDTO.projectId);
+        Project project = projectRepo.get(projectMemberListDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }
@@ -339,32 +337,12 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         // security finish
 
         ProjectMember member = jdbcProjectMemberRepo
-                .getNotFiredByUserIdAndProjectIdAndFetchOrgMemberAndProjectAndOrganization(
+                .getNotFiredByUserIdAndProjectIdAndFetchOrgMemberAndProject(
                         currentUser.getId(), projectId);
         if (member == null) {
             throw new NotFoundException("Project member");
         }
         delete(member);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
-    public void deleteBatchByOrganizationMember(OrganizationMember organizationMember) {
-        Long organizationMemberId = organizationMember.getId();
-        // fetch project ids to delete from elasticsearch
-        List<Long> projectIds = jdbcProjectMemberRepo.listProjectIdsByNotFiredOrgMemberId(organizationMemberId);
-
-        long now = System.currentTimeMillis();
-        jdbcProjectMemberRepo.deleteNotFiredByHiredAtAndOrganizationMemberId(
-                now - PROJECT_MEMBERSHIP_MINIMUM_DURATION_MILLIS, organizationMemberId);
-        jdbcProjectMemberRepo.setFiredToTrueAndFiredAtToNowForNotFiredByOrganizationMemberId(organizationMemberId);
-
-        Long userId = organizationMember.getUser().getId();
-        try {
-            elasticsearchService.removeProjects(userId, projectIds);
-        } catch (Exception e) {
-            LOG.error("Could not remove projects for user " + userId + " in elasticsearch", e);
-        }
     }
 
     @Override
@@ -381,9 +359,8 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         if (projectId == null) {
             return new ArrayList<OrganizationMemberUserDTO>();
         }
-        Long organizationId = jdbcProjectRepo.getOrganizationIdById(projectId);
 
-        SearchHits hits = elasticsearchService.searchByNameAndOrganizationAndProject(prefix, organizationId, projectId);
+        SearchHits hits = elasticsearchService.searchByNameAndOrganizationAndProject(prefix, projectId);
         return OrganizationMemberUserDTO.fromSearchHits(hits, organizationId,
                 ((meFirst && currentUser != null) ? currentUser.getId() : null));
     }

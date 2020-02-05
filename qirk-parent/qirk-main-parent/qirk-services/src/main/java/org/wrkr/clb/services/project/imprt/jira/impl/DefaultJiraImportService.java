@@ -309,7 +309,7 @@ public class DefaultJiraImportService implements JiraImportService {
         List<JiraIdAndNameDTO> priorities = getJiraEntities(priorityNodes, priorityIds);
         List<JiraIdAndNameDTO> statuses = getJiraEntities(statusNodes, statusIds);
 
-        List<Project> projectList = projectRepo.listImportedByOrganizationId(organizationId);
+        List<Project> projectList = projectRepo.listImportedFromJira(organizationId);
         List<OrganizationMember> memberList = orgMemberRepo.listNotFiredByOrganizationIdAndFetchUser(organizationId);
         return new JiraOrganizationMatchDTO(projects, users, types, priorities, statuses,
                 QirkOrganizationDTO.fromEntities(projectList, memberList));

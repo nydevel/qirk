@@ -19,16 +19,11 @@ package org.wrkr.clb.services.dto.project;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Tuple;
-
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProjectInviteOptionDTO extends ProjectWithOrganizationDTO {
-
-    public ProjectNameAndUiIdDTO organization;
 
     @JsonProperty(value = "is_member")
     public boolean isMember = false;
@@ -36,22 +31,20 @@ public class ProjectInviteOptionDTO extends ProjectWithOrganizationDTO {
     @JsonProperty(value = "invite")
     public ProjectInviteStatusDTO invite;
 
-    public static ProjectInviteOptionDTO fromTuple(Tuple tuple) {
+    public static ProjectInviteOptionDTO fromEntity(Project project) {
         ProjectInviteOptionDTO dto = new ProjectInviteOptionDTO();
 
-        Project project = tuple.get(0, Project.class);
         dto.id = project.getId();
         dto.name = project.getName();
         dto.uiId = project.getUiId();
-        dto.organization = ProjectNameAndUiIdDTO.fromEntity(tuple.get(1, Organization.class));
 
         return dto;
     }
 
-    public static List<ProjectInviteOptionDTO> fromTuples(List<Tuple> tupleList) {
+    public static List<ProjectInviteOptionDTO> fromTuples(List<Project> projectList) {
         List<ProjectInviteOptionDTO> dtoList = new ArrayList<ProjectInviteOptionDTO>();
-        for (Tuple tuple : tupleList) {
-            dtoList.add(fromTuple(tuple));
+        for (Project project : projectList) {
+            dtoList.add(fromEntity(project));
         }
         return dtoList;
     }

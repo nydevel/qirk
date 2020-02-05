@@ -157,24 +157,4 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
         long numberOfProjectMembersAfterTest = testRepo.countEntities(ProjectMember.class);
         assertEquals("exactly 1 project member should be deleted", numberOfProjectMembers - 1, numberOfProjectMembersAfterTest);
     }
-
-    @Test
-    public void test_deleteBatchByOrganizationMemberId() throws Exception {
-        User user = userRepo.getByEmail(projectManagerEmail);
-        Organization organization = organizationRepo.getByUiId(publicOrganizationUiId);
-        OrganizationMember orgMemberToDelete = organizationMemberRepo.getNotFiredByUserAndOrganization(user, organization);
-        List<ProjectMember> projectMembersToDelete = projectMemberRepo.listNotFiredByOrganizationMember(orgMemberToDelete);
-        long numberOfProjectMembers = testRepo.countEntities(ProjectMember.class);
-        long numberOfProjectMembersToDelete = projectMembersToDelete.size();
-
-        transactionalService.projectMemberService_deleteBatchByOrganizationMember(orgMemberToDelete);
-
-        for (ProjectMember projectMember : projectMembersToDelete) {
-            ProjectMember deletedProjectMember = testRepo.getEntityOrNull(ProjectMember.class, projectMember.getId());
-            assertNull("project member must be deleted", deletedProjectMember);
-        }
-        long numberOfProjectMembersAfterTest = testRepo.countEntities(ProjectMember.class);
-        assertEquals("exactly " + numberOfProjectMembersToDelete + " project members should be deleted",
-                numberOfProjectMembers - numberOfProjectMembersToDelete, numberOfProjectMembersAfterTest);
-    }
 }

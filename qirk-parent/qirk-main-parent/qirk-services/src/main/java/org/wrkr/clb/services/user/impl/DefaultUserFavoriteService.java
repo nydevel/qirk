@@ -45,7 +45,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 
-
 @Validated
 @Service
 public class DefaultUserFavoriteService implements UserFavoriteService {
@@ -77,7 +76,7 @@ public class DefaultUserFavoriteService implements UserFavoriteService {
 
         userFavorite.setUser(currentUser);
 
-        Project project = projectRepo.getAndFetchOrganization(userFavoriteDTO.projectId);
+        Project project = projectRepo.get(userFavoriteDTO.projectId);
         if (project == null) {
             throw new NotFoundException("Project");
         }

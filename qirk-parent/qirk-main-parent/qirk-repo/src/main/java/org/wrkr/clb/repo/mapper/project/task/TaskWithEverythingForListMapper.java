@@ -20,31 +20,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.organization.OrganizationMemberMeta;
+import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskMeta;
-import org.wrkr.clb.repo.mapper.organization.ShortOrganizationMemberWithUserMapper;
+import org.wrkr.clb.model.user.UserMeta;
+import org.wrkr.clb.repo.mapper.project.ProjectMemberWithUserMapper;
 import org.wrkr.clb.repo.mapper.project.ShortProjectMapper;
 
 public class TaskWithEverythingForListMapper extends BaseMapper<Task> {
 
     private ShortProjectMapper projectMapper;
 
-    private ShortOrganizationMemberWithUserMapper reporterMapper;
-    private ShortOrganizationMemberWithUserMapper assigneeMapper;
+    private ProjectMemberWithUserMapper reporterMapper;
+    private ProjectMemberWithUserMapper assigneeMapper;
 
     private TaskTypeMapper typeMapper;
     private TaskPriorityMapper priorityMapper;
     private TaskStatusMapper statusMapper;
 
     public TaskWithEverythingForListMapper(String taskTableName, String projectTableName,
-            String reporterMemberTableName, String reporterUserTableName,
-            String assigneeMemberTableName, String assigneeUserTableName,
+            ProjectMemberMeta reporterMemberMeta, UserMeta reporterUserMeta,
+            ProjectMemberMeta assigneeMemberMeta, UserMeta assigneeUserMeta,
             String typeTableName, String priorityTableName, String statusTableName) {
         super(taskTableName);
         projectMapper = new ShortProjectMapper(projectTableName);
-        reporterMapper = new ShortOrganizationMemberWithUserMapper(reporterMemberTableName, reporterUserTableName);
-        assigneeMapper = new ShortOrganizationMemberWithUserMapper(assigneeMemberTableName, assigneeUserTableName);
+        reporterMapper = new ProjectMemberWithUserMapper(reporterMemberMeta, reporterUserMeta);
+        assigneeMapper = new ProjectMemberWithUserMapper(assigneeMemberMeta, assigneeUserMeta);
         typeMapper = new TaskTypeMapper(typeTableName);
         priorityMapper = new TaskPriorityMapper(priorityTableName);
         statusMapper = new TaskStatusMapper(statusTableName);
@@ -77,7 +78,7 @@ public class TaskWithEverythingForListMapper extends BaseMapper<Task> {
 
         task.setProject(projectMapper.mapRow(rs, rowNum));
         task.setReporter(reporterMapper.mapRow(rs, rowNum));
-        if (rs.getObject(assigneeMapper.generateColumnAlias(OrganizationMemberMeta.id)) != null) {
+        if (rs.getObject(assigneeMapper.generateColumnAlias(ProjectMemberMeta.id)) != null) {
             task.setAssignee(assigneeMapper.mapRow(rs, rowNum));
         }
         task.setType(typeMapper.mapRow(rs, rowNum));

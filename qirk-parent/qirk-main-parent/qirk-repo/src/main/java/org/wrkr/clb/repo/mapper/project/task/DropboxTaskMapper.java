@@ -27,8 +27,7 @@ public class DropboxTaskMapper extends TaskNumberMapper {
 
     private DropboxProjectMapper projectMapper;
 
-    public DropboxTaskMapper(String taskTableName, String projectTableName, String projectDropboxSettingsTableName,
-            String orgTableName, String orgDropboxSettingsTableName) {
+    public DropboxTaskMapper(String taskTableName, String projectTableName, String projectDropboxSettingsTableName) {
         super(taskTableName);
         projectMapper = new DropboxProjectMapper(projectTableName, projectDropboxSettingsTableName);
     }
