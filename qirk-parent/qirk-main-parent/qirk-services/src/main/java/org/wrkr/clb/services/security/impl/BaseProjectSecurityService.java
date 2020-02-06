@@ -19,7 +19,6 @@ package org.wrkr.clb.services.security.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
@@ -27,15 +26,15 @@ import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
 import org.wrkr.clb.repo.security.SecurityIssueRepo;
 import org.wrkr.clb.repo.security.SecurityMemoRepo;
 import org.wrkr.clb.repo.security.SecurityProjectRepo;
+import org.wrkr.clb.repo.security.SecurityTaskHashtagRepo;
 import org.wrkr.clb.repo.security.SecurityTaskRepo;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.util.exception.PaymentRequiredException;
 
-public abstract class BaseProjectSecurityService extends BaseOrganizationSecurityService {
+public abstract class BaseProjectSecurityService extends BaseSecurityService {
 
     @Autowired
     protected SecurityProjectRepo projectRepo;
@@ -50,7 +49,7 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
     private SecurityMemoRepo memoRepo;
 
     @Autowired
-    protected TaskHashtagRepo taskHashtagRepo;
+    private SecurityTaskHashtagRepo taskHashtagRepo;
 
     protected Project getProjectWithOrgMemberAndProjectMemberByUserAndProjectId(User user, Long projectId) {
         if (user == null) {
@@ -91,13 +90,13 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
                 user.getId());
     }
 
-    protected Project getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(User user, Long applicationId) {
-        if (user == null) {
-            return projectRepo.getByApplicationIdForSecurity(applicationId);
-        }
-        return projectRepo.getByApplicationIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(applicationId,
-                user.getId());
-    }
+    // protected Project getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(User user, Long applicationId) {
+    // if (user == null) {
+    // return projectRepo.getByApplicationIdForSecurity(applicationId);
+    // }
+    // return projectRepo.getByApplicationIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(applicationId,
+    // user.getId());
+    // }
 
     protected Project getProjectWithOrgMemberAndProjectMemberByUserAndOtherMemberId(User user, Long projectMemberId) {
         if (user == null) {
@@ -200,14 +199,7 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
         }
         requireAuthnOrThrowException(user);
 
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
-
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
+        List<ProjectMember> projectMembers = project.getMembers();
         requireProjectMemberOrThrowException(projectMembers, user);
     }
 
@@ -216,35 +208,22 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
             return;
         }
 
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
-
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
+        List<ProjectMember> projectMembers = project.getMembers();
         authzCanWriteToProject(projectMembers, user);
     }
 
-    protected void authzCanWriteToProjectOrIsOrgMemberId(User user, Project project, List<Long> orgMemberIds)
+    protected void authzCanWriteToProjectOrIsOrgMemberId(User user, Project project, List<Long> projectMemberIds)
             throws SecurityException {
         if (project == null) {
             return;
         }
 
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
+        List<ProjectMember> projectMembers = project.getMembers();
+        ProjectMember projectMember = authzCanWriteToProject(projectMembers, user);
 
-        if (orgMemberIds.contains(orgMember.getId())) {
+        if (projectMemberIds.contains(projectMember.getId())) {
             return;
         }
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
-        authzCanWriteToProject(projectMembers, user);
     }
 
     protected void authzCanManageProject(User user, Project project) throws SecurityException {
@@ -252,35 +231,22 @@ public abstract class BaseProjectSecurityService extends BaseOrganizationSecurit
             return;
         }
 
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
-
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
+        List<ProjectMember> projectMembers = project.getMembers();
         requireProjectManagerOrThrowException(projectMembers, user);
     }
 
-    protected void authzCanManageProjectOrIsOrgMemberId(User user, Project project, List<Long> orgMemberIds)
+    protected void authzCanManageProjectOrIsOrgMemberId(User user, Project project, List<Long> projectMemberIds)
             throws SecurityException {
         if (project == null) {
             return;
         }
 
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
+        List<ProjectMember> projectMembers = project.getMembers();
+        ProjectMember projectMember = requireProjectManagerOrThrowException(projectMembers, user);
 
-        if (orgMemberIds.contains(orgMember.getId())) {
+        if (projectMemberIds.contains(projectMember.getId())) {
             return;
         }
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
-        requireProjectManagerOrThrowException(projectMembers, user);
     }
 
     protected Task getTaskWithProjectAndOrgMemberAndProjectMemberByUserAndTaskId(User user, Long taskId) {

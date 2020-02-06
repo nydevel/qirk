@@ -19,11 +19,11 @@ package org.wrkr.clb.services.security.impl;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
@@ -31,6 +31,7 @@ import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.user.User;
+import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 
@@ -38,22 +39,19 @@ import org.wrkr.clb.services.security.ProjectSecurityService;
 @Service
 public class DefaultProjectSecurityService extends BaseProjectSecurityService implements ProjectSecurityService {
 
+    @Autowired
+    private TaskHashtagRepo taskHashtagRepo;
+
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void authzCanCreateProject(User user, IdOrUiIdDTO organizationDTO) throws SecurityException {
-        requireAuthnOrThrowException(user);
-
-        OrganizationMember member = getOrganizationMemberByUserAndOrganizationIdOrUiId(user, organizationDTO);
-        requireOrganizationManagerOrThrowException(member);
+    public void authzCanCreateProject(User user) throws SecurityException {
+        requireAdminOrThrowException(user);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void authzCanImportProjects(User user, Long organizationId) throws SecurityException {
-        requireAuthnOrThrowException(user);
-
-        Organization organization = getOrganizationWithMemberByUserAndOrganizationId(user, organizationId);
-        requireOrganizationOwnerOrThrowException(organization.getMembers(), user);
+    public void authzCanImportProjects(User user) throws SecurityException {
+        requireAdminOrThrowException(user);
     }
 
     @Override
@@ -102,15 +100,7 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
         requireAuthnOrThrowException(user);
 
         Project project = getProjectWithOrgMemberAndProjectMemberByUserAndProjectId(user, projectId);
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        OrganizationMember orgMember = requireOrganizationMemberOrThrowException(orgMembers, user);
-
-        if (orgMember.isManager()) {
-            return; // gods can everything
-        }
-
-        List<ProjectMember> projectMembers = orgMember.getProjectMembership();
-        authzCanWriteToProject(projectMembers, user);
+        authzCanWriteToProject(user, project);
     }
 
     @Override
@@ -179,12 +169,12 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
         authzCanModifyProjectApplications(user, project);
     }
 
-    @Override
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public void authzCanModifyProjectApplication(User user, Long applicationId) throws SecurityException {
-        Project project = getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(user, applicationId);
-        authzCanModifyProjectApplications(user, project);
-    }
+    // @Override
+    // @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+    // public void authzCanModifyProjectApplication(User user, Long applicationId) throws SecurityException {
+    // Project project = getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(user, applicationId);
+    // authzCanModifyProjectApplications(user, project);
+    // }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -336,28 +326,12 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
             return false;
         }
 
-        // uncomment when payment is on
-        // if (project.isPrivate() && project.isFrozen()) {
-        // return false;
-        // }
-
-        List<OrganizationMember> orgMembers = project.getOrganizationMembers();
-        for (OrganizationMember orgMember : orgMembers) {
-            if (orgMember == null || !orgMember.getUserId().equals(user.getId())) {
+        List<ProjectMember> projectMembers = project.getMembers();
+        for (ProjectMember projectMember : projectMembers) {
+            if (projectMember == null || !projectMember.getUserId().equals(user.getId())) {
                 continue;
             }
-
-            if (orgMember.isManager()) {
-                return true;
-            }
-
-            List<ProjectMember> projectMembers = orgMember.getProjectMembership();
-            for (ProjectMember projectMember : projectMembers) {
-                if (projectMember == null || !projectMember.getUserId().equals(user.getId())) {
-                    continue;
-                }
-                return (projectMember.isWriteAllowed() || projectMember.isManager());
-            }
+            return (projectMember.isWriteAllowed() || projectMember.isManager());
         }
 
         return false;
@@ -466,10 +440,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
         }
 
         authzCanUpdateTasks(user, task.getProject());
-        /*@formatter:off
-        requirePaymentOrThrowException(project);
-        authzCanWriteToProjectOrIsOrgMemberId(user, task.getProject(), Arrays.asList(task.getReporterId(), task.getAssigneeId()));
-        @formatter:on*/
     }
 
     @Override

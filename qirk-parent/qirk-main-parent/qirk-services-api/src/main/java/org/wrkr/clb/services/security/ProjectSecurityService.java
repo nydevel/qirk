@@ -30,7 +30,7 @@ public interface ProjectSecurityService {
     public void authzCanCreateProject(User user) throws SecurityException;
 
     public void authzCanImportProjects(User user) throws SecurityException;
-    
+
     public void authzCanReadProject(User user,
             @NotNull(message = "projectId is null") Long projectId) throws SecurityException;
 
@@ -72,8 +72,8 @@ public interface ProjectSecurityService {
     public void authzCanModifyProjectApplications(User user,
             @NotNull(message = "projectUiId must not be null") String projectUiId) throws SecurityException;
 
-    public void authzCanModifyProjectApplication(User user,
-            @NotNull(message = "applicationId must not be null") Long applicationId) throws SecurityException;
+    // public void authzCanModifyProjectApplication(User user,
+    // @NotNull(message = "applicationId must not be null") Long applicationId) throws SecurityException;
 
     public void authzCanReadProjectMembers(User user,
             @NotNull(message = "projectId must not be null") Long projectId) throws SecurityException;

@@ -17,7 +17,9 @@
 package org.wrkr.clb.repo.security;
 
 import org.springframework.stereotype.Repository;
+import org.wrkr.clb.model.project.GrantedPermissionsProjectInviteMeta;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectInviteMeta;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.RoadMeta;
@@ -45,6 +47,30 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
 
     private static final SecurityProjectMapper TABLENAME_SECURITY_PROJECT_MAPPER = new SecurityProjectMapper(
             ProjectMeta.DEFAULT);
+
+    private static final String SELECT_BY_INVITE_ID_FOR_SECURITY = "SELECT " +
+            TABLENAME_SECURITY_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + ProjectMeta.TABLE_NAME + " " +
+            "INNER JOIN " + ProjectInviteMeta.TABLE_NAME + " " +
+            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+            ProjectInviteMeta.TABLE_NAME + "." + ProjectInviteMeta.projectId + " " +
+            "WHERE " + ProjectInviteMeta.TABLE_NAME + "." + ProjectInviteMeta.id + " = ?;"; // 1
+
+    private static final String SELECT_BY_GRANTED_PERMS_INVITE_TOKEN_ID_FOR_SECURITY = "SELECT " +
+            TABLENAME_SECURITY_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + ProjectMeta.TABLE_NAME + " " +
+            "INNER JOIN " + GrantedPermissionsProjectInviteMeta.TABLE_NAME + " " +
+            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+            GrantedPermissionsProjectInviteMeta.TABLE_NAME + "." + GrantedPermissionsProjectInviteMeta.projectId + " " +
+            "WHERE " + GrantedPermissionsProjectInviteMeta.TABLE_NAME + "." + GrantedPermissionsProjectInviteMeta.id + " = ?;"; // 1
+
+    // private static final String SELECT_BY_APPLICATION_ID_FOR_SECURITY = "SELECT " +
+    // TABLENAME_SECURITY_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
+    // "FROM " + ProjectMeta.TABLE_NAME + " " +
+    // "INNER JOIN " + ProjectApplicationMeta.TABLE_NAME + " " +
+    // "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+    // ProjectApplicationMeta.TABLE_NAME + "." + ProjectApplicationMeta.projectId + " " +
+    // "WHERE " + ProjectApplicationMeta.TABLE_NAME + "." + ProjectApplicationMeta.id + " = ?;"; // 1
 
     private static final String SELECT_BY_MEMBER_ID_FOR_SECURITY = "SELECT " +
             TABLENAME_SECURITY_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
@@ -104,6 +130,34 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
             + SELECT_AND_FETCH_NOT_FIRED_PROJECT_MEMBER_AND_USER_BY_USER_ID_FOR_SECURITY_PREFIX +
             "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ?;"; // 2
 
+    private static final String SELECT_BY_INVITE_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
+            + PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + ProjectMeta.TABLE_NAME + " " +
+            "INNER JOIN " + ProjectInviteMeta.TABLE_NAME + " " +
+            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+            ProjectInviteMeta.TABLE_NAME + "." + ProjectInviteMeta.projectId + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            "WHERE " + ProjectInviteMeta.TABLE_NAME + "." + ProjectInviteMeta.id + " = ?;"; // 2
+
+    private static final String SELECT_BY_GRANTED_PERMS_INVITE_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
+            + PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + ProjectMeta.TABLE_NAME + " " +
+            "INNER JOIN " + GrantedPermissionsProjectInviteMeta.TABLE_NAME + " " +
+            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+            GrantedPermissionsProjectInviteMeta.TABLE_NAME + "." + GrantedPermissionsProjectInviteMeta.projectId + " " +
+            JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+            "WHERE " + GrantedPermissionsProjectInviteMeta.TABLE_NAME + "." + GrantedPermissionsProjectInviteMeta.id + " = ?;"; // 2
+
+    // private static final String
+    // SELECT_BY_APPLICATION_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
+    // + PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER.generateSelectColumnsStatement() + " " +
+    // "FROM " + ProjectMeta.TABLE_NAME + " " +
+    // "INNER JOIN " + ProjectApplicationMeta.TABLE_NAME + " " +
+    // "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = " +
+    // ProjectApplicationMeta.TABLE_NAME + "." + ProjectApplicationMeta.projectId + " " +
+    // JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
+    // "WHERE " + ProjectApplicationMeta.TABLE_NAME + "." + ProjectApplicationMeta.id + " = ?;"; // 2
+
     private static final String OTHER_PROJECT_MEMBER_TABLE_ALIAS = "other_project_member";
     private static final String SELECT_BY_OTHER_MEMBER_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY = "SELECT "
             + PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER.generateSelectColumnsStatement() + " " +
@@ -151,6 +205,21 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
                 projectUiId);
     }
 
+    public Project getByInviteIdForSecurity(Long inviteId) {
+        return queryForObjectOrNull(SELECT_BY_INVITE_ID_FOR_SECURITY, TABLENAME_SECURITY_PROJECT_MAPPER,
+                inviteId);
+    }
+
+    public Project getByGrantedPermsInviteIdForSecurity(Long inviteId) {
+        return queryForObjectOrNull(SELECT_BY_GRANTED_PERMS_INVITE_TOKEN_ID_FOR_SECURITY, TABLENAME_SECURITY_PROJECT_MAPPER,
+                inviteId);
+    }
+
+    // public Project getByApplicationIdForSecurity(Long applicationId) {
+    // return queryForObjectOrNull(SELECT_BY_APPLICATION_ID_FOR_SECURITY, TABLENAME_SECURITY_PROJECT_MAPPER,
+    // applicationId);
+    // }
+
     public Project getByMemberIdForSecurity(Long projectMemberId) {
         return queryForObjectOrNull(SELECT_BY_MEMBER_ID_FOR_SECURITY, TABLENAME_SECURITY_PROJECT_MAPPER,
                 projectMemberId);
@@ -182,6 +251,28 @@ public class SecurityProjectRepo extends JDBCBaseMainRepo {
                 PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER,
                 userId, projectUiId);
     }
+
+    public Project getByInviteIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(Long inviteId, Long userId) {
+        return queryForObjectOrNull(SELECT_BY_INVITE_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY,
+                PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER,
+                userId, inviteId);
+    }
+
+    public Project getByGrantedPermsInviteIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(
+            Long inviteId, Long userId) {
+        return queryForObjectOrNull(
+                SELECT_BY_GRANTED_PERMS_INVITE_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY,
+                PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER,
+                userId, inviteId);
+    }
+
+    // public Project getByApplicationIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(
+    // Long applicationId, Long userId) {
+    // return queryForObjectOrNull(
+    // SELECT_BY_APPLICATION_ID_AND_FETCH_NOT_FIRED_ORG_MEMBER_AND_PROJECT_MEMBER_BY_USER_ID_FOR_SECURITY,
+    // PROJECT_WITH_ORG_MEMBER_AND_PROJECT_MEMBER_MAPPER,
+    // userId, applicationId);
+    // }
 
     public Project getByOtherMemberIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(
             Long projectMemberId, Long userId) {

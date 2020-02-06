@@ -85,8 +85,8 @@ public class TaskServiceTest extends BaseServiceTest {
         user1organizationMember = saveOrganizationMember(user1, organization1, false);
         user2organizationMember = saveOrganizationMember(user2, organization1, false);
 
-        project1 = saveProject(organization1, project1name, project1uiId, false);
-        project2 = saveProject(organization1, project2name, project2uiId, false);
+        project1 = saveProject(project1name, project1uiId, false);
+        project2 = saveProject(project2name, project2uiId, false);
 
         reporters = new ArrayList<OrganizationMember>(Arrays.asList(user1organizationMember, user2organizationMember));
         assignees = new ArrayList<OrganizationMember>(Arrays.asList(user1organizationMember, user2organizationMember, null));

@@ -33,4 +33,9 @@ public abstract class BaseSecurityService {
             throw new SecurityException("User is not authenticated");
         }
     }
+
+    protected void requireAdminOrThrowException(User user) throws SecurityException {
+        requireAuthnOrThrowException(user);
+        // TODO
+    }
 }

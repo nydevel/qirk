@@ -104,8 +104,8 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
         OrganizationMember taskAssignee = saveOrganizationMember(taskAssigneeUser, publicOrganization, false);
         OrganizationMember projectReadOnlyMember = saveOrganizationMember(projectReadOnlyMemberUser, publicOrganization, false);
 
-        Project privateProject = saveProject(publicOrganization, privateProjectName, privateProjectUiId, true);
-        Project publicProject = saveProject(publicOrganization, publicProjectName, publicProjectUiId, false);
+        Project privateProject = saveProject(privateProjectName, privateProjectUiId, true);
+        Project publicProject = saveProject(publicProjectName, publicProjectUiId, false);
 
         for (Project project : new Project[] { privateProject, publicProject }) {
             saveProjectMember(projectManager, project, true, true);

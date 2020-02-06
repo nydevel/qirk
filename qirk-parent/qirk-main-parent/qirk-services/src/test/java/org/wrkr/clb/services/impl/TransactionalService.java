@@ -16,21 +16,8 @@
  */
 package org.wrkr.clb.services.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.model.organization.OrganizationMember;
-import org.wrkr.clb.services.project.ProjectMemberService;
-
 
 @Service
 public class TransactionalService {
-
-    @Autowired
-    private ProjectMemberService projectMemberService;
-
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public void projectMemberService_deleteBatchByOrganizationMember(OrganizationMember organizationMember) {
-        projectMemberService.deleteBatchByOrganizationMember(organizationMember);
-    }
 }

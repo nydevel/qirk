@@ -131,8 +131,8 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
         OrganizationMember taskAssignee = saveOrganizationMember(taskAssigneeUser, privateOrganization, false);
         OrganizationMember projectReadOnlyMember = saveOrganizationMember(projectReadOnlyMemberUser, privateOrganization, false);
 
-        Project privateProject = saveProject(privateOrganization, privateProjectName, privateProjectUiId, true);
-        saveProject(publicOrganization, publicProjectName, publicProjectUiId, false);
+        Project privateProject = saveProject(privateProjectName, privateProjectUiId, true);
+        saveProject(publicProjectName, publicProjectUiId, false);
 
         saveProjectInvite(nonMemberUser, privateProject, projectMemberUser,
                 inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING));

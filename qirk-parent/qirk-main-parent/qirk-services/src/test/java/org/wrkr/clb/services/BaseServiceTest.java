@@ -25,15 +25,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wrkr.clb.common.crypto.HashEncoder;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.ApplicationStatus;
 import org.wrkr.clb.model.InviteStatus;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.Road;
@@ -91,40 +87,12 @@ public abstract class BaseServiceTest {
         return user;
     }
 
-    protected Organization saveOrganization(User owner, String name, String uiId, boolean isPrivate) {
-        Organization organization = new Organization();
-
-        organization.setOwner(owner);
-        organization.setName(name);
-        organization.setUiId(uiId);
-        organization.setPrivate(isPrivate);
-
-        testRepo.persistEntity(organization);
-
-        saveOrganizationMember(owner, organization, true);
-
-        return organization;
-    }
-
-    protected OrganizationMember saveOrganizationMember(User user, Organization organization, boolean manager) {
-        OrganizationMember member = new OrganizationMember();
-
-        member.setUser(user);
-        member.setOrganization(organization);
-        member.setManager(manager);
-        member.setEnabled(true);
-
-        testRepo.persistEntity(member);
-        return member;
-    }
-
-    protected Project saveProject(Organization organization, String name, String uiId, boolean isPrivate) {
+    protected Project saveProject(String name, String uiId, boolean isPrivate) {
         ProjectTaskNumberSequence taskNumberSequence = new ProjectTaskNumberSequence();
         testRepo.persistEntity(taskNumberSequence);
 
         Project project = new Project();
 
-        project.setOrganization(organization);
         project.setTaskNumberSequence(taskNumberSequence);
         project.setName(name);
         project.setUiId(uiId);
@@ -192,12 +160,11 @@ public abstract class BaseServiceTest {
      * }
      */
 
-    protected ProjectMember saveProjectMember(OrganizationMember organizationMember, Project project,
+    protected ProjectMember saveProjectMember(User user, Project project,
             boolean manager, boolean writeAllowed) {
         ProjectMember member = new ProjectMember();
 
-        member.setUser(organizationMember.getUser());
-        member.setOrganizationMember(organizationMember);
+        member.setUser(user);
         member.setProject(project);
         member.setManager(manager);
         member.setWriteAllowed(writeAllowed);
@@ -210,7 +177,6 @@ public abstract class BaseServiceTest {
     protected Road saveRoad(Project project, String name) {
         Road road = new Road();
 
-        road.setOrganization(project.getOrganization());
         road.setProject(project);
         road.setName(name);
 
@@ -221,7 +187,6 @@ public abstract class BaseServiceTest {
     protected TaskCard saveTaskCard(Road road, String name) {
         TaskCard card = new TaskCard();
 
-        card.setOrganization(road.getOrganization());
         card.setProject(road.getProject());
         card.setRoad(road);
         card.setName(name);
@@ -231,7 +196,7 @@ public abstract class BaseServiceTest {
         return card;
     }
 
-    protected Task createTask(OrganizationMember reporter, OrganizationMember assignee,
+    protected Task createTask(ProjectMember reporter, ProjectMember assignee,
             TaskType type, TaskPriority priority, TaskStatus status, TaskCard card) {
         Task task = new Task();
 
@@ -280,7 +245,7 @@ public abstract class BaseServiceTest {
         return issue;
     }
 
-    protected Memo saveMemo(Project project, OrganizationMember author) {
+    protected Memo saveMemo(Project project, ProjectMember author) {
         Memo memo = new Memo();
 
         memo.setProject(project);
