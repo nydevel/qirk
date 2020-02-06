@@ -22,7 +22,6 @@ public class JiraUploadMeta extends BaseEntityMeta {
 
     public static final String TABLE_NAME = "jira_upload";
 
-    public static final String organizationId = "organization_id";
     public static final String uploadTimestamp = "upload_timestamp";
     public static final String archiveFilename = "archive_filename";
 }

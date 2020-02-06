@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
@@ -60,10 +61,6 @@ public class JiraProjectImportDTO {
         }
     }
 
-    @JsonProperty(value = "organization")
-    @NotNull(message = "organization in JiraProjectImportDTO must not be null")
-    public Long organizationId;
-
     @NotNull(message = "timestamp in JiraProjectImportDTO must not be null")
     public Long timestamp;
 
@@ -96,8 +93,8 @@ public class JiraProjectImportDTO {
     public Map<String, String> jiraStatusIdToQirkStatusNameCode;
 
     @JsonProperty(value = "members")
-    @NotNull(message = "types in JiraProjectImportDTO must not be null")
-    public Map<String, Long> jiraUserNameToQirkOrgMemberId;
+    @NotNull(message = "members in JiraProjectImportDTO must not be null")
+    public Map<String, Long> jiraUserNameToQirkOrgUserId;
 
     // fields filled during service execution
 
@@ -120,4 +117,6 @@ public class JiraProjectImportDTO {
     public Map<String, String> jiraUserNameToJiraUserId;
     @JsonIgnore
     public Map<String, User> jiraUserNameToQirkUser;
+    @JsonIgnore
+    public Map<String, ProjectMember> jiraUserNameToQirkProjectMember;
 }

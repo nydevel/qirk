@@ -35,7 +35,6 @@ import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.user.EmailActivationToken;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.PasswordActivationToken;
@@ -44,13 +43,11 @@ import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.ExistsDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.RegisterDTO;
 import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
 import org.wrkr.clb.services.http.CookieService;
-import org.wrkr.clb.services.organization.OrganizationService;
 import org.wrkr.clb.services.user.EmailActivationTokenService;
 import org.wrkr.clb.services.user.PasswordActivationTokenService;
 import org.wrkr.clb.services.user.RegistrationService;
@@ -58,7 +55,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.LicenseNotAcceptedException;
 import org.wrkr.clb.services.util.http.Cookies;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
-
 
 @Validated
 @Service
@@ -80,9 +76,6 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Autowired
     private EmailActivationTokenService emailTokenService;
-
-    @Autowired
-    private OrganizationService organizationService;
 
     @Autowired
     private CookieService cookieService;
@@ -125,16 +118,9 @@ public class DefaultRegistrationService implements RegistrationService {
         notifSettings.setUserId(user.getId());
         notifSettingsRepo.save(notifSettings);
 
-        OrganizationDTO organizationDTO = new OrganizationDTO();
-        organizationDTO.name = user.getFullName();
-        organizationDTO.uiId = "";
-        Organization predefinedOrganization = organizationService.createPredefinedForUser(user, organizationDTO);
-        user.setOrganizationMembership(predefinedOrganization.getMembers());
-
         if (enabled) {
             try {
                 elasticsearchService.index(user);
-                elasticsearchService.setOrganizations(user);
             } catch (Exception e) {
                 LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
             }
@@ -235,7 +221,6 @@ public class DefaultRegistrationService implements RegistrationService {
         if (!wasEnabled) {
             try {
                 elasticsearchService.index(user);
-                elasticsearchService.setOrganizations(user);
             } catch (Exception e) {
                 LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
             }

@@ -18,7 +18,6 @@ package org.wrkr.clb.common.jms.message.notification;
 
 import java.util.Collection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -29,13 +28,9 @@ public class TaskUpdateNotificationMessage extends TaskMessage {
     private static final ObjectWriter TASK_UPDATE_MESSAGE_WRITER = new ObjectMapper()
             .writerFor(TaskUpdateNotificationMessage.class);
 
-    @JsonIgnore
     public static final String OLD_ASSIGNEE = "old_assignee";
-    @JsonIgnore
     public static final String OLD_TYPE = "old_type";
-    @JsonIgnore
     public static final String OLD_PRIORITY = "old_priority";
-    @JsonIgnore
     public static final String OLD_STATUS = "old_status";
 
     @JsonProperty(value = OLD_ASSIGNEE)

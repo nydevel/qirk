@@ -43,7 +43,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
 import org.wrkr.clb.web.json.JsonContainer;
 
-
 @RestController
 @RequestMapping(path = "jira-import", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class JiraImportController extends BaseExceptionHandlerController {
@@ -51,7 +50,6 @@ public class JiraImportController extends BaseExceptionHandlerController {
     private static final int FILENAME_MAX_LENGTH = 511;
 
     private static class UploadFieldName {
-        private static final String ORGANIZATION_ID = "organization_id";
         private static final String FILE = "file";
     }
 
@@ -69,28 +67,18 @@ public class JiraImportController extends BaseExceptionHandlerController {
     public JsonContainer<JiraUploadDTO, Void> upload(HttpServletRequest request, HttpSession session) throws Exception {
         List<FileItem> items = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
 
-        Long organizationId = null;
         FileItem file = null;
 
         for (FileItem item : items) {
 
-            switch (item.getFieldName()) {
-                case UploadFieldName.ORGANIZATION_ID:
-                    organizationId = getLongParameter(item, UploadFieldName.ORGANIZATION_ID);
-                    break;
-
-                case UploadFieldName.FILE:
-                    if (file != null) {
-                        throw new BadRequestException(JsonStatusCode.TOO_MANY_FILES, "Too many files to upload.");
-                    }
-                    file = item;
-                    break;
+            if (UploadFieldName.FILE.equals(item.getFieldName())) {
+                if (file != null) {
+                    throw new BadRequestException(JsonStatusCode.TOO_MANY_FILES, "Too many files to upload.");
+                }
+                file = item;
             }
         }
 
-        if (organizationId == null) {
-            throw new BadRequestException("Required Long parameter '" + UploadFieldName.ORGANIZATION_ID + "' is not present");
-        }
         if (file == null) {
             throw new BadRequestException(JsonStatusCode.NO_FILES, "No files to upload.");
         }
@@ -99,39 +87,37 @@ public class JiraImportController extends BaseExceptionHandlerController {
                     "Filename size must be no more than " + FILENAME_MAX_LENGTH);
         }
 
-        JiraUploadDTO dto = projectImportService.uploadJiraImportFile(getSessionUser(session), file, organizationId);
+        JiraUploadDTO dto = projectImportService.uploadJiraImportFile(getSessionUser(session),
+                file);
         return new JsonContainer<JiraUploadDTO, Void>(dto);
     }
 
     @GetMapping(value = "list-uploads")
-    public JsonContainer<JiraUploadDTO, Void> listUploads(HttpSession session,
-            @RequestParam(name = "organization_id") long organizationId) throws Exception {
+    public JsonContainer<JiraUploadDTO, Void> listUploads(HttpSession session) throws Exception {
         long startTime = System.currentTimeMillis();
-        List<JiraUploadDTO> dtoList = projectImportService.listUploads(getSessionUser(session), organizationId);
-        logProcessingTimeFromStartTime(startTime, "listUploads", organizationId);
+        List<JiraUploadDTO> dtoList = projectImportService.listUploads(getSessionUser(session));
+        logProcessingTimeFromStartTime(startTime, "listUploads");
         return new JsonContainer<JiraUploadDTO, Void>(dtoList);
     }
 
     @GetMapping(value = "list-projects")
     public JsonContainer<JiraProjectDTO, Void> listProjects(HttpSession session,
-            @RequestParam(name = "organization_id") long organizationId,
             @RequestParam(name = "timestamp") long timestamp) throws Exception {
         long startTime = System.currentTimeMillis();
-        List<JiraProjectDTO> projectDTOList = projectImportService.listProjects(getSessionUser(session), organizationId,
+        List<JiraProjectDTO> projectDTOList = projectImportService.listProjects(getSessionUser(session),
                 timestamp);
-        logProcessingTimeFromStartTime(startTime, "listProjects", organizationId, timestamp);
+        logProcessingTimeFromStartTime(startTime, "listProjects", timestamp);
         return new JsonContainer<JiraProjectDTO, Void>(projectDTOList);
     }
 
     @GetMapping(value = "list-projects-data")
     public JsonContainer<JiraOrganizationMatchDTO, Void> listProjectsData(HttpSession session,
-            @RequestParam(name = "organization_id") long organizationId,
             @RequestParam(name = "timestamp") long timestamp,
             @RequestParam(name = "project_id") Set<String> projectIds) throws Exception {
         long startTime = System.currentTimeMillis();
         JiraOrganizationMatchDTO dto = projectImportService.listProjectsData(
-                getSessionUser(session), organizationId, timestamp, projectIds);
-        logProcessingTimeFromStartTime(startTime, "listProjectsData", organizationId, timestamp);
+                getSessionUser(session), timestamp, projectIds);
+        logProcessingTimeFromStartTime(startTime, "listProjectsData", timestamp);
         return new JsonContainer<JiraOrganizationMatchDTO, Void>(dto);
     }
 

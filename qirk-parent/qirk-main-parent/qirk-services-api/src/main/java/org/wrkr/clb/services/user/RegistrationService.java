@@ -39,19 +39,19 @@ import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
 public interface RegistrationService {
 
     public ExistsDTO checkEmail(
-            @NotEmpty(message = "email in RegistrationService must not be empty") @Email(message = "email in RegistrationService must be valid") String email,
+            @NotEmpty(message = "email must not be empty") @Email(message = "email must be valid") String email,
             boolean excludeDisabled);
 
     public ExistsDTO checkUsername(
-            @NotNull(message = "username in RegistrationService must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
-                    + "+", message = "username in RegistrationService must be lower case slug") String username);
+            @NotNull(message = "username must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
+                    + "+", message = "username must be lower case slug") String username);
 
     public User createUserWithEmailAndPasswordHash(
-            @NotEmpty(message = "email in RegistrationService must not be empty") @Email(message = "email in RegistrationService must be valid") String email,
-            @NotBlank(message = "passwordHash in RegistrationService must not be blank") String passwordHash,
-            @NotNull(message = "username in RegistrationService must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
-                    + "{1,25}", message = "username in RegistrationService must be lower case slug") String username,
-            @NotBlank(message = "fullName in RegistrationService must not be blank") String fullName, boolean licenseAccepted)
+            @NotEmpty(message = "email must not be empty") @Email(message = "email must be valid") String email,
+            @NotBlank(message = "passwordHash must not be blank") String passwordHash,
+            @NotNull(message = "username must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
+                    + "{1,25}", message = "username must be lower case slug") String username,
+            @NotBlank(message = "fullName must not be blank") String fullName, boolean licenseAccepted)
             throws Exception;
 
     @Deprecated
@@ -64,7 +64,7 @@ public interface RegistrationService {
 
     @Deprecated
     public User activate(
-            @NotNull(message = "token in RegistrationService must not be null") String token) throws Exception;
+            @NotNull(message = "token must not be null") String token) throws Exception;
 
     public User activate(HttpServletRequest request, @Valid ActivationDTO activationDTO) throws Exception;
 }

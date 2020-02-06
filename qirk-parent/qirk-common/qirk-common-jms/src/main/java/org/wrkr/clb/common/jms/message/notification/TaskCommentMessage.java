@@ -26,22 +26,13 @@ public class TaskCommentMessage extends BaseTaskNotificationMessage {
 
     private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(TaskCommentMessage.class);
 
-    @JsonIgnore
     public static final String SENDER_USERNAME = "sender_username";
-    @JsonIgnore
     public static final String SENDER_FULL_NAME = "sender_full_name";
 
-    @JsonIgnore
-    public static final String ORGANIZATION_ID = "organization_id";
-    @JsonIgnore
     public static final String PROJECT_ID = "project_id";
-    @JsonIgnore
     public static final String PROJECT_NAME = "project_name";
-    @JsonIgnore
     public static final String TASK_ID = "task_id";
-    @JsonIgnore
     public static final String TASK_NUMBER = "task_number";
-    @JsonIgnore
     public static final String TASK_SUMMARY = "task_summary";
 
     @JsonIgnore
@@ -54,8 +45,6 @@ public class TaskCommentMessage extends BaseTaskNotificationMessage {
     @JsonProperty(value = SENDER_FULL_NAME)
     public String senderFullName;
 
-    @JsonProperty(value = ORGANIZATION_ID)
-    public long organizationId;
     @JsonProperty(value = PROJECT_ID)
     public long projectId;
     @JsonProperty(value = PROJECT_NAME)

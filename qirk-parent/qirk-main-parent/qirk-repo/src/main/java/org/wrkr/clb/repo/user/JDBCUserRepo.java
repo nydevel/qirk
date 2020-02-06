@@ -17,6 +17,7 @@
 package org.wrkr.clb.repo.user;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -31,10 +32,12 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.user.AccountUserMapper;
+import org.wrkr.clb.repo.mapper.user.BaseUserMapper;
 import org.wrkr.clb.repo.mapper.user.EmailUserMapper;
 import org.wrkr.clb.repo.mapper.user.ProfileUserMapper;
 import org.wrkr.clb.repo.mapper.user.ProfileUserWithNotificationSettingsMapper;
 import org.wrkr.clb.repo.mapper.user.PublicProfileUserMapper;
+import org.wrkr.clb.repo.mapper.user.PublicUserWithEmailMapper;
 import org.wrkr.clb.repo.mapper.user.PublicUserWithProjectMembershipMapper;
 import org.wrkr.clb.repo.mapper.user.UserWithNotificationSettingMapper;
 
@@ -44,9 +47,16 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(JDBCUserRepo.class);
 
+    private static final BaseUserMapper BASE_USER_MAPPER = new BaseUserMapper();
+
+    private static final String SELECT_BY_ID = "SELECT " +
+            BASE_USER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + UserMeta.TABLE_NAME + " " +
+            "WHERE " + UserMeta.id + " = ?;"; // 1
+
     private static final EmailUserMapper EMAIL_USER_MAPPER = new EmailUserMapper();
 
-    private static final String SELECT_ID_BY_EMAIL = "SELECT " +
+    private static final String SELECT_BY_EMAIL = "SELECT " +
             EMAIL_USER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.emailAddress + " = ?;"; // 1
@@ -106,6 +116,12 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.id + " IN ("; // 1
 
+    private static final PublicUserWithEmailMapper PUBLIC_USER_WITH_EMAIL_MAPPER = new PublicUserWithEmailMapper();
+
+    private static final String SELECT_ALL = "SELECT " +
+            PUBLIC_USER_WITH_EMAIL_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + UserMeta.TABLE_NAME + ";";
+
     private static final PublicUserWithProjectMembershipMapper PUBLIC_USER_WITH_PROJECT_MEMBERSHIP_MAPPER = new PublicUserWithProjectMembershipMapper(
             UserMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
 
@@ -162,8 +178,13 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
             "SET " + UserMeta.licenseAccepted + " = true " +
             "WHERE " + UserMeta.id + " = ?;"; // 1
 
+    public User getById(Long userId) {
+        return queryForObjectOrNull(SELECT_BY_ID, BASE_USER_MAPPER,
+                userId);
+    }
+
     public User getByEmail(String email) {
-        return queryForObjectOrNull(SELECT_ID_BY_EMAIL, EMAIL_USER_MAPPER,
+        return queryForObjectOrNull(SELECT_BY_EMAIL, EMAIL_USER_MAPPER,
                 email);
     }
 
@@ -211,8 +232,12 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
         return queryForList(SELECT_EMAILS, String.class);
     }
 
-    public List<User> listEmailsByIds(List<Long> ids) {
+    public List<User> listEmailsByIds(Collection<Long> ids) {
         return queryForList(insertNBindValues(SELECT_EMAILS_BY_IDS_PREFIX, ids.size(), ");"), EMAIL_USER_MAPPER, ids.toArray());
+    }
+
+    public List<User> list() {
+        return queryForList(SELECT_ALL, PUBLIC_USER_WITH_EMAIL_MAPPER);
     }
 
     public List<User> listAndFetchProjectMembership() {

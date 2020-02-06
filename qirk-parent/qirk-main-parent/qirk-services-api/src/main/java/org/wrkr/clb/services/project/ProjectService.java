@@ -42,12 +42,12 @@ import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 public interface ProjectService {
 
     public ExistsDTO checkUiId(User currentUser,
-            @NotNull(message = "uiId in ProjectService must not be null") @Pattern(regexp = RegExpPattern.SLUG
-                    + "+", message = "uiId in ProjectService must be slug") String uiId)
+            @NotNull(message = "uiId must not be null") @Pattern(regexp = RegExpPattern.SLUG
+                    + "+", message = "uiId must be slug") String uiId)
             throws Exception;
 
-    public Project create(User creator, @Valid ProjectDTO projectDTO,
-            @NotNull(message = "membersToCreate in ProjectService must not be null") List<User> membersToCreate) throws Exception;
+    public Project create(User creatorUser, @Valid ProjectDTO projectDTO,
+            @NotNull(message = "membersToCreate must not be null") List<User> membersToCreate) throws Exception;
 
     @Validated(OnCreate.class)
     public ProjectReadDTO create(User currentUser, @Valid ProjectDTO projectDTO) throws Exception;
@@ -56,10 +56,10 @@ public interface ProjectService {
     public ProjectReadDTO update(User currentUser, @Valid ProjectDTO projectDTO) throws Exception;
 
     public ProjectDocDTO getDocumentation(User currentUser,
-            @NotNull(message = "id in ProjectService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 
     public ProjectDocDTO getDocumentationByUiId(User currentUser,
-            @NotNull(message = "uiId in ProjectService must not be null") String uiId) throws Exception;
+            @NotNull(message = "uiId must not be null") String uiId) throws Exception;
 
     public ProjectReadDTO updateDocumentation(User currentUser, @Valid ProjectDocDTO documentationDTO) throws Exception;
 
@@ -67,19 +67,19 @@ public interface ProjectService {
 
     // public ProjectReadDTO addDropbox(User currentUser, @Valid OAuthCodeDTO codeDTO) throws Exception;
 
-    // public ProjectDropboxDTO getDropbox(User currentUser, @NotNull(message = "id in ProjectService must not be null") Long id);
+    // public ProjectDropboxDTO getDropbox(User currentUser, @NotNull(message = "id must not be null") Long id);
 
-    // public ProjectDropboxDTO getDropboxByUiId(User currentUser, @NotNull(message = "uiId in ProjectService must not be null")
+    // public ProjectDropboxDTO getDropboxByUiId(User currentUser, @NotNull(message = "uiId must not be null")
     // String uiId);
 
     // public ProjectReadDTO removeDropbox(User currentUser, @Valid RecordVersionDTO projectDTO) throws Exception;
 
     public ProjectReadDTO get(User currentUser,
-            @NotNull(message = "id in ProjectService must not be null") Long id,
+            @NotNull(message = "id must not be null") Long id,
             boolean includeApplication) throws Exception;
 
     public ProjectReadDTO getByUiId(User currentUser,
-            @NotNull(message = "uiId in ProjectService must not be null") String uiId,
+            @NotNull(message = "uiId must not be null") String uiId,
             boolean includeApplication) throws Exception;
 
     public List<ProjectWithOrganizationDTO> listManagedByUser(User currentUser);
@@ -92,5 +92,5 @@ public interface ProjectService {
     public List<ProjectNameAndUiIdDTO> listAvailableToUser(User user);
 
     public ChatPermissionsDTO getChatToken(User currentUser,
-            @NotNull(message = "id in ProjectService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 }

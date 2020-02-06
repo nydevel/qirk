@@ -43,9 +43,8 @@ import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.common.util.strings.MarkdownUtils;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskCard;
@@ -56,16 +55,15 @@ import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.context.TaskSearchContext;
-import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
-import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
+import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
-import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
 import org.wrkr.clb.repo.project.task.TaskCardRepo;
 import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
 import org.wrkr.clb.repo.project.task.TaskLinkRepo;
 import org.wrkr.clb.repo.project.task.TaskPriorityRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.TaskStatusRepo;
 import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
 import org.wrkr.clb.repo.project.task.TaskTypeRepo;
@@ -86,7 +84,6 @@ import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
-
 
 //@Service configured in clb-services-ctx.xml
 @Validated
@@ -140,10 +137,7 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
     private ProjectTaskNumberSequenceRepo taskNumberSequenceRepo;
 
     @Autowired
-    private OrganizationMemberRepo organizationMemberRepo;
-
-    @Autowired
-    private JDBCOrganizationMemberRepo jdbcOrganizationMemberRepo;
+    private JDBCProjectMemberRepo projectMemberRepo;
 
     @Autowired
     private TaskTypeRepo taskTypeRepo;
@@ -222,10 +216,10 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
             if (taskDTO.assigneeId != null) {
                 // don't set assignee when it's the same
                 if (task.getAssignee() == null || !taskDTO.assigneeId.equals(task.getAssignee().getId())) {
-                    OrganizationMember assignee = organizationMemberRepo.getNotFiredByIdAndOrganizationAndFetchUser(
-                            taskDTO.assigneeId, task.getProject().getOrganization());
+                    ProjectMember assignee = projectMemberRepo.getNotFiredByUserIdAndProjectIdAndFetchUser(
+                            taskDTO.assigneeId, task.getProject().getId());
                     if (assignee == null) {
-                        throw new NotFoundException("Assignee organization member");
+                        throw new NotFoundException("Assignee project member");
                     }
                     task.setAssignee(assignee);
                 }
@@ -288,10 +282,6 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         notificationMessage.projectId = project.getId();
         notificationMessage.projectUiId = project.getUiId();
         notificationMessage.projectName = project.getName();
-
-        Organization organizaiton = project.getOrganization();
-        notificationMessage.organizationId = organizaiton.getId();
-        notificationMessage.organizationUiId = organizaiton.getUiId();
 
         notificationMessage.taskId = task.getId();
         notificationMessage.taskNumber = task.getNumber();
@@ -363,8 +353,8 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         task.setNumber(taskNumber);
         setNextTaskNumber(taskNumberSequence, taskNumber + 1L);
 
-        OrganizationMember reporter = organizationMemberRepo.getNotFiredByUserAndOrganization(currentUser,
-                project.getOrganization());
+        ProjectMember reporter = projectMemberRepo.getNotFiredByUserIdAndProjectIdAndFetchUser(
+                currentUser.getId(), project.getId());
         if (reporter == null) {
             throw new NotFoundException("Reporter organization member");
         }
@@ -631,52 +621,6 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         return getDTO(currentUser, taskId);
     }
 
-    /*@formatter:off
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<TaskReadDTO> listByProject(User currentUser, IdOrUiIdDTO projectDTO) {
-        // security
-        securityService.authzCanReadTasks(currentUser, projectDTO);
-        // security
-
-        List<Task> taskList = jpaTaskRepo.listByProjectIdOrUiIdAndFetchTypeAndPriorityAndStatus(projectDTO.id, projectDTO.uiId);
-        return TaskReadDTO.fromEntities(taskList);
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<TaskReadDTO> listAssignedToCurrentUserByProject(User currentUser, IdOrUiIdDTO projectDTO) {
-        // security
-        securityService.authzCanReadTasks(currentUser, projectDTO);
-        // security
-
-        List<Task> taskList = jpaTaskRepo.listTopByProjectIdOrUiIdAndAssigneeUserAndFetchEverythingForRead(
-                projectDTO.id, projectDTO.uiId,
-                currentUser, LIST_BY_PROJECT_MAX_RESULTS);
-
-        return TaskReadDTO.fromEntitiesWithProject(taskList);
-    }
-    @formatter:on*/
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<TaskReadDTO> listParentOptions(User currentUser, IdOrUiIdDTO projectDTO) {
-        // security
-        securityService.authzCanReadTasks(currentUser, projectDTO);
-        // security
-
-        List<Task> taskList = new ArrayList<Task>();
-        if (projectDTO.id != null) {
-            taskList = taskRepo.listAliveNonHiddenNonChildByProjectId(projectDTO.id);
-        } else if (projectDTO.uiId != null) {
-            taskList = taskRepo.listAliveNonHiddenNonChildByProjectUiId(projectDTO.uiId);
-        }
-        return TaskReadDTO.fromEntitiesWithoutOtherFields(taskList);
-    }
-
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<LinkedTaskDTO> listLinkOptionsByTaskId(User currentUser, Long taskId) {
@@ -719,12 +663,12 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         return TaskReadDTO.fromEntitiesWithoutTimestamps(taskList);
     }
 
-    private Long getOrganizationMemberIdByUsernameAndProject(User currentUser, IdOrUiIdDTO projectDTO) {
+    private Long getProjectMemberIdByUsernameAndProject(User currentUser, IdOrUiIdDTO projectDTO) {
         if (projectDTO.id != null) {
-            return jdbcOrganizationMemberRepo.getIdByUserIdAndProjectId(currentUser.getId(), projectDTO.id);
+            return projectMemberRepo.getNotFiredMemberIdByUserIdAndProjectId(currentUser.getId(), projectDTO.id);
         }
         if (projectDTO.uiId != null) {
-            return jdbcOrganizationMemberRepo.getIdByUserIdAndProjectUiId(currentUser.getId(), projectDTO.uiId);
+            return projectMemberRepo.getNotFiredMemberIdByUserIdAndProjectUiId(currentUser.getId(), projectDTO.uiId);
         }
         return null;
     }
@@ -740,12 +684,12 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
 
         if (TaskSearchContext.REPORTED_BY_ME_ID.equals(searchContext.reporterId) ||
                 TaskSearchContext.ASSIGNED_TO_ME_ID.equals(searchContext.assigneeId)) {
-            Long currentUserId = getOrganizationMemberIdByUsernameAndProject(currentUser, projectDTO);
+            Long currentProjectMemberId = getProjectMemberIdByUsernameAndProject(currentUser, projectDTO);
             if (TaskSearchContext.REPORTED_BY_ME_ID.equals(searchContext.reporterId)) {
-                searchContext.reporterId = currentUserId;
+                searchContext.reporterId = currentProjectMemberId;
             }
             if (TaskSearchContext.ASSIGNED_TO_ME_ID.equals(searchContext.assigneeId)) {
-                searchContext.assigneeId = currentUserId;
+                searchContext.assigneeId = currentProjectMemberId;
             }
         }
 
@@ -762,7 +706,7 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
 
         if (TaskSearchContext.REPORTED_BY_ME_ID.equals(searchContext.reporterId) ||
                 TaskSearchContext.ASSIGNED_TO_ME_ID.equals(searchContext.assigneeId)) {
-            Long currentUserId = getOrganizationMemberIdByUsernameAndProject(currentUser, projectDTO);
+            Long currentUserId = getProjectMemberIdByUsernameAndProject(currentUser, projectDTO);
             if (TaskSearchContext.REPORTED_BY_ME_ID.equals(searchContext.reporterId)) {
                 searchContext.reporterId = currentUserId;
             }
@@ -839,10 +783,6 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
             tokenData.projectId = project.getId();
             tokenData.projectUiId = project.getUiId();
             tokenData.projectName = project.getName();
-
-            Organization organization = project.getOrganization();
-            tokenData.organizationId = organization.getId();
-            tokenData.organizationUiId = organization.getUiId();
 
             tokenData.taskNumber = task.getNumber();
         }

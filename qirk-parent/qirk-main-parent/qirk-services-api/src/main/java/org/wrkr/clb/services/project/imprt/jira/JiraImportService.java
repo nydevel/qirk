@@ -32,20 +32,18 @@ import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectImportDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraUploadDTO;
 
-
 @Validated
 public interface JiraImportService {
 
     public JiraUploadDTO uploadJiraImportFile(User currentUser,
-            @NotNull(message = "file in ProjectImportService must not be null") FileItem file,
-            @NotNull(message = "organizationId in ProjectImportService must not be null") Long organizationId) throws Exception;
+            @NotNull(message = "file must not be null") FileItem file) throws Exception;
 
-    public List<JiraUploadDTO> listUploads(User currentUser, long organizationId) throws Exception;
+    public List<JiraUploadDTO> listUploads(User currentUser) throws Exception;
 
-    public List<JiraProjectDTO> listProjects(User currentUser, long organizationId, long timestamp) throws Exception;
+    public List<JiraProjectDTO> listProjects(User currentUser, long timestamp) throws Exception;
 
-    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long organizationId, long timestamp,
-            @NotEmpty(message = "projectIds in ProjectImportService must not be empty") Set<String> projectIds) throws Exception;
+    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long timestamp,
+            @NotEmpty(message = "projectIds must not be empty") Set<String> projectIds) throws Exception;
 
     public List<ImportStatusDTO> importProjects(User currentUser, @Valid JiraProjectImportDTO importDTO) throws Exception;
 }

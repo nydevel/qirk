@@ -39,21 +39,21 @@ public interface TaskCardService {
     public void move(User currentUser, @Valid MoveToRoadDTO moveDTO) throws Exception;
 
     public List<TaskCardReadDTO> list(User currentUser,
-            @NotNull(message = "projectId in TaskCardService must not be null") Long projectId);
+            @NotNull(message = "projectId must not be null") Long projectId);
 
     public List<TaskCardReadDTO> list(User currentUser,
-            @NotNull(message = "projectUiId in TaskCardService must not be null") String projectUiId);
+            @NotNull(message = "projectUiId must not be null") String projectUiId);
 
     public void archive(User currentUser, @Valid RecordVersionDTO dto) throws Exception;
 
     public void archiveBatchByRoadId(Long roadId);
 
     public List<TaskCardReadDTO> listArchive(User currentUser,
-            @NotNull(message = "projectId in TaskCardService must not be null") Long projectId);
+            @NotNull(message = "projectId must not be null") Long projectId);
 
     public List<TaskCardReadDTO> listArchive(User currentUser,
-            @NotNull(message = "projectUiId in TaskCardService must not be null") String projectUiId);
+            @NotNull(message = "projectUiId must not be null") String projectUiId);
 
     public void delete(User currentUser,
-            @NotNull(message = "projectId in TaskCardService must not be null") Long id) throws Exception;
+            @NotNull(message = "projectId must not be null") Long id) throws Exception;
 }

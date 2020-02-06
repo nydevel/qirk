@@ -42,7 +42,6 @@ import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
 import org.wrkr.clb.repo.project.IssueRepo;
 import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
@@ -114,9 +113,6 @@ public class DefaultProfileService implements ProfileService {
 
     @Autowired
     private NotificationSettingsRepo notifSettingsRepo;
-
-    @Autowired
-    private JDBCOrganizationMemberRepo orgMemberRepo;
 
     @Autowired
     private TagService tagService;
@@ -193,8 +189,6 @@ public class DefaultProfileService implements ProfileService {
         try {
             if (!elasticsearchService.exists(user)) {
                 elasticsearchService.index(user);
-                user.setOrganizationMembership(orgMemberRepo.listNotFiredByUserIdAndFetchOrganization(user.getId()));
-                elasticsearchService.setOrganizations(user);
             }
         } catch (Exception e) {
             LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);

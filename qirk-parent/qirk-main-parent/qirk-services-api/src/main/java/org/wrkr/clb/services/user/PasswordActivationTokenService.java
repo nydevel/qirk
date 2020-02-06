@@ -27,13 +27,13 @@ import org.wrkr.clb.model.user.User;
 public interface PasswordActivationTokenService {
 
     public PasswordActivationToken create(
-            @NotNull(message = "user in ActivationTokenService must not be null") User user);
+            @NotNull(message = "user must not be null") User user);
 
     @Deprecated
     public PasswordActivationToken getDisabledByEmail(
-            @NotNull(message = "email in ActivationTokenService must not be null") String email) throws Exception;
+            @NotNull(message = "email must not be null") String email) throws Exception;
 
     public User getUserAndDeleteToken(
-            @NotNull(message = "token in ActivationTokenService must not be null") String token)
+            @NotNull(message = "token must not be null") String token)
             throws Exception;
 }

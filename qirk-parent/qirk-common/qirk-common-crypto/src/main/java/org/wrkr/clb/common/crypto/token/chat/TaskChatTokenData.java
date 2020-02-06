@@ -18,7 +18,6 @@ package org.wrkr.clb.common.crypto.token.chat;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,24 +27,13 @@ public class TaskChatTokenData extends ChatTokenData {
 
     private static final ObjectWriter TASK_CHAT_TOKEN_DATA_WRITER = new ObjectMapper().writerFor(TaskChatTokenData.class);
 
-    @JsonIgnore
     public static final String SENDER_USERNAME = "sender_username";
-    @JsonIgnore
     public static final String SENDER_FULL_NAME = "sender_full_name";
 
-    @JsonIgnore
-    public static final String ORGANIZATION_ID = "org_id";
-    @JsonIgnore
-    public static final String ORGANIZATION_UI_ID = "org_ui_id";
-    @JsonIgnore
     public static final String PROJECT_ID = "proj_id";
-    @JsonIgnore
     public static final String PROJECT_UI_ID = "proj_ui_id";
-    @JsonIgnore
     public static final String PROJECT_NAME = "proj_name";
-    @JsonIgnore
     public static final String TASK_NUMBER = "task_number";
-    @JsonIgnore
     public static final String TASK_SUMMARY = "task_summary";
 
     @JsonProperty(value = SENDER_USERNAME)
@@ -53,10 +41,6 @@ public class TaskChatTokenData extends ChatTokenData {
     @JsonProperty(value = SENDER_FULL_NAME)
     public String senderFullName;
 
-    @JsonProperty(value = ORGANIZATION_ID)
-    public long organizationId;
-    @JsonProperty(value = ORGANIZATION_UI_ID)
-    public String organizationUiId;
     @JsonProperty(value = PROJECT_ID)
     public long projectId;
     @JsonProperty(value = PROJECT_UI_ID)
@@ -77,8 +61,6 @@ public class TaskChatTokenData extends ChatTokenData {
         senderUsername = (String) map.get(SENDER_USERNAME);
         senderFullName = (String) map.get(SENDER_FULL_NAME);
 
-        organizationId = (Long) map.get(ORGANIZATION_ID);
-        organizationUiId = (String) map.get(ORGANIZATION_UI_ID);
         projectId = (Long) map.get(PROJECT_ID);
         projectUiId = (String) map.get(PROJECT_UI_ID);
         projectName = (String) map.get(PROJECT_NAME);

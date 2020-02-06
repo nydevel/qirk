@@ -75,12 +75,12 @@ public class ProjectMemberUserDTO extends IdDTO {
         return dtoList;
     }
 
-    public static ProjectMemberUserDTO fromSearchHit(SearchHit hit, Long organizationId) throws IOException {
+    public static ProjectMemberUserDTO fromSearchHit(SearchHit hit, Long projectId) throws IOException {
         ProjectMemberUserDTO dto = new ProjectMemberUserDTO();
 
         for (SearchHit memberHit : hit.getInnerHits().get(ElasticsearchUserDTO.PROJECTS)) {
             Map<String, Object> memberSource = JsonUtils.convertJsonToMapUsingLongForInts(memberHit.getSourceAsString());
-            if (organizationId.equals((Long) memberSource.get(ElasticsearchNestedProjectDTO.PROJECT_ID))) {
+            if (projectId.equals((Long) memberSource.get(ElasticsearchNestedProjectDTO.PROJECT_ID))) {
                 dto.id = (Long) memberSource.get(ElasticsearchNestedProjectDTO.MEMBER_ID);
                 break;
             }
@@ -90,11 +90,11 @@ public class ProjectMemberUserDTO extends IdDTO {
         return dto;
     }
 
-    public static List<ProjectMemberUserDTO> fromSearchHits(SearchHits hits, Long organizationId, Long firstUserId)
+    public static List<ProjectMemberUserDTO> fromSearchHits(SearchHits hits, Long projectId, Long firstUserId)
             throws IOException {
         List<ProjectMemberUserDTO> dtoList = new ArrayList<ProjectMemberUserDTO>(hits.getHits().length);
         for (SearchHit hit : hits) {
-            ProjectMemberUserDTO dto = fromSearchHit(hit, organizationId);
+            ProjectMemberUserDTO dto = fromSearchHit(hit, projectId);
             if (dto.user.id.equals(firstUserId)) {
                 dtoList.add(0, dto);
             } else {

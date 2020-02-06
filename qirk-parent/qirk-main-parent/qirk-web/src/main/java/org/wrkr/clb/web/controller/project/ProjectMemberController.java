@@ -57,7 +57,7 @@ public class ProjectMemberController extends BaseExceptionHandlerController {
             @RequestBody ProjectMemberDTO projectMemberDTO) throws Exception {
         long startTime = System.currentTimeMillis();
         ProjectMemberReadDTO projectMemberReadDTO = projectMemberService.create(getSessionUser(session), projectMemberDTO);
-        logProcessingTimeFromStartTime(startTime, "create", projectMemberDTO.organizationMemberId, projectMemberDTO.projectId);
+        logProcessingTimeFromStartTime(startTime, "create", projectMemberDTO.userId, projectMemberDTO.projectId);
         return new JsonContainer<ProjectMemberReadDTO, Void>(projectMemberReadDTO);
     }
 

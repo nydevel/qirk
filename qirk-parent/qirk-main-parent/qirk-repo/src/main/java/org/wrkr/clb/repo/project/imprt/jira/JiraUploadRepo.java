@@ -26,30 +26,27 @@ import org.wrkr.clb.model.project.imprt.jira.JiraUpload;
 import org.wrkr.clb.model.project.imprt.jira.JiraUploadMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 
-
 @Repository
 public class JiraUploadRepo extends JDBCBaseMainRepo {
 
     private static final String INSERT = "INSERT INTO " + JiraUploadMeta.TABLE_NAME + " " +
-            "(" + JiraUploadMeta.organizationId + ", " + // 1
-            JiraUploadMeta.uploadTimestamp + ", " + // 2
-            JiraUploadMeta.archiveFilename + ") " + // 3
-            "VALUES (?, ?, ?);";
+            JiraUploadMeta.uploadTimestamp + ", " + // 1
+            JiraUploadMeta.archiveFilename + ") " + // 2
+            "VALUES (?, ?);";
 
-    private static final String SELECT_BY_ORGANIZATION_ID = "SELECT " +
+    private static final String SELECT_ALL = "SELECT " +
             JiraUploadMeta.uploadTimestamp + ", " +
             JiraUploadMeta.archiveFilename + " " +
-            "FROM " + JiraUploadMeta.TABLE_NAME + " " +
-            "WHERE " + JiraUploadMeta.organizationId + " = ?;";
+            "FROM " + JiraUploadMeta.TABLE_NAME + ";";
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public void save(JiraUpload upload) {
         getJdbcTemplate().update(INSERT,
-                upload.getOrganizationId(), upload.getUploadTimestamp(), upload.getArchiveFilename());
+                upload.getUploadTimestamp(), upload.getArchiveFilename());
     }
 
-    public Map<Long, String> mapTimestampToArchiveFilenameByOrganizationId(long organizationId) {
-        List<Map<String, Object>> results = getJdbcTemplate().queryForList(SELECT_BY_ORGANIZATION_ID, organizationId);
+    public Map<Long, String> mapTimestampToArchiveFilenameByOrganizationId() {
+        List<Map<String, Object>> results = getJdbcTemplate().queryForList(SELECT_ALL);
 
         Map<Long, String> map = new HashMap<Long, String>();
         for (Map<String, Object> result : results) {

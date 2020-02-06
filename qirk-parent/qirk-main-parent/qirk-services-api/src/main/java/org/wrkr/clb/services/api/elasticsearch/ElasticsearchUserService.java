@@ -26,11 +26,11 @@ public interface ElasticsearchUserService extends ElasticsearchService<User> {
 
     public void setProjects(User user) throws Exception;
 
-    public void addProject(User user, ProjectMember member) throws Exception;
+    public void addProject(Long userId, ProjectMember member) throws Exception;
 
-    public void updateProject(User user, ProjectMember member) throws Exception;
+    public void updateProject(Long userId, ProjectMember member) throws Exception;
 
-    public void removeProject(User user, ProjectMember member) throws Exception;
+    public void removeProject(Long userId, ProjectMember member) throws Exception;
 
     public void setInvitedProjects(Long userId, List<Long> projectIds) throws Exception;
 

@@ -32,12 +32,12 @@ import org.wrkr.clb.services.dto.AttachmentDTO;
 public interface FileService {
 
     public AttachmentDTO uploadAndCreateAttachment(User currentUser,
-            @NotNull(message = "file in FileService must not be null") FileItem file,
-            @NotNull(message = "taskId in FileService must not be null") Long taskId) throws Exception;
+            @NotNull(message = "file must not be null") FileItem file,
+            @NotNull(message = "taskId must not be null") Long taskId) throws Exception;
 
     public String uploadAndCreateTemporaryAttachment(User currentUser,
-            @NotNull(message = "file in FileService must not be null") FileItem file,
-            @NotNull(message = "projectId in FileService must not be null") Long projectId) throws Exception;
+            @NotNull(message = "file must not be null") FileItem file,
+            @NotNull(message = "projectId must not be null") Long projectId) throws Exception;
 
     public String getTemporaryLink(Attachment attachment) throws Exception;
 

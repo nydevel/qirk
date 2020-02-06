@@ -119,10 +119,6 @@ public abstract class DefaultFileService implements FileService {
     @Override
     public String generateTaskUrl(Task task) {
         Project project = projectRepo.getNameAndUiIdByTaskId(task.getId());
-        Map<String, String> values = new HashMap<String, String>();
-        values.put("organizationUiId", "");
-        values.put("projectUiId", project.getUiId());
-        values.put("taskNumber", task.getNumber().toString());
         return frontUrl + StringSubstitutor.replace(taskUrl,
                 new MapBuilder<String, String>()
                         .put("organizationUiId", "")

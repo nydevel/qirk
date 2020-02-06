@@ -91,8 +91,8 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public void addProject(User user, ProjectMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
+    public void addProject(Long userId, ProjectMember member) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest(getIndex(), userId.toString());
         updateRequest.script(
                 new Script(ScriptType.STORED, null, Scripts.ADD_PROJECT,
                         ElasticsearchNestedProjectDTO.fromEntity(member)));
@@ -108,8 +108,8 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public void updateProject(User user, ProjectMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
+    public void updateProject(Long userId, ProjectMember member) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest(getIndex(), userId.toString());
         updateRequest.script(
                 new Script(ScriptType.STORED, null, Scripts.UPDATE_PROJECT_MEMBER,
                         getUpdateProjectMemberParams(member)));
@@ -125,8 +125,8 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     @Override
-    public void removeProject(User user, ProjectMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), user.getId().toString());
+    public void removeProject(Long userId, ProjectMember member) throws IOException {
+        UpdateRequest updateRequest = new UpdateRequest(getIndex(), userId.toString());
         updateRequest.script(
                 new Script(ScriptType.STORED, null, Scripts.REMOVE_PROJECT,
                         getRemoveProjectParams(member)));

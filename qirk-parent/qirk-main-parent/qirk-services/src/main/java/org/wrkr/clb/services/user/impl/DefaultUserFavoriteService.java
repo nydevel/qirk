@@ -49,6 +49,7 @@ import org.wrkr.clb.services.util.http.JsonStatusCode;
 @Service
 public class DefaultUserFavoriteService implements UserFavoriteService {
 
+    @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(DefaultUserFavoriteService.class);
 
     @Autowired
@@ -240,16 +241,6 @@ public class DefaultUserFavoriteService implements UserFavoriteService {
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
     public void deleteByUserIdAndProject(Long userId, Project project) {
-        if (userId == null || project == null) {
-            if (userId == null) {
-                LOG.warn("userId in DefaultUserFavoriteService is null");
-            }
-            if (project == null) {
-                LOG.warn("project in DefaultUserFavoriteService is null");
-            }
-            return;
-        }
-
         UserFavorite userFavorite = favoriteRepo.getByUserIdAndProjectAndFetchPreviousAndNext(userId, project);
         if (userFavorite != null) {
             delete(userFavorite);

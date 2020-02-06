@@ -33,23 +33,23 @@ import org.wrkr.clb.services.dto.project.task.AttachmentCreateDTO;
 public interface AttachmentService {
 
     public AttachmentDTO create(
-            @NotNull(message = "externalPath in AttachmentService create must not be null") String externalPath,
-            @NotNull(message = "task in AttachmentService create must not be null") Task task,
-            @NotNull(message = "dropboxSettings in AttachmentService create must not be null") DropboxSettings dropboxSettings);
+            @NotNull(message = "externalPath create must not be null") String externalPath,
+            @NotNull(message = "task create must not be null") Task task,
+            @NotNull(message = "dropboxSettings create must not be null") DropboxSettings dropboxSettings);
 
     public AttachmentDTO create(
-            @NotNull(message = "externalPath in AttachmentService create must not be null") String externalPath,
-            @NotNull(message = "task in AttachmentService create must not be null") Task task);
+            @NotNull(message = "externalPath create must not be null") String externalPath,
+            @NotNull(message = "task create must not be null") Task task);
 
     public List<AttachmentDTO> createFromTemporary(User currentUser, @Valid AttachmentCreateDTO createDTO) throws Exception;
 
     public List<AttachmentDTO> listByTask(User currentUser,
-            @NotNull(message = "taskId in AttachmentService listByTask must not be null") Long taskId);
+            @NotNull(message = "taskId listByTask must not be null") Long taskId);
 
     public void delete(User currentUser,
-            @NotNull(message = "id in AttachmentService delete must not be null") Long id) throws Exception;
+            @NotNull(message = "id delete must not be null") Long id) throws Exception;
 
     @Deprecated
     public String getThumbnail(User currentUser,
-            @NotNull(message = "id in AttachmentService delete must not be null") Long id) throws Exception;
+            @NotNull(message = "id delete must not be null") Long id) throws Exception;
 }

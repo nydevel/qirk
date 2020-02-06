@@ -26,12 +26,12 @@ import org.wrkr.clb.model.project.Project;
 @Validated
 public interface TemporaryAttachmentService {
 
-    public String create(@NotNull(message = "externalPath in AttachmentService create must not be null") String externalPath,
-            @NotNull(message = "task in AttachmentService create must not be null") Project project,
-            @NotNull(message = "dropboxSettings in AttachmentService create must not be null") DropboxSettings dropboxSettings);
+    public String create(@NotNull(message = "externalPath create must not be null") String externalPath,
+            @NotNull(message = "task create must not be null") Project project,
+            @NotNull(message = "dropboxSettings create must not be null") DropboxSettings dropboxSettings);
 
-    public String create(@NotNull(message = "externalPath in AttachmentService create must not be null") String externalPath,
-            @NotNull(message = "task in AttachmentService create must not be null") Project project);
+    public String create(@NotNull(message = "externalPath create must not be null") String externalPath,
+            @NotNull(message = "task create must not be null") Project project);
 
     public void clearTemporaryAttachments();
 }

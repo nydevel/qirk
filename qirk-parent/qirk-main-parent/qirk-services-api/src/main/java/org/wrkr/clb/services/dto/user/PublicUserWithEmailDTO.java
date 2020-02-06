@@ -16,6 +16,9 @@
  */
 package org.wrkr.clb.services.dto.user;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.wrkr.clb.model.user.User;
 
 public class PublicUserWithEmailDTO extends PublicUserDTO {
@@ -34,5 +37,13 @@ public class PublicUserWithEmailDTO extends PublicUserDTO {
         }
 
         return dto;
+    }
+
+    public static List<PublicUserWithEmailDTO> fromEntitiesWithEmail(List<User> userList) {
+        List<PublicUserWithEmailDTO> dtoList = new ArrayList<PublicUserWithEmailDTO>(userList.size());
+        for (User user : userList) {
+            dtoList.add(fromEntity(user));
+        }
+        return dtoList;
     }
 }

@@ -35,23 +35,23 @@ public interface DropboxApiService extends OAuthService {
     public String getRedirectURIForProject();
 
     @Deprecated
-    public String upload(@NotNull(message = "token in DropboxApiService must not be null") String token,
-            @NotNull(message = "path in DropboxApiService must not be null") String path,
-            @NotNull(message = "file in DropboxApiService must not be null") File file) throws Exception;
+    public String upload(@NotNull(message = "token must not be null") String token,
+            @NotNull(message = "path must not be null") String path,
+            @NotNull(message = "file must not be null") File file) throws Exception;
 
-    public String getTemporaryLink(@NotNull(message = "token in DropboxApiService must not be null") String token,
-            @NotNull(message = "path in DropboxApiService must not be null") String path) throws Exception;
+    public String getTemporaryLink(@NotNull(message = "token must not be null") String token,
+            @NotNull(message = "path must not be null") String path) throws Exception;
 
     @Deprecated
     public String getThumbnail(
-            @NotNull(message = "token in DropboxApiService must not be null") String token,
-            @NotNull(message = "path in DropboxApiService must not be null") String path) throws Exception;
+            @NotNull(message = "token must not be null") String token,
+            @NotNull(message = "path must not be null") String path) throws Exception;
 
     @Deprecated
     public List<byte[]> getThumbnailBatch(
-            @NotNull(message = "token in DropboxApiService must not be null") String token,
-            @NotNull(message = "pathList in DropboxApiService must not be null") List<String> pathList) throws Exception;
+            @NotNull(message = "token must not be null") String token,
+            @NotNull(message = "pathList must not be null") List<String> pathList) throws Exception;
 
-    public void delete(@NotNull(message = "token in DropboxApiService must not be null") String token,
-            @NotNull(message = "path in DropboxApiService must not be null") String path) throws Exception;
+    public void delete(@NotNull(message = "token must not be null") String token,
+            @NotNull(message = "path must not be null") String path) throws Exception;
 }

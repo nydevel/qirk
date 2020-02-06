@@ -31,7 +31,6 @@ import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.organization.OrganizationRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.UserRepo;
@@ -39,13 +38,10 @@ import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.dto.user.PublicProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
-import org.wrkr.clb.services.dto.user.PublicUserMembershipDTO;
-import org.wrkr.clb.services.security.OrganizationSecurityService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.security.SecurityService;
 import org.wrkr.clb.services.user.UserService;
 import org.wrkr.clb.services.util.exception.NotFoundException;
-
 
 //@Service configured in clb-services-ctx.xml
 @Validated
@@ -81,9 +77,6 @@ public class DefaultUserService implements UserService {
     private JDBCUserRepo jdbcUserRepo;
 
     @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
     private TagRepo tagRepo;
 
     @Autowired
@@ -97,9 +90,6 @@ public class DefaultUserService implements UserService {
 
     @Autowired
     private SecurityService securityService;
-
-    @Autowired
-    private OrganizationSecurityService orgSecurityService;
 
     @Autowired
     private ProjectSecurityService projectSecurityService;
@@ -128,28 +118,7 @@ public class DefaultUserService implements UserService {
     }
 
     @Override
-    public List<PublicUserDTO> searchForOrganization(
-            User currentUser, String searchValue, IdOrUiIdDTO excludeOrganizationDTO)
-            throws Exception {
-        // security start
-        orgSecurityService.authzCanReadOrganization(currentUser, excludeOrganizationDTO);
-        // security finish
-
-        Long excludeOrganizationId = excludeOrganizationDTO.id;
-        if (excludeOrganizationId == null) {
-            excludeOrganizationId = organizationRepo.getOrganizationIdByUiId(excludeOrganizationDTO.uiId);
-        }
-        if (excludeOrganizationId == null) {
-            throw new NotFoundException("Organization");
-        }
-
-        SearchHits hits = elasticsearchService.searchByNameAndExcludeOrganization(searchValue, excludeOrganizationId);
-
-        return PublicUserDTO.fromSearchHits(hits);
-    }
-
-    @Override
-    public List<PublicUserMembershipDTO> searchForProject(User currentUser, String searchValue,
+    public List<PublicUserDTO> searchForProject(User currentUser, String searchValue,
             IdOrUiIdDTO excludeProjectDTO)
             throws Exception {
         // security start
@@ -164,24 +133,13 @@ public class DefaultUserService implements UserService {
             throw new NotFoundException("Project");
         }
 
-        Long organizationId = organizationRepo.getOrganizationIdByProjectId(excludeProjectId);
-        SearchHits memberHits = elasticsearchService.searchByNameAndOrganizationAndExcludeProject(
-                searchValue, organizationId, excludeProjectId);
-        SearchHits nonMemberHits = elasticsearchService.searchByNameAndExcludeOrganizationAndProject(
-                searchValue, organizationId, excludeProjectId);
-
-        return PublicUserMembershipDTO.fromSearchHits(memberHits, nonMemberHits, organizationId);
+        SearchHits hits = elasticsearchService.searchByNameAndExcludeProject(searchValue, excludeProjectId);
+        return PublicUserDTO.fromSearchHits(hits);
     }
 
     @Override
-    public List<PublicUserDTO> search(String prefix, boolean includeTags) throws Exception {
-        SearchHits hits = null;
-        if (includeTags) {
-            hits = elasticsearchService.searchByNameOrTags(prefix);
-        } else {
-            hits = elasticsearchService.searchByName(prefix);
-        }
-
+    public List<PublicUserDTO> search(String prefix) throws Exception {
+        SearchHits hits = elasticsearchService.searchByName(prefix);
         List<PublicUserDTO> dtoList = PublicUserDTO.fromSearchHits(hits);
         return dtoList;
     }

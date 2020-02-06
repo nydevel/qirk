@@ -19,12 +19,12 @@ package org.wrkr.clb.services.dto.project.imprt;
 import java.util.List;
 
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
-import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
+import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
+import org.wrkr.clb.services.dto.user.PublicUserWithEmailDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -32,17 +32,17 @@ public class QirkOrganizationDTO {
 
     @JsonProperty(value = "imported_projects")
     public List<ProjectNameAndUiIdDTO> importedProjects;
-    public List<ProjectMemberUserDTO> members;
+    public List<PublicUserWithEmailDTO> users;
 
     public List<TaskAttributeDTO> types;
     public List<TaskAttributeDTO> priorities;
     public List<TaskAttributeDTO> statuses;
 
-    public static QirkOrganizationDTO fromEntities(List<Project> projectList, List<ProjectMember> memberList) {
+    public static QirkOrganizationDTO fromEntities(List<Project> projectList, List<User> userList) {
         QirkOrganizationDTO dto = new QirkOrganizationDTO();
 
         dto.importedProjects = ProjectNameAndUiIdDTO.fromEntities(projectList);
-        dto.members = ProjectMemberUserDTO.fromEntitiesWithEmail(memberList);
+        dto.users = PublicUserWithEmailDTO.fromEntitiesWithEmail(userList);
 
         dto.types = TaskAttributeDTO.fromTypes(TaskType.Type.values());
         dto.priorities = TaskAttributeDTO.fromPriorities(TaskPriority.Priority.values());

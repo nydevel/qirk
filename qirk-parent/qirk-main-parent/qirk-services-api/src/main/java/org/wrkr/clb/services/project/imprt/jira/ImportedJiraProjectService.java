@@ -27,7 +27,7 @@ import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectImportDTO;
 
 public interface ImportedJiraProjectService {
 
-    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProject(long organizationId);
+    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProject();
 
     public void importNewProject(User importingUser,
             Document entitiesDoc, ImportedJiraProject importedProject, JiraProjectImportDTO importDTO,

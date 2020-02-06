@@ -29,9 +29,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class ImportedJiraProject {
 
     @JsonIgnore
-    private Long organizationId;
-
-    @JsonIgnore
     private Long uploadTimestamp;
 
     @JsonIgnore
@@ -60,14 +57,6 @@ public class ImportedJiraProject {
     @JsonInclude(Include.NON_NULL)
     public String getProjectName() {
         return (project == null ? null : project.getName());
-    }
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
     }
 
     public Long getUploadTimestamp() {

@@ -28,16 +28,16 @@ public interface TaskSubscriberService {
 
     public void create(Long userId, Long taskId);
 
-    public void create(User currentUser, @NotNull(message = "taskId in TaskSubscriberService must not be null") Long taskId);
+    public void create(User currentUser, @NotNull(message = "taskId must not be null") Long taskId);
 
-    public List<Long> list(@NotNull(message = "taskId in TaskSubscriberService must not be null") Long taskId);
+    public List<Long> list(@NotNull(message = "taskId must not be null") Long taskId);
 
     public UserIdsDTO list(User currentUser,
-            @NotNull(message = "taskId in TaskSubscriberService must not be null") Long taskId);
+            @NotNull(message = "taskId must not be null") Long taskId);
 
     public List<User> listWithEmail(Long taskId, NotificationSettings.Setting notifSetting);
 
     public void delete(Long userId, Long taskId);
 
-    public void delete(User currentUser, @NotNull(message = "taskId in TaskSubscriberService must not be null") Long taskId);
+    public void delete(User currentUser, @NotNull(message = "taskId must not be null") Long taskId);
 }

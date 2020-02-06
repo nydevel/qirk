@@ -29,7 +29,6 @@ import org.wrkr.clb.services.dto.MoveDTO;
 import org.wrkr.clb.services.dto.user.UserFavoriteDTO;
 import org.wrkr.clb.services.dto.user.UserFavoriteReadDTO;
 
-
 @Validated
 public interface UserFavoriteService {
 
@@ -43,12 +42,14 @@ public interface UserFavoriteService {
     List<UserFavoriteReadDTO> listByUser(User currentUser);
 
     void deleteById(User currentUser,
-            @NotNull(message = "id in UserFavoriteService not be null") Long id) throws Exception;
+            @NotNull(message = "id not be null") Long id) throws Exception;
 
-    void deleteByUserAndProjectId(User user, @NotNull(message = "projectId in ProjectService must not be null") Long projectId);
+    void deleteByUserAndProjectId(User user, @NotNull(message = "projectId must not be null") Long projectId);
 
     void deleteByUserAndProjectUiId(User user,
-            @NotNull(message = "projectUiId in ProjectService must not be null") String projectUiId);
+            @NotNull(message = "projectUiId must not be null") String projectUiId);
 
-    void deleteByUserIdAndProject(Long userId, Project project);
+    void deleteByUserIdAndProject(
+            @NotNull(message = "userId must not be null") Long userId,
+            @NotNull(message = "project must not be null") Project project);
 }

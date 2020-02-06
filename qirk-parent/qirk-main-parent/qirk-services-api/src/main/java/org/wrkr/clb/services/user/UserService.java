@@ -27,8 +27,6 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.dto.user.PublicProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
-import org.wrkr.clb.services.dto.user.PublicUserMembershipDTO;
-
 
 @Validated
 public interface UserService {
@@ -37,16 +35,12 @@ public interface UserService {
 
     public List<PublicUserDTO> listByIds(@NotNull(message = "ids must not be null") List<Long> ids) throws Exception;
 
-    public List<PublicUserDTO> searchForOrganization(User currentUser,
-            @NotNull(message = "searchValue in UserService must not be null") String searchValue,
-            @Valid IdOrUiIdDTO excludeOrganizationDTO) throws Exception;
-
-    public List<PublicUserMembershipDTO> searchForProject(User currentUser,
-            @NotNull(message = "searchValue in UserService must not be null") String searchValue,
+    public List<PublicUserDTO> searchForProject(User currentUser,
+            @NotNull(message = "searchValue must not be null") String searchValue,
             @Valid IdOrUiIdDTO excludeProjectDTO) throws Exception;
 
-    public List<PublicUserDTO> search(@NotNull(message = "prefix must not be null") String prefix, boolean includeTags)
-            throws Exception;
+    public List<PublicUserDTO> search(
+            @NotNull(message = "prefix must not be null") String prefix) throws Exception;
 
     @Deprecated
     public TokenAndIvDTO getDialogChatToken(User currentUser, long userId) throws Exception;

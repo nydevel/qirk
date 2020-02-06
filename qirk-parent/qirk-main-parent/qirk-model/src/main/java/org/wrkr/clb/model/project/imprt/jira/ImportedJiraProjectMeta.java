@@ -22,7 +22,6 @@ public class ImportedJiraProjectMeta extends BaseEntityMeta {
 
     public static final String TABLE_NAME = "imported_jira_project";
 
-    public static final String organizationId = "organization_id";
     public static final String projectId = "project_id";
     public static final String uploadTimestamp = "upload_timestamp";
     public static final String jiraProjectId = "jira_project_id";

@@ -42,8 +42,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.wrkr.clb.common.util.io.UnclosableInputStreamWrapper;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProject;
 import org.wrkr.clb.model.project.imprt.jira.JiraUpload;
@@ -51,13 +49,12 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
-import org.wrkr.clb.repo.organization.JDBCOrganizationRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.imprt.jira.JiraUploadRepo;
 import org.wrkr.clb.repo.project.task.TaskPriorityRepo;
 import org.wrkr.clb.repo.project.task.TaskStatusRepo;
 import org.wrkr.clb.repo.project.task.TaskTypeRepo;
+import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
 import org.wrkr.clb.services.dto.project.imprt.ImportStatusDTO;
 import org.wrkr.clb.services.dto.project.imprt.QirkOrganizationDTO;
@@ -69,11 +66,10 @@ import org.wrkr.clb.services.dto.project.imprt.jira.JiraUploadDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraUserDTO;
 import org.wrkr.clb.services.project.imprt.jira.ImportedJiraProjectService;
 import org.wrkr.clb.services.project.imprt.jira.JiraImportService;
-import org.wrkr.clb.services.security.OrganizationSecurityService;
+import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.dom.DOMUtils;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
-import org.wrkr.clb.services.util.exception.NotFoundException;
 
 @Validated
 @Service
@@ -96,9 +92,6 @@ public class DefaultJiraImportService implements JiraImportService {
     }
 
     @Autowired
-    private JDBCOrganizationRepo organizationRepo;
-
-    @Autowired
     private YandexCloudApiService yandexCloudService;
 
     @Autowired
@@ -108,10 +101,10 @@ public class DefaultJiraImportService implements JiraImportService {
     private JiraUploadRepo jiraUploadRepo;
 
     @Autowired
-    private JDBCProjectRepo projectRepo;
+    private JDBCUserRepo userRepo;
 
     @Autowired
-    private JDBCOrganizationMemberRepo orgMemberRepo;
+    private JDBCProjectRepo projectRepo;
 
     @Autowired
     private TaskTypeRepo typeRepo;
@@ -123,47 +116,37 @@ public class DefaultJiraImportService implements JiraImportService {
     private TaskStatusRepo statusRepo;
 
     @Autowired
-    private OrganizationSecurityService securityService;
+    private ProjectSecurityService securityService;
 
-    private String generateOrganizationFolderPath(Long organizationId) {
-        return YANDEXCLOUD_FILE_PATH_PREFIX + organizationId + "/";
+    private String generateUploadFolderPath(long timestamp) {
+        return YANDEXCLOUD_FILE_PATH_PREFIX + timestamp + "/";
     }
 
-    private String generateUploadFolderPath(Long organizationId, long timestamp) {
-        return generateOrganizationFolderPath(organizationId) + timestamp + "/";
-    }
-
-    public String generateFilePath(Long organizationId, long timestamp, String filename) {
-        return generateUploadFolderPath(organizationId, timestamp) + filename;
+    public String generateFilePath(long timestamp, String filename) {
+        return generateUploadFolderPath(timestamp) + filename;
     }
 
     @Override
-    public JiraUploadDTO uploadJiraImportFile(User currentUser, FileItem file, Long organizationId) throws Exception {
+    public JiraUploadDTO uploadJiraImportFile(User currentUser, FileItem file) throws Exception {
         // security
-        securityService.authzCanImportProjects(currentUser, organizationId);
+        securityService.authzCanImportProjects(currentUser);
         // security
-
-        if (!organizationRepo.exists(organizationId)) {
-            throw new NotFoundException("Organization");
-        }
 
         long now = System.currentTimeMillis();
 
-        ZipInputStream zipInputStream = new ZipInputStream(file.getInputStream());
-        UnclosableInputStreamWrapper zipInputStreamWrapper = new UnclosableInputStreamWrapper(zipInputStream);
+        try (ZipInputStream zipInputStream = new ZipInputStream(file.getInputStream());
+                UnclosableInputStreamWrapper zipInputStreamWrapper = new UnclosableInputStreamWrapper(zipInputStream)) {
 
-        ZipEntry zipEntry = zipInputStream.getNextEntry();
-        while (zipEntry != null) {
-            if (!zipEntry.isDirectory()) {
-                yandexCloudService.upload(generateFilePath(organizationId, now, zipEntry.getName()), zipInputStreamWrapper);
+            ZipEntry zipEntry = zipInputStream.getNextEntry();
+            while (zipEntry != null) {
+                if (!zipEntry.isDirectory()) {
+                    yandexCloudService.upload(generateFilePath(now, zipEntry.getName()), zipInputStreamWrapper);
+                }
+                zipEntry = zipInputStream.getNextEntry();
             }
-            zipEntry = zipInputStream.getNextEntry();
         }
-        zipInputStream.close();
-        zipInputStreamWrapper.close();
 
         JiraUpload upload = new JiraUpload();
-        upload.setOrganizationId(organizationId);
         upload.setUploadTimestamp(now);
         upload.setArchiveFilename(file.getName());
         jiraUploadRepo.save(upload);
@@ -172,26 +155,21 @@ public class DefaultJiraImportService implements JiraImportService {
     }
 
     @Override
-    public List<JiraUploadDTO> listUploads(User currentUser, long organizationId) throws ApplicationException {
+    public List<JiraUploadDTO> listUploads(User currentUser) throws ApplicationException {
         // security
-        securityService.authzCanModifyOrganization(currentUser, organizationId);
+        securityService.authzCanImportProjects(currentUser);
         // security
 
-        if (!organizationRepo.exists(organizationId)) {
-            throw new NotFoundException("Organization");
-        }
-
-        String folderPrefix = generateOrganizationFolderPath(organizationId);
-        List<String> folderPaths = yandexCloudService.listFolders(folderPrefix);
+        List<String> folderPaths = yandexCloudService.listFolders(YANDEXCLOUD_FILE_PATH_PREFIX);
 
         Map<Long, List<ImportedJiraProject>> timestampToImportedProject = importedProjectService
-                .mapTimestampToImportedProject(organizationId);
-        Map<Long, String> timestampToArchiveName = jiraUploadRepo.mapTimestampToArchiveFilenameByOrganizationId(organizationId);
+                .mapTimestampToImportedProject();
+        Map<Long, String> timestampToArchiveName = jiraUploadRepo.mapTimestampToArchiveFilenameByOrganizationId();
 
         List<JiraUploadDTO> dtoList = new ArrayList<JiraUploadDTO>(folderPaths.size());
         List<ImportedJiraProject> emptyImportedProjectList = new ArrayList<ImportedJiraProject>();
         for (String folderPath : folderPaths) {
-            String timestampString = folderPath.substring(folderPrefix.length(), folderPath.length() - 1);
+            String timestampString = folderPath.substring(YANDEXCLOUD_FILE_PATH_PREFIX.length(), folderPath.length() - 1);
             Long timestamp;
             try {
                 timestamp = Long.valueOf(timestampString);
@@ -205,9 +183,9 @@ public class DefaultJiraImportService implements JiraImportService {
         return dtoList;
     }
 
-    private Document getProjectDOM(long organizationId, long timestamp) throws Exception {
+    private Document getProjectDOM(long timestamp) throws Exception {
         InputStream entitiesFile = yandexCloudService.getFileOrThrowApplicationException(
-                generateFilePath(organizationId, timestamp, ENTITIES_FILENAME),
+                generateFilePath(timestamp, ENTITIES_FILENAME),
                 JsonStatusCode.ENTITIES_FILE_NOT_FOUND,
                 "There was no upload at specified timestamp or the archive structure is incorrect.");
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -218,16 +196,12 @@ public class DefaultJiraImportService implements JiraImportService {
     }
 
     @Override
-    public List<JiraProjectDTO> listProjects(User currentUser, long organizationId, long timestamp) throws Exception {
+    public List<JiraProjectDTO> listProjects(User currentUser, long timestamp) throws Exception {
         // security
-        securityService.authzCanModifyOrganization(currentUser, organizationId);
+        securityService.authzCanImportProjects(currentUser);
         // security
 
-        if (!organizationRepo.exists(organizationId)) {
-            throw new NotFoundException("Organization");
-        }
-
-        Document document = getProjectDOM(organizationId, timestamp);
+        Document document = getProjectDOM(timestamp);
 
         NodeList nodes = DOMUtils.getNodes(document, "/entity-engine-xml/Project");
         return JiraProjectDTO.fromDOMNodeList(nodes);
@@ -254,18 +228,12 @@ public class DefaultJiraImportService implements JiraImportService {
     }
 
     @Override
-    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long organizationId, long timestamp,
-            Set<String> projectIds)
-            throws Exception {
+    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long timestamp, Set<String> projectIds) throws Exception {
         // security
-        securityService.authzCanModifyOrganization(currentUser, organizationId);
+        securityService.authzCanImportProjects(currentUser);
         // security
 
-        if (!organizationRepo.exists(organizationId)) {
-            throw new NotFoundException("Organization");
-        }
-
-        Document document = getProjectDOM(organizationId, timestamp);
+        Document document = getProjectDOM(timestamp);
 
         NodeList projectNodes = DOMUtils.getNodes(document, "/entity-engine-xml/Project");
         NodeList userNodes = DOMUtils.getNodes(document, "/entity-engine-xml/User");
@@ -309,10 +277,10 @@ public class DefaultJiraImportService implements JiraImportService {
         List<JiraIdAndNameDTO> priorities = getJiraEntities(priorityNodes, priorityIds);
         List<JiraIdAndNameDTO> statuses = getJiraEntities(statusNodes, statusIds);
 
-        List<Project> projectList = projectRepo.listImportedFromJira(organizationId);
-        List<OrganizationMember> memberList = orgMemberRepo.listNotFiredByOrganizationIdAndFetchUser(organizationId);
+        List<Project> projectList = projectRepo.listImportedFromJira();
+        List<User> userList = userRepo.list();
         return new JiraOrganizationMatchDTO(projects, users, types, priorities, statuses,
-                QirkOrganizationDTO.fromEntities(projectList, memberList));
+                QirkOrganizationDTO.fromEntities(projectList, userList));
     }
 
     private <A extends Object> Map<String, A> mapJiraIdToTaskAttributeMap(
@@ -356,7 +324,7 @@ public class DefaultJiraImportService implements JiraImportService {
         return new ImportStatusDTO(jiraProjectId, status, errorCode);
     }
 
-    private ImportStatusDTO importProject(OrganizationMember importingMember, Organization organization,
+    private ImportStatusDTO importProject(User importingUser,
             Document entitiesDoc, Element projectElement, JiraProjectImportDTO importDTO,
             String uploadFolderPath, char uploadFolderDelimeter) throws Exception {
         String jiraProjectId = projectElement.getAttribute(JiraProjectDTO.ID);
@@ -364,7 +332,6 @@ public class DefaultJiraImportService implements JiraImportService {
 
         ImportedJiraProject importedProject = new ImportedJiraProject();
 
-        importedProject.setOrganizationId(organization.getId());
         importedProject.setUploadTimestamp(importDTO.timestamp);
         importedProject.setProjectId(projectId);
         importedProject.setJiraProjectId(Long.valueOf(jiraProjectId));
@@ -373,8 +340,7 @@ public class DefaultJiraImportService implements JiraImportService {
 
         if (projectId == null) {
             try {
-                importedProjectService.importNewProject(importingMember, organization,
-                        entitiesDoc, importedProject, importDTO,
+                importedProjectService.importNewProject(importingUser, entitiesDoc, importedProject, importDTO,
                         uploadFolderPath, uploadFolderDelimeter);
                 return new ImportStatusDTO(jiraProjectId, ImportStatusDTO.Status.CREATED);
             } catch (Exception e) {
@@ -384,7 +350,7 @@ public class DefaultJiraImportService implements JiraImportService {
 
         } else {
             try {
-                return importedProjectService.importProjectUpdate(importingMember, entitiesDoc, importedProject, importDTO,
+                return importedProjectService.importProjectUpdate(importingUser, entitiesDoc, importedProject, importDTO,
                         uploadFolderPath, uploadFolderDelimeter);
             } catch (Exception e) {
                 LOG.error("Could not update project from jira", e);
@@ -396,15 +362,10 @@ public class DefaultJiraImportService implements JiraImportService {
     @Override
     public List<ImportStatusDTO> importProjects(User currentUser, JiraProjectImportDTO importDTO) throws Exception {
         // security
-        securityService.authzCanModifyOrganization(currentUser, importDTO.organizationId);
+        securityService.authzCanImportProjects(currentUser);
         // security
 
-        Organization organization = organizationRepo.getById(importDTO.organizationId);
-        if (organization == null) {
-            throw new NotFoundException("Organization");
-        }
-
-        Document document = getProjectDOM(importDTO.organizationId, importDTO.timestamp);
+        Document document = getProjectDOM(importDTO.timestamp);
 
         NodeList projectNodes = DOMUtils.getNodes(document, "/entity-engine-xml/Project");
 
@@ -419,17 +380,16 @@ public class DefaultJiraImportService implements JiraImportService {
         importDTO.defaultPriority = priorityRepo.getByNameCode(TaskPriority.DEFAULT);
         importDTO.defaultStatus = statusRepo.getByNameCode(TaskStatus.DEFAULT);
 
-        List<OrganizationMember> orgMembers = orgMemberRepo.listNotFiredByOrganizationIdAndUserIds(
-                importDTO.organizationId, importDTO.jiraUserNameToQirkOrgMemberId.values());
-        Map<Long, OrganizationMember> idToOrgMember = new HashMap<Long, OrganizationMember>();
-        for (OrganizationMember orgMember : orgMembers) {
-            idToOrgMember.put(orgMember.getId(), orgMember);
+        List<User> users = userRepo.listEmailsByIds(importDTO.jiraUserNameToQirkOrgUserId.values());
+        Map<Long, User> idToUser = new HashMap<Long, User>();
+        for (User user : users) {
+            idToUser.put(user.getId(), user);
         }
-        importDTO.jiraUserNameToQirkUser = new HashMap<String, OrganizationMember>();
+        importDTO.jiraUserNameToQirkUser = new HashMap<String, User>();
         for (String jiraUserName : importDTO.jiraUserNameToQirkUser.keySet()) {
-            OrganizationMember orgMember = idToOrgMember.get(importDTO.jiraUserNameToQirkOrgMemberId.get(jiraUserName));
-            if (orgMember != null) {
-                importDTO.jiraUserNameToQirkUser.put(jiraUserName.toLowerCase(), orgMember);
+            User user = idToUser.get(importDTO.jiraUserNameToQirkOrgUserId.get(jiraUserName));
+            if (user != null) {
+                importDTO.jiraUserNameToQirkUser.put(jiraUserName.toLowerCase(), user);
             }
         }
 
@@ -441,10 +401,7 @@ public class DefaultJiraImportService implements JiraImportService {
                     userElement.getAttribute(JiraUserDTO.USERNAME), userElement.getAttribute(JiraUserDTO.ID));
         }
 
-        OrganizationMember currentMember = orgMemberRepo.getNotFiredByUserIdAndOrganizationId(
-                currentUser.getId(), importDTO.organizationId);
-
-        String uploadFolderPath = generateUploadFolderPath(importDTO.organizationId, importDTO.timestamp);
+        String uploadFolderPath = generateUploadFolderPath(importDTO.timestamp);
         char uploadFolderDelimeter = getUploadFolderDelimeter(uploadFolderPath);
 
         List<ImportStatusDTO> result = new ArrayList<ImportStatusDTO>();
@@ -453,7 +410,7 @@ public class DefaultJiraImportService implements JiraImportService {
             String jiraProjectId = projectElement.getAttribute(JiraProjectDTO.ID);
             if (importDTO.projectIds.contains(jiraProjectId)) {
                 result.add(
-                        importProject(currentMember, organization, document, projectElement,
+                        importProject(currentUser, document, projectElement,
                                 importDTO, uploadFolderPath, uploadFolderDelimeter));
             }
         }

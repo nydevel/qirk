@@ -34,11 +34,11 @@ public interface MemoService {
             @Valid MemoDTO memoDTO) throws Exception;
 
     List<MemoReadDTO> listByProjectId(User currentUser,
-            @NotNull(message = "projectId in MemoService listByProject must not be null") Long projectId);
+            @NotNull(message = "projectId listByProject must not be null") Long projectId);
     
     List<MemoReadDTO> listByProjectUiId(User currentUser,
-            @NotNull(message = "projectUiId in MemoService listByProject must not be null") String projectUiId);
+            @NotNull(message = "projectUiId listByProject must not be null") String projectUiId);
 
     void delete(User currentUser,
-            @NotNull(message = "id in MemoService delete must not be null") Long id) throws Exception;
+            @NotNull(message = "id delete must not be null") Long id) throws Exception;
 }

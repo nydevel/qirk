@@ -43,10 +43,10 @@ public interface RoadService {
     public void move(User currentUser, @Valid MoveDTO moveDTO) throws Exception;
 
     public List<RoadReadDTO> list(User currentUser,
-            @NotNull(message = "projectId in RoadService must not be null") Long projectId);
+            @NotNull(message = "projectId must not be null") Long projectId);
 
     public List<RoadReadDTO> list(User currentUser,
-            @NotNull(message = "projectUiId in RoadService must not be null") String projectUiId);
+            @NotNull(message = "projectUiId must not be null") String projectUiId);
 
-    public void delete(User currentUser, @NotNull(message = "id in RoadService must not be null") Long id) throws Exception;
+    public void delete(User currentUser, @NotNull(message = "id must not be null") Long id) throws Exception;
 }

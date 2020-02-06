@@ -149,7 +149,7 @@ public class ProjectRepo extends JPABaseIdRepo<Project> {
         return getResultList(query);
     }
 
-    public List<Project> listAvailableToUserAndOrderAscByName(User user, boolean includePublicWithoutMembership) {
+    public List<Project> listAvailableToUserAndOrderAscByName(User user) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Project> query = cb.createQuery(Project.class);
 
@@ -160,11 +160,13 @@ public class ProjectRepo extends JPABaseIdRepo<Project> {
                 cb.and(
                         cb.equal(projectMemberJoin.get(ProjectMember_.fired), false),
                         cb.equal(projectMemberJoin.get(ProjectMember_.user), user))));
-        if (includePublicWithoutMembership) {
-            availabilityPredicates.add(cb.equal(projectRoot.get(Project_.isPrivate), false));
-        }
+        availabilityPredicates.add(cb.equal(projectRoot.get(Project_.isPrivate), false));
+
         query.where(cb.or(
-                availabilityPredicates.toArray(new Predicate[availabilityPredicates.size()])));
+                cb.and(
+                        cb.equal(projectMemberJoin.get(ProjectMember_.fired), false),
+                        cb.equal(projectMemberJoin.get(ProjectMember_.user), user)),
+                cb.equal(projectRoot.get(Project_.isPrivate), false)));
         query.distinct(true);
         query.orderBy(cb.asc(projectRoot.get(Project_.name)));
         return getResultList(query);

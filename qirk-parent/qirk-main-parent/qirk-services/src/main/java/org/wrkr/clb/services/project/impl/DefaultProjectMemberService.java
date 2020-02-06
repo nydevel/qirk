@@ -30,23 +30,21 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.organization.JDBCOrganizationMemberRepo;
-import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.ProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
+import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
-import org.wrkr.clb.services.dto.organization.OrganizationMemberUserDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberListDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberReadDTO;
+import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 import org.wrkr.clb.services.project.ProjectMemberService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.security.SecurityService;
@@ -75,10 +73,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
     private JDBCProjectRepo jdbcProjectRepo;
 
     @Autowired
-    private OrganizationMemberRepo orgMemberRepo;
-
-    @Autowired
-    private JDBCOrganizationMemberRepo jdbcOrgMemberRepo;
+    private JDBCUserRepo userRepo;
 
     @Autowired
     private TaskSubscriberRepo taskSubscriberRepo;
@@ -95,20 +90,6 @@ public class DefaultProjectMemberService implements ProjectMemberService {
     @Autowired
     private SecurityService authnSecurityService;
 
-    @Deprecated
-    @SuppressWarnings("unused")
-    private void freezeProjectIfCountExceededMinMembersToCharge(Project project) {
-        if (project.getOrganization().isFrozen() && !project.isFrozen()) {
-            long projectMembersCount = jdbcOrgMemberRepo
-                    .countNotFiredManagersOrProjectMembersByOrganizationIdAndProjectId(
-                            project.getOrganization(), project);
-            if (projectMembersCount >= Project.MIN_PRIVATE_PROJECT_MEMBERS_TO_CHARGE) {
-                project.setFrozen(true);
-                jdbcProjectRepo.updateFrozen(project);
-            }
-        }
-    }
-
     @Override
     @Transactional(propagation = Propagation.MANDATORY)
     public ProjectMember create(User user, Project project, ProjectMemberDTO projectMemberDTO) {
@@ -119,8 +100,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
         member = new ProjectMember();
         member.setProject(project);
-        member.setOrganizationMember(organizationMember);
-        member.setUser(organizationMember.getUser());
+        member.setUser(user);
 
         member.setWriteAllowed(projectMemberDTO.writeAllowed || projectMemberDTO.manager);
         member.setManager(projectMemberDTO.manager);
@@ -128,14 +108,10 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
         projectMemberRepo.persist(member);
 
-        // uncomment when payment is on
-        // freezeProject(project);
-
-        Long userId = member.getUser().getId();
         try {
-            elasticsearchService.addProject(userId, member.getProject().getId());
+            elasticsearchService.addProject(user.getId(), member);
         } catch (Exception e) {
-            LOG.error("Could not add project for user " + userId + " in elasticsearch", e);
+            LOG.error("Could not add project for user " + user.getId() + " in elasticsearch", e);
         }
 
         return member;
@@ -154,20 +130,17 @@ public class DefaultProjectMemberService implements ProjectMemberService {
             throw new NotFoundException("Project");
         }
 
-        OrganizationMember organizationMember = null;
-        if (ProjectMemberDTO.CURRENT_USER_ORGANIZATION_MEMBER_ID.equals(projectMemberDTO.organizationMemberId)) {
-            organizationMember = orgMemberRepo.getNotFiredByUserAndOrganization(currentUser,
-                    project.getOrganization());
+        User user = null;
+        if (ProjectMemberDTO.CURRENT_USER_ID.equals(projectMemberDTO.userId)) {
+            user = currentUser;
         } else {
-            organizationMember = orgMemberRepo
-                    .getNotFiredByIdAndOrganizationAndFetchUser(projectMemberDTO.organizationMemberId,
-                            project.getOrganization());
+            user = userRepo.getByIdForAccount(projectMemberDTO.userId);
         }
-        if (organizationMember == null) {
-            throw new NotFoundException("Organization member");
+        if (user == null) {
+            throw new NotFoundException("User");
         }
 
-        ProjectMember projectMember = create(organizationMember, project, projectMemberDTO);
+        ProjectMember projectMember = create(user, project, projectMemberDTO);
         return ProjectMemberReadDTO.fromEntityWithUserAndProjectAndPermissions(projectMember);
     }
 
@@ -186,14 +159,12 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
         List<ProjectMemberReadDTO> readDTOList = new ArrayList<ProjectMemberReadDTO>();
         for (ProjectMemberDTO projectMemberDTO : projectMemberListDTO.members) {
-            OrganizationMember organizationMember = orgMemberRepo
-                    .getNotFiredByIdAndOrganizationAndFetchUser(projectMemberDTO.organizationMemberId,
-                            project.getOrganization());
-            if (organizationMember == null) {
-                throw new NotFoundException("Organization member");
+            User user = userRepo.getById(projectMemberDTO.userId);
+            if (user == null) {
+                throw new NotFoundException("User");
             }
 
-            ProjectMember projectMember = create(organizationMember, project, projectMemberDTO);
+            ProjectMember projectMember = create(user, project, projectMemberDTO);
             readDTOList.add(ProjectMemberReadDTO.fromEntityWithUserAndProjectAndPermissions(projectMember));
         }
         return readDTOList;
@@ -266,20 +237,6 @@ public class DefaultProjectMemberService implements ProjectMemberService {
         return ProjectMemberReadDTO.fromProjectMemberWithProjectTuples(memberList);
     }
 
-    @Deprecated
-    @SuppressWarnings("unused")
-    private void unfreezeProjectIfCountBecameLessThanMinMembersToCharge(Project project) {
-        if (project.getOrganization().isFrozen() && project.isFrozen()) {
-            long projectMembersCount = jdbcOrgMemberRepo
-                    .countNotFiredManagersOrProjectMembersByOrganizationIdAndProjectId(
-                            project.getOrganization(), project);
-            if (projectMembersCount < Project.MIN_PRIVATE_PROJECT_MEMBERS_TO_CHARGE) {
-                project.setFrozen(false);
-                jdbcProjectRepo.updateFrozen(project);
-            }
-        }
-    }
-
     private void delete(ProjectMember member, boolean deleteUserFavorite) {
         long now = System.currentTimeMillis();
         if (now - member.getHiredAt().toInstant().toEpochMilli() < PROJECT_MEMBERSHIP_MINIMUM_DURATION_MILLIS) {
@@ -288,26 +245,20 @@ public class DefaultProjectMemberService implements ProjectMemberService {
             jdbcProjectMemberRepo.setFiredTrueAndFiredAtNowForNotFiredById(member.getId());
         }
 
-        Long userId = member.getUserId();
         Project project = member.getProject();
         if (project.isPrivate()) {
-            taskSubscriberRepo.deleteByUserIdAndProjectId(userId, project.getId());
-        }
+            taskSubscriberRepo.deleteByUserIdAndProjectId(member.getUserId(), project.getId());
 
-        // not used yet
-        if (deleteUserFavorite) {
-            if (project.isPrivate() && !member.getOrganizationMember().isManager()) {
+            // not used yet
+            if (deleteUserFavorite) {
                 userFavoriteService.deleteByUserIdAndProject(member.getUserId(), member.getProject());
             }
         }
 
-        // uncomment when payment is on
-        // unfreezeProjectIfCountBecameLessThanMinMembersToCharge(project);
-
         try {
-            elasticsearchService.removeProject(userId, project.getId());
+            elasticsearchService.removeProject(member.getUserId(), member);
         } catch (Exception e) {
-            LOG.error("Could not remove project for user " + userId + " in elasticsearch", e);
+            LOG.error("Could not remove project for user " + member.getUserId() + " in elasticsearch", e);
         }
     }
 
@@ -346,7 +297,7 @@ public class DefaultProjectMemberService implements ProjectMemberService {
     }
 
     @Override
-    public List<OrganizationMemberUserDTO> search(
+    public List<ProjectMemberUserDTO> search(
             User currentUser, String prefix, IdOrUiIdDTO projectDTO, boolean meFirst) throws Exception {
         // security start
         securityService.authzCanReadProjectMembers(currentUser, projectDTO);
@@ -357,11 +308,11 @@ public class DefaultProjectMemberService implements ProjectMemberService {
             projectId = jdbcProjectRepo.getProjectIdByUiId(projectDTO.uiId);
         }
         if (projectId == null) {
-            return new ArrayList<OrganizationMemberUserDTO>();
+            return new ArrayList<ProjectMemberUserDTO>();
         }
 
-        SearchHits hits = elasticsearchService.searchByNameAndOrganizationAndProject(prefix, projectId);
-        return OrganizationMemberUserDTO.fromSearchHits(hits, organizationId,
+        SearchHits hits = elasticsearchService.searchByNameAndProject(prefix, projectId);
+        return ProjectMemberUserDTO.fromSearchHits(hits, projectId,
                 ((meFirst && currentUser != null) ? currentUser.getId() : null));
     }
 }

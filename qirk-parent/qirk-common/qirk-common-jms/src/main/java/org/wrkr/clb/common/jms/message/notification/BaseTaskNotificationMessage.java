@@ -18,18 +18,12 @@ package org.wrkr.clb.common.jms.message.notification;
 
 import java.util.Collection;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public abstract class BaseTaskNotificationMessage extends BaseNotificationMessage {
 
-    @JsonIgnore
-    public static final String ORGANIZATION_UI_ID = "organization_ui_id";
-    @JsonIgnore
     public static final String PROJECT_UI_ID = "project_ui_id";
 
-    @JsonProperty(value = ORGANIZATION_UI_ID)
-    public String organizationUiId;
     @JsonProperty(value = PROJECT_UI_ID)
     public String projectUiId;
 

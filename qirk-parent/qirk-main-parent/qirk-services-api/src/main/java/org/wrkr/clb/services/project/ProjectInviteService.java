@@ -35,23 +35,23 @@ public interface ProjectInviteService {
     public ProjectInviteReadDTO create(User currentUser, @Valid ProjectInviteDTO projectInviteDTO) throws Exception;
 
     public ProjectInviteReadDTO get(User currentUser,
-            @NotNull(message = "id in ProjectInviteService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 
     public List<ProjectInviteReadDTO> listByUser(User currentUser);
 
     public ProjectInviteReadDTO accept(User currentUser,
-            @NotNull(message = "id in ProjectInviteService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 
     public ProjectInviteReadDTO reject(User currentUser, @Valid RejectDTO rejectDTO) throws Exception;
 
     public List<ProjectInviteReadDTO> listByProjectId(User currentUser,
-            @NotNull(message = "projectId in ProjectInviteService must not be null") Long projectId);
+            @NotNull(message = "projectId must not be null") Long projectId);
 
     public List<ProjectInviteReadDTO> listByProjectUiId(User currentUser,
-            @NotNull(message = "projectUiId in ProjectInviteService must not be null") String projectUiId);
+            @NotNull(message = "projectUiId must not be null") String projectUiId);
 
     public void cancel(User currentUser,
-            @NotNull(message = "id in ProjectInviteService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 
     public void execute(User currentUser, @Valid ProjectMemberPermissionsDTO inviteDTO) throws Exception;
 }

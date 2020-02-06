@@ -19,9 +19,10 @@ package org.wrkr.clb.services.project.imprt.jira.impl;
 import java.io.IOException;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,16 +36,15 @@ import org.w3c.dom.NodeList;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.common.util.strings.MarkdownUtils;
 import org.wrkr.clb.common.util.strings.jira.JiraFormatMarkdownUtils;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProject;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.imprt.jira.ImportedJiraProjectRepo;
-import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
+import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchTaskService;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
@@ -112,8 +112,8 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProject(long organizationId) {
-        return importedProjectRepo.mapTimestampToImportedProjectsByOrganizationId(organizationId);
+    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProject() {
+        return importedProjectRepo.mapTimestampToImportedProjects();
     }
 
     private OffsetDateTime getOffsetDateTime(Element element, String attribute) {
@@ -175,7 +175,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
                 descriptionJira;
     }
 
-    private Task importTask(OrganizationMember importingMember, Project project, String jiraProjectKey,
+    private Task importTask(ProjectMember importingMember, Project project, String jiraProjectKey,
             Element taskElement, Long number, Document entitiesDoc, JiraProjectImportDTO importDTO,
             String uploadFolderPath, char uploadFolderDelimeter) throws Exception {
         Task task = new Task();
@@ -188,9 +188,9 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         task.setSummary(
                 MarkdownUtils.descriptionToSummary(task.getDescriptionMd(), task.getDescriptionHtml(), Task.SUMMARY_LENGTH));
 
-        task.setReporter(importDTO.jiraUserNameToQirkUser.getOrDefault(
+        task.setReporter(importDTO.jiraUserNameToQirkProjectMember.getOrDefault(
                 taskElement.getAttribute("reporter").toLowerCase(), importingMember));
-        task.setAssignee(importDTO.jiraUserNameToQirkUser.get(taskElement.getAttribute("assignee").toLowerCase()));
+        task.setAssignee(importDTO.jiraUserNameToQirkProjectMember.get(taskElement.getAttribute("assignee").toLowerCase()));
 
         task.setCreatedAt(getOffsetDateTime(taskElement, "created"));
         task.setUpdatedAt(getOffsetDateTime(taskElement, "updated"));
@@ -222,13 +222,20 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         return task;
     }
 
-    public void createProjectMembers(
-            Project project, OrganizationMember importingMember, Collection<OrganizationMember> orgMembers) {
-        projectMemberService.create(importingMember, project, new ProjectMemberDTO(true, true));
+    public ProjectMember createImportingProjectMember(Project project, User importingUser) {
+        return projectMemberService.create(importingUser, project, new ProjectMemberDTO(true, true));
+    }
+
+    public Map<String, ProjectMember> createProjectMembers(Project project, Map<String, User> jiraUserNameToQirkUser) {
         ProjectMemberDTO defaultProjectPermissions = new ProjectMemberDTO(true, false);
-        for (OrganizationMember orgMember : orgMembers) {
-            projectMemberService.create(orgMember, project, defaultProjectPermissions);
+
+        Map<String, ProjectMember> jiraUserNameToQirkProjectMember = new HashMap<String, ProjectMember>();
+        for (Entry<String, User> jiraUserNameAndQirkUser : jiraUserNameToQirkUser.entrySet()) {
+            ProjectMember projectMember = projectMemberService.create(
+                    jiraUserNameAndQirkUser.getValue(), project, defaultProjectPermissions);
+            jiraUserNameToQirkProjectMember.put(jiraUserNameAndQirkUser.getKey(), projectMember);
         }
+        return jiraUserNameToQirkProjectMember;
     }
 
     @Override
@@ -247,13 +254,14 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         projectDTO.isPrivate = importDTO.isPrivate;
         projectDTO.description = "";
 
-        Project project = projectService.create(projectDTO, organization, new ArrayList<User>());
+        Project project = projectService.create(importingUser, projectDTO, new ArrayList<User>());
 
         importedProject.setProjectId(project.getId());
         importedProject.setUpdatedAt(DateTimeUtils.now());
         importedProjectRepo.save(importedProject);
 
-        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkUser.values());
+        ProjectMember importingMember = createImportingProjectMember(project, importingUser);
+        importDTO.jiraUserNameToQirkProjectMember = createProjectMembers(project, importDTO.jiraUserNameToQirkUser);
 
         NodeList taskNodes = DOMUtils.getNodes(entitiesDoc, "/entity-engine-xml/Issue[@project=" + jiraProjectId + "]");
         List<Task> tasks = new ArrayList<Task>(taskNodes.getLength());
@@ -285,7 +293,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         task.setSummary(
                 MarkdownUtils.descriptionToSummary(task.getDescriptionMd(), task.getDescriptionHtml(), Task.SUMMARY_LENGTH));
 
-        task.setAssignee(importDTO.jiraUserNameToQirkUser.get(taskElement.getAttribute("assignee").toLowerCase()));
+        task.setAssignee(importDTO.jiraUserNameToQirkProjectMember.get(taskElement.getAttribute("assignee").toLowerCase()));
 
         task.setType(importDTO.jiraTypeIdToQirkType.getOrDefault(taskElement.getAttribute("type"), importDTO.defaultType));
         task.setPriority(importDTO.jiraPriorityIdToQirkPriority.getOrDefault(
@@ -305,8 +313,7 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         long jiraProjectId = importedProject.getJiraProjectId();
         String jiraProjectKey = importedProject.getJiraProjectKey();
 
-        OffsetDateTime lastImportAt = importedProjectRepo.getLastUpdatedAtByOrganizationIdAndProjectId(
-                importedProject.getOrganizationId(), importedProject.getProjectId());
+        OffsetDateTime lastImportAt = importedProjectRepo.getLastUpdatedAtByProjectId(importedProject.getProjectId());
         if (lastImportAt == null) {
             return new ImportStatusDTO(String.valueOf(jiraProjectId), ImportStatusDTO.Status.NOT_FOUND, JsonStatusCode.NOT_FOUND);
         }
@@ -316,7 +323,8 @@ public class DefaultImportedJiraProjectService implements ImportedJiraProjectSer
         importedProject.setUpdatedAt(DateTimeUtils.now());
         importedProjectRepo.save(importedProject);
 
-        createProjectMembers(project, importingMember, importDTO.jiraUserNameToQirkUser.values());
+        ProjectMember importingMember = createImportingProjectMember(project, importingUser);
+        importDTO.jiraUserNameToQirkProjectMember = createProjectMembers(project, importDTO.jiraUserNameToQirkUser);
 
         Map<Long, Task> jiraTaskIdToTask = taskRepo.mapJiraTaskIdToTaskByprojectId(project.getId());
 

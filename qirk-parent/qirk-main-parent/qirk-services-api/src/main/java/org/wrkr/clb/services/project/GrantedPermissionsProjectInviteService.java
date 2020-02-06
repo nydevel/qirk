@@ -50,13 +50,13 @@ public interface GrantedPermissionsProjectInviteService {
             @Valid GrantedPermissionsProjectInviteDTO projectInviteDTO) throws Exception;
 
     public GrantedPermissionsProjectInviteReadDTO get(User currentUser,
-            @NotNull(message = "id in GrantedPermissionsProjectInviteService must not be null") Long id)
+            @NotNull(message = "id must not be null") Long id)
             throws Exception;
 
     public List<GrantedPermissionsProjectInviteReadDTO> listByUser(User currentUser);
 
     public void accept(User currentUser,
-            @NotNull(message = "id in GrantedPermissionsProjectInviteService must not be null") Long id)
+            @NotNull(message = "id must not be null") Long id)
             throws Exception;
 
     public void acceptByToken(@Valid TokenRegisterDTO dto) throws Exception;
@@ -66,13 +66,13 @@ public interface GrantedPermissionsProjectInviteService {
     public GrantedPermissionsProjectInviteReadDTO rejectByToken(@Valid TokenRejectDTO rejectDTO) throws Exception;
 
     public List<GrantedPermissionsProjectInviteReadDTO> listByProjectId(User currentUser,
-            @NotNull(message = "projectId in GrantedPermissionsProjectInviteService must not be null") Long projectId,
+            @NotNull(message = "projectId must not be null") Long projectId,
             boolean includeEmail);
 
     public List<GrantedPermissionsProjectInviteReadDTO> listByProjectUiId(User currentUser,
-            @NotNull(message = "projectUiId in GrantedPermissionsProjectInviteService must not be null") String projectUiId,
+            @NotNull(message = "projectUiId must not be null") String projectUiId,
             boolean includeEmail);
 
     public void cancel(User currentUser,
-            @NotNull(message = "id in GrantedPermissionsProjectInviteService must not be null") Long id);
+            @NotNull(message = "id must not be null") Long id);
 }

@@ -18,17 +18,8 @@ package org.wrkr.clb.model.project.imprt.jira;
 
 public class JiraUpload {
 
-    private Long organizationId;
     private Long uploadTimestamp;
     private String archiveFilename;
-
-    public Long getOrganizationId() {
-        return organizationId;
-    }
-
-    public void setOrganizationId(Long organizationId) {
-        this.organizationId = organizationId;
-    }
 
     public Long getUploadTimestamp() {
         return uploadTimestamp;

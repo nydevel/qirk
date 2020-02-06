@@ -19,27 +19,19 @@ package org.wrkr.clb.services.dto.project;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.wrkr.clb.common.util.strings.RegExpPattern;
-import org.wrkr.clb.common.validation.groups.OnCreate;
 import org.wrkr.clb.common.validation.groups.OnUpdate;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProjectDTO extends IdDTO {
-
-    @JsonProperty(value = "organization")
-    @NotNull(message = "organization in ProjectDTO must not be null", groups = OnCreate.class)
-    @Valid
-    public IdOrUiIdDTO organization;
 
     @JsonProperty(value = "record_version")
     @NotNull(message = "record_version in ProjectDTO must not be null", groups = OnUpdate.class)

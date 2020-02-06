@@ -25,5 +25,5 @@ import org.wrkr.clb.model.user.User;
 public interface AttachmentFileService {
 
     public String getTemporaryLink(User currentUser,
-            @NotNull(message = "id in AttachmentFileService must not be null") Long id);
+            @NotNull(message = "id must not be null") Long id);
 }

@@ -32,56 +32,52 @@ import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.ImportedJiraProjectMapper;
 
-
 @Repository
 public class ImportedJiraProjectRepo extends JDBCBaseMainRepo {
 
     private static final String INSERT = "INSERT INTO " + ImportedJiraProjectMeta.TABLE_NAME + " " +
-            "(" + ImportedJiraProjectMeta.organizationId + ", " + // 1
-            ImportedJiraProjectMeta.projectId + ", " + // 2
-            ImportedJiraProjectMeta.uploadTimestamp + ", " + // 3
-            ImportedJiraProjectMeta.jiraProjectId + ", " + // 4
-            ImportedJiraProjectMeta.jiraProjectKey + ", " + // 5
-            ImportedJiraProjectMeta.jiraProjectName + ", " + // 6
-            ImportedJiraProjectMeta.updatedAt + ") " + // 7
-            "VALUES (?, ?, ?, ?, ?, ?, ?);";
+            ImportedJiraProjectMeta.projectId + ", " + // 1
+            ImportedJiraProjectMeta.uploadTimestamp + ", " + // 2
+            ImportedJiraProjectMeta.jiraProjectId + ", " + // 3
+            ImportedJiraProjectMeta.jiraProjectKey + ", " + // 4
+            ImportedJiraProjectMeta.jiraProjectName + ", " + // 5
+            ImportedJiraProjectMeta.updatedAt + ") " + // 6
+            "VALUES (?, ?, ?, ?, ?, ?);";
 
-    private static final String SELECT_LAST_UPDATED_AT_BY_ORGANIZATION_ID_AND_PROJECT_ID = "SELECT " +
+    private static final String SELECT_LAST_UPDATED_AT_BY_PROJECT_ID = "SELECT " +
             "MAX(" + ImportedJiraProjectMeta.updatedAt + ") " +
             "FROM " + ImportedJiraProjectMeta.TABLE_NAME + " " +
-            "WHERE " + ImportedJiraProjectMeta.organizationId + " = ? " + // 1
-            "AND " + ImportedJiraProjectMeta.projectId + " = ?;"; // 2
+            "WHERE " + ImportedJiraProjectMeta.projectId + " = ?;"; // 1
 
     private static final ImportedJiraProjectMapper MAPPER = new ImportedJiraProjectMapper(
             ImportedJiraProjectMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
-    private static final String SELECT_BY_ORGANIZATION_ID = "SELECT " +
+    private static final String SELECT_ALL = "SELECT " +
             MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ImportedJiraProjectMeta.TABLE_NAME + " " +
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + ImportedJiraProjectMeta.TABLE_NAME + "." + ImportedJiraProjectMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "WHERE " + ImportedJiraProjectMeta.TABLE_NAME + "." + ImportedJiraProjectMeta.organizationId + " = ? " + // 1
             "ORDER BY " + ImportedJiraProjectMeta.TABLE_NAME + "." + ImportedJiraProjectMeta.uploadTimestamp + " ASC;";
 
     public void save(ImportedJiraProject project) {
         getJdbcTemplate().update(INSERT,
-                project.getOrganizationId(), project.getProjectId(), project.getUploadTimestamp(),
+                project.getProjectId(), project.getUploadTimestamp(),
                 project.getJiraProjectId(), project.getJiraProjectKey(), project.getJiraProjectName(),
                 Timestamp.from(project.getUpdatedAt().toInstant()));
     }
 
-    public OffsetDateTime getLastUpdatedAtByOrganizationIdAndProjectId(Long organizationId, Long projectId) {
-        Timestamp timestamp = queryForObjectOrNull(SELECT_LAST_UPDATED_AT_BY_ORGANIZATION_ID_AND_PROJECT_ID, Timestamp.class,
-                organizationId, projectId);
+    public OffsetDateTime getLastUpdatedAtByProjectId(Long projectId) {
+        Timestamp timestamp = queryForObjectOrNull(SELECT_LAST_UPDATED_AT_BY_PROJECT_ID, Timestamp.class,
+                projectId);
         if (timestamp == null) {
             return null;
         }
         return OffsetDateTime.ofInstant(timestamp.toInstant(), DateTimeUtils.DEFAULT_TIME_ZONE_ID);
     }
 
-    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProjectsByOrganizationId(long organizationId) {
-        List<Map<String, Object>> results = getJdbcTemplate().queryForList(SELECT_BY_ORGANIZATION_ID, organizationId);
+    public Map<Long, List<ImportedJiraProject>> mapTimestampToImportedProjects() {
+        List<Map<String, Object>> results = getJdbcTemplate().queryForList(SELECT_ALL);
 
         Map<Long, List<ImportedJiraProject>> map = new HashMap<Long, List<ImportedJiraProject>>();
         List<ImportedJiraProject> projectsAtTimestamp = new ArrayList<ImportedJiraProject>();

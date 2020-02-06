@@ -27,8 +27,8 @@ import org.wrkr.clb.model.user.User;
 public interface TagService {
 
     public List<Tag> getOrCreate(
-            @NotNull(message = "tagNames in TagService must not be null") Set<String> tagNames);
+            @NotNull(message = "tagNames must not be null") Set<String> tagNames);
 
-    public List<Tag> setTagsToUser(@NotNull(message = "user in TagService must not be null") User user,
-            @NotNull(message = "tagNames in TagService must not be null") Set<String> tagNames);
+    public List<Tag> setTagsToUser(@NotNull(message = "user must not be null") User user,
+            @NotNull(message = "tagNames must not be null") Set<String> tagNames);
 }

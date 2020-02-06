@@ -23,6 +23,6 @@ import org.wrkr.clb.model.user.User;
 
 public interface LoginStatisticsService {
 
-    LoginStatistics create(@NotNull(message = "user in LoginStatisticsService must not be null") User user,
+    LoginStatistics create(@NotNull(message = "user must not be null") User user,
             String forwardedFor);
 }

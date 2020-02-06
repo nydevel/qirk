@@ -27,8 +27,6 @@ public class TaskMessage extends BaseTaskNotificationMessage {
 
     private static final ObjectWriter MESSAGE_WRITER = new ObjectMapper().writerFor(TaskMessage.class);
 
-    public static final String ORGANIZATION_ID = "organization_id";
-    public static final String ORGANIZATION_UI_ID = "organization_ui_id";
     public static final String PROJECT_ID = "project_id";
     public static final String PROJECT_UI_ID = "project_ui_id";
     public static final String PROJECT_NAME = "project_name";
@@ -52,10 +50,6 @@ public class TaskMessage extends BaseTaskNotificationMessage {
     public static final String NEW_PRIORITY_HUMAN_READABLE = "new_priority_hr";
     public static final String NEW_STATUS_HUMAN_READABLE = "new_status_hr";
 
-    @JsonProperty(value = ORGANIZATION_ID)
-    public long organizationId;
-    @JsonProperty(value = ORGANIZATION_UI_ID)
-    public String organizationUiId;
     @JsonProperty(value = PROJECT_ID)
     public long projectId;
     @JsonProperty(value = PROJECT_UI_ID)

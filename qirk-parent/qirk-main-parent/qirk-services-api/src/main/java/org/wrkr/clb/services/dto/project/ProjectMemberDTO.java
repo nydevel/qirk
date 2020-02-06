@@ -26,12 +26,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProjectMemberDTO extends IdDTO {
     
-    public static final Long CURRENT_USER_ORGANIZATION_MEMBER_ID = -1L;
+    public static final Long CURRENT_USER_ID = -1L;
 
-    @JsonProperty(value = "organization_member")
-    @NotNull(message = "organization_member in ProjectMemberDTO must not be null", groups = {
+    @JsonProperty(value = "user")
+    @NotNull(message = "user in ProjectMemberDTO must not be null", groups = {
             OnCreate.class, OnCreateBatch.class })
-    public Long organizationMemberId;
+    public Long userId;
 
     @JsonProperty(value = "project")
     @NotNull(message = "project in ProjectMemberDTO must not be null", groups = OnCreate.class)

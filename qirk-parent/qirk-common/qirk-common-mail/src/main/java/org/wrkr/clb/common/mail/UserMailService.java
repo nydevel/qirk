@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.text.StringSubstitutor;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,7 @@ import org.wrkr.clb.common.crypto.token.notification.NotificationSettingsTokenDa
 import org.wrkr.clb.common.jms.message.notification.BaseTaskNotificationMessage;
 import org.wrkr.clb.common.jms.message.notification.TaskCommentMessage;
 import org.wrkr.clb.common.jms.message.notification.TaskUpdateNotificationMessage;
+import org.wrkr.clb.common.util.collections.MapBuilder;
 import org.wrkr.clb.common.util.strings.CharSet;
 
 public class UserMailService extends BaseMailService {
@@ -250,10 +252,12 @@ public class UserMailService extends BaseMailService {
     }
 
     private String generateTaskUrl(Map<String, Object> messageBody, Long taskNumber) {
-        return frontUrl + String.format(frontTaskUrl,
-                (String) messageBody.get(BaseTaskNotificationMessage.ORGANIZATION_UI_ID),
-                (String) messageBody.get(BaseTaskNotificationMessage.PROJECT_UI_ID),
-                taskNumber);
+        return frontUrl + StringSubstitutor.replace(frontTaskUrl,
+                new MapBuilder<String, String>()
+                        .put("organizationUiId", "")
+                        .put("projectUiId", (String) messageBody.get(BaseTaskNotificationMessage.PROJECT_UI_ID))
+                        .put("taskNumber", taskNumber.toString()).build(),
+                "{", "}");
     }
 
     public void sendTaskCreatedEmail(List<String> recipients, Map<String, Object> messageBody) {

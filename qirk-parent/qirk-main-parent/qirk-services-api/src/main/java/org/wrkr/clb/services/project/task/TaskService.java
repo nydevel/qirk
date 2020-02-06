@@ -39,7 +39,6 @@ import org.wrkr.clb.services.dto.project.task.TaskDTO;
 import org.wrkr.clb.services.dto.project.task.TaskLinkDTO;
 import org.wrkr.clb.services.dto.project.task.TaskReadDTO;
 
-
 @Validated
 public interface TaskService {
 
@@ -57,24 +56,17 @@ public interface TaskService {
     public void removeLink(User currentUser, @Valid TaskLinkDTO taskLinkDTO) throws Exception;
 
     public TaskReadDTO get(User currentUser,
-            @NotNull(message = "id in TaskService must not be null") Long id) throws Exception;
+            @NotNull(message = "id must not be null") Long id) throws Exception;
 
     public TaskReadDTO getByProjectAndNumber(User currentUser, @Valid IdOrUiIdDTO projectDTO,
-            @NotNull(message = "number in TaskService must not be null") Long number)
+            @NotNull(message = "number must not be null") Long number)
             throws Exception;
 
-    // public List<TaskReadDTO> listByProject(User currentUser, @Valid IdOrUiIdDTO projectDTO);;
-
-    // public List<TaskReadDTO> listAssignedToCurrentUserByProject(User currentUser, @Valid IdOrUiIdDTO projectDTO);
-
-    @Deprecated
-    public List<TaskReadDTO> listParentOptions(User currentUser, @Valid IdOrUiIdDTO idOrUiIdDTO);
-
     public List<LinkedTaskDTO> listLinkOptionsByTaskId(User currentUser,
-            @NotNull(message = "taskId in TaskService must not be null") Long taskId);
+            @NotNull(message = "taskId must not be null") Long taskId);
 
     public List<LinkedTaskDTO> listLinkOptionsByProjectId(User currentUser,
-            @NotNull(message = "projectId in TaskService must not be null") Long projectId);
+            @NotNull(message = "projectId must not be null") Long projectId);
 
     public List<TaskReadDTO> listCardless(User currentUser, @Valid IdOrUiIdDTO idOrUiIdDTO);
 

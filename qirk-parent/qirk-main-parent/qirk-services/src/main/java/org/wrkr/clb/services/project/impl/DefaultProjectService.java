@@ -41,15 +41,12 @@ import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.common.util.strings.MarkdownUtils;
 import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.organization.Organization;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.organization.JDBCOrganizationRepo;
-import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.ProjectInviteRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
@@ -121,12 +118,6 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     // private ProjectApplicationRepo projectApplicationRepo;
 
     @Autowired
-    private JDBCOrganizationRepo organizationRepo;
-
-    @Autowired
-    private OrganizationMemberRepo organizationMemberRepo;
-
-    @Autowired
     private TagRepo tagRepo;
 
     @Autowired
@@ -168,11 +159,11 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
-    public Project create(User creator, ProjectDTO projectDTO, List<User> membersToCreate)
+    public Project create(User creatorUser, ProjectDTO projectDTO, List<User> membersToCreate)
             throws Exception {
         Project project = new Project();
-        project.setOrganization(organization);
-        project.setPrivate(projectDTO.isPrivate || organization.isPrivate());
+        project.setOwner(creatorUser);
+        project.setPrivate(projectDTO.isPrivate);
 
         ProjectTaskNumberSequence taskNumberSequence = new ProjectTaskNumberSequence();
         taskNumberSequence = taskNumberSequenceRepo.save(taskNumberSequence);
@@ -191,7 +182,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         String uiId = projectDTO.uiId.strip().toLowerCase();
         if (uiId.isEmpty()) {
             do {
-                uiId = RandomStringUtils.randomAlphanumeric(Organization.UI_ID_LENGTH).toLowerCase();
+                uiId = RandomStringUtils.randomAlphanumeric(Project.UI_ID_LENGTH).toLowerCase();
             } while (projectRepo.existsByUiId(uiId));
         }
         project.setUiId(uiId);
@@ -214,25 +205,15 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public ProjectReadDTO create(User currentUser, ProjectDTO projectDTO) throws Exception {
         // security start
-        securityService.authzCanCreateProject(currentUser, projectDTO.organization);
+        securityService.authzCanCreateProject(currentUser);
         // security finish
-
-        Organization organization = null;
-        if (projectDTO.organization.id != null) {
-            organization = organizationRepo.getById(projectDTO.organization.id);
-        } else if (projectDTO.organization.uiId != null) {
-            organization = organizationRepo.getByUiId(projectDTO.organization.uiId);
-        }
-        if (organization == null) {
-            throw new NotFoundException("Organization");
-        }
 
         List<User> membersToCreate = new ArrayList<User>();
         if (projectDTO.makeMeMember) {
             membersToCreate.add(currentUser);
         }
 
-        Project project = create(projectDTO, organization, membersToCreate);
+        Project project = create(currentUser, projectDTO, membersToCreate);
         ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocs(project);
 
         return dto;
@@ -261,7 +242,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
             project.setKey(projectDTO.key);
         }
         boolean wasPrivate = project.isPrivate();
-        project.setPrivate(projectDTO.isPrivate || project.getOrganization().isPrivate());
+        project.setPrivate(projectDTO.isPrivate);
 
         if (!projectDTO.uiId.isBlank()) {
             project.setUiId(projectDTO.uiId.strip().toLowerCase());
@@ -430,7 +411,8 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         return jdbcProjectRepo.getByIdWithEverythingForReadAndFetchMembershipForSecurity(projectId, currentUser.getId());
     }
 
-    private ProjectReadDTO getDTOWithPermissions(User currentUser, Long projectId, boolean includeApplication)
+    private ProjectReadDTO getDTOWithPermissions(User currentUser, Long projectId,
+            @SuppressWarnings("unused") boolean includeApplication)
             throws ApplicationException {
         if (projectId == null) {
             throw new NotFoundException("Project");
@@ -542,22 +524,17 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.MANDATORY)
     public List<ProjectNameAndUiIdDTO> listAvailableToUser(User user) {
-        if (organizationMember == null) {
-            if (!organization.isPrivate()) {
-                List<Project> projectList = projectRepo.listPublicAndOrderAscByName();
-                return ProjectNameAndUiIdDTO.fromEntities(projectList);
-            }
-            return new ArrayList<ProjectNameAndUiIdDTO>();
-        }
-
-        if (organizationMember.isManager()) {
-            List<Project> projectList = projectRepo.listAndOrderAscByName();
+        if (user == null) {
+            List<Project> projectList = projectRepo.listPublicAndOrderAscByName();
             return ProjectNameAndUiIdDTO.fromEntities(projectList);
-
         }
 
-        List<Project> projectList = projectRepo.listAvailableToUserAndOrderAscByName(organizationMember,
-                !organization.isPrivate());
+        // if (organizationMember.isManager()) {
+        // List<Project> projectList = projectRepo.listAndOrderAscByName();
+        // return ProjectNameAndUiIdDTO.fromEntities(projectList);
+        // }
+
+        List<Project> projectList = projectRepo.listAvailableToUserAndOrderAscByName(user);
         return ProjectNameAndUiIdDTO.fromEntities(projectList);
     }
 

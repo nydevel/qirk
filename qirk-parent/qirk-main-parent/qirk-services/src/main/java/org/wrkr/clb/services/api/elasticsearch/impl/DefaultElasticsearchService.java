@@ -159,7 +159,6 @@ public abstract class DefaultElasticsearchService<E extends BaseIdEntity> implem
             return new MultiGetItemResponse[0];
         }
         if (includeFields == null) {
-            LOG.warn("includeFields in ElasticsearchService multiGet is null");
             includeFields = Strings.EMPTY_ARRAY;
         }
 

@@ -52,8 +52,6 @@ public class DefaultTaskChatService extends DefaultChatService implements TaskCh
         notificationMessage.senderUsername = tokenData.senderUsername;
         notificationMessage.senderFullName = tokenData.senderFullName;
 
-        notificationMessage.organizationId = tokenData.organizationId;
-        notificationMessage.organizationUiId = tokenData.organizationUiId;
         notificationMessage.projectId = tokenData.projectId;
         notificationMessage.projectUiId = tokenData.projectUiId;
         notificationMessage.projectName = tokenData.projectName;

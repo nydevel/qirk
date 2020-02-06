@@ -24,6 +24,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 public interface OAuthService {
 
-    public String getToken(@NotNull(message = "code in OAuthService must not be null") String code,
-            @NotNull(message = "redirectURI in OAuthService must not be null") String redirectURI) throws Exception;
+    public String getToken(@NotNull(message = "code must not be null") String code,
+            @NotNull(message = "redirectURI must not be null") String redirectURI) throws Exception;
 }
