@@ -245,23 +245,6 @@ public class TaskRepo extends JDBCBaseIdRepo {
             + "FROM " + TaskMeta.TABLE_NAME + " " +
             "WHERE " + TaskMeta.id + " IN (?, ?);"; // 1, 2
 
-    private static final String SELECT_ALIVE_NON_HIDDEN_TASK_IDS_BY_REPORTER_OR_ASSIGNEE_USER_ID = "SELECT " +
-            TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.reporterId + " = " +
-            REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
-            "LEFT JOIN " + ProjectMemberMeta.TABLE_NAME + " AS " + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.assigneeId + " = " +
-            ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.id + " " +
-            "INNER JOIN " + TaskStatusMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.statusId + " = " +
-            TaskStatusMeta.TABLE_NAME + "." + TaskStatusMeta.id + " " +
-            "WHERE (" + REPORTER_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = ? " + // 1
-            "OR" + ASSIGNEE_PROJECT_MEMBER_TABLE_ALIAS + "." + ProjectMemberMeta.userId + " = ?) " + // 2
-            "AND NOT " + TaskMeta.TABLE_NAME + "." + TaskMeta.hidden + " " +
-            "AND " + ALIVE_PREDICATE + ";";
-
     private static final LinkedTaskMapper LINKED_TASK_MAPPER = new LinkedTaskMapper(
             TaskMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
@@ -568,11 +551,6 @@ public class TaskRepo extends JDBCBaseIdRepo {
             throw new IncorrectResultSizeDataAccessException(2, results.size());
         }
         return results;
-    }
-
-    public List<Long> listAliveNonHiddenTaskIdsByNotFiredReporterOrAssigneeUserId(Long userId) {
-        return queryForList(SELECT_ALIVE_NON_HIDDEN_TASK_IDS_BY_REPORTER_OR_ASSIGNEE_USER_ID, Long.class,
-                userId, userId);
     }
 
     public List<Task> listByProjectIdAndIds(Long projectId, Set<Long> taskIds) {

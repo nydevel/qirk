@@ -18,8 +18,6 @@ package org.wrkr.clb.services.file.impl;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.fileupload.FileItem;

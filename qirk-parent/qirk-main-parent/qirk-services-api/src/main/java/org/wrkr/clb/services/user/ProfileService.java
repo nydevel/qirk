@@ -46,6 +46,4 @@ public interface ProfileService {
             throws Exception;
 
     public TokenAndIvDTO getNotificationToken(User sessionUser) throws Exception;
-
-    public TokenAndIvDTO getCreditToken(User sessionUser) throws Exception;
 }

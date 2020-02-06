@@ -29,9 +29,7 @@ import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Issue_;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.Project_;
-import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.JPABaseIdRepo;
-
 
 @Repository
 public class IssueRepo extends JPABaseIdRepo<Issue> {
@@ -50,17 +48,6 @@ public class IssueRepo extends JPABaseIdRepo<Issue> {
 
         query.where(cb.equal(root.get(Issue_.id), id));
         return getSingleResultOrNull(query);
-    }
-
-    public List<Long> listReportedIdsByUser(User user) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> idsQuery = cb.createQuery(Long.class);
-
-        Root<Issue> issueRoot = idsQuery.from(Issue.class);
-
-        idsQuery.select(issueRoot.get(Issue_.ID));
-        idsQuery.where(cb.equal(issueRoot.get(Issue_.reporter), user));
-        return getResultList(idsQuery);
     }
 
     public List<Issue> listByProjectIdAndFetchReporter(Long projectId) {

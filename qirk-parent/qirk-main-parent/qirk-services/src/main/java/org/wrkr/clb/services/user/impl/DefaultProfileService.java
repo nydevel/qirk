@@ -29,7 +29,6 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.crypto.HashEncoder;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
-import org.wrkr.clb.common.crypto.token.crdt.CrdtTokenData;
 import org.wrkr.clb.common.crypto.token.notification.NotificationTokenData;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
@@ -40,9 +39,6 @@ import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.repo.TagRepo;
-import org.wrkr.clb.repo.project.IssueRepo;
-import org.wrkr.clb.repo.project.JDBCProjectMemberRepo;
-import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
@@ -68,20 +64,8 @@ public class DefaultProfileService implements ProfileService {
     private static final Logger LOG = LoggerFactory.getLogger(DefaultProfileService.class);
 
     // chat token config values
-    private Integer chatTokenNotBeforeToleranceSeconds;
-    private Integer chatTokenLifetimeSeconds;
     private Integer notificationTokenNotBeforeToleranceSeconds;
     private Integer notificationTokenLifetimeSeconds;
-    private Integer crdtTokenNotBeforeToleranceSeconds;
-    private Integer crdtTokenLifetimeSeconds;
-
-    public void setChatTokenNotBeforeToleranceSeconds(Integer chatTokenNotBeforeToleranceSeconds) {
-        this.chatTokenNotBeforeToleranceSeconds = chatTokenNotBeforeToleranceSeconds;
-    }
-
-    public void setChatTokenLifetimeSeconds(Integer chatTokenLifetimeSeconds) {
-        this.chatTokenLifetimeSeconds = chatTokenLifetimeSeconds;
-    }
 
     public void setNotificationTokenNotBeforeToleranceSeconds(Integer notificationTokenNotBeforeToleranceSeconds) {
         this.notificationTokenNotBeforeToleranceSeconds = notificationTokenNotBeforeToleranceSeconds;
@@ -89,14 +73,6 @@ public class DefaultProfileService implements ProfileService {
 
     public void setNotificationTokenLifetimeSeconds(Integer notificationTokenLifetimeSeconds) {
         this.notificationTokenLifetimeSeconds = notificationTokenLifetimeSeconds;
-    }
-
-    public void setCrdtTokenNotBeforeToleranceSeconds(Integer crdtTokenNotBeforeToleranceSeconds) {
-        this.crdtTokenNotBeforeToleranceSeconds = crdtTokenNotBeforeToleranceSeconds;
-    }
-
-    public void setCrdtTokenLifetimeSeconds(Integer crdtTokenLifetimeSeconds) {
-        this.crdtTokenLifetimeSeconds = crdtTokenLifetimeSeconds;
     }
 
     @Autowired
@@ -117,15 +93,6 @@ public class DefaultProfileService implements ProfileService {
 
     @Autowired
     private LanguageRepo languageRepo;
-
-    @Autowired
-    private JDBCProjectMemberRepo projectMemberRepo;
-
-    @Autowired
-    private TaskRepo taskRepo;
-
-    @Autowired
-    private IssueRepo issueRepo;
 
     @Autowired
     private TagRepo tagRepo;
@@ -256,22 +223,6 @@ public class DefaultProfileService implements ProfileService {
         List<Language> languages = languageRepo.listByIds(profileDTO.languageIds);
         languageRepo.setLanguagesToUser(user.getId(), languages);
 
-        /*@formatter:off
-        profileLinkRepo.deleteOldLinks(user, links);
-        List<ProfileLink> linkEntities = new ArrayList<ProfileLink>();
-        for (String link : links) {
-            ProfileLink linkEntity = profileLinkRepo.findByUserAndLink(user, link);
-            if (linkEntity == null) {
-                linkEntity = new ProfileLink();
-                linkEntity.setLink(link);
-                linkEntity.setUser(user);
-                linkEntity = profileLinkRepo.save(linkEntity);
-            }
-            linkEntities.add(linkEntity);
-        }
-        user.setLinks(linkEntities);
-        @formatter:on*/
-
         session.setAttribute(SessionAttribute.AUTHN_USER, user);
         try {
             elasticsearchService.updateOrIndex(user);
@@ -294,22 +245,6 @@ public class DefaultProfileService implements ProfileService {
         long now = System.currentTimeMillis();
         tokenData.notBefore = now - notificationTokenNotBeforeToleranceSeconds * 1000;
         tokenData.notOnOrAfter = now + notificationTokenLifetimeSeconds * 1000;
-
-        return tokenGenerator.encrypt(tokenData.toJson());
-    }
-
-    @Override
-    public TokenAndIvDTO getCreditToken(User sessionUser) throws Exception {
-        // security star
-        securityService.isAuthenticated(sessionUser);
-        // security finish
-
-        CrdtTokenData tokenData = new CrdtTokenData();
-        tokenData.userId = sessionUser.getId();
-
-        long now = System.currentTimeMillis();
-        tokenData.notBefore = now - crdtTokenNotBeforeToleranceSeconds * 1000;
-        tokenData.notOnOrAfter = now + crdtTokenLifetimeSeconds * 1000;
 
         return tokenGenerator.encrypt(tokenData.toJson());
     }
