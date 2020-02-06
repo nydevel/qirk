@@ -42,7 +42,6 @@ import org.wrkr.clb.chat.services.IssueChatService;
 import org.wrkr.clb.chat.services.ProjectChatService;
 import org.wrkr.clb.chat.services.TaskChatService;
 import org.wrkr.clb.chat.services.dto.ChatDTO;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.ExternalUuidDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.jms.DialogChatListener;
@@ -58,14 +57,12 @@ import org.wrkr.clb.chat.services.security.SecurityService;
 import org.wrkr.clb.chat.services.util.json.JsonStatusCode;
 import org.wrkr.clb.chat.web.json.JsonContainer;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.crypto.token.chat.MultipleChatTokenData;
 import org.wrkr.clb.common.crypto.token.chat.SecurityTokenData;
 import org.wrkr.clb.common.crypto.token.chat.TaskChatTokenData;
 import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.common.util.strings.JsonUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 
 // uncomment in full version
 // @ServerEndpoint(value = "/chat") uncomment in full version
@@ -75,7 +72,6 @@ public class ChatWebSocketController implements MQDestination {
 
     public static enum RequestType {
         PING("PING"),
-        GET_CHAT_LIST("GET_CHAT_LIST"),
         GET_HISTORY("GET_HISTORY"),
         SEND_MESSAGE("SEND_MESSAGE"),
         REFRESH_TOKEN("REFRESH_TOKEN"),
@@ -186,22 +182,6 @@ public class ChatWebSocketController implements MQDestination {
             switch (requestType) {
                 case PING:
                     return;
-
-                case GET_CHAT_LIST:
-                    /*@formatter:off
-                    MultipleChatTokenData multipleChatTokenData = new MultipleChatTokenData(
-                            securityService.decryptToken(token, IV));
-                    securityService.validateTokenDataOrThrowSecurityException(multipleChatTokenData, false);
-                    getChatList(multipleChatTokenData);
-                    for (String tokenChatType : multipleChatTokenData.chatTypeToChatIds.keySet()) {
-                        List<Long> tokenChatIds = multipleChatTokenData.chatTypeToChatIds.get(tokenChatType);
-                        for (Long tokenChatId : tokenChatIds) {
-                            saveToken(session, tokenChatType, tokenChatId, multipleChatTokenData);
-                            subscribe(session, tokenChatType, tokenChatId);
-                        }
-                    }
-                    @formatter:on*/
-                    break;
 
                 case GET_HISTORY:
                     tokenData = getSavedTokenDataOrValidateAndSaveToken(session, chatType, chatId, token, IV, false);
@@ -380,16 +360,6 @@ public class ChatWebSocketController implements MQDestination {
                 break;
         }
         session.getBasicRemote().sendText(JsonContainer.fromObject(null, ResponseType.UNSUBSCRIBED));
-    }
-
-    @SuppressWarnings("unused")
-    private void getChatList(MultipleChatTokenData multipleChatTokenData) throws JsonProcessingException, IOException {
-        List<ChatWithLastMessageDTO> dtoList = new ArrayList<ChatWithLastMessageDTO>();
-        dtoList.addAll(taskChatService.getChatList(multipleChatTokenData.chatTypeToChatIds.get(ChatType.TASK)));
-        dtoList.addAll(issueChatService.getChatList(multipleChatTokenData.chatTypeToChatIds.get(ChatType.ISSUE)));
-        dtoList.addAll(projectChatService.getChatList(multipleChatTokenData.chatTypeToChatIds.get(ChatType.PROJECT)));
-        dtoList.addAll(dialogChatService.getChatList(multipleChatTokenData.chatTypeToChatIds.get(ChatType.DIALOG)));
-        session.getBasicRemote().sendText(JsonContainer.fromObjects(dtoList, ResponseType.CHAT_LIST));
     }
 
     private void getHistory(Session session, ChatTokenData tokenData, Long timestamp) throws Exception {

@@ -18,19 +18,14 @@ package org.wrkr.clb.common.crypto.token.chat;
 
 import org.wrkr.clb.common.util.strings.JsonUtils;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 public abstract class SecurityTokenData {
 
-    @JsonIgnore
     public static final String SENDER_ID = "sender_id";
-    @JsonIgnore
     public static final String WRITE = "write";
-    @JsonIgnore
     public static final String NOT_BEFORE = "not_before";
-    @JsonIgnore
     public static final String NOT_ON_OR_AFTER = "not_after";
 
     @JsonProperty(value = SENDER_ID)

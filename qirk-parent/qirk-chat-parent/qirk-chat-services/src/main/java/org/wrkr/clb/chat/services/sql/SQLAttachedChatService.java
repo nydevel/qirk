@@ -19,10 +19,8 @@ package org.wrkr.clb.chat.services.sql;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.chat.model.sql.BaseAttachedChatMessage;
 import org.wrkr.clb.chat.model.sql.BaseChatMessage;
 import org.wrkr.clb.chat.repo.sql.BaseAttachedChatMessageRepo;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
 
@@ -45,13 +43,5 @@ public abstract class SQLAttachedChatService extends SQLChatService {
     public void delete(ChatTokenData tokenData, long timestamp) {
         long chatId = tokenData.chatId;
         getRepo().deleteByChatIdAndTimestamp(chatId, timestamp);
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "dsTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ChatWithLastMessageDTO> getChatList(List<Long> chatIds) {
-        List<BaseAttachedChatMessage> messageList = getRepo().getChatList(chatIds);
-        return ChatWithLastMessageDTO.fromAttachedChatMessages(messageList);
     }
 }

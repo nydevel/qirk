@@ -45,9 +45,6 @@ public interface ProfileService {
     public CurrentUserProfileDTO updateProfile(HttpSession session, User sessionUser, @Valid PriofileUpdateDTO profileDTO)
             throws Exception;
 
-    @Deprecated
-    public TokenAndIvDTO getAllChatsToken(User sessionUser) throws Exception;
-
     public TokenAndIvDTO getNotificationToken(User sessionUser) throws Exception;
 
     public TokenAndIvDTO getCreditToken(User sessionUser) throws Exception;

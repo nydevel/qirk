@@ -17,7 +17,6 @@
 package org.wrkr.clb.chat.services;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,7 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wrkr.clb.chat.model.sql.BaseChatMessage;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
@@ -75,14 +73,5 @@ public abstract class DefaultChatService implements ChatService {
         sendNewMessageStatistics(tokenData, messageEntity);
 
         return MessageDTO.fromEntity(messageEntity);
-    }
-
-    @Override
-    public List<ChatWithLastMessageDTO> getChatList(List<Long> chatIds) {
-        if (chatIds.isEmpty()) {
-            return new ArrayList<ChatWithLastMessageDTO>();
-        }
-
-        return getSQLService().getChatList(chatIds);
     }
 }

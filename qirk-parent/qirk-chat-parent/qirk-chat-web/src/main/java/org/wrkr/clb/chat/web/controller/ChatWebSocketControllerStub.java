@@ -17,13 +17,6 @@
 package org.wrkr.clb.chat.web.controller;
 
 import java.io.EOFException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.websocket.CloseReason;
 import javax.websocket.EndpointConfig;
@@ -36,37 +29,8 @@ import javax.websocket.server.ServerEndpoint;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import org.wrkr.clb.chat.services.DialogChatService;
-import org.wrkr.clb.chat.services.IssueChatService;
-import org.wrkr.clb.chat.services.ProjectChatService;
-import org.wrkr.clb.chat.services.TaskChatService;
-import org.wrkr.clb.chat.services.dto.ChatDTO;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
-import org.wrkr.clb.chat.services.dto.ExternalUuidDTO;
-import org.wrkr.clb.chat.services.dto.MessageDTO;
-import org.wrkr.clb.chat.services.jms.DialogChatListener;
-import org.wrkr.clb.chat.services.jms.DialogChatSender;
-import org.wrkr.clb.chat.services.jms.IssueChatListener;
-import org.wrkr.clb.chat.services.jms.IssueChatSender;
-import org.wrkr.clb.chat.services.jms.MQDestination;
-import org.wrkr.clb.chat.services.jms.ProjectChatListener;
-import org.wrkr.clb.chat.services.jms.ProjectChatSender;
-import org.wrkr.clb.chat.services.jms.TaskChatListener;
-import org.wrkr.clb.chat.services.jms.TaskChatSender;
-import org.wrkr.clb.chat.services.security.SecurityService;
 import org.wrkr.clb.chat.services.util.json.JsonStatusCode;
 import org.wrkr.clb.chat.web.json.JsonContainer;
-import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.crypto.token.chat.MultipleChatTokenData;
-import org.wrkr.clb.common.crypto.token.chat.SecurityTokenData;
-import org.wrkr.clb.common.crypto.token.chat.TaskChatTokenData;
-import org.wrkr.clb.common.util.chat.ChatType;
-import org.wrkr.clb.common.util.strings.JsonUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 
 // comment in full version
 @SuppressWarnings("unused")

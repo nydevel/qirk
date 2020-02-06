@@ -18,7 +18,6 @@ package org.wrkr.clb.common.crypto.token.chat;
 
 import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,9 +27,7 @@ public class ChatTokenData extends SecurityTokenData {
 
     private static final ObjectWriter CHAT_TOKEN_DATA_WRITER = new ObjectMapper().writerFor(ChatTokenData.class);
 
-    @JsonIgnore
     public static final String CHAT_TYPE = "chat_type";
-    @JsonIgnore
     public static final String CHAT_ID = "chat_id";
 
     @JsonProperty(value = CHAT_TYPE)

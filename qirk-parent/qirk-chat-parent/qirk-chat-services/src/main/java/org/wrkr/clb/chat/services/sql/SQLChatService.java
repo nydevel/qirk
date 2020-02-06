@@ -24,7 +24,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 import org.wrkr.clb.chat.model.sql.BaseChatMessage;
 import org.wrkr.clb.chat.repo.sql.BaseChatMessageRepo;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
 
@@ -61,6 +60,4 @@ public abstract class SQLChatService {
 
     // @Transactional(value = "dsTransactionManager", rollbackFor = Throwable.class)
     public abstract void delete(ChatTokenData tokenData, long timestamp);
-
-    public abstract List<ChatWithLastMessageDTO> getChatList(List<Long> chatIds);
 }

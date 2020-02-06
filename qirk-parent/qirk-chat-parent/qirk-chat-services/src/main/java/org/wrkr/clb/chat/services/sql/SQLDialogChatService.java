@@ -25,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wrkr.clb.chat.model.sql.BaseChatMessage;
 import org.wrkr.clb.chat.model.sql.DialogMessage;
 import org.wrkr.clb.chat.repo.sql.SQLDialogMessageRepo;
-import org.wrkr.clb.chat.services.dto.ChatWithLastMessageDTO;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
 
@@ -67,13 +66,5 @@ public class SQLDialogChatService extends SQLChatService {
         long user1Id = Long.min(tokenData.senderId, tokenData.chatId);
         long user2Id = Long.max(tokenData.senderId, tokenData.chatId);
         getRepo().deleteByUserIdAndTimestamp(user1Id, user2Id, timestamp);
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "dsTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ChatWithLastMessageDTO> getChatList(List<Long> chatIds) {
-        List<DialogMessage> messageList = getRepo().getChatList(chatIds);
-        return ChatWithLastMessageDTO.fromDialogMessages(messageList);
     }
 }

@@ -46,7 +46,6 @@ import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
 import org.wrkr.clb.services.dto.user.PublicProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
-import org.wrkr.clb.services.dto.user.PublicUserMembershipDTO;
 import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
 import org.wrkr.clb.services.security.SecurityService;
 import org.wrkr.clb.services.user.AuthnService;
@@ -58,7 +57,6 @@ import org.wrkr.clb.services.user.UserService;
 import org.wrkr.clb.web.controller.BaseAuthenticationExceptionHandlerController;
 import org.wrkr.clb.web.http.Header;
 import org.wrkr.clb.web.json.JsonContainer;
-
 
 @RestController
 @RequestMapping(path = "user", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -249,27 +247,15 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     }
     @formatter:on*/
 
-    @GetMapping(value = "search-for-organization")
-    public JsonContainer<PublicUserDTO, Void> searchForOrganization(HttpSession session,
-            @RequestParam(name = "prefix") String searchValue,
-            @RequestParam(name = "organization_id", required = false) Long organizationId,
-            @RequestParam(name = "organization_ui_id", required = false) String organizationUiId) throws Exception {
-        long startTime = System.currentTimeMillis();
-        List<PublicUserDTO> userDTOList = userService.searchForOrganization(getSessionUser(session), searchValue.strip(),
-                new IdOrUiIdDTO(organizationId, organizationUiId));
-        logProcessingTimeFromStartTime(startTime, "searchForOrganization", organizationId, organizationUiId);
-        return new JsonContainer<PublicUserDTO, Void>(userDTOList);
-    }
-
     @GetMapping(value = "search-for-project")
-    public JsonContainer<PublicUserMembershipDTO, Void> searchForProject(HttpSession session,
+    public JsonContainer<PublicUserDTO, Void> searchForProject(HttpSession session,
             @RequestParam(name = "prefix") String searchValue,
             @RequestParam(name = "project_id", required = false) Long projectId,
             @RequestParam(name = "project_ui_id", required = false) String projectUiId) throws Exception {
         long startTime = System.currentTimeMillis();
-        List<PublicUserMembershipDTO> userDTOList = userService.searchForProject(getSessionUser(session), searchValue.strip(),
+        List<PublicUserDTO> userDTOList = userService.searchForProject(getSessionUser(session), searchValue.strip(),
                 new IdOrUiIdDTO(projectId, projectUiId));
         logProcessingTimeFromStartTime(startTime, "searchForProject", projectId, projectUiId);
-        return new JsonContainer<PublicUserMembershipDTO, Void>(userDTOList);
+        return new JsonContainer<PublicUserDTO, Void>(userDTOList);
     }
 }

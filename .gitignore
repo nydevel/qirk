@@ -3,6 +3,7 @@
 
 ### Java ###
 target/
+*.class
 
 ### STS ###
 .metadata/

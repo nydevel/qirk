@@ -29,12 +29,10 @@ import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.crypto.HashEncoder;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
-import org.wrkr.clb.common.crypto.token.chat.MultipleChatTokenData;
 import org.wrkr.clb.common.crypto.token.crdt.CrdtTokenData;
 import org.wrkr.clb.common.crypto.token.notification.NotificationTokenData;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
-import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.user.NotificationSettings;
@@ -281,36 +279,6 @@ public class DefaultProfileService implements ProfileService {
             LOG.error("Could not update user " + user.getId() + " in elasticsearch", e);
         }
         return CurrentUserProfileDTO.fromEntity(user, tags, languages);
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public TokenAndIvDTO getAllChatsToken(User sessionUser) throws Exception {
-        // security start
-        securityService.isAuthenticated(sessionUser);
-        // security finish
-
-        Long userId = sessionUser.getId();
-
-        MultipleChatTokenData tokenData = new MultipleChatTokenData();
-        tokenData.senderId = userId;
-        tokenData.write = false;
-
-        List<Long> projectIds = projectMemberRepo.listProjectIdsByNotFiredUserId(sessionUser.getId());
-        tokenData.addChats(ChatType.PROJECT, projectIds);
-
-        List<Long> taskIds = taskRepo.listAliveNonHiddenTaskIdsByNotFiredReporterOrAssigneeUserId(sessionUser.getId());
-        tokenData.addChats(ChatType.TASK, taskIds);
-
-        List<Long> issueIds = issueRepo.listReportedIdsByUser(sessionUser);
-        tokenData.addChats(ChatType.ISSUE, issueIds);
-
-        long now = System.currentTimeMillis();
-        tokenData.notBefore = now - chatTokenNotBeforeToleranceSeconds * 1000;
-        tokenData.notOnOrAfter = now + chatTokenLifetimeSeconds * 1000;
-
-        return tokenGenerator.encrypt(tokenData.toJson());
     }
 
     @Override
