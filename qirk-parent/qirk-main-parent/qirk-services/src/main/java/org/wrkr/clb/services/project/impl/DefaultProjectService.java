@@ -63,7 +63,6 @@ import org.wrkr.clb.services.dto.project.ProjectInviteStatusDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberDTO;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
-import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 import org.wrkr.clb.services.impl.VersionedEntityService;
 import org.wrkr.clb.services.project.ProjectMemberService;
 import org.wrkr.clb.services.project.ProjectService;
@@ -472,17 +471,16 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ProjectWithOrganizationDTO> listManagedByUser(User currentUser) {
-        List<Project> projectList = projectRepo
-                .listByNotFiredManagerProjectMemberUser(currentUser);
-        return ProjectWithOrganizationDTO.fromEntities(projectList);
+    public List<ProjectNameAndUiIdDTO> listManagedByUser(User currentUser) {
+        List<Project> projectList = projectRepo.listByNotFiredManagerProjectMemberUser(currentUser);
+        return ProjectNameAndUiIdDTO.fromEntities(projectList);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ProjectWithOrganizationDTO> listByUser(User currentUser) {
+    public List<ProjectNameAndUiIdDTO> listByUser(User currentUser) {
         List<Project> projectList = projectRepo.listByNotFiredProjectMemberUserAndOrderAscByName(currentUser);
-        return ProjectWithOrganizationDTO.fromEntities(projectList);
+        return ProjectNameAndUiIdDTO.fromEntities(projectList);
     }
 
     @Deprecated

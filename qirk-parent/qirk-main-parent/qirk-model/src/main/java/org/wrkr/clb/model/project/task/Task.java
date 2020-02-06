@@ -65,13 +65,13 @@ public class Task extends BaseIdEntity implements VersionedIdEntity {
     private String summary;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reporter_user_organization_id", nullable = false)
+    @JoinColumn(name = TaskMeta.reporterId, nullable = false)
     private ProjectMember reporter;
     @Transient
     private Long reporterId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignee_user_organization_id", nullable = true)
+    @JoinColumn(name = TaskMeta.assigneeId, nullable = true)
     private ProjectMember assignee;
     @Transient
     private Long assigneeId;

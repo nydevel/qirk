@@ -207,15 +207,6 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
         return new JsonContainer<TokenAndIvDTO, Void>(tokenDTO);
     }
 
-    @GetMapping(value = "credit-token")
-    public JsonContainer<TokenAndIvDTO, Void> getCreditToken(HttpSession session) throws Exception {
-        long startTime = System.currentTimeMillis();
-        User user = getSessionUser(session);
-        TokenAndIvDTO tokenDTO = profileService.getCreditToken(user);
-        logProcessingTimeFromStartTime(startTime, "getCreditToken", user);
-        return new JsonContainer<TokenAndIvDTO, Void>(tokenDTO);
-    }
-
     @GetMapping(value = "/")
     public JsonContainer<PublicProfileDTO, Void> get(@SuppressWarnings("unused") HttpSession session,
             @RequestParam(name = "id") Long id) throws Exception {

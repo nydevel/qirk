@@ -45,7 +45,7 @@ public class JiraUploadRepo extends JDBCBaseMainRepo {
                 upload.getUploadTimestamp(), upload.getArchiveFilename());
     }
 
-    public Map<Long, String> mapTimestampToArchiveFilenameByOrganizationId() {
+    public Map<Long, String> mapTimestampToArchiveFilename() {
         List<Map<String, Object>> results = getJdbcTemplate().queryForList(SELECT_ALL);
 
         Map<Long, String> map = new HashMap<Long, String>();

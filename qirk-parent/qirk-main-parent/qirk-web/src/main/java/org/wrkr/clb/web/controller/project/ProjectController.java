@@ -37,8 +37,8 @@ import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
+import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
-import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 import org.wrkr.clb.services.project.ProjectService;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
@@ -174,17 +174,17 @@ public class ProjectController extends BaseExceptionHandlerController {
     }
 
     @GetMapping(value = "list-by-user")
-    public JsonContainer<ProjectWithOrganizationDTO, Void> listByUser(HttpSession session,
+    public JsonContainer<ProjectNameAndUiIdDTO, Void> listByUser(HttpSession session,
             @RequestParam(name = "managed", required = false, defaultValue = "false") boolean managed) {
         long startTime = System.currentTimeMillis();
-        List<ProjectWithOrganizationDTO> projectDTOList = new ArrayList<ProjectWithOrganizationDTO>();
+        List<ProjectNameAndUiIdDTO> projectDTOList = new ArrayList<ProjectNameAndUiIdDTO>();
         if (managed) {
             projectDTOList = projectService.listManagedByUser(getSessionUser(session));
         } else {
             projectDTOList = projectService.listByUser(getSessionUser(session));
         }
         logProcessingTimeFromStartTime(startTime, "listByUser", managed);
-        return new JsonContainer<ProjectWithOrganizationDTO, Void>(projectDTOList);
+        return new JsonContainer<ProjectNameAndUiIdDTO, Void>(projectDTOList);
     }
 
     @Deprecated
@@ -196,28 +196,6 @@ public class ProjectController extends BaseExceptionHandlerController {
         logProcessingTimeFromStartTime(startTime, "listInviteOptions", userId);
         return new JsonContainer<ProjectInviteOptionDTO, Void>(projectDTOList);
     }
-
-    /*@formatter:off
-    @GetMapping(value = "top")
-    public JsonContainer<ProjectReadDTO, Void> listTop(@SuppressWarnings("unused") HttpSession session)
-            throws Exception {
-        long startTime = System.currentTimeMillis();
-        List<ProjectReadDTO> projectDTOList = projectService.listTop();
-        logProcessingTimeFromStartTime(startTime, "listTop");
-        return new JsonContainer<ProjectReadDTO, Void>(projectDTOList);
-    }
-
-    @GetMapping(value = "search")
-    public JsonContainer<ProjectWithOrganizationDTO, Void> search(@SuppressWarnings("unused") HttpSession session,
-            @RequestParam(name = "text") String text,
-            @RequestParam(name = "include_description", required = false, defaultValue = "false") boolean includeDescription)
-            throws Exception {
-        long startTime = System.currentTimeMillis();
-        List<ProjectWithOrganizationDTO> projectDTOList = projectService.search(text.strip(), includeDescription);
-        logProcessingTimeFromStartTime(startTime, "search", text, includeDescription);
-        return new JsonContainer<ProjectWithOrganizationDTO, Void>(projectDTOList);
-    }
-    @formatter:on*/
 
     @GetMapping(value = "chat-token")
     public JsonContainer<ChatPermissionsDTO, Void> getChatToken(HttpSession session,

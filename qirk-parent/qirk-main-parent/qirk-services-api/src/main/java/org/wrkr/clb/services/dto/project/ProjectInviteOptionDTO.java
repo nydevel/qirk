@@ -23,7 +23,7 @@ import org.wrkr.clb.model.project.Project;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProjectInviteOptionDTO extends ProjectWithOrganizationDTO {
+public class ProjectInviteOptionDTO extends ProjectNameAndUiIdDTO {
 
     @JsonProperty(value = "is_member")
     public boolean isMember = false;

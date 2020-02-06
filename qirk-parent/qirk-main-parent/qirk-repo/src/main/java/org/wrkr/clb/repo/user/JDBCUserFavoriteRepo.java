@@ -34,7 +34,7 @@ public class JDBCUserFavoriteRepo extends JDBCBaseMainRepo {
     private static final UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper USER_FAVORITE_WITH_SECURITY_MEMBERSHIP_MAPPER = new UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper(
             UserFavoriteMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
-    private static final String SELECT_BY_USER_ID_AND_FETCH_PROJECT_AND_ORGANIZATION_AND_MEMBERSHIP_FOR_SECURITY = "SELECT "
+    private static final String SELECT_BY_USER_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_FOR_SECURITY = "SELECT "
             + USER_FAVORITE_WITH_SECURITY_MEMBERSHIP_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserFavoriteMeta.TABLE_NAME + " " +
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
@@ -43,8 +43,8 @@ public class JDBCUserFavoriteRepo extends JDBCBaseMainRepo {
             SecurityProjectRepo.JOIN_NOT_FIRED_PROJECT_MEMBER_AND_USER_ON_PROJECT_ID_AND_USER_ID + " " +
             "WHERE " + UserFavoriteMeta.TABLE_NAME + "." + UserFavoriteMeta.userId + " = ?;"; // 2
 
-    public List<UserFavorite> listByUserIdAndFetchProjectAndOrganizationAndMembershipForSecurity(Long userId) {
-        return queryForList(SELECT_BY_USER_ID_AND_FETCH_PROJECT_AND_ORGANIZATION_AND_MEMBERSHIP_FOR_SECURITY,
+    public List<UserFavorite> listByUserIdAndFetchProjectAndMembershipForSecurity(Long userId) {
+        return queryForList(SELECT_BY_USER_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_FOR_SECURITY,
                 USER_FAVORITE_WITH_SECURITY_MEMBERSHIP_MAPPER,
                 userId, userId);
     }

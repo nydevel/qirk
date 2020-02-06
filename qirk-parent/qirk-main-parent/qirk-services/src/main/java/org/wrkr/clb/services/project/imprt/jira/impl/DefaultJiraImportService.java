@@ -57,9 +57,9 @@ import org.wrkr.clb.repo.project.task.TaskTypeRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
 import org.wrkr.clb.services.dto.project.imprt.ImportStatusDTO;
-import org.wrkr.clb.services.dto.project.imprt.QirkOrganizationDTO;
+import org.wrkr.clb.services.dto.project.imprt.QirkDataDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraIdAndNameDTO;
-import org.wrkr.clb.services.dto.project.imprt.jira.JiraOrganizationMatchDTO;
+import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectMatchDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectImportDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraUploadDTO;
@@ -164,7 +164,7 @@ public class DefaultJiraImportService implements JiraImportService {
 
         Map<Long, List<ImportedJiraProject>> timestampToImportedProject = importedProjectService
                 .mapTimestampToImportedProject();
-        Map<Long, String> timestampToArchiveName = jiraUploadRepo.mapTimestampToArchiveFilenameByOrganizationId();
+        Map<Long, String> timestampToArchiveName = jiraUploadRepo.mapTimestampToArchiveFilename();
 
         List<JiraUploadDTO> dtoList = new ArrayList<JiraUploadDTO>(folderPaths.size());
         List<ImportedJiraProject> emptyImportedProjectList = new ArrayList<ImportedJiraProject>();
@@ -228,7 +228,7 @@ public class DefaultJiraImportService implements JiraImportService {
     }
 
     @Override
-    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long timestamp, Set<String> projectIds) throws Exception {
+    public JiraProjectMatchDTO listProjectsData(User currentUser, long timestamp, Set<String> projectIds) throws Exception {
         // security
         securityService.authzCanImportProjects(currentUser);
         // security
@@ -279,8 +279,8 @@ public class DefaultJiraImportService implements JiraImportService {
 
         List<Project> projectList = projectRepo.listImportedFromJira();
         List<User> userList = userRepo.list();
-        return new JiraOrganizationMatchDTO(projects, users, types, priorities, statuses,
-                QirkOrganizationDTO.fromEntities(projectList, userList));
+        return new JiraProjectMatchDTO(projects, users, types, priorities, statuses,
+                QirkDataDTO.fromEntities(projectList, userList));
     }
 
     private <A extends Object> Map<String, A> mapJiraIdToTaskAttributeMap(

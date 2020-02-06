@@ -22,7 +22,6 @@ public class RoadMeta extends BaseVersionedEntityMeta {
 
     public static final String TABLE_NAME = "road";
 
-    public static final String organizationId = "organization_id";
     public static final String projectId = "project_id";
     public static final String name = "name";
     public static final String previousId = "previous_id";

@@ -24,6 +24,6 @@ public class MemoMeta extends BaseIdEntityMeta {
 
     public static final String body = "body";
     public static final String projectId = "project_id";
-    public static final String authorId = "author_user_organization_id";
+    public static final String authorId = "author_project_member_id";
     public static final String createdAt = "created_at";
 }

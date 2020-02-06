@@ -32,22 +32,22 @@ import org.wrkr.clb.model.BaseIdEntity;
 @Table(name = MemoMeta.TABLE_NAME)
 public class Memo extends BaseIdEntity {
 
-    @Column(name = "body", nullable = false)
+    @Column(name = MemoMeta.body, nullable = false)
     private String body;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id", nullable = false)
+    @JoinColumn(name = MemoMeta.projectId, nullable = false)
     private Project project;
     @Transient
     private Long projectId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "author_user_organization_id", nullable = false)
+    @JoinColumn(name = MemoMeta.authorId, nullable = false)
     private ProjectMember author;
     @Transient
     private Long authorId;
 
-    @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
+    @Column(name = MemoMeta.createdAt, columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
     private OffsetDateTime createdAt;
 
     public String getBody() {

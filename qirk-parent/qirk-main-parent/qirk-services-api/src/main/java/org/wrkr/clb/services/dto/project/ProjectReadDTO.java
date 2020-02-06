@@ -29,10 +29,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProjectReadDTO extends ProjectWithOrganizationDTO {
-
-    @JsonInclude(Include.NON_NULL)
-    public ProjectNameAndUiIdDTO organization;
+public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
 
     @JsonProperty(value = "record_version")
     public Long recordVersion;

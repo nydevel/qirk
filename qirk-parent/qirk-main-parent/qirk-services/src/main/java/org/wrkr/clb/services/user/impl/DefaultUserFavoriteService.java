@@ -161,7 +161,7 @@ public class DefaultUserFavoriteService implements UserFavoriteService {
         // security finish
 
         List<UserFavorite> unsortedList = jdbcFavoriteRepo
-                .listByUserIdAndFetchProjectAndOrganizationAndMembershipForSecurity(currentUser.getId());
+                .listByUserIdAndFetchProjectAndMembershipForSecurity(currentUser.getId());
 
         UserFavorite lastFavorite = null;
         Map<Long, UserFavorite> favoriteIdToNextFavorite = new HashMap<Long, UserFavorite>(unsortedList.size());

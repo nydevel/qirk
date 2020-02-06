@@ -22,7 +22,6 @@ public class TaskCardMeta extends BaseVersionedEntityMeta {
 
     public static final String TABLE_NAME = "task_card";
 
-    public static final String organizationId = "organization_id";
     public static final String projectId = "project_id";
     public static final String roadId = "road_id";
     public static final String name = "name";

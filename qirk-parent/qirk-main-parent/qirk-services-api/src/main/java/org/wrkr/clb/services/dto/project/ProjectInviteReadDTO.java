@@ -38,7 +38,7 @@ public class ProjectInviteReadDTO extends ProjectInviteStatusDTO {
     public PublicUserDTO user;
 
     @JsonInclude(Include.NON_NULL)
-    public ProjectWithOrganizationDTO project;
+    public ProjectNameAndUiIdDTO project;
 
     public String text;
 
@@ -62,10 +62,10 @@ public class ProjectInviteReadDTO extends ProjectInviteStatusDTO {
     }
 
     public static final List<ProjectInviteReadDTO> fromInvites(List<ProjectInvite> inviteList,
-            boolean includeUser, boolean includeProjectAndOrganization, boolean includeStatus) {
+            boolean includeUser, boolean includeProject, boolean includeStatus) {
         List<ProjectInviteReadDTO> dtoList = new ArrayList<ProjectInviteReadDTO>();
         for (ProjectInvite invite : inviteList) {
-            dtoList.add(fromInvite(invite, includeUser, includeProjectAndOrganization, includeStatus));
+            dtoList.add(fromInvite(invite, includeUser, includeProject, includeStatus));
         }
         return dtoList;
     }
@@ -78,8 +78,7 @@ public class ProjectInviteReadDTO extends ProjectInviteStatusDTO {
         return fromInvites(inviteList, true, false, true);
     }
 
-    protected void setFields(BaseProjectInvite invite,
-            boolean includeUser, boolean includeProjectAndOrganization, boolean includeStatus) {
+    protected void setFields(BaseProjectInvite invite, boolean includeUser, boolean includeProject, boolean includeStatus) {
         id = invite.getId();
         text = invite.getText();
         createdAt = invite.getCreatedAt().format(DateTimeUtils.WEB_DATETIME_FORMATTER);
@@ -88,8 +87,8 @@ public class ProjectInviteReadDTO extends ProjectInviteStatusDTO {
         if (includeUser) {
             user = PublicUserDTO.fromEntity(invite.getUser());
         }
-        if (includeProjectAndOrganization) {
-            project = ProjectWithOrganizationDTO.fromEntity(invite.getProject());
+        if (includeProject) {
+            project = ProjectNameAndUiIdDTO.fromEntity(invite.getProject());
         }
         if (includeStatus) {
             status = invite.getStatus();

@@ -148,7 +148,7 @@ public class TaskRepo extends JDBCBaseIdRepo {
     private static final ChatTaskMapper CHAT_TASK_MAPPER = new ChatTaskMapper(
             TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
-    private static final String SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT_AND_ORGANIZATION = "SELECT " +
+    private static final String SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT = "SELECT " +
             CHAT_TASK_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + TaskMeta.TABLE_NAME + " " +
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
@@ -532,8 +532,8 @@ public class TaskRepo extends JDBCBaseIdRepo {
         return queryForObjectOrNull(SELECT_BY_ID_FOR_DROPBOX_AND_FETCH_PROJECT, DROPBOX_TASK_MAPPER, taskId);
     }
 
-    public Task getByIdForChatAndFetchProjectAndOrganization(Long taskId) {
-        return queryForObjectOrNull(SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT_AND_ORGANIZATION, CHAT_TASK_MAPPER, taskId);
+    public Task getByIdForChatAndFetchProject(Long taskId) {
+        return queryForObjectOrNull(SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT, CHAT_TASK_MAPPER, taskId);
     }
 
     public Task getByIdAndFetchEverythingForUpdate(Long taskId) {

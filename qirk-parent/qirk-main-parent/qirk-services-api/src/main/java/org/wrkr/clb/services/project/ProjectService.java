@@ -36,7 +36,6 @@ import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
 import org.wrkr.clb.services.dto.project.ProjectReadDTO;
-import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
 @Validated
 public interface ProjectService {
@@ -82,9 +81,9 @@ public interface ProjectService {
             @NotNull(message = "uiId must not be null") String uiId,
             boolean includeApplication) throws Exception;
 
-    public List<ProjectWithOrganizationDTO> listManagedByUser(User currentUser);
+    public List<ProjectNameAndUiIdDTO> listManagedByUser(User currentUser);
 
-    public List<ProjectWithOrganizationDTO> listByUser(User currentUser);
+    public List<ProjectNameAndUiIdDTO> listByUser(User currentUser);
 
     @Deprecated
     public List<ProjectInviteOptionDTO> listInviteOptions(User currentUser, long userId);

@@ -28,7 +28,6 @@ import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.services.dto.IdDTO;
 import org.wrkr.clb.services.dto.project.ProjectMemberUserDTO;
 import org.wrkr.clb.services.dto.project.ProjectNameAndUiIdDTO;
-import org.wrkr.clb.services.dto.project.ProjectWithOrganizationDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -164,7 +163,7 @@ public class TaskReadDTO extends IdDTO {
     public static TaskReadDTO fromEntityWithEverythingForReadAndOrganizationAndSubscription(Task task) {
         TaskReadDTO dto = fromEntity(task, false, false, true);
 
-        dto.project = ProjectWithOrganizationDTO.fromEntity(task.getProject());
+        dto.project = ProjectNameAndUiIdDTO.fromEntity(task.getProject());
         dto.hasDropboxSettings = (task.getProject().getDropboxSettingsId() != null);
         dto.linkedTasks = LinkedTaskDTO.fromEntities(task.getLinkedTasks());
         dto.hashtags = task.getHashtags();

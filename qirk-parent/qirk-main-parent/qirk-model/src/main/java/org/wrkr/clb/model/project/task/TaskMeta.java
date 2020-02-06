@@ -27,8 +27,8 @@ public class TaskMeta extends BaseVersionedEntityMeta {
     public static final String descriptionMd = "description_md";
     public static final String descriptionHtml = "description_html";
     public static final String summary = "summary";
-    public static final String reporterId = "reporter_user_organization_id";
-    public static final String assigneeId = "assignee_user_organization_id";
+    public static final String reporterId = "reporter_project_member_id";
+    public static final String assigneeId = "assignee_project_member_id";
     public static final String createdAt = "created_at";
     public static final String updatedAt = "updated_at";
     public static final String typeId = "type_id";

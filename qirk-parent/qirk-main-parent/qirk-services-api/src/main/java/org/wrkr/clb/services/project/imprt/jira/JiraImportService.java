@@ -27,7 +27,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.project.imprt.ImportStatusDTO;
-import org.wrkr.clb.services.dto.project.imprt.jira.JiraOrganizationMatchDTO;
+import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectMatchDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectImportDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraUploadDTO;
@@ -42,7 +42,7 @@ public interface JiraImportService {
 
     public List<JiraProjectDTO> listProjects(User currentUser, long timestamp) throws Exception;
 
-    public JiraOrganizationMatchDTO listProjectsData(User currentUser, long timestamp,
+    public JiraProjectMatchDTO listProjectsData(User currentUser, long timestamp,
             @NotEmpty(message = "projectIds must not be empty") Set<String> projectIds) throws Exception;
 
     public List<ImportStatusDTO> importProjects(User currentUser, @Valid JiraProjectImportDTO importDTO) throws Exception;

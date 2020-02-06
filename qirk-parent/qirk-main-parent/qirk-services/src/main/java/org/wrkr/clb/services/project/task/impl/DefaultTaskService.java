@@ -754,7 +754,7 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         securityService.authzCanReadTask(currentUser, taskId);
         // security
 
-        Task task = taskRepo.getByIdForChatAndFetchProjectAndOrganization(taskId);
+        Task task = taskRepo.getByIdForChatAndFetchProject(taskId);
         if (task == null) {
             throw new NotFoundException("Task");
         }

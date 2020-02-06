@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wrkr.clb.services.dto.project.imprt.ImportStatusDTO;
-import org.wrkr.clb.services.dto.project.imprt.jira.JiraOrganizationMatchDTO;
+import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectMatchDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraProjectImportDTO;
 import org.wrkr.clb.services.dto.project.imprt.jira.JiraUploadDTO;
@@ -111,14 +111,14 @@ public class JiraImportController extends BaseExceptionHandlerController {
     }
 
     @GetMapping(value = "list-projects-data")
-    public JsonContainer<JiraOrganizationMatchDTO, Void> listProjectsData(HttpSession session,
+    public JsonContainer<JiraProjectMatchDTO, Void> listProjectsData(HttpSession session,
             @RequestParam(name = "timestamp") long timestamp,
             @RequestParam(name = "project_id") Set<String> projectIds) throws Exception {
         long startTime = System.currentTimeMillis();
-        JiraOrganizationMatchDTO dto = projectImportService.listProjectsData(
+        JiraProjectMatchDTO dto = projectImportService.listProjectsData(
                 getSessionUser(session), timestamp, projectIds);
         logProcessingTimeFromStartTime(startTime, "listProjectsData", timestamp);
-        return new JsonContainer<JiraOrganizationMatchDTO, Void>(dto);
+        return new JsonContainer<JiraProjectMatchDTO, Void>(dto);
     }
 
     @PostMapping(value = "/")
