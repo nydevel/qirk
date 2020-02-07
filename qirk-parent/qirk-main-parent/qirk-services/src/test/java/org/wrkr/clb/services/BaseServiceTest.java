@@ -87,13 +87,14 @@ public abstract class BaseServiceTest {
         return user;
     }
 
-    protected Project saveProject(String name, String uiId, boolean isPrivate) {
+    protected Project saveProject(User owner, String name, String uiId, boolean isPrivate) {
         ProjectTaskNumberSequence taskNumberSequence = new ProjectTaskNumberSequence();
         testRepo.persistEntity(taskNumberSequence);
 
         Project project = new Project();
 
         project.setTaskNumberSequence(taskNumberSequence);
+        project.setOwner(owner);
         project.setName(name);
         project.setUiId(uiId);
         project.setKey(DEFAULT_PROJECT_KEY);

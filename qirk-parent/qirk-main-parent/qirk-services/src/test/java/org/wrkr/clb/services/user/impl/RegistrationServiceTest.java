@@ -23,8 +23,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
@@ -33,7 +31,6 @@ import org.wrkr.clb.services.BaseServiceTest;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.user.RegisterDTO;
 import org.wrkr.clb.services.user.RegistrationService;
-
 
 @SuppressWarnings("unused")
 public class RegistrationServiceTest extends BaseServiceTest {
@@ -61,8 +58,6 @@ public class RegistrationServiceTest extends BaseServiceTest {
     @After
     public void afterTest() {
         testRepo.clearTable(PasswordActivationToken.class);
-        testRepo.clearTable(OrganizationMember.class);
-        testRepo.clearTable(Organization.class);
         testRepo.clearTable(User.class);
     }
 

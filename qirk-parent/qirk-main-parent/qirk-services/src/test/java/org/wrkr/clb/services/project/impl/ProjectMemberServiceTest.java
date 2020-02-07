@@ -19,27 +19,20 @@ package org.wrkr.clb.services.project.impl;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.wrkr.clb.model.organization.Organization;
-import org.wrkr.clb.model.organization.OrganizationMember;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.organization.OrganizationMemberRepo;
-import org.wrkr.clb.repo.organization.OrganizationRepo;
 import org.wrkr.clb.repo.project.ProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.BaseServiceTest;
-import org.wrkr.clb.services.impl.TransactionalService;
 import org.wrkr.clb.services.project.ProjectMemberService;
 
 public class ProjectMemberServiceTest extends BaseServiceTest {
@@ -53,9 +46,6 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
     private static final String projectReadOnlyMemberEmail = "project_read_only_member@test.com";
     private static final String nonMemberEmail = "non_member@test.com";
 
-    private static final String publicOrganizationName = "Public Organization";
-    private static final String publicOrganizationUiId = "public_organization";
-
     private static final String privateProjectName = "Private Project";
     private static final String privateProjectUiId = "private_project";
 
@@ -66,12 +56,6 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
     private UserRepo userRepo;
 
     @Autowired
-    private OrganizationRepo organizationRepo;
-
-    @Autowired
-    private OrganizationMemberRepo organizationMemberRepo;
-
-    @Autowired
     private ProjectRepo projectRepo;
 
     @Autowired
@@ -80,38 +64,26 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
     @Autowired
     private ProjectMemberService projectMemberService;
 
-    @Autowired
-    private TransactionalService transactionalService;
-
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void beforeTest() throws Exception {
-        User orgOwnerUser = saveUser(orgOwnerEmail, userPassword);
-        User orgManagerUser = saveUser(orgManagerEmail, userPassword);
+        User projectOwnerUser = saveUser(orgOwnerEmail, userPassword);
         User projectManagerUser = saveUser(projectManagerEmail, userPassword);
         User projectMemberUser = saveUser(projectMemberEmail, userPassword);
         User taskAssigneeUser = saveUser(taskAssigneeEmail, userPassword);
         User projectReadOnlyMemberUser = saveUser(projectReadOnlyMemberEmail, userPassword);
         saveUser(nonMemberEmail, userPassword);
 
-        Organization publicOrganization = saveOrganization(orgOwnerUser, publicOrganizationName, publicOrganizationUiId, false);
-
-        saveOrganizationMember(orgManagerUser, publicOrganization, true);
-        OrganizationMember projectManager = saveOrganizationMember(projectManagerUser, publicOrganization, false);
-        OrganizationMember projectMember = saveOrganizationMember(projectMemberUser, publicOrganization, false);
-        OrganizationMember taskAssignee = saveOrganizationMember(taskAssigneeUser, publicOrganization, false);
-        OrganizationMember projectReadOnlyMember = saveOrganizationMember(projectReadOnlyMemberUser, publicOrganization, false);
-
-        Project privateProject = saveProject(privateProjectName, privateProjectUiId, true);
-        Project publicProject = saveProject(publicProjectName, publicProjectUiId, false);
+        Project privateProject = saveProject(projectOwnerUser, privateProjectName, privateProjectUiId, true);
+        Project publicProject = saveProject(projectOwnerUser, publicProjectName, publicProjectUiId, false);
 
         for (Project project : new Project[] { privateProject, publicProject }) {
-            saveProjectMember(projectManager, project, true, true);
-            saveProjectMember(projectMember, project, false, true);
-            saveProjectMember(taskAssignee, project, false, false);
-            saveProjectMember(projectReadOnlyMember, project, false, false);
+            saveProjectMember(projectManagerUser, project, true, true);
+            saveProjectMember(projectMemberUser, project, false, true);
+            saveProjectMember(taskAssigneeUser, project, false, false);
+            saveProjectMember(projectReadOnlyMemberUser, project, false, false);
         }
     }
 
@@ -120,8 +92,6 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
         testRepo.clearTable(ProjectMember.class);
         testRepo.clearTable(Project.class);
         testRepo.clearTable(ProjectTaskNumberSequence.class);
-        testRepo.clearTable(OrganizationMember.class);
-        testRepo.clearTable(Organization.class);
         testRepo.clearTable(User.class);
     }
 
