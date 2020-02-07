@@ -41,8 +41,7 @@ public class BaseUserMapper extends BaseEntityMapper<User> {
     @Override
     public String generateSelectColumnsStatement() {
         return generateSelectColumnStatement(UserMeta.id) + ", " +
-                generateSelectColumnStatement(UserMeta.licenseAccepted) + ", " +
-                generateSelectColumnStatement(UserMeta.dontRecommend);
+                generateSelectColumnStatement(UserMeta.manager);
     }
 
     @Override
@@ -50,8 +49,7 @@ public class BaseUserMapper extends BaseEntityMapper<User> {
         User user = new User();
 
         user.setId(rs.getLong(generateColumnAlias(UserMeta.id)));
-        user.setLicenseAccepted(rs.getBoolean(generateColumnAlias(UserMeta.licenseAccepted)));
-        user.setDontRecommend(rs.getBoolean(generateColumnAlias(UserMeta.dontRecommend)));
+        user.setManager(rs.getBoolean(generateColumnAlias(UserMeta.manager)));
 
         return user;
     }
@@ -60,8 +58,7 @@ public class BaseUserMapper extends BaseEntityMapper<User> {
         User user = new User();
 
         user.setId((Long) result.get(generateColumnAlias(UserMeta.id)));
-        user.setLicenseAccepted((boolean) result.get(generateColumnAlias(UserMeta.licenseAccepted)));
-        user.setDontRecommend((boolean) result.get(generateColumnAlias(UserMeta.dontRecommend)));
+        user.setManager((boolean) result.get(generateColumnAlias(UserMeta.manager)));
 
         return user;
     }

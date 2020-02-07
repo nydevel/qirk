@@ -45,13 +45,13 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void authzCanCreateProject(User user) throws SecurityException {
-        requireAdminOrThrowException(user);
+        requireManagerOrThrowException(user);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
     public void authzCanImportProjects(User user) throws SecurityException {
-        requireAdminOrThrowException(user);
+        requireManagerOrThrowException(user);
     }
 
     @Override

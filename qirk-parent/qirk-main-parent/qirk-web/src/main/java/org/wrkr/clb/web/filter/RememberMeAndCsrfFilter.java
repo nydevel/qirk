@@ -44,13 +44,11 @@ import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.services.http.CookieService;
-import org.wrkr.clb.services.user.ProfileService;
 import org.wrkr.clb.services.user.RememberMeTokenService;
 import org.wrkr.clb.services.util.http.Cookies;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 import org.wrkr.clb.services.util.http.SessionAttribute;
 import org.wrkr.clb.web.http.Header;
-
 
 @Component
 public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
@@ -64,7 +62,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
     private CookieService cookieService;
     private RememberMeTokenService rememberMeService;
     private JDBCUserRepo userRepo;
-    private ProfileService profileService;
     private StatisticsSender statisticsSender;
 
     @Override
@@ -73,7 +70,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
         cookieService = ctx.getBean(CookieService.class);
         rememberMeService = ctx.getBean(RememberMeTokenService.class);
         userRepo = ctx.getBean(JDBCUserRepo.class);
-        profileService = ctx.getBean(ProfileService.class);
         statisticsSender = ctx.getBean(StatisticsSender.class);
     }
 
@@ -96,17 +92,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
                 if (user == null) {
                     httpResponse = cookieService.removeCookie(httpResponse, rememberMeCookie);
                 } else {
-                    if (!user.isLicenseAccepted()) {
-                        String licenseAcceptedHeader = httpRequest.getHeader(Header.LICENSE_ACCEPTED);
-                        if ("true".equals(licenseAcceptedHeader)) {
-                            user = profileService.acceptLicense(user);
-                        } else {
-                            writeJsonToResponse((HttpServletResponse) response, HttpServletResponse.SC_FORBIDDEN,
-                                    JsonStatusCode.LICENSE_NOT_ACCEPTED, "License not accepted.");
-                            return;
-                        }
-                    }
-
                     OffsetDateTime updatedAt = rememberMeService.updateRememberMeToken(rememberMeToken);
                     session.setAttribute(SessionAttribute.AUTHN_USER, user);
 

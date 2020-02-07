@@ -22,7 +22,7 @@ import java.sql.SQLException;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserMeta;
 
-public class AccountUserMapper extends PublicUserWithEmailMapper {
+public class AccountUserMapper extends UserMapper {
 
     public AccountUserMapper() {
         super();
@@ -33,21 +33,15 @@ public class AccountUserMapper extends PublicUserWithEmailMapper {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public String generateSelectColumnsStatement() {
         return super.generateSelectColumnsStatement() + ", " +
-                generateSelectColumnStatement(UserMeta.passwordHash) + ", " +
-                generateSelectColumnStatement(UserMeta.enabled);
+                generateSelectColumnStatement(UserMeta.passwordHash);
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = super.mapRow(rs, rowNum);
-
         user.setPasswordHash(rs.getString(generateColumnAlias(UserMeta.passwordHash)));
-        user.setEnabled(rs.getBoolean(generateColumnAlias(UserMeta.enabled)));
-
         return user;
     }
 }

@@ -50,8 +50,8 @@ public class SecurityServiceTest extends BaseServiceTest {
 
     @Before
     public void beforeTest() throws Exception {
-        saveUser(privateUserEmail, privateUserUsername, DEFAULT_USER_PASSWORD, true);
-        saveUser(publicUserEmail, publicUserUsername, DEFAULT_USER_PASSWORD, false);
+        saveUser(privateUserEmail, privateUserUsername, DEFAULT_USER_PASSWORD);
+        saveUser(publicUserEmail, publicUserUsername, DEFAULT_USER_PASSWORD);
         saveUser(disabledUserEmail, disabledUserUsername);
     }
 

@@ -37,9 +37,6 @@ public class PublicUserDTO extends IdDTO {
     @JsonProperty(value = "full_name")
     public String fullName;
 
-    @JsonProperty(value = "dont_recommend")
-    public Boolean dontRecommend;
-
     public static PublicUserDTO fromEntity(User user) {
         PublicUserDTO dto = new PublicUserDTO();
 
@@ -47,7 +44,6 @@ public class PublicUserDTO extends IdDTO {
             dto.id = user.getId();
             dto.username = user.getUsername();
             dto.fullName = user.getFullName();
-            dto.dontRecommend = user.isDontRecommend();
         }
 
         return dto;
@@ -68,7 +64,6 @@ public class PublicUserDTO extends IdDTO {
         dto.id = id;
         dto.username = (String) source.get(ElasticsearchUserDTO.USERNAME);
         dto.fullName = (String) source.get(ElasticsearchUserDTO.FULL_NAME);
-        dto.dontRecommend = (Boolean) source.get(ElasticsearchUserDTO.DONT_RECOMMEND);
 
         return dto;
     }

@@ -68,10 +68,10 @@ public abstract class BaseServiceTest {
 
     protected User saveUser(String email, String password)
             throws Exception {
-        return saveUser(email.split("@")[0].toLowerCase(), email, password, null);
+        return saveUser(email.split("@")[0].toLowerCase(), email, password);
     }
 
-    protected User saveUser(String username, String email, String password, Boolean dontRecommend) throws Exception {
+    protected User saveUser(String username, String email, String password) throws Exception {
         User user = new User();
 
         user.setUsername(username);
@@ -79,9 +79,6 @@ public abstract class BaseServiceTest {
         user.setPasswordHash(HashEncoder.encryptToHex(password));
         user.setCreatedAt(DateTimeUtils.now());
         user.setFullName(email.split("@")[0]);
-        if (dontRecommend != null) {
-            user.setDontRecommend(dontRecommend);
-        }
 
         testRepo.persistEntity(user);
         return user;

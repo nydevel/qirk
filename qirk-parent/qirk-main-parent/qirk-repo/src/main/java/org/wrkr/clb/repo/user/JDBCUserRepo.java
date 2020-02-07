@@ -32,13 +32,10 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.user.AccountUserMapper;
-import org.wrkr.clb.repo.mapper.user.BaseUserMapper;
-import org.wrkr.clb.repo.mapper.user.EmailUserMapper;
-import org.wrkr.clb.repo.mapper.user.ProfileUserMapper;
-import org.wrkr.clb.repo.mapper.user.ProfileUserWithNotificationSettingsMapper;
-import org.wrkr.clb.repo.mapper.user.PublicProfileUserMapper;
-import org.wrkr.clb.repo.mapper.user.PublicUserWithEmailMapper;
+import org.wrkr.clb.repo.mapper.user.UserWithNotificationSettingsMapper;
+import org.wrkr.clb.repo.mapper.user.PublicUserMapper;
 import org.wrkr.clb.repo.mapper.user.PublicUserWithProjectMembershipMapper;
+import org.wrkr.clb.repo.mapper.user.UserMapper;
 import org.wrkr.clb.repo.mapper.user.UserWithNotificationSettingMapper;
 
 @Repository
@@ -47,17 +44,22 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
     @SuppressWarnings("unused")
     private static final Logger LOG = LoggerFactory.getLogger(JDBCUserRepo.class);
 
-    private static final BaseUserMapper BASE_USER_MAPPER = new BaseUserMapper();
+    private static final PublicUserMapper PUBLIC_USER_MAPPER = new PublicUserMapper();
 
-    private static final String SELECT_BY_ID = "SELECT " +
-            BASE_USER_MAPPER.generateSelectColumnsStatement() + " " +
+    private static final String SELECT_BY_ID_FOR_PUBLIC = "SELECT " +
+            PUBLIC_USER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.id + " = ?;"; // 1
 
-    private static final EmailUserMapper EMAIL_USER_MAPPER = new EmailUserMapper();
+    private static final UserMapper USER_MAPPER = new UserMapper();
+
+    private static final String SELECT_BY_ID = "SELECT " +
+            USER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + UserMeta.TABLE_NAME + " " +
+            "WHERE " + UserMeta.id + " = ?;"; // 1
 
     private static final String SELECT_BY_EMAIL = "SELECT " +
-            EMAIL_USER_MAPPER.generateSelectColumnsStatement() + " " +
+            USER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.emailAddress + " = ?;"; // 1
 
@@ -76,30 +78,11 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
     private static final String SELECT_BY_EMAIL_FOR_ACCOUNT = SELECT_FOR_ACCOUNT_PREFIX + " " +
             "WHERE " + UserMeta.emailAddress + " = ?;"; // 1
 
-    @Deprecated
-    private static final String SELECT_ENABLED_BY_ID_FOR_ACCOUNT = SELECT_FOR_ACCOUNT_PREFIX + " " +
-            "WHERE " + UserMeta.id + " = ? " + // 1
-            "AND " + UserMeta.enabled + ";";
-
-    private static final PublicProfileUserMapper PUBLIC_PROFILE_MAPPER = new PublicProfileUserMapper();
-
-    private static final String SELECT_BY_ID_FOR_PUBLIC_PROFILE = "SELECT " +
-            PUBLIC_PROFILE_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + UserMeta.TABLE_NAME + " " +
-            "WHERE " + UserMeta.id + " = ?;"; // 1
-
-    private static final ProfileUserMapper PROFILE_MAPPER = new ProfileUserMapper();
-
-    private static final String SELECT_BY_ID_FOR_PROFILE = "SELECT " +
-            PROFILE_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + UserMeta.TABLE_NAME + " " +
-            "WHERE " + UserMeta.id + " = ?;"; // 1
-
-    private static final ProfileUserWithNotificationSettingsMapper PROFILE_WITH_NOTIF_SETTINGS_MAPPER = new ProfileUserWithNotificationSettingsMapper(
+    private static final UserWithNotificationSettingsMapper USER_WITH_NOTIF_SETTINGS_MAPPER = new UserWithNotificationSettingsMapper(
             UserMeta.TABLE_NAME, NotificationSettingsMeta.TABLE_NAME);
 
-    private static final String SELECT_BY_ID_FOR_PROFILE_AND_FETCH_NOTIF_SETTINGS = "SELECT " +
-            PROFILE_WITH_NOTIF_SETTINGS_MAPPER.generateSelectColumnsStatement() + " " +
+    private static final String SELECT_BY_ID_AND_FETCH_NOTIF_SETTINGS = "SELECT " +
+            USER_WITH_NOTIF_SETTINGS_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
             "INNER JOIN " + NotificationSettingsMeta.TABLE_NAME + " " +
             "ON " + UserMeta.id + " = " + NotificationSettingsMeta.userId + " " +
@@ -111,16 +94,14 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
     private static final String SELECT_EMAILS = "SELECT " + UserMeta.emailAddress + " " +
             "FROM " + UserMeta.TABLE_NAME + ";";
 
-    private static final String SELECT_EMAILS_BY_IDS_PREFIX = "SELECT " +
-            EMAIL_USER_MAPPER.generateSelectColumnsStatement() + " " +
+    private static final String SELECT_ALL = "SELECT " +
+            USER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + UserMeta.TABLE_NAME + ";";
+
+    private static final String SELECT_BY_IDS_PREFIX = "SELECT " +
+            USER_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + UserMeta.TABLE_NAME + " " +
             "WHERE " + UserMeta.id + " IN ("; // 1
-
-    private static final PublicUserWithEmailMapper PUBLIC_USER_WITH_EMAIL_MAPPER = new PublicUserWithEmailMapper();
-
-    private static final String SELECT_ALL = "SELECT " +
-            PUBLIC_USER_WITH_EMAIL_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + UserMeta.TABLE_NAME + ";";
 
     private static final PublicUserWithProjectMembershipMapper PUBLIC_USER_WITH_PROJECT_MEMBERSHIP_MAPPER = new PublicUserWithProjectMembershipMapper(
             UserMeta.TABLE_NAME, ProjectMemberMeta.TABLE_NAME);
@@ -134,14 +115,14 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
             "AND NOT " + ProjectMemberMeta.TABLE_NAME + "." + ProjectMemberMeta.fired + " " +
             "ORDER BY " + UserMeta.TABLE_NAME + "." + UserMeta.id + " ASC;";
 
-    private static final UserWithNotificationSettingMapper USER_TASK_CREATED_MAPPER = new UserWithNotificationSettingMapper(
+    private static final UserWithNotificationSettingMapper USER_WITH_TASK_CREATED_MAPPER = new UserWithNotificationSettingMapper(
             UserMeta.TABLE_NAME, NotificationSettingsMeta.TABLE_NAME, NotificationSettingsMeta.taskCreated);
-    private static final UserWithNotificationSettingMapper USER_TASK_UPDATED_MAPPER = new UserWithNotificationSettingMapper(
+    private static final UserWithNotificationSettingMapper USER_WITH_TASK_UPDATED_MAPPER = new UserWithNotificationSettingMapper(
             UserMeta.TABLE_NAME, NotificationSettingsMeta.TABLE_NAME, NotificationSettingsMeta.taskUpdated);
-    private static final UserWithNotificationSettingMapper USER_TASK_COMMENTED_MAPPER = new UserWithNotificationSettingMapper(
+    private static final UserWithNotificationSettingMapper USER_WITH_TASK_COMMENTED_MAPPER = new UserWithNotificationSettingMapper(
             UserMeta.TABLE_NAME, NotificationSettingsMeta.TABLE_NAME, NotificationSettingsMeta.taskCommented);
 
-    private static final String SELECT_USERS_BY_TASK_ID_AND_FETCH_NOTIFICATION_SETTING_SUFFIX = "FROM "
+    private static final String SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_NOTIF_SETTING_SUFFIX = "FROM "
             + TaskSubscriberMeta.TABLE_NAME + " " +
             "INNER JOIN " + UserMeta.TABLE_NAME + " " +
             "ON " + TaskSubscriberMeta.TABLE_NAME + "." + TaskSubscriberMeta.userId + " = " +
@@ -151,40 +132,38 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
             NotificationSettingsMeta.TABLE_NAME + "." + NotificationSettingsMeta.userId + " " +
             "WHERE " + TaskSubscriberMeta.TABLE_NAME + "." + TaskSubscriberMeta.taskId + " = ?;"; // 1
 
-    private static final String SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_CREATED = "SELECT " +
-            USER_TASK_CREATED_MAPPER.generateSelectColumnsStatement() + " " +
-            SELECT_USERS_BY_TASK_ID_AND_FETCH_NOTIFICATION_SETTING_SUFFIX;
+    private static final String SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_CREATED = "SELECT " +
+            USER_WITH_TASK_CREATED_MAPPER.generateSelectColumnsStatement() + " " +
+            SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_NOTIF_SETTING_SUFFIX;
 
-    private static final String SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_UPDATED = "SELECT " +
-            USER_TASK_UPDATED_MAPPER.generateSelectColumnsStatement() + " " +
-            SELECT_USERS_BY_TASK_ID_AND_FETCH_NOTIFICATION_SETTING_SUFFIX;
+    private static final String SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_UPDATED = "SELECT " +
+            USER_WITH_TASK_UPDATED_MAPPER.generateSelectColumnsStatement() + " " +
+            SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_NOTIF_SETTING_SUFFIX;
 
-    private static final String SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_COMMENTED = "SELECT " +
-            USER_TASK_COMMENTED_MAPPER.generateSelectColumnsStatement() + " " +
-            SELECT_USERS_BY_TASK_ID_AND_FETCH_NOTIFICATION_SETTING_SUFFIX;
+    private static final String SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_COMMENTED = "SELECT " +
+            USER_WITH_TASK_COMMENTED_MAPPER.generateSelectColumnsStatement() + " " +
+            SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_NOTIF_SETTING_SUFFIX;
 
-    @SuppressWarnings("deprecation")
-    private static final String UPDATE_PASSWORD_HASH_SET_ENABLED_TRUE = "UPDATE " + UserMeta.TABLE_NAME + " " +
-            "SET " + UserMeta.passwordHash + " = ?, " + // 1
-            UserMeta.enabled + " = true " +
+    private static final String UPDATE_PASSWORD_HASH = "UPDATE " + UserMeta.TABLE_NAME + " " +
+            "SET " + UserMeta.passwordHash + " = ? " + // 1
             "WHERE " + UserMeta.id + " = ?;"; // 2
 
-    private static final String UPDATE_FULL_NAME_AND_ABOUT = "UPDATE " + UserMeta.TABLE_NAME + " " +
-            "SET " + UserMeta.fullName + " = ?, " + // 1
-            UserMeta.about + " = ? " + // 2
-            "WHERE " + UserMeta.id + " = ?;"; // 3
+    private static final String UPDATE_FULL_NAME = "UPDATE " + UserMeta.TABLE_NAME + " " +
+            "SET " + UserMeta.fullName + " = ? " + // 1
+            "WHERE " + UserMeta.id + " = ?;"; // 2
 
-    private static final String UPDATE_SET_LICENSE_ACCEPTED_TO_TRUE = "UPDATE " + UserMeta.TABLE_NAME + " " +
-            "SET " + UserMeta.licenseAccepted + " = true " +
-            "WHERE " + UserMeta.id + " = ?;"; // 1
+    public User getByIdForPublic(Long userId) {
+        return queryForObjectOrNull(SELECT_BY_ID_FOR_PUBLIC, PUBLIC_USER_MAPPER,
+                userId);
+    }
 
     public User getById(Long userId) {
-        return queryForObjectOrNull(SELECT_BY_ID, BASE_USER_MAPPER,
+        return queryForObjectOrNull(SELECT_BY_ID, USER_MAPPER,
                 userId);
     }
 
     public User getByEmail(String email) {
-        return queryForObjectOrNull(SELECT_BY_EMAIL, EMAIL_USER_MAPPER,
+        return queryForObjectOrNull(SELECT_BY_EMAIL, USER_MAPPER,
                 email);
     }
 
@@ -203,24 +182,8 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
                 email);
     }
 
-    @Deprecated
-    public User getEnabledByIdForAccount(Long userId) {
-        return queryForObjectOrNull(SELECT_ENABLED_BY_ID_FOR_ACCOUNT, ACCOUNT_USER_MAPPER,
-                userId);
-    }
-
-    public User getByIdForPublicProfile(Long userId) {
-        return queryForObjectOrNull(SELECT_BY_ID_FOR_PUBLIC_PROFILE, PUBLIC_PROFILE_MAPPER,
-                userId);
-    }
-
-    public User getByIdForProfile(Long userId) {
-        return queryForObjectOrNull(SELECT_BY_ID_FOR_PROFILE, PROFILE_MAPPER,
-                userId);
-    }
-
-    public User getByIdForProfileAndFetchNotificationSettings(Long userId) {
-        return queryForObjectOrNull(SELECT_BY_ID_FOR_PROFILE_AND_FETCH_NOTIF_SETTINGS, PROFILE_WITH_NOTIF_SETTINGS_MAPPER,
+    public User getByIdAndFetchNotificationSettings(Long userId) {
+        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_NOTIF_SETTINGS, USER_WITH_NOTIF_SETTINGS_MAPPER,
                 userId);
     }
 
@@ -232,12 +195,13 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
         return queryForList(SELECT_EMAILS, String.class);
     }
 
-    public List<User> listEmailsByIds(Collection<Long> ids) {
-        return queryForList(insertNBindValues(SELECT_EMAILS_BY_IDS_PREFIX, ids.size(), ");"), EMAIL_USER_MAPPER, ids.toArray());
+    public List<User> list() {
+        return queryForList(SELECT_ALL, USER_MAPPER);
     }
 
-    public List<User> list() {
-        return queryForList(SELECT_ALL, PUBLIC_USER_WITH_EMAIL_MAPPER);
+    public List<User> listByIds(Collection<Long> ids) {
+        return queryForList(insertNBindValues(SELECT_BY_IDS_PREFIX, ids.size(), ");"), USER_MAPPER,
+                ids.toArray());
     }
 
     public List<User> listAndFetchProjectMembership() {
@@ -259,33 +223,29 @@ public class JDBCUserRepo extends JDBCBaseMainRepo {
         return results;
     }
 
-    public List<User> listByTaskIdAndFetchNotificationSetting(
+    public List<User> listBySubscribedTaskIdAndFetchNotificationSetting(
             Long taskId, NotificationSettings.Setting notifSetting) {
         switch (notifSetting) {
             case TASK_CREATED:
-                return queryForList(SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_CREATED, USER_TASK_CREATED_MAPPER,
+                return queryForList(SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_CREATED, USER_WITH_TASK_CREATED_MAPPER,
                         taskId);
             case TASK_UPDATED:
-                return queryForList(SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_UPDATED, USER_TASK_UPDATED_MAPPER,
+                return queryForList(SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_UPDATED, USER_WITH_TASK_UPDATED_MAPPER,
                         taskId);
             case TASK_COMMENTED:
-                return queryForList(SELECT_USERS_BY_TASK_ID_AND_FETCH_TASK_COMMENTED, USER_TASK_COMMENTED_MAPPER,
+                return queryForList(SELECT_USERS_BY_SUBSCRIBED_TASK_ID_AND_FETCH_TASK_COMMENTED, USER_WITH_TASK_COMMENTED_MAPPER,
                         taskId);
         }
         return new ArrayList<User>();
     }
 
-    public void updatePasswordHashAndSetEnabledToTrue(User user) {
-        updateSingleRow(UPDATE_PASSWORD_HASH_SET_ENABLED_TRUE,
+    public void updatePasswordHash(User user) {
+        updateSingleRow(UPDATE_PASSWORD_HASH,
                 user.getPasswordHash(), user.getId());
     }
 
-    public void updateFullNameAndAbout(User user) {
-        updateSingleRow(UPDATE_FULL_NAME_AND_ABOUT,
-                user.getFullName(), user.getAbout(), user.getId());
-    }
-
-    public void setLicenseAcceptedToTrue(User user) {
-        updateSingleRow(UPDATE_SET_LICENSE_ACCEPTED_TO_TRUE, user.getId());
+    public void updateFullName(User user) {
+        updateSingleRow(UPDATE_FULL_NAME,
+                user.getFullName(), user.getId());
     }
 }

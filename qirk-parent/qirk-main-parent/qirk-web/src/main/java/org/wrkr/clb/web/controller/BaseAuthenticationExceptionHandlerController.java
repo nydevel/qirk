@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.wrkr.clb.services.dto.RetryAfterDTO;
-import org.wrkr.clb.services.util.exception.LicenseNotAcceptedException;
 import org.wrkr.clb.services.util.exception.TooManyLoginAttemptsException;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 import org.wrkr.clb.web.json.JsonContainer;
@@ -44,13 +43,6 @@ public abstract class BaseAuthenticationExceptionHandlerController extends BaseE
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     private JsonContainer<Void, Void> handleDisabledException(@SuppressWarnings("unused") DisabledException e) {
         return JsonContainer.fromCodeAndReason(JsonStatusCode.ACCOUNT_DISABLED, "Account is disabled.");
-    }
-
-    @ExceptionHandler(LicenseNotAcceptedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    private JsonContainer<Void, Void> handleLicenseNotAcceptedExceptionException(
-            @SuppressWarnings("unused") LicenseNotAcceptedException e) {
-        return JsonContainer.fromCodeAndReason(JsonStatusCode.LICENSE_NOT_ACCEPTED, "License not accepted.");
     }
 
     @ExceptionHandler(TooManyLoginAttemptsException.class)

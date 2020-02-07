@@ -20,28 +20,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.model.user.UserMeta;
 
-public class EmailUserMapper extends BaseUserMapper {
+public class UserWithNotificationSettingsMapper extends UserMapper {
 
-    public EmailUserMapper() {
-        super();
-    }
+    private NotificationSettingsMapper notificationSettingsMapper;
 
-    public EmailUserMapper(String tableName) {
-        super(tableName);
+    public UserWithNotificationSettingsMapper(String userTableName, String notifSettingsTableName) {
+        super(userTableName);
+        notificationSettingsMapper = new NotificationSettingsMapper(notifSettingsTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
         return super.generateSelectColumnsStatement() + ", " +
-                generateSelectColumnStatement(UserMeta.emailAddress);
+                notificationSettingsMapper.generateSelectColumnsStatement();
     }
 
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = super.mapRow(rs, rowNum);
-        user.setEmailAddress(rs.getString(generateColumnAlias(UserMeta.emailAddress)));
+        user.setNotificationSettings(notificationSettingsMapper.mapRow(rs, rowNum));
         return user;
     }
 }

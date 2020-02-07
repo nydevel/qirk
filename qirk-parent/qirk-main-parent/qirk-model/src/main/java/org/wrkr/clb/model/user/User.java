@@ -53,27 +53,18 @@ public class User extends BaseIdEntity {
     @Column(name = "password_hash", nullable = false)
     private String passwordHash;
 
-    // @Column(name = "enabled", nullable = false)
-    @Deprecated
-    @Transient
-    private boolean enabled = true;
-
-    @Column(name = "license_accepted", nullable = false)
-    private boolean licenseAccepted = false;
-
     @Column(name = "created_at", columnDefinition = "TIMESTAMP WITH TIME ZONE", nullable = false)
     private OffsetDateTime createdAt;
+
+    // Authorization
+
+    @Column(name = "manager", nullable = false)
+    private boolean manager;
 
     // Profile
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
-
-    @Column(name = "dont_recommend", nullable = false)
-    private boolean dontRecommend = true;
-
-    @Column(name = "about", nullable = false)
-    private String about = "";
 
     @Transient
     private NotificationSettings notificationSettings;
@@ -133,20 +124,20 @@ public class User extends BaseIdEntity {
         this.createdAt = createdAt;
     }
 
+    public boolean isManager() {
+        return manager;
+    }
+
+    public void setManager(boolean manager) {
+        this.manager = manager;
+    }
+
     public String getFullName() {
         return fullName;
     }
 
     public void setFullName(String fullName) {
         this.fullName = fullName;
-    }
-
-    public String getAbout() {
-        return about;
-    }
-
-    public void setAbout(String about) {
-        this.about = about;
     }
 
     public NotificationSettings getNotificationSettings() {
@@ -179,32 +170,6 @@ public class User extends BaseIdEntity {
 
     public void setLanguages(List<Language> languages) {
         this.languages = languages;
-    }
-
-    @Deprecated
-    public boolean isEnabled() {
-        return enabled;
-    }
-
-    @Deprecated
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-
-    public boolean isLicenseAccepted() {
-        return licenseAccepted;
-    }
-
-    public void setLicenseAccepted(boolean licenseAccepted) {
-        this.licenseAccepted = licenseAccepted;
-    }
-
-    public boolean isDontRecommend() {
-        return dontRecommend;
-    }
-
-    public void setDontRecommend(boolean dontRecommend) {
-        this.dontRecommend = dontRecommend;
     }
 
     public List<ProjectMember> getProjectMembership() {

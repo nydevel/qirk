@@ -17,7 +17,6 @@
 package org.wrkr.clb.services.user.impl;
 
 import java.time.OffsetDateTime;
-import java.util.Arrays;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -28,16 +27,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.common.crypto.HashEncoder;
 import org.wrkr.clb.common.jms.message.statistics.UserRegisteredMessage;
 import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.common.util.strings.ExtStringUtils;
 import org.wrkr.clb.model.user.EmailActivationToken;
 import org.wrkr.clb.model.user.NotificationSettings;
-import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.UserRepo;
@@ -45,16 +41,10 @@ import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
-import org.wrkr.clb.services.dto.user.RegisterDTO;
-import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
 import org.wrkr.clb.services.http.CookieService;
 import org.wrkr.clb.services.user.EmailActivationTokenService;
-import org.wrkr.clb.services.user.PasswordActivationTokenService;
 import org.wrkr.clb.services.user.RegistrationService;
-import org.wrkr.clb.services.util.exception.BadRequestException;
-import org.wrkr.clb.services.util.exception.LicenseNotAcceptedException;
 import org.wrkr.clb.services.util.http.Cookies;
-import org.wrkr.clb.services.util.http.JsonStatusCode;
 
 @Validated
 @Service
@@ -70,9 +60,6 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Autowired
     private UserMailService mailService;
-
-    @Autowired
-    private PasswordActivationTokenService tokenService;
 
     @Autowired
     private EmailActivationTokenService emailTokenService;
@@ -98,8 +85,9 @@ public class DefaultRegistrationService implements RegistrationService {
         return new ExistsDTO(userRepo.existsByUsername(username));
     }
 
-    private User createUserWithEmailAndPasswordHash(
-            String email, String passwordHash, String username, String fullName, boolean enabled, boolean licenseAccepted)
+    @Override
+    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
+    public User createUserWithEmailAndPasswordHash(String email, String passwordHash, String username, String fullName)
             throws Exception {
         User user = new User();
 
@@ -107,7 +95,6 @@ public class DefaultRegistrationService implements RegistrationService {
         user.setPasswordHash(passwordHash);
         user.setUsername(username);
         user.setFullName(fullName);
-        user.setLicenseAccepted(licenseAccepted);
 
         OffsetDateTime createdAt = DateTimeUtils.now();
         user.setCreatedAt(createdAt);
@@ -118,34 +105,13 @@ public class DefaultRegistrationService implements RegistrationService {
         notifSettings.setUserId(user.getId());
         notifSettingsRepo.save(notifSettings);
 
-        if (enabled) {
-            try {
-                elasticsearchService.index(user);
-            } catch (Exception e) {
-                LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
-            }
+        try {
+            elasticsearchService.index(user);
+        } catch (Exception e) {
+            LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
         }
 
         return user;
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, propagation = Propagation.MANDATORY)
-    public User createUserWithEmailAndPasswordHash(
-            String email, String passwordHash, String username, String fullName, boolean licenseAccepted)
-            throws Exception {
-        return createUserWithEmailAndPasswordHash(email, passwordHash, username, fullName, true, licenseAccepted);
-    }
-
-    @Deprecated
-    private User createDisabledUserWithEmailAndPassword(String email, String password) throws Exception {
-        if (password == null || password.isBlank()) {
-            throw new BadRequestException(JsonStatusCode.CONSTRAINT_VIOLATION, "Password must not be blank.");
-        }
-        email = email.toLowerCase();
-        String username = ExtStringUtils.substringByLimitOrSymbols(email, 25, Arrays.asList("@"));
-        return createUserWithEmailAndPasswordHash(
-                email, HashEncoder.encryptToHex(password.strip()), username, username, false, false);
     }
 
     private void sendUserRegisteredStatistics(HttpServletRequest request, User user) {
@@ -166,67 +132,12 @@ public class DefaultRegistrationService implements RegistrationService {
         }
     }
 
-    private PasswordActivationToken register(HttpServletRequest request, String email, String password) throws Exception {
-        // create user
-        User user = createDisabledUserWithEmailAndPassword(email, password);
-
-        // create activation token
-        PasswordActivationToken activationToken = tokenService.create(user);
-
-        // send statistics
-        sendUserRegisteredStatistics(request, user);
-
-        return activationToken;
-    }
-
-    @Deprecated
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public EmailSentDTO register(HttpServletRequest request, RegisterDTO registerDTO) throws Exception {
-        PasswordActivationToken activationToken = register(request, registerDTO.emailAddress, registerDTO.password);
-
-        // send confirmation email
-        return mailService.sendConfirmationEmail(activationToken.getUser().getEmailAddress(), activationToken.getToken());
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public EmailSentDTO register(RegisterNoPasswordDTO registerDTO) throws Exception {
-        if (!registerDTO.licenseAccepted) {
-            throw new LicenseNotAcceptedException("");
-        }
+    public EmailSentDTO register(EmailAddressDTO registerDTO) throws Exception {
         EmailActivationToken activationToken = emailTokenService.getOrCreate(registerDTO.emailAddress.toLowerCase());
         return mailService.sendRegistrationEmail(
                 activationToken.getEmailAddress(), activationToken.getPassword(), activationToken.getToken());
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public EmailSentDTO resendConfirmationEmail(EmailAddressDTO emailDTO) throws Exception {
-        PasswordActivationToken activationToken = tokenService.getDisabledByEmail(emailDTO.emailAddress.strip());
-        return mailService.sendConfirmationEmail(activationToken.getUser().getEmailAddress(), activationToken.getToken());
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public User activate(String token) throws Exception {
-        User user = tokenService.getUserAndDeleteToken(token);
-
-        boolean wasEnabled = user.isEnabled();
-        user.setEnabled(true);
-        user = userRepo.merge(user);
-
-        if (!wasEnabled) {
-            try {
-                elasticsearchService.index(user);
-            } catch (Exception e) {
-                LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
-            }
-        }
-
-        return user;
     }
 
     @Override
@@ -235,7 +146,7 @@ public class DefaultRegistrationService implements RegistrationService {
         EmailActivationToken activationToken = emailTokenService.getAndDelete(activationDTO.token);
         User user = createUserWithEmailAndPasswordHash(
                 activationToken.getEmailAddress(), activationToken.getPasswordHash(),
-                activationDTO.username, activationDTO.fullName.strip(), true);
+                activationDTO.username, activationDTO.fullName.strip());
         sendUserRegisteredStatistics(request, user);
         return user;
     }

@@ -26,7 +26,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.annotation.Validated;
@@ -43,12 +42,10 @@ import org.wrkr.clb.services.user.LoginStatisticsService;
 import org.wrkr.clb.services.user.ProfileService;
 import org.wrkr.clb.services.user.RememberMeTokenService;
 import org.wrkr.clb.services.util.exception.BadRequestException;
-import org.wrkr.clb.services.util.exception.LicenseNotAcceptedException;
 import org.wrkr.clb.services.util.exception.TooManyLoginAttemptsException;
 import org.wrkr.clb.services.util.http.Cookies;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 import org.wrkr.clb.services.util.http.SessionAttribute;
-
 
 //@Service configured in clb-services-ctx.xml
 @Validated
@@ -89,16 +86,12 @@ public class DefaultAuthnService implements AuthnService {
     private GRecaptchaService recaptchaService;
 
     @Override
-    @SuppressWarnings("deprecation")
     public HttpServletResponse login(HttpServletRequest request,
             HttpServletResponse response, HttpSession session,
             LoginDTO loginDTO, String forwardedFor) throws AuthenticationException, BadRequestException {
         User user = profileService.getAccount(loginDTO);
         if (user == null) {
             throw new UsernameNotFoundException("");
-        }
-        if (!user.isEnabled()) {
-            throw new DisabledException("");
         }
 
         List<FailedLoginAttempt> lastAttempts = failedLoginAttemptRepo.listTopRecentByUserId(
@@ -126,13 +119,6 @@ public class DefaultAuthnService implements AuthnService {
             failedLoginAttemptRepo.save(attempt);
 
             throw new BadCredentialsException("");
-        }
-        if (!user.isLicenseAccepted()) {
-            if (!loginDTO.licenseAccepted) {
-                throw new LicenseNotAcceptedException("");
-            } else {
-                user = profileService.acceptLicense(user);
-            }
         }
 
         return login(response, session, user, forwardedFor);

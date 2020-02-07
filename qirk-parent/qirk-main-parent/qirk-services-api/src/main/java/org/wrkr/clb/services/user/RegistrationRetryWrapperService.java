@@ -21,18 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
-import org.wrkr.clb.services.dto.user.RegisterDTO;
-import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
+import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 
 public interface RegistrationRetryWrapperService {
 
-    @Deprecated
-    public EmailSentDTO register(HttpServletRequest request, RegisterDTO registerDTO) throws Exception;
-
-    public EmailSentDTO register(RegisterNoPasswordDTO emailDTO) throws Exception;
-
-    @Deprecated
-    public User activate(String token) throws Exception;
+    public EmailSentDTO register(EmailAddressDTO emailDTO) throws Exception;
 
     public User activate(HttpServletRequest request, ActivationDTO activationDTO) throws Exception;
 }

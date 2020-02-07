@@ -25,13 +25,9 @@ public class UserMeta extends BaseIdEntityMeta {
     public static final String username = "username";
     public static final String emailAddress = "email_address";
     public static final String passwordHash = "password_hash";
-    @Deprecated
-    public static final String enabled = "enabled";
-    public static final String licenseAccepted = "license_accepted";
     public static final String createdAt = "created_at";
+    public static final String manager = "manager";
     public static final String fullName = "full_name";
-    public static final String dontRecommend = "dont_recommend";
-    public static final String about = "about";
 
     public static final UserToTagMeta tags = new UserToTagMeta();
     public static final UserToLanguageMeta languages = new UserToLanguageMeta();

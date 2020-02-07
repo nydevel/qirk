@@ -380,7 +380,7 @@ public class DefaultJiraImportService implements JiraImportService {
         importDTO.defaultPriority = priorityRepo.getByNameCode(TaskPriority.DEFAULT);
         importDTO.defaultStatus = statusRepo.getByNameCode(TaskStatus.DEFAULT);
 
-        List<User> users = userRepo.listEmailsByIds(importDTO.jiraUserNameToQirkOrgUserId.values());
+        List<User> users = userRepo.listByIds(importDTO.jiraUserNameToQirkOrgUserId.values());
         Map<Long, User> idToUser = new HashMap<Long, User>();
         for (User user : users) {
             idToUser.put(user.getId(), user);

@@ -337,7 +337,7 @@ public class DefaultGrantedPermissionsProjectInviteService implements GrantedPer
             }
 
             user = registrationService.createUserWithEmailAndPasswordHash(
-                    email, passwordHash, dto.username, dto.fullName.strip(), false);
+                    email, passwordHash, dto.username, dto.fullName.strip());
 
         }
 

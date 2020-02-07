@@ -25,8 +25,7 @@ import org.wrkr.clb.common.jdbc.transaction.RetryOnCannotAcquireLock;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
-import org.wrkr.clb.services.dto.user.RegisterDTO;
-import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
+import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.user.RegistrationRetryWrapperService;
 import org.wrkr.clb.services.user.RegistrationService;
 
@@ -36,37 +35,13 @@ public class DefaultRegistrationRetryWrapperService implements RegistrationRetry
     @Autowired
     private RegistrationService registrationService;
 
-    @Deprecated
     @Override
-    public EmailSentDTO register(HttpServletRequest request, RegisterDTO registerDTO) throws Exception {
-        return RetryOnCannotAcquireLock.<EmailSentDTO>exec(new Executor() {
-            @SuppressWarnings({ "unchecked", "unused" })
-            @Override
-            public EmailSentDTO exec(int retryNumber) throws Exception {
-                return registrationService.register(request, registerDTO);
-            }
-        });
-    }
-
-    @Override
-    public EmailSentDTO register(RegisterNoPasswordDTO emailDTO) throws Exception {
+    public EmailSentDTO register(EmailAddressDTO emailDTO) throws Exception {
         return RetryOnCannotAcquireLock.<EmailSentDTO>exec(new Executor() {
             @SuppressWarnings({ "unchecked", "unused" })
             @Override
             public EmailSentDTO exec(int retryNumber) throws Exception {
                 return registrationService.register(emailDTO);
-            }
-        });
-    }
-
-    @Deprecated
-    @Override
-    public User activate(String token) throws Exception {
-        return RetryOnCannotAcquireLock.<User>exec(new Executor() {
-            @SuppressWarnings({ "unchecked", "unused" })
-            @Override
-            public User exec(int retryNumber) throws Exception {
-                return registrationService.activate(token);
             }
         });
     }

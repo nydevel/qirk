@@ -100,7 +100,7 @@ public class DefaultUserService implements UserService {
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public PublicProfileDTO get(Long id) throws Exception {
-        User user = jdbcUserRepo.getByIdForPublicProfile(id);
+        User user = jdbcUserRepo.getByIdForPublic(id);
         if (user == null) {
             throw new NotFoundException("User");
         }

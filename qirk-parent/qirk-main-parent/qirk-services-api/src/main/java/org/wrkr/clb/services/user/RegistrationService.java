@@ -31,9 +31,6 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
-import org.wrkr.clb.services.dto.user.RegisterDTO;
-import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
-
 
 @Validated
 public interface RegistrationService {
@@ -51,20 +48,9 @@ public interface RegistrationService {
             @NotBlank(message = "passwordHash must not be blank") String passwordHash,
             @NotNull(message = "username must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
                     + "{1,25}", message = "username must be lower case slug") String username,
-            @NotBlank(message = "fullName must not be blank") String fullName, boolean licenseAccepted)
-            throws Exception;
+            @NotBlank(message = "fullName must not be blank") String fullName) throws Exception;
 
-    @Deprecated
-    public EmailSentDTO register(HttpServletRequest request, @Valid RegisterDTO registerDTO) throws Exception;
-
-    public EmailSentDTO register(@Valid RegisterNoPasswordDTO registerDTO) throws Exception;
-
-    @Deprecated
-    public EmailSentDTO resendConfirmationEmail(@Valid EmailAddressDTO emailDTO) throws Exception;
-
-    @Deprecated
-    public User activate(
-            @NotNull(message = "token must not be null") String token) throws Exception;
+    public EmailSentDTO register(@Valid EmailAddressDTO registerDTO) throws Exception;
 
     public User activate(HttpServletRequest request, @Valid ActivationDTO activationDTO) throws Exception;
 }

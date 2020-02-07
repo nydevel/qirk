@@ -25,11 +25,7 @@ import org.wrkr.clb.model.user.User;
 
 public class PublicProfileDTO extends PublicUserDTO {
 
-    public String about;
-
     public List<Tag> tags = new ArrayList<Tag>();
-
-    // private List<ProfileLink> links = new ArrayList<ProfileLink>();
 
     public List<Language> languages = new ArrayList<Language>();
 
@@ -39,11 +35,8 @@ public class PublicProfileDTO extends PublicUserDTO {
         dto.id = user.getId();
         dto.username = user.getUsername();
         dto.fullName = user.getFullName();
-        dto.dontRecommend = user.isDontRecommend();
-        dto.about = user.getAbout();
         dto.tags = user.getTags();
         dto.languages = user.getLanguages();
-        // links = user.getLinks();
 
         return dto;
     }

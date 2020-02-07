@@ -22,26 +22,26 @@ import java.sql.SQLException;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserMeta;
 
-public class PublicProfileUserMapper extends PublicUserMapper {
+public class UserMapper extends PublicUserMapper {
 
-    public PublicProfileUserMapper() {
+    public UserMapper() {
         super();
     }
 
-    public PublicProfileUserMapper(String tableName) {
+    public UserMapper(String tableName) {
         super(tableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
         return super.generateSelectColumnsStatement() + ", " +
-                generateSelectColumnStatement(UserMeta.about);
+                generateSelectColumnStatement(UserMeta.emailAddress);
     }
 
     @Override
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = super.mapRow(rs, rowNum);
-        user.setAbout(rs.getString(generateColumnAlias(UserMeta.about)));
+        user.setEmailAddress(rs.getString(generateColumnAlias(UserMeta.emailAddress)));
         return user;
     }
 }

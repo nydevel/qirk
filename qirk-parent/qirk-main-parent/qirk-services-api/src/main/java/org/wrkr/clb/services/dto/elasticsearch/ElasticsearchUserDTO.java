@@ -35,8 +35,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
 
     private static final ObjectWriter DTO_WRITER = new ObjectMapper().writerFor(ElasticsearchUserDTO.class);
 
-    public static final String DONT_RECOMMEND = "dont_recommend";
-
     public static final String USERNAME = "username";
     public static final String FULL_NAME = "full_name";
     public static final String NAME_SEARCH_FIELD = "name_search_field";
@@ -45,9 +43,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
 
     public static final String PROJECTS = "projects";
     public static final String INVITED_PROJECTS = "invited_projects";
-
-    @JsonProperty(value = DONT_RECOMMEND)
-    public Boolean dontRecommend;
 
     @JsonProperty(value = USERNAME)
     public String username;
@@ -68,8 +63,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
 
     public static ElasticsearchUserDTO fromEntity(User user) {
         ElasticsearchUserDTO dto = new ElasticsearchUserDTO();
-
-        dto.dontRecommend = user.isDontRecommend();
 
         dto.username = user.getUsername();
         dto.fullName = user.getFullName();

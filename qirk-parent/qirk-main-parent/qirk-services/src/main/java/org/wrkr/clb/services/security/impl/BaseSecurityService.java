@@ -34,8 +34,10 @@ public abstract class BaseSecurityService {
         }
     }
 
-    protected void requireAdminOrThrowException(User user) throws SecurityException {
+    protected void requireManagerOrThrowException(User user) throws SecurityException {
         requireAuthnOrThrowException(user);
-        // TODO
+        if (!user.isManager()) {
+            throw new SecurityException("User is not a manager");
+        }
     }
 }

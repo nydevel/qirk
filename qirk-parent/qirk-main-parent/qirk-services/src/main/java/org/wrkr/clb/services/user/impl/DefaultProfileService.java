@@ -123,7 +123,6 @@ public class DefaultProfileService implements ProfileService {
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public void changePassword(User sessionUser, PasswordChangeDTO passwordDTO) throws Exception {
         User user = null;
@@ -143,16 +142,7 @@ public class DefaultProfileService implements ProfileService {
         }
 
         user.setPasswordHash(HashEncoder.encryptToHex(passwordDTO.newPassword));
-        user.setEnabled(true);
-        userRepo.updatePasswordHashAndSetEnabledToTrue(user);
-
-        try {
-            if (!elasticsearchService.exists(user)) {
-                elasticsearchService.index(user);
-            }
-        } catch (Exception e) {
-            LOG.error("Could not save user " + user.getId() + " to elasticsearch", e);
-        }
+        userRepo.updatePasswordHash(user);
     }
 
     @Override
@@ -165,21 +155,13 @@ public class DefaultProfileService implements ProfileService {
     }
 
     @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public User acceptLicense(User user) {
-        user.setLicenseAccepted(true);
-        userRepo.setLicenseAcceptedToTrue(user);
-        return user;
-    }
-
-    @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public CurrentUserProfileDTO getProfile(User sessionUser) throws ApplicationException {
         // security start
         securityService.isAuthenticated(sessionUser);
         // security finish
 
-        User user = userRepo.getByIdForProfileAndFetchNotificationSettings(sessionUser.getId());
+        User user = userRepo.getByIdAndFetchNotificationSettings(sessionUser.getId());
         if (user == null) {
             throw new NotFoundException("User");
         }
@@ -198,14 +180,13 @@ public class DefaultProfileService implements ProfileService {
         securityService.isAuthenticated(sessionUser);
         // security finish
 
-        User user = userRepo.getByIdForProfile(sessionUser.getId());
+        User user = userRepo.getById(sessionUser.getId());
         if (user == null) {
             throw new NotFoundException("User");
         }
 
         user.setFullName(profileDTO.fullName.strip());
-        user.setAbout(profileDTO.about);
-        userRepo.updateFullNameAndAbout(user);
+        userRepo.updateFullName(user);
 
         Long userId = user.getId();
         NotificationSettings notifSettings = profileDTO.notificationSettings;

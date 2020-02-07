@@ -38,9 +38,7 @@ public class CurrentUserProfileDTO extends PublicProfileDTO {
         dto.id = user.getId();
         dto.username = user.getUsername();
         dto.fullName = user.getFullName();
-        dto.dontRecommend = user.isDontRecommend();
         dto.email = user.getEmailAddress();
-        dto.about = user.getAbout();
         dto.notificationSettings = user.getNotificationSettings();
         dto.tags = tags;
         dto.languages = languages;

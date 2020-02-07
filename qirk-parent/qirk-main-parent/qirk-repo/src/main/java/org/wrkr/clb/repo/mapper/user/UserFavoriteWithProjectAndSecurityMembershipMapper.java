@@ -27,11 +27,11 @@ import org.wrkr.clb.model.user.UserFavoriteMeta;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.mapper.project.ShortProjectWithSecurityMembershipMapper;
 
-public class UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper extends BaseMapper<UserFavorite> {
+public class UserFavoriteWithProjectAndSecurityMembershipMapper extends BaseMapper<UserFavorite> {
 
     protected ShortProjectWithSecurityMembershipMapper projectMapper;
 
-    public UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper(String userFavoriteTableName,
+    public UserFavoriteWithProjectAndSecurityMembershipMapper(String userFavoriteTableName,
             String projectTableName, ProjectMemberMeta projectMemberMeta, UserMeta userMeta) {
         super(userFavoriteTableName);
         this.projectMapper = new ShortProjectWithSecurityMembershipMapper(projectTableName, projectMemberMeta, userMeta);

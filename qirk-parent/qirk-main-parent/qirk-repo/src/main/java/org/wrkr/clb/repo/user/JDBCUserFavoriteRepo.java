@@ -25,13 +25,13 @@ import org.wrkr.clb.model.user.UserFavorite;
 import org.wrkr.clb.model.user.UserFavoriteMeta;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
-import org.wrkr.clb.repo.mapper.user.UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper;
+import org.wrkr.clb.repo.mapper.user.UserFavoriteWithProjectAndSecurityMembershipMapper;
 import org.wrkr.clb.repo.security.SecurityProjectRepo;
 
 @Repository
 public class JDBCUserFavoriteRepo extends JDBCBaseMainRepo {
 
-    private static final UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper USER_FAVORITE_WITH_SECURITY_MEMBERSHIP_MAPPER = new UserFavoriteWithProjectAndOrgAndSecurityMembershipMapper(
+    private static final UserFavoriteWithProjectAndSecurityMembershipMapper USER_FAVORITE_WITH_SECURITY_MEMBERSHIP_MAPPER = new UserFavoriteWithProjectAndSecurityMembershipMapper(
             UserFavoriteMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, ProjectMemberMeta.DEFAULT, UserMeta.DEFAULT);
 
     private static final String SELECT_BY_USER_ID_AND_FETCH_PROJECT_AND_MEMBERSHIP_FOR_SECURITY = "SELECT "

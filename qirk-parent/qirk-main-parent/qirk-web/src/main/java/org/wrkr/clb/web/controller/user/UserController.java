@@ -46,8 +46,6 @@ import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
 import org.wrkr.clb.services.dto.user.PublicProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
-import org.wrkr.clb.services.dto.user.RegisterNoPasswordDTO;
-import org.wrkr.clb.services.security.SecurityService;
 import org.wrkr.clb.services.user.AuthnService;
 import org.wrkr.clb.services.user.ProfileRetryWrapperService;
 import org.wrkr.clb.services.user.ProfileService;
@@ -80,9 +78,6 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private SecurityService securityService;
-
     @GetMapping(value = "check-email")
     public JsonContainer<ExistsDTO, Void> checkEmail(@SuppressWarnings("unused") HttpSession session,
             @RequestParam(name = "email") String email,
@@ -104,7 +99,7 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
 
     @PostMapping(value = "register")
     public JsonContainer<EmailSentDTO, Void> register(@SuppressWarnings("unused") HttpSession session,
-            @RequestBody RegisterNoPasswordDTO emailDTO) throws Exception {
+            @RequestBody EmailAddressDTO emailDTO) throws Exception {
         long startTime = System.currentTimeMillis();
         EmailSentDTO dto = registrationRWService.register(emailDTO);
         logProcessingTimeFromStartTime(startTime, "register");
@@ -114,7 +109,7 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     @Deprecated
     @PostMapping(value = "register-no-password")
     public JsonContainer<EmailSentDTO, Void> registerNoPassword(HttpSession session,
-            @RequestBody RegisterNoPasswordDTO emailDTO) throws Exception {
+            @RequestBody EmailAddressDTO emailDTO) throws Exception {
         return register(session, emailDTO);
     }
 
@@ -136,16 +131,6 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
             HttpServletRequest request, HttpServletResponse response, HttpSession session,
             @RequestBody ActivationDTO activationDTO) throws Exception {
         return activate(request, response, session, activationDTO);
-    }
-
-    @PostMapping(value = "accept-license")
-    public JsonContainer<Void, Void> acceptLicense(HttpSession session) throws Exception {
-        long startTime = System.currentTimeMillis();
-        User currentUser = getSessionUser(session);
-        securityService.isAuthenticated(currentUser);
-        profileService.acceptLicense(currentUser);
-        logProcessingTimeFromStartTime(startTime, "acceptLicense");
-        return new JsonContainer<Void, Void>();
     }
 
     @PostMapping(value = "reset-password")

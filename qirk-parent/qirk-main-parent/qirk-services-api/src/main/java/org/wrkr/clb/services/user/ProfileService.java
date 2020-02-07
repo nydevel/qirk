@@ -38,8 +38,6 @@ public interface ProfileService {
 
     public User getAccount(@Valid LoginDTO loginDTO);
 
-    public User acceptLicense(User user);
-
     public CurrentUserProfileDTO getProfile(User sessionUser) throws Exception;
 
     public CurrentUserProfileDTO updateProfile(HttpSession session, User sessionUser, @Valid PriofileUpdateDTO profileDTO)

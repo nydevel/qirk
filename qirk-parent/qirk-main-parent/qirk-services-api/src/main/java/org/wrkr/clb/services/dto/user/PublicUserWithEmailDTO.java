@@ -32,7 +32,6 @@ public class PublicUserWithEmailDTO extends PublicUserDTO {
             dto.id = user.getId();
             dto.username = user.getUsername();
             dto.fullName = user.getFullName();
-            dto.dontRecommend = user.isDontRecommend();
             dto.email = user.getEmailAddress();
         }
 
