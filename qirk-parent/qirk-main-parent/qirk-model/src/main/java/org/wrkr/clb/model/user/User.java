@@ -59,7 +59,7 @@ public class User extends BaseIdEntity {
     // Authorization
 
     @Column(name = "manager", nullable = false)
-    private boolean manager;
+    private boolean manager = false;
 
     // Profile
 

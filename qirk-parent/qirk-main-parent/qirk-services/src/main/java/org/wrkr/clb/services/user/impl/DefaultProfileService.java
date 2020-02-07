@@ -115,7 +115,7 @@ public class DefaultProfileService implements ProfileService {
             throw new NotFoundException("User");
         }
 
-        PasswordActivationToken activationToken = activationTokenRepo.getByUser(user);
+        PasswordActivationToken activationToken = activationTokenRepo.getByUserId(user.getId());
         if (activationToken == null) {
             activationToken = activationTokenService.create(user);
         }
@@ -128,7 +128,6 @@ public class DefaultProfileService implements ProfileService {
         User user = null;
         if (passwordDTO.token != null) {
             user = activationTokenService.getUserAndDeleteToken(passwordDTO.token);
-            // jpaUserRepo.detach(user);
         } else {
             // security start
             securityService.isAuthenticated(sessionUser);

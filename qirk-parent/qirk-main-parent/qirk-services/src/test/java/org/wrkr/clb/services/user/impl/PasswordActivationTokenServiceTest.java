@@ -17,7 +17,6 @@
 package org.wrkr.clb.services.user.impl;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -36,16 +35,13 @@ import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 import org.wrkr.clb.test.util.JsonStatusCodeMatcher;
 
-public class ActivationTokenServiceTest extends BaseServiceTest {
+public class PasswordActivationTokenServiceTest extends BaseServiceTest {
 
-    private static Long enabledUserId;
+    private Long enabledUserId;
     private static final String enabledUserEmail = "enableduser@test.com";
     private static final String enabledUserPassword = "enabled";
 
-    private static final String disabledUserEmail = "disableduser@test.com";
-    private static final String disabledUserPassword = "disabled";
-
-    private static Long enabledUserWithTokenId;
+    private Long enabledUserWithTokenId;
     private static final String enabledUserWithTokenEmail = "enableduserwithtoken@test.com";
     private static final String enabledUserWithTokenPassword = "enabledwithtoken";
     private static final String enabledUserWithTokenToken = Long.valueOf(10 ^ 23).toString();
@@ -77,9 +73,8 @@ public class ActivationTokenServiceTest extends BaseServiceTest {
     @Before
     public void beforeTest() throws Exception {
         enabledUserId = saveUser(enabledUserEmail, enabledUserPassword).getId();
-        saveUser(disabledUserEmail, disabledUserPassword).getId();
-        enabledUserWithTokenId = saveUserWithToken(enabledUserWithTokenEmail, enabledUserWithTokenPassword,
-                enabledUserWithTokenToken);
+        enabledUserWithTokenId = saveUserWithToken(
+                enabledUserWithTokenEmail, enabledUserWithTokenPassword, enabledUserWithTokenToken);
     }
 
     @After
@@ -89,7 +84,7 @@ public class ActivationTokenServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void test_createForEnabledUser() {
+    public void test_create() {
         User enabledUser = testRepo.getEntity(User.class, enabledUserId);
         long numberOfActivationTokens = testRepo.countEntities(PasswordActivationToken.class);
 
@@ -102,27 +97,14 @@ public class ActivationTokenServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void test_createForDisabledUser() {
-        User disabledUser = testRepo.getEntity(User.class, enabledUserId);
-        long numberOfActivationTokens = testRepo.countEntities(PasswordActivationToken.class);
-
-        PasswordActivationToken token = tokenService.create(disabledUser);
-
-        List<PasswordActivationToken> tokenList = testRepo.listEntities(PasswordActivationToken.class);
-        assertEquals("exactly 1 token should be created", numberOfActivationTokens + 1, tokenList.size());
-        token = testRepo.getEntity(PasswordActivationToken.class, token.getId());
-        assertEquals("user id doesn't match", disabledUser.getId(), token.getUser().getId());
-    }
-
-    @Test
-    public void test_getUserAndDeleteTokenForEnabledUser() throws Exception {
+    public void test_getUserAndDeleteToken() throws Exception {
         long numberOfActivationTokens = testRepo.countEntities(PasswordActivationToken.class);
 
         User user = tokenService.getUserAndDeleteToken(enabledUserWithTokenToken);
 
         assertEquals("user id doesn't match", enabledUserWithTokenId, user.getId());
-        PasswordActivationToken deletedToken = tokenRepo.getByToken(enabledUserWithTokenToken);
-        assertNull("token must be deleted", deletedToken);
+        boolean exists = tokenRepo.existsByToken(enabledUserWithTokenToken);
+        assertEquals("token must be deleted", false, exists);
         List<PasswordActivationToken> tokenList = testRepo.listEntities(PasswordActivationToken.class);
         assertEquals("exactly 1 token should be deleted", numberOfActivationTokens - 1, tokenList.size());
     }

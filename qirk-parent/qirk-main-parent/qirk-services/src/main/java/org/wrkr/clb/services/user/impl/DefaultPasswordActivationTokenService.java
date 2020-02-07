@@ -30,7 +30,6 @@ import org.wrkr.clb.services.user.PasswordActivationTokenService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 @Validated
 @Service
 public class DefaultPasswordActivationTokenService implements PasswordActivationTokenService {
@@ -57,19 +56,8 @@ public class DefaultPasswordActivationTokenService implements PasswordActivation
         activationToken.setUser(user);
 
         activationToken.setCreatedAt(DateTimeUtils.now());
-        activationTokenRepo.persist(activationToken);
+        activationTokenRepo.save(activationToken);
         return activationToken;
-    }
-
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.MANDATORY)
-    public PasswordActivationToken getDisabledByEmail(String email) throws ApplicationException {
-        PasswordActivationToken token = activationTokenRepo.getDisabledByEmailAndFetchUser(email);
-        if (token == null) {
-            throw new NotFoundException("Token");
-        }
-        return token;
     }
 
     private User getUserAndDeleteToken(PasswordActivationToken activationToken) throws ApplicationException {

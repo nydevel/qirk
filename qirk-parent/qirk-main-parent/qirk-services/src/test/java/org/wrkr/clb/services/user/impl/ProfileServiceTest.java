@@ -36,19 +36,18 @@ import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.user.ProfileService;
 
-
 @SuppressWarnings("unused")
 public class ProfileServiceTest extends BaseServiceTest {
 
-    private static Long enabledUserId;
+    private Long enabledUserId;
     private static final String enabledUserEmail = "enableduser@test.com";
     private static final String enabledUserPassword = "enabled";
     private static final String enabledUserNewPassword = "enablednew";
 
-    private static Long enabledUserWithTokenId;
+    private Long enabledUserWithTokenId;
     private static final String enabledUserWithTokenEmail = "enableduserwithtoken@test.com";
     private static final String enabledUserWithTokenPassword = "enabledwithtoken";
-    private static final String enabledUserWithTokenToken = Long.valueOf(10 ^ 23).toString();
+    private static final String enabledUserWithTokenToken = Long.valueOf(10 ^ 23).toString(); // 24 symbols
 
     private static final String nonExistingPassword = "nonexisting";
 
@@ -109,83 +108,14 @@ public class ProfileServiceTest extends BaseServiceTest {
     }
 
     @Test
-    public void test_resetPasswordForEnabledUser() throws Exception {
+    public void test_resetPassword() throws Exception {
         EmailAddressDTO dto = createEmailDTO(enabledUserEmail);
 
         profileService.resetPassword(dto);
 
         long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
         assertEquals("exactly 1 token should be created", numberOfActivationTokens + 1L, tokenCount);
-        PasswordActivationToken token = activationTokenRepo.getByEmailAndFetchUser(enabledUserEmail);
-        assertEquals("user id doesn't match", enabledUserId, token.getUser().getId());
+        boolean exists = activationTokenRepo.existsByUserId(enabledUserId);
+        assertEquals("user id doesn't match", true, exists);
     }
-
-    /*@formatter:off
-    @Test
-    public void test_changePasswordForAuthenticatedEnabledUser() throws Exception {
-        PasswordChangeDTO dto = createPasswordChangeDTO(enabledUserPassword, enabledUserNewPassword, null);
-
-        profileService.changePassword(testRepo.getEntity(User.class, enabledUserId), dto);
-
-        User user = userRepo.getByEmail(enabledUserEmail);
-        assertEquals("password didn't change", HashEncoder.encryptToHex(enabledUserNewPassword), user.getPasswordHash());
-
-        long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
-        assertEquals("no token should be deleted", numberOfActivationTokens, tokenCount);
-    }
-
-    @Test
-    public void test_changePasswordForAuthenticatedEnabledUserWithWrongPassword() throws Exception {
-        expectedException.expect(BadCredentialsException.class);
-
-        PasswordChangeDTO dto = createPasswordChangeDTO(enabledUserWithTokenPassword, nonExistingPassword, null);
-
-        profileService.changePassword(testRepo.getEntity(User.class, enabledUserId), dto);
-    }
-
-    @Test
-    public void test_changePasswordByTokenForEnabledUserWithToken() throws Exception {
-        PasswordChangeDTO dto = createPasswordChangeDTO(null, enabledUserNewPassword, enabledUserWithTokenToken);
-
-        profileService.changePassword(null, dto);
-
-        User user = userRepo.get(enabledUserWithTokenId);
-        assertEquals("password didn't change", HashEncoder.encryptToHex(enabledUserNewPassword), user.getPasswordHash());
-
-        long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
-        assertEquals("exactly 1 token should be deleted", numberOfActivationTokens - 1L, tokenCount);
-        PasswordActivationToken token = activationTokenRepo.getByToken(enabledUserWithTokenToken);
-        assertNull("token must be deleted", token);
-    }
-
-    @Test
-    public void test_changePasswordByTokenForAuthenticatedEnabledUserWithToken() throws Exception {
-        PasswordChangeDTO dto = createPasswordChangeDTO(null, enabledUserNewPassword, enabledUserWithTokenToken);
-
-        profileService.changePassword(testRepo.getEntity(User.class, enabledUserWithTokenId), dto);
-
-        User user = userRepo.get(enabledUserWithTokenId);
-        assertEquals("password didn't change", HashEncoder.encryptToHex(enabledUserNewPassword), user.getPasswordHash());
-
-        long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
-        assertEquals("exactly 1 token should be deleted", numberOfActivationTokens - 1L, tokenCount);
-        PasswordActivationToken token = activationTokenRepo.getByToken(enabledUserWithTokenToken);
-        assertNull("token must be deleted", token);
-    }
-
-    @Test
-    public void test_changePasswordByTokenForEnabledUserWithTokenAuthenticatedAsOtherUser() throws Exception {
-        PasswordChangeDTO dto = createPasswordChangeDTO(null, enabledUserNewPassword, enabledUserWithTokenToken);
-
-        profileService.changePassword(testRepo.getEntity(User.class, enabledUserId), dto);
-
-        User user = userRepo.get(enabledUserWithTokenId);
-        assertEquals("password didn't change", HashEncoder.encryptToHex(enabledUserNewPassword), user.getPasswordHash());
-
-        long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
-        assertEquals("exactly 1 token should be deleted", numberOfActivationTokens - 1L, tokenCount);
-        PasswordActivationToken token = activationTokenRepo.getByToken(enabledUserWithTokenToken);
-        assertNull("token must be deleted", token);
-    }
-    @formatter:on*/
 }

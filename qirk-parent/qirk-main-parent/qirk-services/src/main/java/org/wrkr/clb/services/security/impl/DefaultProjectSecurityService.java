@@ -62,7 +62,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
     }
 
     /**
-     * 
      * @return id of the project; null if it does not exist
      */
     @Override
@@ -262,7 +261,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
     }
 
     /**
-     * 
      * @return id of the road; null if it does not exist
      */
     @Override
@@ -399,7 +397,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
     }
 
     /**
-     * 
      * @return id of the task; null if it does not exist
      */
     @Override
@@ -531,7 +528,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
     }
 
     /**
-     * 
      * @return id of the task hashtag; null if it does not exist
      */
     @Override

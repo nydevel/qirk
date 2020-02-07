@@ -16,95 +16,76 @@
  */
 package org.wrkr.clb.repo.user;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.sql.Timestamp;
 
 import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.user.PasswordActivationToken;
-import org.wrkr.clb.model.user.PasswordActivationToken_;
-import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPADeletingRepo;
+import org.wrkr.clb.model.user.PasswordActivationTokenMeta;
+import org.wrkr.clb.model.user.UserMeta;
+import org.wrkr.clb.repo.JDBCBaseMainRepo;
+import org.wrkr.clb.repo.mapper.user.PasswordActivationTokenMapper;
+import org.wrkr.clb.repo.mapper.user.PasswordActivationTokenWithUserMapper;
 
 @Repository
-public class PasswordActivationTokenRepo extends JPADeletingRepo<PasswordActivationToken> {
+public class PasswordActivationTokenRepo extends JDBCBaseMainRepo {
 
-    @Override
-    public PasswordActivationToken get(Long id) {
-        return get(PasswordActivationToken.class, id);
-    }
+    private static final String INSERT = "INSERT INTO " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "(" + PasswordActivationTokenMeta.token + ", " + // 1
+            PasswordActivationTokenMeta.userId + ", " + // 2
+            PasswordActivationTokenMeta.createdAt + ") " + // 3
+            "VALUES (?, ?, ?);";
 
-    public List<PasswordActivationToken> list() {
-        return list(PasswordActivationToken.class);
+    private static final String EXISTS_BY_TOKEN = "SELECT 1 FROM " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "WHERE " + PasswordActivationTokenMeta.token + " = ?;"; // 1
+
+    private static final String EXISTS_BY_USER_ID = "SELECT 1 FROM " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "WHERE " + PasswordActivationTokenMeta.userId + " = ?;"; // 1
+
+    private static final PasswordActivationTokenMapper PASSWORD_ACTIVATION_TOKEN_MAPPER = new PasswordActivationTokenMapper();
+
+    private static final String SELECT_BY_USER_ID = "SELECT " +
+            PASSWORD_ACTIVATION_TOKEN_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "WHERE " + PasswordActivationTokenMeta.userId + " = ?;"; // 1
+
+    private static final PasswordActivationTokenWithUserMapper PASSWORD_ACTIVATION_TOKEN_WITH_USER_MAPPER = new PasswordActivationTokenWithUserMapper(
+            PasswordActivationTokenMeta.TABLE_NAME, UserMeta.TABLE_NAME);
+
+    private static final String SELECT_BY_TOKEN_AND_FETCH_USER = "SELECT " +
+            PASSWORD_ACTIVATION_TOKEN_WITH_USER_MAPPER.generateSelectColumnsStatement() + " " +
+            "FROM " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "INNER JOIN " + UserMeta.TABLE_NAME + " " +
+            "ON " + PasswordActivationTokenMeta.TABLE_NAME + "." + PasswordActivationTokenMeta.userId + " = " +
+            UserMeta.TABLE_NAME + "." + UserMeta.id + " " +
+            "WHERE " + PasswordActivationTokenMeta.TABLE_NAME + "." + PasswordActivationTokenMeta.token + " = ?;"; // 1
+
+    private static final String DELETE = "DELETE FROM " + PasswordActivationTokenMeta.TABLE_NAME + " " +
+            "WHERE " + PasswordActivationTokenMeta.id + " = ?;"; // 1
+
+    public void save(PasswordActivationToken token) {
+        getJdbcTemplate().update(INSERT,
+                token.getToken(), token.getUserId(), Timestamp.from(token.getCreatedAt().toInstant()));
     }
 
     public boolean existsByToken(String token) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Long> query = cb.createQuery(Long.class);
-
-        Root<PasswordActivationToken> root = query.from(PasswordActivationToken.class);
-
-        query.where(cb.equal(root.get(PasswordActivationToken_.token), token));
-        return exists(root, query);
+        return exists(EXISTS_BY_TOKEN, token);
     }
 
-    public PasswordActivationToken getByToken(String token) {
-        return getByToken(token, false);
+    public boolean existsByUserId(Long userId) {
+        return exists(EXISTS_BY_USER_ID, userId);
+    }
+
+    public PasswordActivationToken getByUserId(Long userId) {
+        return queryForObjectOrNull(SELECT_BY_USER_ID, PASSWORD_ACTIVATION_TOKEN_MAPPER,
+                userId);
     }
 
     public PasswordActivationToken getByTokenAndFetchUser(String token) {
-        return getByToken(token, true);
+        return queryForObjectOrNull(SELECT_BY_TOKEN_AND_FETCH_USER, PASSWORD_ACTIVATION_TOKEN_WITH_USER_MAPPER,
+                token);
     }
 
-    private PasswordActivationToken getByToken(String token, boolean fetchUser) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<PasswordActivationToken> query = cb.createQuery(PasswordActivationToken.class);
-
-        Root<PasswordActivationToken> root = query.from(PasswordActivationToken.class);
-        if (fetchUser) {
-            root.fetch(PasswordActivationToken_.user);
-        }
-
-        query.where(cb.equal(root.get(PasswordActivationToken_.token), token));
-        return getSingleResultOrNull(query);
-    }
-
-    public PasswordActivationToken getByUser(User user) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<PasswordActivationToken> query = cb.createQuery(PasswordActivationToken.class);
-
-        Root<PasswordActivationToken> root = query.from(PasswordActivationToken.class);
-
-        query.where(cb.equal(root.get(PasswordActivationToken_.user), user));
-        return getSingleResultOrNull(query);
-    }
-
-    public PasswordActivationToken getByEmailAndFetchUser(String email) {
-        return getByEmailAndFetchUser(email, false);
-    }
-
-    @Deprecated
-    public PasswordActivationToken getDisabledByEmailAndFetchUser(String email) {
-        return getByEmailAndFetchUser(email, true);
-    }
-
-    private PasswordActivationToken getByEmailAndFetchUser(String email, @SuppressWarnings("unused") boolean excludeEnabled) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<PasswordActivationToken> query = cb.createQuery(PasswordActivationToken.class);
-
-        Root<PasswordActivationToken> activationTokenRoot = query.from(PasswordActivationToken.class);
-        activationTokenRoot.fetch(PasswordActivationToken_.user);
-        Join<PasswordActivationToken, User> userJoin = activationTokenRoot.join(PasswordActivationToken_.user);
-
-        List<Predicate> predicates = new ArrayList<Predicate>(Arrays.asList(cb.equal(userJoin.get(User_.emailAddress), email)));
-        query.where(predicates.toArray(new Predicate[0]));
-        return getSingleResultOrNull(query);
+    public void delete(PasswordActivationToken token) {
+        updateSingleRow(DELETE, token.getId());
     }
 }

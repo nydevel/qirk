@@ -14,21 +14,15 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.user;
+package org.wrkr.clb.model.user;
 
-import javax.validation.constraints.NotNull;
+import org.wrkr.clb.model.BaseIdEntityMeta;
 
-import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.user.PasswordActivationToken;
-import org.wrkr.clb.model.user.User;
+public class PasswordActivationTokenMeta extends BaseIdEntityMeta {
 
-@Validated
-public interface PasswordActivationTokenService {
+    public static final String TABLE_NAME = "password_activation_token";
 
-    public PasswordActivationToken create(
-            @NotNull(message = "user must not be null") User user);
-
-    public User getUserAndDeleteToken(
-            @NotNull(message = "token must not be null") String token)
-            throws Exception;
+    public static final String token = "token";
+    public static final String userId = "user_id";
+    public static final String createdAt = "created_at";
 }
