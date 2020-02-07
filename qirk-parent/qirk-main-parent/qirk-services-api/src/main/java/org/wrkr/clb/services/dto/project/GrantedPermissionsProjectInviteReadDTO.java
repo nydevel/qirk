@@ -50,10 +50,10 @@ public class GrantedPermissionsProjectInviteReadDTO extends ProjectInviteReadDTO
     public Boolean emailSent;
 
     public static GrantedPermissionsProjectInviteReadDTO fromGrantedPermissionsInvite(GrantedPermissionsProjectInvite invite,
-            boolean includeUser, boolean includeProjectAndOrganization, boolean includeStatus, boolean includeSender) {
+            boolean includeUser, boolean includeProject, boolean includeStatus, boolean includeSender) {
         GrantedPermissionsProjectInviteReadDTO dto = new GrantedPermissionsProjectInviteReadDTO();
 
-        dto.setFields(invite, includeUser, includeProjectAndOrganization, includeStatus);
+        dto.setFields(invite, includeUser, includeProject, includeStatus);
         if (includeSender) {
             dto.sender = PublicUserDTO.fromEntity(invite.getSender());
         }
@@ -85,11 +85,11 @@ public class GrantedPermissionsProjectInviteReadDTO extends ProjectInviteReadDTO
 
     public static List<GrantedPermissionsProjectInviteReadDTO> fromGrantedPermissionsInvites(
             List<GrantedPermissionsProjectInvite> inviteList,
-            boolean includeUser, boolean includeProjectAndOrganization, InviteStatus status, boolean includeSender) {
+            boolean includeUser, boolean includeProject, InviteStatus status, boolean includeSender) {
         List<GrantedPermissionsProjectInviteReadDTO> dtoList = new ArrayList<GrantedPermissionsProjectInviteReadDTO>();
         for (GrantedPermissionsProjectInvite invite : inviteList) {
             GrantedPermissionsProjectInviteReadDTO dto = fromGrantedPermissionsInvite(invite,
-                    includeUser, includeProjectAndOrganization, false, includeSender);
+                    includeUser, includeProject, false, includeSender);
             dto.status = status;
             dtoList.add(dto);
         }
@@ -107,8 +107,8 @@ public class GrantedPermissionsProjectInviteReadDTO extends ProjectInviteReadDTO
     }
 
     protected void setFields(GrantedPermissionsProjectInvite invite,
-            boolean includeUser, boolean includeProjectAndOrganization, boolean includeStatus) {
-        super.setFields(invite, includeUser, includeProjectAndOrganization, includeStatus);
+            boolean includeUser, boolean includeProject, boolean includeStatus) {
+        super.setFields(invite, includeUser, includeProject, includeStatus);
 
         writeAllowed = invite.isWriteAllowed();
         manager = invite.isManager();

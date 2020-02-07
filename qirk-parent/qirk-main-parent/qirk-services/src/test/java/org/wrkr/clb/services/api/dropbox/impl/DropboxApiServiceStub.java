@@ -21,18 +21,12 @@ import java.util.List;
 
 import org.wrkr.clb.services.api.dropbox.DropboxApiService;
 
-
 @Deprecated
 @SuppressWarnings("unused")
 public class DropboxApiServiceStub implements DropboxApiService {
 
     @Override
     public String getToken(String code, String redirectURI) throws Exception {
-        return null;
-    }
-
-    @Override
-    public String getRedirectURIForOrganization() {
         return null;
     }
 

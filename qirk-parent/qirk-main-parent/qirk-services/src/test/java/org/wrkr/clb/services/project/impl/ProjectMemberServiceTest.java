@@ -38,8 +38,7 @@ import org.wrkr.clb.services.project.ProjectMemberService;
 public class ProjectMemberServiceTest extends BaseServiceTest {
 
     private static final String userPassword = "password";
-    private static final String orgOwnerEmail = "org_owner@test.com";
-    private static final String orgManagerEmail = "org_manager@test.com";
+    private static final String projectOwnerEmail = "org_owner@test.com";
     private static final String projectManagerEmail = "project_manager@test.com";
     private static final String projectMemberEmail = "project_member@test.com";
     private static final String taskAssigneeEmail = "task_assignee@test.com";
@@ -69,7 +68,7 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
 
     @Before
     public void beforeTest() throws Exception {
-        User projectOwnerUser = saveUser(orgOwnerEmail, userPassword);
+        User projectOwnerUser = saveUser(projectOwnerEmail, userPassword);
         User projectManagerUser = saveUser(projectManagerEmail, userPassword);
         User projectMemberUser = saveUser(projectMemberEmail, userPassword);
         User taskAssigneeUser = saveUser(taskAssigneeEmail, userPassword);
@@ -97,14 +96,14 @@ public class ProjectMemberServiceTest extends BaseServiceTest {
 
     @Test
     public void test_delete() throws Exception {
-        User orgManager = userRepo.getByEmail(orgManagerEmail);
+        User projectOwner = userRepo.getByEmail(projectOwnerEmail);
         User otherUser = userRepo.getByEmail(projectManagerEmail);
         Project project = projectRepo.getByUiId(privateProjectUiId);
         ProjectMember otherProjectMember = projectMemberRepo.getNotFiredByUserAndProject(otherUser, project);
         Long otherProjectMemberId = otherProjectMember.getId();
         long numberOfProjectMembers = testRepo.countEntities(ProjectMember.class);
 
-        projectMemberService.delete(orgManager, otherProjectMemberId);
+        projectMemberService.delete(projectOwner, otherProjectMemberId);
 
         ProjectMember deletedProjectMember = testRepo.getEntityOrNull(ProjectMember.class, otherProjectMemberId);
         assertNull("project member must be deleted", deletedProjectMember);

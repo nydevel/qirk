@@ -388,18 +388,6 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
             return;
         }
 
-        /*@formatter:off
-        if (_isAuthenticated(user)) {
-            List<OrganizationMember> members = task.getProject().getOrganizationMembers();
-
-            for (OrganizationMember member : members) {
-                if (member.getUserId().equals(user.getId()) && isTaskReporterOrAssignee(task, member)) {
-                    return; // reporter or assignee of the task
-                }
-            }
-        }
-        @formatter:on*/
-
         authzCanReadTasks(user, task.getProject());
     }
 

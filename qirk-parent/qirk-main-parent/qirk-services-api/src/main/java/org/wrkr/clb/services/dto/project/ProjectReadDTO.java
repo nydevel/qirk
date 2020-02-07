@@ -64,10 +64,6 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     @JsonProperty(value = "dropbox_settings")
     public DropboxSettingsDTO dropboxSettings;
 
-    @Deprecated
-    @JsonProperty(value = "organization_dropbox_settings")
-    public DropboxSettingsDTO organizationDropboxSettings;
-
     @JsonInclude(Include.NON_NULL)
     public List<Tag> tags;
 
@@ -150,11 +146,11 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
         return dtoList;
     }
 
-    public static List<ProjectReadDTO> fromEntitiesWithOrganization(List<Project> projectList) {
+    public static List<ProjectReadDTO> fromEntitiesWithoutTags(List<Project> projectList) {
         return fromEntities(projectList, false, false);
     }
 
-    public static List<ProjectReadDTO> fromEntitiesWithDropboxSettingsAndTags(List<Project> projectList) {
+    public static List<ProjectReadDTO> fromEntitiesWithTags(List<Project> projectList) {
         return fromEntities(projectList, true, false);
     }
 }

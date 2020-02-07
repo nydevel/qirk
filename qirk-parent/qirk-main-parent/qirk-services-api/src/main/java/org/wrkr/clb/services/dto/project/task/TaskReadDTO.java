@@ -160,7 +160,7 @@ public class TaskReadDTO extends IdDTO {
         return dto;
     }
 
-    public static TaskReadDTO fromEntityWithEverythingForReadAndOrganizationAndSubscription(Task task) {
+    public static TaskReadDTO fromEntityWithEverythingForReadAndSubscription(Task task) {
         TaskReadDTO dto = fromEntity(task, false, false, true);
 
         dto.project = ProjectNameAndUiIdDTO.fromEntity(task.getProject());

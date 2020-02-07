@@ -21,10 +21,6 @@
 
     <bean class="org.wrkr.clb.services.api.elasticsearch.impl.DefaultElasticsearchUserService">
     </bean>
-    <bean class="org.wrkr.clb.services.api.elasticsearch.impl.DefaultElasticsearchProjectService">
-    </bean>
-    <bean class="org.wrkr.clb.services.api.elasticsearch.impl.DefaultElasticsearchOrganizationService">
-    </bean>
     <bean class="org.wrkr.clb.services.api.elasticsearch.impl.DefaultElasticsearchTaskService">
     </bean>
 

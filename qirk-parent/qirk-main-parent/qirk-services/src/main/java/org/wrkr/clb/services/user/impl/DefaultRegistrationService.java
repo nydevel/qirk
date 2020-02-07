@@ -167,7 +167,7 @@ public class DefaultRegistrationService implements RegistrationService {
     }
 
     private PasswordActivationToken register(HttpServletRequest request, String email, String password) throws Exception {
-        // create user and predefined organization
+        // create user
         User user = createDisabledUserWithEmailAndPassword(email, password);
 
         // create activation token

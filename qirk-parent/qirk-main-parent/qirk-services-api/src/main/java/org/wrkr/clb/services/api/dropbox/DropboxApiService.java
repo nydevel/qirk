@@ -24,12 +24,8 @@ import javax.validation.constraints.NotNull;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.services.api.OAuthService;
 
-
 @Validated
 public interface DropboxApiService extends OAuthService {
-
-    @Deprecated
-    public String getRedirectURIForOrganization();
 
     @Deprecated
     public String getRedirectURIForProject();

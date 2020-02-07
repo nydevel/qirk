@@ -43,7 +43,6 @@ import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 
-
 //@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultDropboxApiService extends DefaultOAuthService implements DropboxApiService {
@@ -79,7 +78,6 @@ public class DefaultDropboxApiService extends DefaultOAuthService implements Dro
     protected String clientSercet;
 
     // redirect uri config values
-    private String redirectURIForOrganization;
     private String redirectURIForProject;
 
     @Override
@@ -98,15 +96,6 @@ public class DefaultDropboxApiService extends DefaultOAuthService implements Dro
 
     public void setClientSercet(String clientSercet) {
         this.clientSercet = clientSercet;
-    }
-
-    @Override
-    public String getRedirectURIForOrganization() {
-        return redirectURIForOrganization;
-    }
-
-    public void setRedirectURIForOrganization(String redirectURIForOrganization) {
-        this.redirectURIForOrganization = redirectURIForOrganization;
     }
 
     @Override

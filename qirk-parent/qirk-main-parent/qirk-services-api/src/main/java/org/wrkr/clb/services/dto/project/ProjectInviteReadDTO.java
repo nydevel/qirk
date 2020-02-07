@@ -49,11 +49,9 @@ public class ProjectInviteReadDTO extends ProjectInviteStatusDTO {
     public String updatedAt;
 
     public static ProjectInviteReadDTO fromInvite(BaseProjectInvite invite,
-            boolean includeUser, boolean includeProjectAndOrganization, boolean includeStatus) {
+            boolean includeUser, boolean includeProject, boolean includeStatus) {
         ProjectInviteReadDTO dto = new ProjectInviteReadDTO();
-
-        dto.setFields(invite, includeUser, includeProjectAndOrganization, includeStatus);
-
+        dto.setFields(invite, includeUser, includeProject, includeStatus);
         return dto;
     }
 

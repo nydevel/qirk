@@ -356,7 +356,7 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         ProjectMember reporter = projectMemberRepo.getNotFiredByUserIdAndProjectIdAndFetchUser(
                 currentUser.getId(), project.getId());
         if (reporter == null) {
-            throw new NotFoundException("Reporter organization member");
+            throw new NotFoundException("Reporter project member");
         }
         task.setReporter(reporter);
 
@@ -589,7 +589,7 @@ public class DefaultTaskService extends VersionedEntityService implements TaskSe
         task.setLinkedTasks(taskRepo.listByLinkedTaskId(taskId));
         task.setHashtags(hashtagRepo.listByTaskId(task.getId()));
 
-        TaskReadDTO dto = TaskReadDTO.fromEntityWithEverythingForReadAndOrganizationAndSubscription(task);
+        TaskReadDTO dto = TaskReadDTO.fromEntityWithEverythingForReadAndSubscription(task);
         if (currentUser != null) {
             dto.subscribed = subscriberRepo.exists(currentUser.getId(), taskId);
         }
