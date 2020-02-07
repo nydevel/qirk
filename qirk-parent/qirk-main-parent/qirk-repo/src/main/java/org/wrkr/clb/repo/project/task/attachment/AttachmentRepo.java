@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.project.task;
+package org.wrkr.clb.repo.project.task.attachment;
 
 import java.sql.Array;
 import java.sql.JDBCType;
@@ -26,14 +26,14 @@ import java.util.Map;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.task.Attachment;
-import org.wrkr.clb.model.project.task.AttachmentMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
-import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
+import org.wrkr.clb.model.project.task.attachment.AttachmentMeta;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachmentMeta;
 import org.wrkr.clb.repo.JDBCIdEntityRepo;
-import org.wrkr.clb.repo.mapper.project.task.AttachmentFilenameMapper;
-import org.wrkr.clb.repo.mapper.project.task.AttachmentMapper;
-import org.wrkr.clb.repo.mapper.project.task.AttachmentWithTaskMapper;
+import org.wrkr.clb.repo.mapper.project.task.attachment.AttachmentFilenameMapper;
+import org.wrkr.clb.repo.mapper.project.task.attachment.AttachmentMapper;
+import org.wrkr.clb.repo.mapper.project.task.attachment.AttachmentWithTaskMapper;
 
 @Repository
 public class AttachmentRepo extends JDBCIdEntityRepo {

@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.project;
+package org.wrkr.clb.repo.mapper.project.imprt.jira;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +23,7 @@ import java.util.Map;
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProject;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
+import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
 
 public class ImportedJiraProjectMapper extends BaseMapper<ImportedJiraProject> {
 

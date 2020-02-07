@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.file.impl;
+package org.wrkr.clb.services.project.task.attachment.impl;
 
 import java.io.IOException;
 
@@ -24,12 +24,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.project.task.Attachment;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.project.task.AttachmentRepo;
-import org.wrkr.clb.services.file.AttachmentFileService;
+import org.wrkr.clb.repo.project.task.attachment.AttachmentRepo;
 import org.wrkr.clb.services.file.FileService;
 import org.wrkr.clb.services.file.YandexCloudFileService;
+import org.wrkr.clb.services.project.task.attachment.AttachmentFileService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 

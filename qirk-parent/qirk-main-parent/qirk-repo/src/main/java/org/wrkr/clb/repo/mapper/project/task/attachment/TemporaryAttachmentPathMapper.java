@@ -14,32 +14,30 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.project.task;
+package org.wrkr.clb.repo.mapper.project.task.attachment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.model.project.task.Attachment;
+import org.wrkr.clb.common.jdbc.BaseMapper;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachment;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachmentMeta;
 
-public class AttachmentWithTaskMapper extends AttachmentMapper {
+public class TemporaryAttachmentPathMapper extends BaseMapper<TemporaryAttachment> {
 
-    private TaskNumberMapper taskMapper;
-
-    public AttachmentWithTaskMapper(String attachmentTableName, String taskTableName) {
+    public TemporaryAttachmentPathMapper(String attachmentTableName) {
         super(attachmentTableName);
-        taskMapper = new TaskNumberMapper(taskTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return super.generateSelectColumnsStatement() + ", " +
-                taskMapper.generateSelectColumnsStatement();
+        return generateSelectColumnStatement(TemporaryAttachmentMeta.path);
     }
 
     @Override
-    public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
-        Attachment attachment = super.mapRow(rs, rowNum);
-        attachment.setTask(taskMapper.mapRow(rs, rowNum));
+    public TemporaryAttachment mapRow(ResultSet rs, @SuppressWarnings("unused") int rowNum) throws SQLException {
+        TemporaryAttachment attachment = new TemporaryAttachment();
+        attachment.setPath(rs.getString(generateColumnAlias(TemporaryAttachmentMeta.path)));
         return attachment;
     }
 }

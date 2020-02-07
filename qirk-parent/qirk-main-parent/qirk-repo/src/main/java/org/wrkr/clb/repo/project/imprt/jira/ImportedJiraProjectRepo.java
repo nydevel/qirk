@@ -30,7 +30,7 @@ import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProject;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
-import org.wrkr.clb.repo.mapper.project.ImportedJiraProjectMapper;
+import org.wrkr.clb.repo.mapper.project.imprt.jira.ImportedJiraProjectMapper;
 
 @Repository
 public class ImportedJiraProjectRepo extends JDBCBaseMainRepo {

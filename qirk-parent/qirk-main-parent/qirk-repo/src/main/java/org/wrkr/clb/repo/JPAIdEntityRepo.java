@@ -31,7 +31,7 @@ import org.wrkr.clb.model.BaseIdEntity_;
 
 
 @Repository
-public abstract class JPAIdEntityRepo<E extends BaseIdEntity> extends JPABaseRepo<E> {
+public abstract class JPAIdEntityRepo<E extends BaseIdEntity> extends JPABaseMainRepo<E> {
 
     private static final Logger LOG = LoggerFactory.getLogger(JPAIdEntityRepo.class);
 

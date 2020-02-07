@@ -14,17 +14,17 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.project.task;
+package org.wrkr.clb.repo.project.task.attachment;
 
 import java.sql.Array;
 import java.sql.JDBCType;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.task.TemporaryAttachment;
-import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachment;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachmentMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
-import org.wrkr.clb.repo.mapper.project.task.TemporaryAttachmentPathMapper;
+import org.wrkr.clb.repo.mapper.project.task.attachment.TemporaryAttachmentPathMapper;
 
 @Repository
 public class TemporaryAttachmentRepo extends JDBCBaseMainRepo {

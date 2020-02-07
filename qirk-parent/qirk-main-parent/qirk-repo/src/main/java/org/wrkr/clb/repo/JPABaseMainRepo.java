@@ -31,9 +31,9 @@ import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.BaseEntity;
 
 @Repository
-public abstract class JPABaseRepo<E extends BaseEntity> {
+public abstract class JPABaseMainRepo<E extends BaseEntity> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JPABaseRepo.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JPABaseMainRepo.class);
 
     @PersistenceContext
     private EntityManager entityManager;

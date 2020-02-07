@@ -19,7 +19,7 @@ package org.wrkr.clb.services.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wrkr.clb.model.project.task.Attachment;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
 
 public class AttachmentDTO extends IdDTO {
 

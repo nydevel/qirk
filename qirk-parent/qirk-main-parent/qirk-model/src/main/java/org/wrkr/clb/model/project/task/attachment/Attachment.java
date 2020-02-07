@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.model.project.task;
+package org.wrkr.clb.model.project.task.attachment;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -25,6 +25,7 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
+import org.wrkr.clb.model.project.task.Task;
 
 @Entity
 @Table(name = AttachmentMeta.TABLE_NAME)

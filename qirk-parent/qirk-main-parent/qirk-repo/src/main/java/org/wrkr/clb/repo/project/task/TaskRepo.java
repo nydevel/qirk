@@ -48,8 +48,7 @@ import org.wrkr.clb.model.project.task.TaskTypeMeta;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCIdEntityRepo;
 import org.wrkr.clb.repo.context.TaskSearchContext;
-import org.wrkr.clb.repo.mapper.project.task.ChatTaskMapper;
-import org.wrkr.clb.repo.mapper.project.task.JiraImportTaskMapper;
+import org.wrkr.clb.repo.mapper.project.imprt.jira.JiraImportTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.LinkedTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.ShortTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.ShortTaskWithPriorityAndStatusMapper;
@@ -58,7 +57,7 @@ import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForDatasyncMapper
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForListMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForReadMapper;
 import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForUpdateMapper;
-import org.wrkr.clb.repo.mapper.project.task.UpdateCardTaskMapper;
+import org.wrkr.clb.repo.mapper.project.task.TaskWithEverythingForCardUpdateMapper;
 import org.wrkr.clb.repo.sort.SortingOption;
 
 @Repository
@@ -92,7 +91,7 @@ public class TaskRepo extends JDBCIdEntityRepo {
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.cardId + " = ? " + // 1
             "AND " + ALIVE_PREDICATE + ";";
 
-    private static final UpdateCardTaskMapper UPDATE_CARD_TASK_MAPPER = new UpdateCardTaskMapper(
+    private static final TaskWithEverythingForCardUpdateMapper UPDATE_CARD_TASK_MAPPER = new TaskWithEverythingForCardUpdateMapper(
             TaskMeta.TABLE_NAME, TaskStatusMeta.TABLE_NAME);
 
     private static final String SELECT_ALIVE_FOR_UPDATE_CARD_BY_ID = "SELECT " +
@@ -126,7 +125,7 @@ public class TaskRepo extends JDBCIdEntityRepo {
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
-    private static final ChatTaskMapper CHAT_TASK_MAPPER = new ChatTaskMapper(
+    private static final TaskNumberWithProjectMapper CHAT_TASK_MAPPER = new TaskNumberWithProjectMapper(
             TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME);
 
     private static final String SELECT_BY_ID_FOR_CHAT_AND_FETCH_PROJECT = "SELECT " +

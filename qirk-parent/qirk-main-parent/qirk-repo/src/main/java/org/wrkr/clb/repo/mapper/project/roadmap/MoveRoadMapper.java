@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.project;
+package org.wrkr.clb.repo.mapper.project.roadmap;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

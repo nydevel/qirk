@@ -38,7 +38,7 @@ import org.wrkr.clb.model.project.task.TaskPriorityMeta;
 import org.wrkr.clb.model.project.task.TaskStatusMeta;
 import org.wrkr.clb.repo.JDBCIdEntityRepo;
 import org.wrkr.clb.repo.mapper.VersionedEntityMapper;
-import org.wrkr.clb.repo.mapper.project.MoveRoadMapper;
+import org.wrkr.clb.repo.mapper.project.roadmap.MoveRoadMapper;
 import org.wrkr.clb.repo.mapper.project.roadmap.RoadWithCardsAndTasksMapper;
 
 @Repository

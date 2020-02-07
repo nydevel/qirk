@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.web.controller.project.task;
+package org.wrkr.clb.web.controller.project.task.attachment;
 
 import java.util.List;
 
@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.wrkr.clb.services.dto.AttachmentDTO;
 import org.wrkr.clb.services.dto.IdDTO;
 import org.wrkr.clb.services.dto.project.task.AttachmentCreateDTO;
-import org.wrkr.clb.services.file.AttachmentService;
+import org.wrkr.clb.services.project.task.attachment.AttachmentService;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
 import org.wrkr.clb.web.json.JsonContainer;
 

@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.model.project.task;
+package org.wrkr.clb.model.project.task.attachment;
 
 import org.wrkr.clb.model.BaseEntity;
 import org.wrkr.clb.model.project.Project;

@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.project.task;
+package org.wrkr.clb.repo.mapper.project.imprt.jira;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +23,9 @@ import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraTaskMeta;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.TaskMeta;
+import org.wrkr.clb.repo.mapper.project.task.TaskPriorityMapper;
+import org.wrkr.clb.repo.mapper.project.task.TaskStatusMapper;
+import org.wrkr.clb.repo.mapper.project.task.TaskTypeMapper;
 
 public class JiraImportTaskMapper extends BaseMapper<Task> {
 

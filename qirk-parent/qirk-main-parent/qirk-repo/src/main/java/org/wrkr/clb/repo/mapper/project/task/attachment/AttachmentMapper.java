@@ -14,29 +14,27 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.repo.mapper.project.task;
+package org.wrkr.clb.repo.mapper.project.task.attachment;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.project.task.Attachment;
-import org.wrkr.clb.model.project.task.AttachmentMeta;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
+import org.wrkr.clb.model.project.task.attachment.AttachmentMeta;
 
-public class AttachmentFilenameMapper extends BaseMapper<Attachment> {
+public class AttachmentMapper extends BaseMapper<Attachment> {
 
-    public AttachmentFilenameMapper() {
-        super();
-    }
-
-    public AttachmentFilenameMapper(String attachmentTableName) {
+    public AttachmentMapper(String attachmentTableName) {
         super(attachmentTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
         return generateSelectColumnStatement(AttachmentMeta.id) + ", " +
-                generateSelectColumnStatement(AttachmentMeta.filename);
+                generateSelectColumnStatement(AttachmentMeta.filename) + ", " +
+                generateSelectColumnStatement(AttachmentMeta.path) + ", " +
+                generateSelectColumnStatement(AttachmentMeta.taskId);
     }
 
     @Override
@@ -45,6 +43,8 @@ public class AttachmentFilenameMapper extends BaseMapper<Attachment> {
 
         attachment.setId(rs.getLong(generateColumnAlias(AttachmentMeta.id)));
         attachment.setFilename(rs.getString(generateColumnAlias(AttachmentMeta.filename)));
+        attachment.setPath(rs.getString(generateColumnAlias(AttachmentMeta.path)));
+        attachment.setTaskId(rs.getLong(generateColumnAlias(AttachmentMeta.taskId)));
 
         return attachment;
     }

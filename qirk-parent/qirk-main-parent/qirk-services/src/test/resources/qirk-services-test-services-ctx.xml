@@ -62,7 +62,7 @@
         <property name="taskUrl" value="${front.url.task}" />
     </bean>
 
-    <bean class="org.wrkr.clb.services.project.task.impl.DefaultTemporaryAttachmentService">
+    <bean class="org.wrkr.clb.services.project.task.attachment.impl.DefaultTemporaryAttachmentService">
         <property name="temporaryAttachmentLifetimeSeconds" value="${attachment.tmp.lifetime.seconds}" />
     </bean>
 

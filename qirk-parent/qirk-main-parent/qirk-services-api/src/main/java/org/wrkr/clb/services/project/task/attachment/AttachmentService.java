@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.file;
+package org.wrkr.clb.services.project.task.attachment;
 
 import java.util.List;
 

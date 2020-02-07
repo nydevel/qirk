@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.file.impl;
+package org.wrkr.clb.services.project.task.attachment.impl;
 
 import java.util.List;
 
@@ -23,15 +23,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.Task;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.project.task.AttachmentRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
-import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
+import org.wrkr.clb.repo.project.task.attachment.AttachmentRepo;
+import org.wrkr.clb.repo.project.task.attachment.TemporaryAttachmentRepo;
 import org.wrkr.clb.services.dto.AttachmentDTO;
 import org.wrkr.clb.services.dto.project.task.AttachmentCreateDTO;
-import org.wrkr.clb.services.file.AttachmentService;
+import org.wrkr.clb.services.project.task.attachment.AttachmentService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.NotFoundException;

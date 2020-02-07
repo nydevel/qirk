@@ -28,10 +28,10 @@ import org.wrkr.clb.model.project.roadmap.RoadMeta;
 import org.wrkr.clb.model.project.roadmap.TaskCard;
 import org.wrkr.clb.model.project.roadmap.TaskCardMeta;
 import org.wrkr.clb.repo.JDBCIdEntityRepo;
+import org.wrkr.clb.repo.mapper.project.roadmap.MoveTaskCardMapper;
 import org.wrkr.clb.repo.mapper.project.roadmap.TaskCardMapper;
 import org.wrkr.clb.repo.mapper.project.roadmap.TaskCardStatusMapper;
 import org.wrkr.clb.repo.mapper.project.roadmap.TaskCardWithRoadMapper;
-import org.wrkr.clb.repo.mapper.project.task.MoveTaskCardMapper;
 
 @Repository
 public class TaskCardRepo extends JDBCIdEntityRepo {

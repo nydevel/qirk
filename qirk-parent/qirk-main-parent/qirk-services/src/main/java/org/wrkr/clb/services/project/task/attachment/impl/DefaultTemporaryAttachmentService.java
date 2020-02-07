@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.services.file.impl;
+package org.wrkr.clb.services.project.task.attachment.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +27,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.model.project.task.TemporaryAttachment;
-import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
+import org.wrkr.clb.model.project.task.attachment.TemporaryAttachment;
+import org.wrkr.clb.repo.project.task.attachment.TemporaryAttachmentRepo;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
-import org.wrkr.clb.services.file.TemporaryAttachmentService;
+import org.wrkr.clb.services.project.task.attachment.TemporaryAttachmentService;
 
 //@Service configured in clb-services-ctx.xml
 @Validated

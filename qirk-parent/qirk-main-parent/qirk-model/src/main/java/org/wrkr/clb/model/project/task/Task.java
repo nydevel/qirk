@@ -37,6 +37,7 @@ import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.roadmap.TaskCard;
+import org.wrkr.clb.model.project.task.attachment.Attachment;
 
 @Entity
 @Table(name = TaskMeta.TABLE_NAME)

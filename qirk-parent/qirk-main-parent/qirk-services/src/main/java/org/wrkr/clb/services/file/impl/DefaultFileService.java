@@ -30,9 +30,9 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
-import org.wrkr.clb.services.file.AttachmentService;
 import org.wrkr.clb.services.file.FileService;
-import org.wrkr.clb.services.file.TemporaryAttachmentService;
+import org.wrkr.clb.services.project.task.attachment.AttachmentService;
+import org.wrkr.clb.services.project.task.attachment.TemporaryAttachmentService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 
 //@Service configured in clb-services-ctx.xml
