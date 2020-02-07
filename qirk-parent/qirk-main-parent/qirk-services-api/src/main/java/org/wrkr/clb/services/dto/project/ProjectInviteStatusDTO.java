@@ -16,8 +16,8 @@
  */
 package org.wrkr.clb.services.dto.project;
 
-import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.project.BaseProjectInvite;
+import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.services.dto.IdDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;

@@ -21,12 +21,10 @@ import java.sql.JDBCType;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TemporaryAttachmentPathMapper;
-
 
 @Repository
 public class TemporaryAttachmentRepo extends JDBCBaseMainRepo {
@@ -36,22 +34,18 @@ public class TemporaryAttachmentRepo extends JDBCBaseMainRepo {
             TemporaryAttachmentMeta.filename + ", " + // 2
             TemporaryAttachmentMeta.path + ", " + // 3
             TemporaryAttachmentMeta.projectId + ", " + // 4
-            TemporaryAttachmentMeta.dropboxSettingsId + ", " + // 5
-            TemporaryAttachmentMeta.createdAt + ") " + // 6
-            "VALUES (?, ?, ?, ?, ?, ?);";
+            TemporaryAttachmentMeta.createdAt + ") " + // 5
+            "VALUES (?, ?, ?, ?, ?);";
 
     private static final String SELECT_1_BY_UUID = "SELECT 1 FROM " + TemporaryAttachmentMeta.TABLE_NAME + " " +
             "WHERE " + TemporaryAttachmentMeta.uuid + " = ?;"; // 1
 
     private static final TemporaryAttachmentPathMapper TEMPORARY_ATTACHMENT_MAPPER = new TemporaryAttachmentPathMapper(
-            TemporaryAttachmentMeta.TABLE_NAME, DropboxSettingsMeta.TABLE_NAME);
+            TemporaryAttachmentMeta.TABLE_NAME);
 
     private static final String SELECT_BY_CREATED_AT_UNTIL = "SELECT " +
             TEMPORARY_ATTACHMENT_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + TemporaryAttachmentMeta.TABLE_NAME + " " +
-            "INNER JOIN " + DropboxSettingsMeta.TABLE_NAME + " " +
-            "ON " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.dropboxSettingsId + " = " +
-            DropboxSettingsMeta.TABLE_NAME + "." + DropboxSettingsMeta.id + " " +
             "WHERE " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.createdAt + " < ?;"; // 1
 
     private static final String DELETE_BY_PROJECT_ID_AND_UUIDS = "DELETE FROM " + TemporaryAttachmentMeta.TABLE_NAME + " " +
@@ -64,7 +58,7 @@ public class TemporaryAttachmentRepo extends JDBCBaseMainRepo {
     public void save(TemporaryAttachment attachment) {
         getJdbcTemplate().update(INSERT,
                 attachment.getUuid(), attachment.getFilename(), attachment.getPath(),
-                attachment.getProjectId(), attachment.getDropboxSettingsId(), attachment.getCreatedAt());
+                attachment.getProjectId(), attachment.getCreatedAt());
     }
 
     public boolean existsByUuid(String uuid) {

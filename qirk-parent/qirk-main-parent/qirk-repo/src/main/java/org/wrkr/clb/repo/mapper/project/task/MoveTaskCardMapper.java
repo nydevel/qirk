@@ -19,11 +19,11 @@ package org.wrkr.clb.repo.mapper.project.task;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import org.wrkr.clb.model.project.task.TaskCard;
-import org.wrkr.clb.model.project.task.TaskCardMeta;
-import org.wrkr.clb.repo.mapper.RecordVersionMapper;
+import org.wrkr.clb.model.project.roadmap.TaskCard;
+import org.wrkr.clb.model.project.roadmap.TaskCardMeta;
+import org.wrkr.clb.repo.mapper.VersionedEntityMapper;
 
-public class MoveTaskCardMapper extends RecordVersionMapper<TaskCard> {
+public class MoveTaskCardMapper extends VersionedEntityMapper<TaskCard> {
 
     protected String nextTableName = "";
 

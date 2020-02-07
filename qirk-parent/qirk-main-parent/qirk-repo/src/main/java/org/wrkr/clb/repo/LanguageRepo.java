@@ -34,7 +34,7 @@ import org.wrkr.clb.model.user.UserToLanguageMeta;
 import org.wrkr.clb.repo.mapper.LanguageMapper;
 
 @Repository
-public class LanguageRepo extends JDBCBaseIdRepo {
+public class LanguageRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT_BATCH_INTO_USER_LANGUAGE = "INSERT INTO " +
             UserToLanguageMeta.TABLE_NAME + " " +

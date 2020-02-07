@@ -23,7 +23,6 @@ import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
-import org.wrkr.clb.services.dto.DropboxSettingsDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -59,10 +58,6 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     @JsonProperty(value = "documentation_md")
     @JsonInclude(Include.NON_NULL)
     public String documentationMd;
-
-    @Deprecated
-    @JsonProperty(value = "dropbox_settings")
-    public DropboxSettingsDTO dropboxSettings;
 
     @JsonInclude(Include.NON_NULL)
     public List<Tag> tags;

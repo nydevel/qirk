@@ -32,12 +32,11 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraTaskMeta;
+import org.wrkr.clb.model.project.roadmap.TaskCardMeta;
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.model.project.task.TaskCardMeta;
 import org.wrkr.clb.model.project.task.TaskHashtagMeta;
 import org.wrkr.clb.model.project.task.TaskHashtagToTaskMeta;
 import org.wrkr.clb.model.project.task.TaskLinkMeta;
@@ -47,10 +46,9 @@ import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskStatusMeta;
 import org.wrkr.clb.model.project.task.TaskTypeMeta;
 import org.wrkr.clb.model.user.UserMeta;
-import org.wrkr.clb.repo.JDBCBaseIdRepo;
+import org.wrkr.clb.repo.JDBCIdEntityRepo;
 import org.wrkr.clb.repo.context.TaskSearchContext;
 import org.wrkr.clb.repo.mapper.project.task.ChatTaskMapper;
-import org.wrkr.clb.repo.mapper.project.task.DropboxTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.JiraImportTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.LinkedTaskMapper;
 import org.wrkr.clb.repo.mapper.project.task.ShortTaskMapper;
@@ -64,7 +62,7 @@ import org.wrkr.clb.repo.mapper.project.task.UpdateCardTaskMapper;
 import org.wrkr.clb.repo.sort.SortingOption;
 
 @Repository
-public class TaskRepo extends JDBCBaseIdRepo {
+public class TaskRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + TaskMeta.TABLE_NAME + " " +
             "(" + TaskMeta.recordVersion + ", " + // 1
@@ -126,23 +124,6 @@ public class TaskRepo extends JDBCBaseIdRepo {
             "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
             "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
             ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
-
-    private static final String PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS = "proj_dropbox_settings";
-    @Deprecated
-    private static final DropboxTaskMapper DROPBOX_TASK_MAPPER = new DropboxTaskMapper(
-            TaskMeta.TABLE_NAME, ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS);
-
-    @Deprecated
-    private static final String SELECT_BY_ID_FOR_DROPBOX_AND_FETCH_PROJECT = "SELECT " +
-            DROPBOX_TASK_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskMeta.TABLE_NAME + "." + TaskMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
-            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id + " " +
             "WHERE " + TaskMeta.TABLE_NAME + "." + TaskMeta.id + " = ?;"; // 1
 
     private static final ChatTaskMapper CHAT_TASK_MAPPER = new ChatTaskMapper(
@@ -525,11 +506,6 @@ public class TaskRepo extends JDBCBaseIdRepo {
 
     public Task getByIdAndFetchProject(Long taskId) {
         return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_PROJECT, SHORT_TASK_WITH_PROJECT_MAPPER, taskId);
-    }
-
-    @Deprecated
-    public Task getByIdForDropboxAndFetchProject(Long taskId) {
-        return queryForObjectOrNull(SELECT_BY_ID_FOR_DROPBOX_AND_FETCH_PROJECT, DROPBOX_TASK_MAPPER, taskId);
     }
 
     public Task getByIdForChatAndFetchProject(Long taskId) {

@@ -25,8 +25,8 @@ public class AttachmentWithTaskMapper extends AttachmentMapper {
 
     private TaskNumberMapper taskMapper;
 
-    public AttachmentWithTaskMapper(String attachmentTableName, String dropboxSettingsTableName, String taskTableName) {
-        super(attachmentTableName, dropboxSettingsTableName);
+    public AttachmentWithTaskMapper(String attachmentTableName, String taskTableName) {
+        super(attachmentTableName);
         taskMapper = new TaskNumberMapper(taskTableName);
     }
 

@@ -42,7 +42,6 @@ import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
-import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.user.CurrentUserProfileDTO;
@@ -77,10 +76,6 @@ public class DefaultProfileService implements ProfileService {
 
     @Autowired
     private JDBCUserRepo userRepo;
-
-    @Deprecated
-    @Autowired
-    private UserRepo jpaUserRepo;
 
     @Autowired
     private PasswordActivationTokenRepo activationTokenRepo;
@@ -134,7 +129,7 @@ public class DefaultProfileService implements ProfileService {
         User user = null;
         if (passwordDTO.token != null) {
             user = activationTokenService.getUserAndDeleteToken(passwordDTO.token);
-            jpaUserRepo.detach(user);
+            // jpaUserRepo.detach(user);
         } else {
             // security start
             securityService.isAuthenticated(sessionUser);

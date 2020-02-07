@@ -40,9 +40,7 @@ public class ProjectMemberWithProjectMapper extends ProjectMemberMapper {
     @Override
     public ProjectMember mapRow(ResultSet rs, int rowNum) throws SQLException {
         ProjectMember member = super.mapRow(rs, rowNum);
-
         member.setProject(projectMapper.mapRow(rs, rowNum));
-
         return member;
     }
 }

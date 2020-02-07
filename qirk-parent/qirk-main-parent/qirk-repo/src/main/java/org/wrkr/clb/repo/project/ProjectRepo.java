@@ -36,10 +36,10 @@ import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.project.task.Task_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseIdRepo;
+import org.wrkr.clb.repo.JPAIdEntityRepo;
 
 @Repository
-public class ProjectRepo extends JPABaseIdRepo<Project> {
+public class ProjectRepo extends JPAIdEntityRepo<Project> {
 
     @Override
     public Project get(Long id) {

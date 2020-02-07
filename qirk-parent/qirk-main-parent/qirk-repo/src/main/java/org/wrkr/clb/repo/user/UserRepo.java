@@ -29,10 +29,10 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseIdRepo;
+import org.wrkr.clb.repo.JPAIdEntityRepo;
 
 @Repository
-public class UserRepo extends JPABaseIdRepo<User> {
+public class UserRepo extends JPAIdEntityRepo<User> {
 
     @Override
     public User get(Long id) {

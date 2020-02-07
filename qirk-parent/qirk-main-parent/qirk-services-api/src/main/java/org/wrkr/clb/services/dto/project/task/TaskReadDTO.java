@@ -164,7 +164,6 @@ public class TaskReadDTO extends IdDTO {
         TaskReadDTO dto = fromEntity(task, false, false, true);
 
         dto.project = ProjectNameAndUiIdDTO.fromEntity(task.getProject());
-        dto.hasDropboxSettings = (task.getProject().getDropboxSettingsId() != null);
         dto.linkedTasks = LinkedTaskDTO.fromEntities(task.getLinkedTasks());
         dto.hashtags = task.getHashtags();
         dto.subscribed = false;

@@ -22,20 +22,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.AttachmentDTO;
 import org.wrkr.clb.services.dto.project.task.AttachmentCreateDTO;
 
-
 @Validated
 public interface AttachmentService {
-
-    public AttachmentDTO create(
-            @NotNull(message = "externalPath create must not be null") String externalPath,
-            @NotNull(message = "task create must not be null") Task task,
-            @NotNull(message = "dropboxSettings create must not be null") DropboxSettings dropboxSettings);
 
     public AttachmentDTO create(
             @NotNull(message = "externalPath create must not be null") String externalPath,
@@ -49,7 +42,6 @@ public interface AttachmentService {
     public void delete(User currentUser,
             @NotNull(message = "id delete must not be null") Long id) throws Exception;
 
-    @Deprecated
-    public String getThumbnail(User currentUser,
-            @NotNull(message = "id delete must not be null") Long id) throws Exception;
+    // public String getThumbnail(User currentUser,
+    // @NotNull(message = "id delete must not be null") Long id) throws Exception;
 }

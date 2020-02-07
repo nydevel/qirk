@@ -90,13 +90,13 @@ public abstract class BaseProjectSecurityService extends BaseSecurityService {
                 user.getId());
     }
 
-    // protected Project getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(User user, Long applicationId) {
-    // if (user == null) {
-    // return projectRepo.getByApplicationIdForSecurity(applicationId);
-    // }
-    // return projectRepo.getByApplicationIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(applicationId,
-    // user.getId());
-    // }
+    protected Project getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(User user, Long applicationId) {
+        if (user == null) {
+            return projectRepo.getByApplicationIdForSecurity(applicationId);
+        }
+        return projectRepo.getByApplicationIdAndFetchNotFiredOrgMemberAndProjectMemberByUserIdForSecurity(applicationId,
+                user.getId());
+    }
 
     protected Project getProjectWithOrgMemberAndProjectMemberByUserAndOtherMemberId(User user, Long projectMemberId) {
         if (user == null) {

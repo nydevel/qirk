@@ -25,8 +25,6 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
-import org.wrkr.clb.model.project.DropboxSettings;
-
 
 @Entity
 @Table(name = AttachmentMeta.TABLE_NAME)
@@ -43,12 +41,6 @@ public class Attachment extends BaseIdEntity {
     private Task task;
     @Transient
     private Long taskId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dropbox_settings_id")
-    private DropboxSettings dropboxSettings;
-    @Transient
-    private Long dropboxSettingsId;
 
     @Column(name = "deleted", nullable = false)
     private boolean deleted = false;
@@ -77,14 +69,6 @@ public class Attachment extends BaseIdEntity {
         this.task = task;
     }
 
-    public DropboxSettings getDropboxSettings() {
-        return dropboxSettings;
-    }
-
-    public void setDropboxSettings(DropboxSettings dropboxSettings) {
-        this.dropboxSettings = dropboxSettings;
-    }
-
     public Long getTaskId() {
         if (taskId == null) {
             return (task == null ? null : task.getId());
@@ -94,17 +78,6 @@ public class Attachment extends BaseIdEntity {
 
     public void setTaskId(Long taskId) {
         this.taskId = taskId;
-    }
-
-    public Long getDropboxSettingsId() {
-        if (dropboxSettingsId == null) {
-            return (dropboxSettings == null ? null : dropboxSettings.getId());
-        }
-        return dropboxSettingsId;
-    }
-
-    public void setDropboxSettingsId(Long dropboxSettingsId) {
-        this.dropboxSettingsId = dropboxSettingsId;
     }
 
     public boolean isDeleted() {

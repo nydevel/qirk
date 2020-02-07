@@ -38,7 +38,6 @@ import org.wrkr.clb.services.file.AttachmentService;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
 import org.wrkr.clb.web.json.JsonContainer;
 
-
 @RestController
 @RequestMapping(path = "attachment", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AttachmentController extends BaseExceptionHandlerController {
@@ -65,16 +64,18 @@ public class AttachmentController extends BaseExceptionHandlerController {
         return new JsonContainer<AttachmentDTO, Void>(attachmentDTOList);
     }
 
-    @Deprecated
-    @GetMapping(value = "thumbnail", produces = { MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
-            MediaType.IMAGE_PNG_VALUE })
-    public String getThumbnail(HttpSession session,
-            @RequestParam("id") Long id) throws Exception {
-        long startTime = System.currentTimeMillis();
-        String thumbnail = attachmentService.getThumbnail(getSessionUser(session), id);
-        logProcessingTimeFromStartTime(startTime, "getThumbnail", id);
-        return thumbnail;
-    }
+    /*
+     * @GetMapping(value = "thumbnail", produces = { MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE,
+     * MediaType.IMAGE_PNG_VALUE })
+     * public String getThumbnail(HttpSession session,
+     * 
+     * @RequestParam("id") Long id) throws Exception {
+     * long startTime = System.currentTimeMillis();
+     * String thumbnail = attachmentService.getThumbnail(getSessionUser(session), id);
+     * logProcessingTimeFromStartTime(startTime, "getThumbnail", id);
+     * return thumbnail;
+     * }
+     */
 
     @DeleteMapping(value = "/")
     public JsonContainer<Void, Void> delete(HttpSession session, @RequestBody IdDTO idDTO) throws Exception {

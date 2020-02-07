@@ -28,12 +28,10 @@ import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.task.AttachmentRepo;
 import org.wrkr.clb.services.file.AttachmentFileService;
-import org.wrkr.clb.services.file.DropboxFileService;
 import org.wrkr.clb.services.file.FileService;
 import org.wrkr.clb.services.file.YandexCloudFileService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
-
 
 @Service
 @Validated
@@ -48,9 +46,6 @@ public class DefaultAttachmentFileService implements AttachmentFileService {
 
     @Autowired
     private ProjectSecurityService securityService;
-
-    @Autowired
-    private DropboxFileService dropboxFileService;
 
     @Autowired
     private YandexCloudFileService yandexCloudFileService;
@@ -71,7 +66,7 @@ public class DefaultAttachmentFileService implements AttachmentFileService {
             return null;
         }
 
-        FileService fileService = attachment.getDropboxSettings() != null ? dropboxFileService : yandexCloudFileService;
+        FileService fileService = yandexCloudFileService;
         String errorCode = JsonStatusCode.INTERNAL_SERVER_ERROR;
         try {
             return fileService.getTemporaryLink(attachment);

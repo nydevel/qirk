@@ -39,12 +39,11 @@ import org.wrkr.clb.services.util.exception.NotFoundException;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 
-
 //@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultYandexCloudFileService extends DefaultFileService implements YandexCloudFileService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DefaultDropboxFileService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefaultYandexCloudFileService.class);
 
     private static final String FILE_PATH_PREFIX = "attachment";
 

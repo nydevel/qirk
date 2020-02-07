@@ -89,12 +89,6 @@ public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEnti
     @Column(name = "frozen", nullable = false)
     private boolean frozen = false;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dropbox_settings_id", nullable = true)
-    private DropboxSettings dropboxSettings;
-    @Transient
-    private Long dropboxSettingsId;
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "project_tag", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
             @JoinColumn(name = "tag_id") })
@@ -211,22 +205,6 @@ public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEnti
 
     public void setFrozen(boolean frozen) {
         this.frozen = frozen;
-    }
-
-    public DropboxSettings getDropboxSettings() {
-        return dropboxSettings;
-    }
-
-    public void setDropboxSettings(DropboxSettings dropboxSettings) {
-        this.dropboxSettings = dropboxSettings;
-    }
-
-    public Long getDropboxSettingsId() {
-        return dropboxSettingsId;
-    }
-
-    public void setDropboxSettingsId(Long dropboxSettingsId) {
-        this.dropboxSettingsId = dropboxSettingsId;
     }
 
     public Long getTaskNumberSequenceId() {

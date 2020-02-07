@@ -37,7 +37,7 @@ import org.wrkr.clb.model.user.UserToTagMeta;
 import org.wrkr.clb.repo.mapper.TagMapper;
 
 @Repository
-public class TagRepo extends JDBCBaseIdRepo {
+public class TagRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + TagMeta.TABLE_NAME + " " +
             "(" + TagMeta.name + ") " + // 1

@@ -31,10 +31,10 @@ import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.PasswordActivationToken_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class PasswordActivationTokenRepo extends JPABaseDeletingRepo<PasswordActivationToken> {
+public class PasswordActivationTokenRepo extends JPADeletingRepo<PasswordActivationToken> {
 
     @Override
     public PasswordActivationToken get(Long id) {

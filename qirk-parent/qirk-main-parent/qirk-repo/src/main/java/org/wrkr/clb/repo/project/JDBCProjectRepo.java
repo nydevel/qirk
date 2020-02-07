@@ -19,16 +19,14 @@ package org.wrkr.clb.repo.project;
 import java.util.List;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
 import org.wrkr.clb.model.project.ProjectMeta;
-import org.wrkr.clb.model.project.RoadMeta;
 import org.wrkr.clb.model.project.imprt.jira.ImportedJiraProjectMeta;
+import org.wrkr.clb.model.project.roadmap.RoadMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
-import org.wrkr.clb.repo.mapper.project.DropboxProjectMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectDocMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectNameAndUiIdMapper;
 import org.wrkr.clb.repo.mapper.project.ProjectWithEverythingForReadAndSecurityMembershipMapper;
@@ -74,27 +72,6 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo {
             PROJECT_DOC_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + ProjectMeta.TABLE_NAME + " " +
             "WHERE " + ProjectMeta.uiId + " = ?;"; // 1
-
-    private static final String PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS = "proj_dropbox_settings";
-    @Deprecated
-    private static final DropboxProjectMapper DROPBOX_PROJECT_MAPPER = new DropboxProjectMapper(
-            ProjectMeta.TABLE_NAME, PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS);
-
-    @Deprecated
-    private static final String SELECT_AND_FETCH_DROPBOX_SETTINGS_PREFIX = "SELECT " +
-            DROPBOX_PROJECT_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + ProjectMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " AS " + PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + " " +
-            "ON " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.dropboxSettingsId + " = " +
-            PROJECT_DROPBOX_SETTINGS_TABLE_ALIAS + "." + DropboxSettingsMeta.id;
-
-    @Deprecated
-    private static final String SELECT_BY_ID_AND_FETCH_DROPBOX_SETTINGS = SELECT_AND_FETCH_DROPBOX_SETTINGS_PREFIX + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " = ?;"; // 1
-
-    @Deprecated
-    private static final String SELECT_BY_UI_ID_AND_FETCH_DROPBOX_SETTINGS = SELECT_AND_FETCH_DROPBOX_SETTINGS_PREFIX + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ?;"; // 1
 
     private static final ProjectWithEverythingForReadMapper PROJECT_WITH_EVERYTHING_FOR_READ_MAPPER = new ProjectWithEverythingForReadMapper(
             ProjectMeta.TABLE_NAME);
@@ -164,18 +141,6 @@ public class JDBCProjectRepo extends JDBCBaseMainRepo {
 
     public Project getByUiIdForDocumentation(String projectUiId) {
         return queryForObjectOrNull(SELECT_BY_UI_ID_FOR_DOCUMENTATION, PROJECT_DOC_MAPPER,
-                projectUiId);
-    }
-
-    @Deprecated
-    public Project getByIdAndFetchDropboxSettings(Long projectId) {
-        return queryForObjectOrNull(SELECT_BY_ID_AND_FETCH_DROPBOX_SETTINGS, DROPBOX_PROJECT_MAPPER,
-                projectId);
-    }
-
-    @Deprecated
-    public Project getByUiIdAndFetchDropboxSettings(String projectUiId) {
-        return queryForObjectOrNull(SELECT_BY_UI_ID_AND_FETCH_DROPBOX_SETTINGS, DROPBOX_PROJECT_MAPPER,
                 projectUiId);
     }
 

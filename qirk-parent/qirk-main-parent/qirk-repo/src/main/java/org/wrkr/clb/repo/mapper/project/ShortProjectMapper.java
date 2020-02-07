@@ -39,7 +39,6 @@ public class ShortProjectMapper extends BaseMapper<Project> {
                 generateSelectColumnStatement(ProjectMeta.name) + ", " +
                 generateSelectColumnStatement(ProjectMeta.uiId) + ", " +
                 generateSelectColumnStatement(ProjectMeta.isPrivate) + ", " +
-                generateSelectColumnStatement(ProjectMeta.dropboxSettingsId) + ", " +
                 generateSelectColumnStatement(ProjectMeta.frozen);
     }
 
@@ -51,7 +50,6 @@ public class ShortProjectMapper extends BaseMapper<Project> {
         project.setName(rs.getString(generateColumnAlias(ProjectMeta.name)));
         project.setUiId(rs.getString(generateColumnAlias(ProjectMeta.uiId)));
         project.setPrivate(rs.getBoolean(generateColumnAlias(ProjectMeta.isPrivate)));
-        project.setDropboxSettingsId((Long) rs.getObject(generateColumnAlias(ProjectMeta.dropboxSettingsId))); // nullable
         project.setFrozen(rs.getBoolean(generateColumnAlias(ProjectMeta.frozen)));
 
         return project;

@@ -25,6 +25,5 @@ public abstract class AttachmentMeta extends BaseIdEntityMeta {
     public static final String filename = "filename";
     public static final String path = "path";
     public static final String taskId = "task_id";
-    public static final String dropboxSettingsId = "dropbox_settings_id";
     public static final String deleted = "deleted";
 }

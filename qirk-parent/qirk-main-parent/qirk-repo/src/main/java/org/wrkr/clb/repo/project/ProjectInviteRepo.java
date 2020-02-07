@@ -26,18 +26,18 @@ import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.InviteStatus;
-import org.wrkr.clb.model.InviteStatus_;
+import org.wrkr.clb.model.project.InviteStatus;
+import org.wrkr.clb.model.project.InviteStatus_;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectInvite_;
 import org.wrkr.clb.model.project.Project_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class ProjectInviteRepo extends JPABaseDeletingRepo<ProjectInvite> {
+public class ProjectInviteRepo extends JPADeletingRepo<ProjectInvite> {
 
     @Override
     public ProjectInvite get(Long id) {

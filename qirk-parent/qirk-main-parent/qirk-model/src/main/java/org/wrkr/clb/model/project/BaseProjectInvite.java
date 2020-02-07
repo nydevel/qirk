@@ -26,7 +26,6 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
-import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.user.User;
 
 

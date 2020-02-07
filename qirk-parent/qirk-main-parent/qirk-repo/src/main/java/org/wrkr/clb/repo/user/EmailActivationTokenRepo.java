@@ -23,10 +23,10 @@ import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.wrkr.clb.model.user.EmailActivationToken;
 import org.wrkr.clb.model.user.EmailActivationToken_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class EmailActivationTokenRepo extends JPABaseDeletingRepo<EmailActivationToken> {
+public class EmailActivationTokenRepo extends JPADeletingRepo<EmailActivationToken> {
 
     @Override
     public EmailActivationToken get(Long id) {

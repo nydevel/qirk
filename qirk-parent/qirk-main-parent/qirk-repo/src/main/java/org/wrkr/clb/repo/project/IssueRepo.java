@@ -29,10 +29,10 @@ import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Issue_;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.Project_;
-import org.wrkr.clb.repo.JPABaseIdRepo;
+import org.wrkr.clb.repo.JPAIdEntityRepo;
 
 @Repository
-public class IssueRepo extends JPABaseIdRepo<Issue> {
+public class IssueRepo extends JPAIdEntityRepo<Issue> {
 
     @Override
     public Issue get(Long id) {

@@ -29,10 +29,10 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.UserFavorite;
 import org.wrkr.clb.model.user.UserFavorite_;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class UserFavoriteRepo extends JPABaseDeletingRepo<UserFavorite> {
+public class UserFavoriteRepo extends JPADeletingRepo<UserFavorite> {
 
     @Override
     public UserFavorite get(Long id) {

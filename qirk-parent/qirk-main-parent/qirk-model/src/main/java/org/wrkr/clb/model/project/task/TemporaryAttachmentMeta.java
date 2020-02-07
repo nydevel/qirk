@@ -26,6 +26,5 @@ public abstract class TemporaryAttachmentMeta extends BaseEntityMeta {
     public static final String filename = "filename";
     public static final String path = "path";
     public static final String projectId = "project_id";
-    public static final String dropboxSettingsId = "dropbox_settings_id";
     public static final String createdAt = "created_at";
 }

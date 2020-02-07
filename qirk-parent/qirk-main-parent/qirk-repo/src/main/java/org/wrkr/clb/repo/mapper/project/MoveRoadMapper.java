@@ -20,8 +20,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
-import org.wrkr.clb.model.project.Road;
-import org.wrkr.clb.model.project.RoadMeta;
+import org.wrkr.clb.model.project.roadmap.Road;
+import org.wrkr.clb.model.project.roadmap.RoadMeta;
 
 public class MoveRoadMapper extends BaseMapper<Road> {
 

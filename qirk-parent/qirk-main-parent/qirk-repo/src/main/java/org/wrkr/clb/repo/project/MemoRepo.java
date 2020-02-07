@@ -31,10 +31,10 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.ProjectMember_;
 import org.wrkr.clb.model.project.Project_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class MemoRepo extends JPABaseDeletingRepo<Memo> {
+public class MemoRepo extends JPADeletingRepo<Memo> {
 
     @Override
     public Memo get(Long id) {

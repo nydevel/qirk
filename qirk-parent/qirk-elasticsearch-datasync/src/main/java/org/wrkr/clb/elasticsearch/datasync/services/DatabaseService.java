@@ -20,8 +20,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.Tag;
+import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.TagRepo;

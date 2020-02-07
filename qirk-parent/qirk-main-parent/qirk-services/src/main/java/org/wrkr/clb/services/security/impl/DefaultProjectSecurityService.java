@@ -169,12 +169,12 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
         authzCanModifyProjectApplications(user, project);
     }
 
-    // @Override
-    // @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    // public void authzCanModifyProjectApplication(User user, Long applicationId) throws SecurityException {
-    // Project project = getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(user, applicationId);
-    // authzCanModifyProjectApplications(user, project);
-    // }
+    @Override
+    @Transactional(readOnly = true, propagation = Propagation.REQUIRES_NEW)
+    public void authzCanModifyProjectApplication(User user, Long applicationId) throws SecurityException {
+        Project project = getProjectWithOrgMemberAndProjectMemberByUserAndApplicationId(user, applicationId);
+        authzCanModifyProjectApplications(user, project);
+    }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)

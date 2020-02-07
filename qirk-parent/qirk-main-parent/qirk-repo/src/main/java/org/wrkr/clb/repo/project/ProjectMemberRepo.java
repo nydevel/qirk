@@ -31,10 +31,10 @@ import org.wrkr.clb.model.project.ProjectMember_;
 import org.wrkr.clb.model.project.Project_;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.model.user.User_;
-import org.wrkr.clb.repo.JPABaseDeletingRepo;
+import org.wrkr.clb.repo.JPADeletingRepo;
 
 @Repository
-public class ProjectMemberRepo extends JPABaseDeletingRepo<ProjectMember> {
+public class ProjectMemberRepo extends JPADeletingRepo<ProjectMember> {
 
     /**
      * @deprecated use {@link #getNotFired()} instead

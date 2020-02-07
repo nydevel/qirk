@@ -22,34 +22,22 @@ import java.sql.SQLException;
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
-import org.wrkr.clb.repo.mapper.DropboxSettingsMapper;
 
 public class TemporaryAttachmentPathMapper extends BaseMapper<TemporaryAttachment> {
 
-    private DropboxSettingsMapper dropboxSettingsMapper;
-
-    public TemporaryAttachmentPathMapper(String attachmentTableName, String dropboxSettingsTableName) {
+    public TemporaryAttachmentPathMapper(String attachmentTableName) {
         super(attachmentTableName);
-        dropboxSettingsMapper = new DropboxSettingsMapper(dropboxSettingsTableName);
     }
 
     @Override
     public String generateSelectColumnsStatement() {
-        return generateSelectColumnStatement(TemporaryAttachmentMeta.path) + ", " +
-                generateSelectColumnStatement(TemporaryAttachmentMeta.dropboxSettingsId) + ", " +
-                dropboxSettingsMapper.generateSelectColumnsStatement();
+        return generateSelectColumnStatement(TemporaryAttachmentMeta.path);
     }
 
     @Override
-    public TemporaryAttachment mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public TemporaryAttachment mapRow(ResultSet rs, @SuppressWarnings("unused") int rowNum) throws SQLException {
         TemporaryAttachment attachment = new TemporaryAttachment();
-
         attachment.setPath(rs.getString(generateColumnAlias(TemporaryAttachmentMeta.path)));
-        attachment.setDropboxSettingsId((Long) rs.getObject(generateColumnAlias(TemporaryAttachmentMeta.dropboxSettingsId))); // nullable
-        if (attachment.getDropboxSettingsId() != null) {
-            attachment.setDropboxSettings(dropboxSettingsMapper.mapRow(rs, rowNum));
-        }
-
         return attachment;
     }
 }

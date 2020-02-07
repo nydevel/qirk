@@ -19,7 +19,6 @@ package org.wrkr.clb.repo.project.task;
 import java.sql.Array;
 import java.sql.JDBCType;
 import java.sql.PreparedStatement;
-import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,64 +26,52 @@ import java.util.Map;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
-import org.wrkr.clb.model.project.DropboxSettingsMeta;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.AttachmentMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.model.project.task.TemporaryAttachmentMeta;
-import org.wrkr.clb.repo.JDBCBaseIdRepo;
+import org.wrkr.clb.repo.JDBCIdEntityRepo;
 import org.wrkr.clb.repo.mapper.project.task.AttachmentFilenameMapper;
 import org.wrkr.clb.repo.mapper.project.task.AttachmentMapper;
 import org.wrkr.clb.repo.mapper.project.task.AttachmentWithTaskMapper;
 
-
 @Repository
-public class AttachmentRepo extends JDBCBaseIdRepo {
+public class AttachmentRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " + // 1
             AttachmentMeta.path + ", " + // 2
-            AttachmentMeta.taskId + ", " + // 3
-            AttachmentMeta.dropboxSettingsId + ") " + // 4
-            "VALUES (?, ?, ?, ?) " +
+            AttachmentMeta.taskId + ") " + // 3
+            "VALUES (?, ?, ?) " +
             "RETURNING " + AttachmentMeta.id + ";";
 
     private static final String INSERT_BATCH = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " +
             AttachmentMeta.path + ", " +
-            AttachmentMeta.taskId + ", " +
-            AttachmentMeta.dropboxSettingsId + ") " +
+            AttachmentMeta.taskId + ") " +
             "(SELECT " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.filename + ", " +
             TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.path + ", " +
-            "?, " + // 1
-            TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.dropboxSettingsId + " " +
+            "? " + // 1
             "FROM " + TemporaryAttachmentMeta.TABLE_NAME + " " +
             "WHERE " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.projectId + " = ? " + // 2
             "AND " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.uuid + " = ANY(?)) " + // 3
             "RETURNING " + AttachmentMeta.id + ", " +
             AttachmentMeta.filename + ";";
 
-    private static final AttachmentMapper ATTACHMENT_MAPPER = new AttachmentMapper(
-            AttachmentMeta.TABLE_NAME, DropboxSettingsMeta.TABLE_NAME);
+    private static final AttachmentMapper ATTACHMENT_MAPPER = new AttachmentMapper(AttachmentMeta.TABLE_NAME);
 
     private static final String SELECT_NOT_DELETED_BY_ID_AND_FETCH_DROPBOX_SETTINGS = "SELECT " +
             ATTACHMENT_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + AttachmentMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " " +
-            "ON " + AttachmentMeta.TABLE_NAME + "." + AttachmentMeta.dropboxSettingsId + " = " +
-            DropboxSettingsMeta.TABLE_NAME + "." + DropboxSettingsMeta.id + " " +
             "WHERE " + AttachmentMeta.TABLE_NAME + "." + AttachmentMeta.id + " = ? " + // 1
             "AND NOT " + AttachmentMeta.TABLE_NAME + "." + AttachmentMeta.deleted + ";";
 
     private static final AttachmentWithTaskMapper ATTACHMENT_WITH_TASK_MAPPER = new AttachmentWithTaskMapper(
-            AttachmentMeta.TABLE_NAME, DropboxSettingsMeta.TABLE_NAME, TaskMeta.TABLE_NAME);
+            AttachmentMeta.TABLE_NAME, TaskMeta.TABLE_NAME);
 
     private static final String SELECT_NOT_DELETED_BY_ID_AND_FETCH_DROPBOX_SETTINGS_AND_TASK = "SELECT " +
             ATTACHMENT_WITH_TASK_MAPPER.generateSelectColumnsStatement() + " " +
             "FROM " + AttachmentMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + DropboxSettingsMeta.TABLE_NAME + " " +
-            "ON " + AttachmentMeta.TABLE_NAME + "." + AttachmentMeta.dropboxSettingsId + " = " +
-            DropboxSettingsMeta.TABLE_NAME + "." + DropboxSettingsMeta.id + " " +
             "INNER JOIN " + TaskMeta.TABLE_NAME + " " +
             "ON " + AttachmentMeta.TABLE_NAME + "." + AttachmentMeta.taskId + " = " +
             TaskMeta.TABLE_NAME + "." + TaskMeta.id + " " +
@@ -112,7 +99,6 @@ public class AttachmentRepo extends JDBCBaseIdRepo {
             ps.setString(1, attachment.getFilename());
             ps.setString(2, attachment.getPath());
             ps.setLong(3, attachment.getTaskId());
-            ps.setObject(4, attachment.getDropboxSettingsId(), Types.BIGINT); // nullable
             return ps;
         }, keyHolder);
 

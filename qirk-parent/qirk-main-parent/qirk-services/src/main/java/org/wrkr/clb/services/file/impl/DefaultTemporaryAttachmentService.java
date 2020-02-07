@@ -26,11 +26,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.TemporaryAttachment;
 import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
-import org.wrkr.clb.services.api.dropbox.DropboxApiService;
 import org.wrkr.clb.services.api.yandexcloud.YandexCloudApiService;
 import org.wrkr.clb.services.file.TemporaryAttachmentService;
 
@@ -55,9 +53,6 @@ public class DefaultTemporaryAttachmentService implements TemporaryAttachmentSer
     private TemporaryAttachmentRepo attachmentRepo;
 
     @Autowired
-    private DropboxApiService dropboxService;
-
-    @Autowired
     private YandexCloudApiService yandexCloudService;
 
     private String generateUuid() {
@@ -66,7 +61,7 @@ public class DefaultTemporaryAttachmentService implements TemporaryAttachmentSer
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public String create(String externalPath, Project project, DropboxSettings dropboxSettings) {
+    public String create(String externalPath, Project project) {
         String uuid = generateUuid();
         while (attachmentRepo.existsByUuid(uuid)) {
             uuid = generateUuid();
@@ -78,17 +73,10 @@ public class DefaultTemporaryAttachmentService implements TemporaryAttachmentSer
         attachment.setFilename(ExtStringUtils.substringFromLastSymbol(externalPath, '/'));
         attachment.setPath(externalPath);
         attachment.setProject(project);
-        attachment.setDropboxSettings(dropboxSettings);
         attachment.setCreatedAt(System.currentTimeMillis());
 
         attachmentRepo.save(attachment);
         return uuid;
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public String create(String externalPath, Project project) {
-        return create(externalPath, project, null);
     }
 
     @Override
@@ -99,16 +87,7 @@ public class DefaultTemporaryAttachmentService implements TemporaryAttachmentSer
 
         List<String> yandexCloudPaths = new ArrayList<String>(attachmentsToDelete.size());
         for (TemporaryAttachment attachment : attachmentsToDelete) {
-            if (attachment.getDropboxSettings() != null) {
-                try {
-                    dropboxService.delete(attachment.getDropboxSettings().getToken(), attachment.getPath());
-                } catch (Exception e) {
-                    LOG.error("Could not delete temporary attachment " + attachment.getPath() +
-                            " with dropbox settings " + attachment.getDropboxSettings().getId() + " from Dropbox", e);
-                }
-            } else {
-                yandexCloudPaths.add(attachment.getPath());
-            }
+            yandexCloudPaths.add(attachment.getPath());
         }
 
         try {

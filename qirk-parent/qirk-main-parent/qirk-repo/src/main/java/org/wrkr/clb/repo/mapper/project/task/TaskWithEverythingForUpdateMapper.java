@@ -21,12 +21,13 @@ import java.sql.SQLException;
 
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.ProjectMemberMeta;
+import org.wrkr.clb.model.project.roadmap.TaskCardMeta;
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.model.project.task.TaskCardMeta;
 import org.wrkr.clb.model.project.task.TaskMeta;
 import org.wrkr.clb.model.user.UserMeta;
 import org.wrkr.clb.repo.mapper.project.ProjectMemberWithUserMapper;
 import org.wrkr.clb.repo.mapper.project.ShortProjectMapper;
+import org.wrkr.clb.repo.mapper.project.roadmap.TaskCardStatusMapper;
 
 public class TaskWithEverythingForUpdateMapper extends BaseMapper<Task> {
 

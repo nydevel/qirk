@@ -26,11 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wrkr.clb.model.project.ProjectMeta;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequenceMeta;
-import org.wrkr.clb.repo.JDBCBaseIdRepo;
+import org.wrkr.clb.repo.JDBCIdEntityRepo;
 
 
 @Repository
-public class ProjectTaskNumberSequenceRepo extends JDBCBaseIdRepo {
+public class ProjectTaskNumberSequenceRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + ProjectTaskNumberSequenceMeta.TABLE_NAME + " " +
             "(" + ProjectTaskNumberSequenceMeta.nextTaskNumber + ") " + // 1

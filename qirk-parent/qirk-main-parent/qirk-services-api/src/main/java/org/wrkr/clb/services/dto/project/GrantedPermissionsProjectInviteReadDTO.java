@@ -19,8 +19,8 @@ package org.wrkr.clb.services.dto.project;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wrkr.clb.model.InviteStatus;
 import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
+import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.ProjectInviteToken;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
 

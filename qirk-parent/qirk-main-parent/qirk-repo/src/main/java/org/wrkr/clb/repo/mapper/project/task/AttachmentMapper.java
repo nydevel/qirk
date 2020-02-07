@@ -22,15 +22,11 @@ import java.sql.SQLException;
 import org.wrkr.clb.common.jdbc.BaseMapper;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.AttachmentMeta;
-import org.wrkr.clb.repo.mapper.DropboxSettingsMapper;
 
 public class AttachmentMapper extends BaseMapper<Attachment> {
 
-    private DropboxSettingsMapper dropboxSettingsMapper;
-
-    public AttachmentMapper(String attachmentTableName, String dropboxSettingsTableName) {
+    public AttachmentMapper(String attachmentTableName) {
         super(attachmentTableName);
-        dropboxSettingsMapper = new DropboxSettingsMapper(dropboxSettingsTableName);
     }
 
     @Override
@@ -38,24 +34,17 @@ public class AttachmentMapper extends BaseMapper<Attachment> {
         return generateSelectColumnStatement(AttachmentMeta.id) + ", " +
                 generateSelectColumnStatement(AttachmentMeta.filename) + ", " +
                 generateSelectColumnStatement(AttachmentMeta.path) + ", " +
-                generateSelectColumnStatement(AttachmentMeta.taskId) + ", " +
-                generateSelectColumnStatement(AttachmentMeta.dropboxSettingsId) + ", " +
-                dropboxSettingsMapper.generateSelectColumnsStatement();
+                generateSelectColumnStatement(AttachmentMeta.taskId);
     }
 
     @Override
-    public Attachment mapRow(ResultSet rs, int rowNum) throws SQLException {
+    public Attachment mapRow(ResultSet rs, @SuppressWarnings("unused") int rowNum) throws SQLException {
         Attachment attachment = new Attachment();
 
         attachment.setId(rs.getLong(generateColumnAlias(AttachmentMeta.id)));
         attachment.setFilename(rs.getString(generateColumnAlias(AttachmentMeta.filename)));
         attachment.setPath(rs.getString(generateColumnAlias(AttachmentMeta.path)));
         attachment.setTaskId(rs.getLong(generateColumnAlias(AttachmentMeta.taskId)));
-
-        attachment.setDropboxSettingsId((Long) rs.getObject(generateColumnAlias(AttachmentMeta.dropboxSettingsId))); // nullable
-        if (attachment.getDropboxSettingsId() != null) {
-            attachment.setDropboxSettings(dropboxSettingsMapper.mapRow(rs, rowNum));
-        }
 
         return attachment;
     }

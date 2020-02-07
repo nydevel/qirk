@@ -23,14 +23,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
-import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.task.Attachment;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.project.task.AttachmentRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.repo.project.task.TemporaryAttachmentRepo;
-import org.wrkr.clb.services.api.dropbox.DropboxApiService;
 import org.wrkr.clb.services.dto.AttachmentDTO;
 import org.wrkr.clb.services.dto.project.task.AttachmentCreateDTO;
 import org.wrkr.clb.services.file.AttachmentService;
@@ -52,29 +50,19 @@ public class DefaultAttachmentService implements AttachmentService {
     private TaskRepo taskRepo;
 
     @Autowired
-    private DropboxApiService dropboxService;
-
-    @Autowired
     private ProjectSecurityService securityService;
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public AttachmentDTO create(String externalPath, Task task, DropboxSettings dropboxSettings) {
+    public AttachmentDTO create(String externalPath, Task task) {
         Attachment attachment = new Attachment();
 
         attachment.setFilename(ExtStringUtils.substringFromLastSymbol(externalPath, '/'));
         attachment.setPath(externalPath);
         attachment.setTask(task);
-        attachment.setDropboxSettings(dropboxSettings);
 
         attachment = attachmentRepo.save(attachment);
         return AttachmentDTO.fromEntity(attachment);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public AttachmentDTO create(String externalPath, Task task) {
-        return create(externalPath, task, null);
     }
 
     @Override
@@ -116,32 +104,27 @@ public class DefaultAttachmentService implements AttachmentService {
             // security finish
         }
 
-        if (attachment.getDropboxSettings() != null) {
-            if (attachment.getDropboxSettings().isPurgeOnDelete()) {
-                dropboxService.delete(attachment.getDropboxSettings().getToken(), attachment.getPath());
-            }
-        } else {
-            // don't delete from YandexCloud
-        }
-
+        // don't delete from YandexCloud
         attachmentRepo.setDeletedToTrue(attachment.getId());
     }
 
-    @Deprecated
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public String getThumbnail(User currentUser, Long id) throws Exception {
-        Attachment attachment = attachmentRepo.getNotDeletedByIdAndFetchDropboxSettings(id);
-        if (attachment == null) {
-            throw new NotFoundException("Attachment");
-        } else {
-            // security start
-            securityService.authzCanReadTask(currentUser, attachment.getTaskId());
-            // security finish
-        }
-
-        String thumbnail = dropboxService.getThumbnail(
-                attachment.getDropboxSettings().getToken(), attachment.getPath());
-        return thumbnail;
-    }
+    /*
+     * @Override
+     * 
+     * @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
+     * public String getThumbnail(User currentUser, Long id) throws Exception {
+     * Attachment attachment = attachmentRepo.getNotDeletedByIdAndFetchDropboxSettings(id);
+     * if (attachment == null) {
+     * throw new NotFoundException("Attachment");
+     * } else {
+     * // security start
+     * securityService.authzCanReadTask(currentUser, attachment.getTaskId());
+     * // security finish
+     * }
+     * 
+     * String thumbnail = dropboxService.getThumbnail(
+     * attachment.getDropboxSettings().getToken(), attachment.getPath());
+     * return thumbnail;
+     * }
+     */
 }

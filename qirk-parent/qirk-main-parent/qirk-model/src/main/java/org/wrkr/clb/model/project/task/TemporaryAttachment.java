@@ -17,7 +17,6 @@
 package org.wrkr.clb.model.project.task;
 
 import org.wrkr.clb.model.BaseEntity;
-import org.wrkr.clb.model.project.DropboxSettings;
 import org.wrkr.clb.model.project.Project;
 
 public class TemporaryAttachment extends BaseEntity {
@@ -30,9 +29,6 @@ public class TemporaryAttachment extends BaseEntity {
 
     private Project project;
     private Long projectId;
-
-    private DropboxSettings dropboxSettings;
-    private Long dropboxSettingsId;
 
     private long createdAt;
 
@@ -77,25 +73,6 @@ public class TemporaryAttachment extends BaseEntity {
 
     public void setProjectId(Long projectId) {
         this.projectId = projectId;
-    }
-
-    public DropboxSettings getDropboxSettings() {
-        return dropboxSettings;
-    }
-
-    public void setDropboxSettings(DropboxSettings dropboxSettings) {
-        this.dropboxSettings = dropboxSettings;
-    }
-
-    public Long getDropboxSettingsId() {
-        if (dropboxSettingsId == null) {
-            return (dropboxSettings == null ? null : dropboxSettings.getId());
-        }
-        return dropboxSettingsId;
-    }
-
-    public void setDropboxSettingsId(Long dropboxSettingsId) {
-        this.dropboxSettingsId = dropboxSettingsId;
     }
 
     public long getCreatedAt() {
