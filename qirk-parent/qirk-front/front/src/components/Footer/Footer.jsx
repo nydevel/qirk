@@ -20,73 +20,7 @@ function Footer({ isSignedIn }) {
             display: "flex",
             alignItems: "center"
           }}
-        >
-          <div style={{ flex: 1, display: "flex", padding: "16px 0" }}>
-            <div
-              style={{
-                display: "flex",
-                padding: 16,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 0
-              }}
-            >
-              <Link
-                style={{ margin: "auto" }}
-                to={paths.PrivacyPolicy.toPath()}
-              >
-                {t("privacy_policy")}
-              </Link>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                padding: 16,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 0
-              }}
-            >
-              <Link
-                style={{ margin: "auto" }}
-                to={paths.LicenseContract.toPath()}
-              >
-                {t("license_contract")}
-              </Link>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                padding: 16,
-                paddingTop: 0,
-                paddingBottom: 0,
-                paddingLeft: 0
-              }}
-            >
-              <Link style={{ margin: "auto" }} to={paths.ChangeLog.toPath()}>
-                {t("changelog")}
-              </Link>
-            </div>
-            {!isSignedIn && (
-              <div
-                style={{
-                  display: "flex",
-                  padding: 16,
-                  paddingTop: 0,
-                  paddingBottom: 0,
-                  paddingLeft: 0
-                }}
-              >
-                <Link
-                  style={{ margin: "auto" }}
-                  to={paths.FeebackForm.toPath()}
-                >
-                  {t("leave_feedback")}
-                </Link>
-              </div>
-            )}
-          </div>
-        </div>
+        ></div>
         <div style={{ paddingBottom: 16 }}>{t("footer_copyright")}</div>
       </Mobile>
       <PC>
@@ -96,39 +30,7 @@ function Footer({ isSignedIn }) {
             display: "flex"
           }}
         >
-          <div style={{ flex: 1, display: "flex" }}>
-            <div style={{ display: "flex", paddingRight: 32 }}>
-              <Link style={{ margin: "auto" }} to={paths.ChangeLog.toPath()}>
-                {t("changelog")}
-              </Link>
-            </div>
-            <div style={{ display: "flex", paddingRight: 32 }}>
-              <Link
-                style={{ margin: "auto" }}
-                to={paths.LicenseContract.toPath()}
-              >
-                {t("license_contract")}
-              </Link>
-            </div>
-            <div style={{ display: "flex", paddingRight: 32 }}>
-              <Link
-                style={{ margin: "auto" }}
-                to={paths.PrivacyPolicy.toPath()}
-              >
-                {t("privacy_policy")}
-              </Link>
-            </div>
-            {!isSignedIn && (
-              <div style={{ display: "flex", paddingRight: 32 }}>
-                <Link
-                  style={{ margin: "auto" }}
-                  to={paths.FeebackForm.toPath()}
-                >
-                  {t("leave_feedback")}
-                </Link>
-              </div>
-            )}
-          </div>
+          <div style={{ flex: 1, display: "flex" }}></div>
           <div style={{ display: "flex" }}>
             <span style={{ margin: "auto" }}>{t("footer_copyright")}</span>
           </div>

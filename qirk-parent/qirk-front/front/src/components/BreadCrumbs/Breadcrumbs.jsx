@@ -9,37 +9,26 @@ import { uiDateTime } from "../../utils/timeUtils";
 
 function Breadcrumbs({
   match: { params, path },
-  orgInfo,
+
   projInfo,
   taskNumber
 }) {
   const bc = [];
   if (
     path === paths.ProjectMemberEditing.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name &&
     projInfo &&
     projInfo.ui_id &&
     projInfo.name
   ) {
     bc.length = 0;
     bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
     });
     bc.push({
       url: paths.ProjectMembers.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: t("Members")
@@ -49,30 +38,20 @@ function Breadcrumbs({
     });
   } else if (
     path === paths.ProjectPredefinedPermissionsInviteEdit.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name &&
     projInfo &&
     projInfo.ui_id &&
     projInfo.name
   ) {
     bc.length = 0;
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
     });
     bc.push({
       url: paths.ProjectMembers.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: t("Members")
@@ -85,120 +64,24 @@ function Breadcrumbs({
       url: paths.MyProfile.toPath(),
       name: t("Profile")
     });
-  } else if (path === paths.OrganizationOverview.url && orgInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-  } else if (path === paths.OrganizationCreate.url) {
-    bc.push({
-      url: paths.OrganizationCreate.toPath(),
-      name: t("Organization creation")
-    });
-  } else if (path === paths.OrganizationEdit.url && orgInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      url: paths.OrganizationEdit.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: t("Organization edit")
-    });
-  } else if (path === paths.OrganizationMembers.url && orgInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      name: t("Members"),
-      url: paths.OrganizationMembers.toPath({
-        organization_uiid: orgInfo.ui_id
-      })
-    });
-  } else if (path === paths.OrganizationMemberEdit.url && orgInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      name: t("Members"),
-      url: paths.OrganizationMembers.toPath({
-        organization_uiid: orgInfo.ui_id
-      })
-    });
-    bc.push({
-      name: t("Editing member")
-    });
-  } else if (path === paths.OrganizationMemberAdd.url && orgInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      name: t("Members"),
-      url: paths.OrganizationMembers.toPath({
-        organization_uiid: orgInfo.ui_id
-      })
-    });
-    bc.push({
-      name: t("Adding a member")
-    });
-  } else if (
-    path === paths.ProjectSingle.url &&
-    orgInfo &&
-    projInfo &&
-    projInfo.name
-  ) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+  } else if (path === paths.ProjectSingle.url && projInfo && projInfo.name) {
     bc.push({
       name: projInfo.name
     });
-  } else if (path === paths.ProjectCreate.url && orgInfo) {
+  } else if (path === paths.ProjectCreate.url) {
     bc.length = 0;
+
     bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      url: paths.ProjectCreate.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
+      url: paths.ProjectCreate.toPath({}),
       name: t("Project creation")
     });
   } else if (
     path === paths.TaskContent.url &&
-    orgInfo &&
     projInfo &&
     ((params && params.task_number) || taskNumber)
   ) {
     bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -206,16 +89,9 @@ function Breadcrumbs({
     bc.push({
       name: `${t("task")} #${(params && params.task_number) || taskNumber}`
     });
-  } else if (path === paths.ProjectEdit.url && orgInfo && projInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+  } else if (path === paths.ProjectEdit.url && projInfo) {
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -223,20 +99,12 @@ function Breadcrumbs({
     bc.push({
       name: t("Project edit"),
       url: paths.ProjectEdit.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       })
     });
-  } else if (path === paths.Documentation.url && orgInfo && projInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+  } else if (path === paths.Documentation.url && projInfo) {
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -244,20 +112,12 @@ function Breadcrumbs({
     bc.push({
       name: t("Documentation"),
       url: paths.Documentation.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       })
     });
-  } else if (path === paths.DocumentationEdit.url && orgInfo && projInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+  } else if (path === paths.DocumentationEdit.url && projInfo) {
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -265,23 +125,15 @@ function Breadcrumbs({
     bc.push({
       name: t("Documentation"),
       url: paths.Documentation.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       })
     });
     bc.push({
       name: t("settings")
     });
-  } else if (path === paths.ProjectDiscussion.url && orgInfo && projInfo) {
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+  } else if (path === paths.ProjectDiscussion.url && projInfo) {
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -289,21 +141,14 @@ function Breadcrumbs({
     bc.push({
       name: t("discussion_label"),
       url: paths.ProjectDiscussion.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       })
     });
-  } else if (path === paths.TaskCreate.url && orgInfo && projInfo) {
+  } else if (path === paths.TaskCreate.url && projInfo) {
     bc.length = 0;
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
@@ -313,98 +158,55 @@ function Breadcrumbs({
     });
   } else if (
     path === paths.ProjectMembers.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name &&
     projInfo &&
     projInfo.ui_id &&
     projInfo.name
   ) {
     bc.length = 0;
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
     });
     bc.push({
       url: paths.ProjectMembers.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: t("Members")
     });
   } else if (
     path === paths.ProjectRoadmap.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name &&
     projInfo &&
     projInfo.ui_id &&
     projInfo.name
   ) {
     bc.length = 0;
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+
     bc.push({
       url: paths.ProjectSingle.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: projInfo.name
     });
     bc.push({
       url: paths.ProjectMembers.toPath({
-        organization_uiid: orgInfo.ui_id,
         project_uiid: projInfo.ui_id
       }),
       name: t("roadmap")
     });
-  } else if (
-    path === paths.JiraImport.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name
-  ) {
+  } else if (path === paths.JiraImport.url) {
     bc.length = 0;
-    bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
+
     bc.push({
       name: "Import from Jira"
     });
-  } else if (
-    path === paths.JiraImportMapping.url &&
-    orgInfo &&
-    orgInfo.ui_id &&
-    orgInfo.name &&
-    params.timestamp
-  ) {
+  } else if (path === paths.JiraImportMapping.url && params.timestamp) {
     bc.length = 0;
+
     bc.push({
-      url: paths.OrganizationOverview.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
-      name: orgInfo.name
-    });
-    bc.push({
-      url: paths.JiraImport.toPath({
-        organization_uiid: orgInfo.ui_id
-      }),
+      url: paths.JiraImport.toPath({}),
       name: "Import from Jira"
     });
     bc.push({
@@ -432,7 +234,6 @@ function Breadcrumbs({
 
 export default withRouter(
   connect(state => ({
-    orgInfo: state.organization.info,
     projInfo: state.project.info,
     foundUserInfo: state.userSearch.foundUserInfo,
     taskNumber:

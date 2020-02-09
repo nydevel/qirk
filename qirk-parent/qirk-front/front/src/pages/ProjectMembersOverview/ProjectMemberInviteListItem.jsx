@@ -18,8 +18,7 @@ import { uiDateTime } from "../../utils/timeUtils";
 function ProjectMemberInviteListItem({
   invite: inv,
   cancelInvite,
-  projectUiId: project_uiid,
-  organizationUiId: organization_uiid
+  projectUiId: project_uiid
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -101,8 +100,7 @@ function ProjectMemberInviteListItem({
           <Link
             to={paths.ProjectPredefinedPermissionsInviteEdit.toPath({
               invite_id: inv.id,
-              project_uiid: project_uiid || "a",
-              organization_uiid: organization_uiid || "a"
+              project_uiid: project_uiid || "a"
             })}
             onClick={e => {
               handleClose(e);

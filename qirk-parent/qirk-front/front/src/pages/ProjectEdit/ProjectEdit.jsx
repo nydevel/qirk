@@ -32,8 +32,6 @@ const mapStateToProps = state => ({
   languagesFetchInProgress:
     state.common.fetchLanguagesStatus === constants.WAITING,
   info: state.project.info,
-  orgId: state.organization.id,
-  orgUiid: state.organization.info && state.organization.info.ui_id,
   requestInProgress:
     state.project.updateProjectRequestStatus === constants.WAITING,
   fetchInProgress: state.project.fetchStatus === constants.WAITING
@@ -141,7 +139,6 @@ function ProjectsEdit({
             <div>
               <GoBackButton
                 pathToBack={`${paths.ProjectSingle.toPath({
-                  organization_uiid: params && params.organization_uiid,
                   project_uiid: params && params.project_uiid
                 })}?${queryString.stringify(filterParams, {
                   arrayFormat: "comma"

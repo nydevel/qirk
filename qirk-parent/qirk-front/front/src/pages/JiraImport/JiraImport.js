@@ -164,7 +164,4 @@ const JiraImport = ({
 };
 
 export default connect(state => ({
-  orgId: state.organization.info && state.organization.info.id,
-  orgUiId: state.organization.info && state.organization.info.ui_id,
-  loadingOrg: state.organization.fetchStatus === constants.WAITING
 }))(JiraImport);

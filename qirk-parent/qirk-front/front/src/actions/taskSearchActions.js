@@ -20,10 +20,6 @@ export const resetTaskSearchDispatch = () => dispatch => {
   dispatch(resetTaskSearch());
 };
 
-export const setLastOrganizationUiIdDispatch = uiid => dispatch => {
-  dispatch(setLastOrganizationUiId(uiid));
-};
-
 export const setLastProjectUiIdDispatch = uiid => dispatch => {
   dispatch(setLastProjectUiId(uiid));
 };
@@ -55,10 +51,7 @@ const setLastProjectUiId = uiid => ({
   type: constants.SET_TASK_SEARCH_LAST_PROJECT_UI_ID
 });
 
-const setLastOrganizationUiId = uiid => ({
-  payload: uiid,
-  type: constants.SET_TASK_SEARCH_LAST_ORGANIZATION_UI_ID
-});
+
 
 const setTaskSearchFetchStatus = status => ({
   payload: status,

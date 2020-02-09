@@ -5,7 +5,6 @@ const INITIAL_STATE = {
   fetchStatus: constants.NOT_REQUESTED,
   countOfAllTasks: 0,
   result: [],
-  lastOrganizationUiId: null,
   lastProjectUiId: null,
   loadingMissingTasks: false
 };
@@ -14,9 +13,6 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case constants.RESET_TASK_SEARCH:
       return { ...INITIAL_STATE };
-
-    case constants.SET_TASK_SEARCH_LAST_ORGANIZATION_UI_ID:
-      return { ...state, lastOrganizationUiId: action.payload };
     case constants.SET_TASK_SEARCH_LAST_PROJECT_UI_ID:
       return { ...state, lastProjectUiId: action.payload };
     case constants.SET_TASK_SEARCH_FETCH_REQUIRED:

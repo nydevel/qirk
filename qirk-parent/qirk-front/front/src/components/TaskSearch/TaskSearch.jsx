@@ -13,7 +13,6 @@ import {
 } from "../../utils/variousUtils";
 import {
   resetTaskSearchDispatch,
-  setLastOrganizationUiIdDispatch,
   setLastProjectUiIdDispatch,
   setTaskSearchCountOfAllTasksDispatch,
   setTaskSearchFilterSearchAfterDispatch,
@@ -42,7 +41,6 @@ import useKeyPress from "../../utils/hooks/useKeyPress";
 import WithTooltip from "../WithTooltip/WithTooltip";
 
 const connectActions = {
-  setLastOrganizationUiIdDispatch,
   setLastProjectUiIdDispatch,
   resetTaskSearchDispatch,
   addCacheUsersDispatch,
@@ -56,10 +54,7 @@ const connectActions = {
 const mapStateToProps = state => ({
   userId: state.user.id,
   cacheUsers: state.cacheUsers.usersList,
-  lastOrganizationUiId: state.taskSearch.lastOrganizationUiId,
   lastProjectUiId: state.taskSearch.lastProjectUiId,
-  organizationUiid: state.organization.info && state.organization.info.ui_id,
-  organizationId: state.organization.info && state.organization.info.id,
   projectUiid: state.project.uiid,
   numberOfFoundTasks: state.taskSearch.countOfAllTasks,
   searchAfter: state.taskSearch.searchAfter,
@@ -77,12 +72,8 @@ let lastResultUpdate = 0; // аналогично первому
 function TaskSearch({
   userId,
   cacheUsers,
-  lastOrganizationUiId,
   lastProjectUiId,
-  setLastOrganizationUiIdDispatch,
   setLastProjectUiIdDispatch,
-  organizationUiid,
-  organizationId,
   projectUiid,
   resetTaskSearchDispatch,
   addCacheUsersDispatch,
@@ -97,9 +88,6 @@ function TaskSearch({
   loadingMissingTasks,
   location,
   history,
-  match: {
-    params: { organization_uiid }
-  },
   match: { params }
 }) {
   const parsed = queryString.parse(location.search);
@@ -197,7 +185,6 @@ function TaskSearch({
         {
           params: {
             prefix: searchString,
-            organization_ui_id: organization_uiid,
             me_first: true,
             show_first: userId
           }
@@ -407,25 +394,20 @@ function TaskSearch({
     if (
       params.organization_uiid &&
       params.project_uiid &&
-      (lastOrganizationUiId !== params.organization_uiid ||
+      (
         lastProjectUiId !== params.project_uiid)
     ) {
       resetTaskSearchDispatch();
-      setLastOrganizationUiIdDispatch(params.organization_uiid);
       setLastProjectUiIdDispatch(params.project_uiid);
     }
   }, [
     params.organization_uiid,
     params.project_uiid,
-    lastOrganizationUiId,
     lastProjectUiId
   ]);
 
   useEffect(() => {
-    //ignore spinner if searchAfter != null
-    if (organizationId) {
-      fetchUsersList(organizationId, usersList);
-    }
+      fetchUsersList( usersList);
   }, [usersList]);
 
   useEffect(() => {
@@ -842,13 +824,14 @@ function TaskSearch({
                   tasks.length > 0 &&
                   numberOfFoundTasks !== 0 &&
                   !requestInProgress &&
-                  (cacheUsers && Object.keys(cacheUsers).length !== 0 && (
+                  cacheUsers &&
+                  Object.keys(cacheUsers).length !== 0 && (
                     <div className="count-of-founded-tasks">
                       <span>{`${t("Found")} ${numberOfFoundTasks} ${t(
                         "tasks"
                       )}`}</span>
                     </div>
-                  ))}
+                  )}
                 {!requestInProgress &&
                   (!tasks || (tasks && tasks.length === 0)) && (
                     <div>
@@ -946,7 +929,6 @@ function TaskSearch({
                 isLoading={requestInProgress}
                 data={tasks.map(item => ({
                   link: paths.TaskContent.toPath({
-                    organization_uiid: organizationUiid,
                     project_uiid: projectUiid,
                     task_number: item.number
                   }),
@@ -981,9 +963,4 @@ function TaskSearch({
   );
 }
 
-export default withRouter(
-  connect(
-    mapStateToProps,
-    connectActions
-  )(TaskSearch)
-);
+export default withRouter(connect(mapStateToProps, connectActions)(TaskSearch));

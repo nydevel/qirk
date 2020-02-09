@@ -56,35 +56,7 @@ function Dashboard({
           <DrawerContent tag="main">
             <List>
               <ListGroup>
-                <Link to={paths.MyOrganizations.toPath()}>
-                  <ListItem
-                    className="dashboard-list__item__icon-button"
-                    style={{
-                      margin: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      minHeight: 55
-                    }}
-                  >
-                    <Icon
-                      style={{ color: "rgba(0, 0, 0, 0.54)", paddingTop: 3 }}
-                    >
-                      business
-                    </Icon>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        whiteSpace: "normal",
-                        textAlign: "center",
-                        wordBreak: "break-word",
-                        minWidth: 65,
-                        paddingTop: 6
-                      }}
-                    >
-                      {t("organizations_label")}
-                    </div>
-                  </ListItem>
-                </Link>
+             
                 <Link to={paths.MyProjects.toPath()}>
                   <ListItem
                     className="dashboard-list__item__icon-button"
@@ -146,38 +118,7 @@ function Dashboard({
                   </ListItem>
                 </Link>
               </ListGroup>
-              <ListGroup>
-                <ListDivider />
-                <Link to={paths.FeebackForm.toPath()}>
-                  <ListItem
-                    className="dashboard-list__item__icon-button"
-                    style={{
-                      margin: 0,
-                      display: "flex",
-                      flexDirection: "column",
-                      minHeight: 55
-                    }}
-                  >
-                    <Icon
-                      style={{ color: "rgba(0, 0, 0, 0.54)", paddingTop: 3 }}
-                    >
-                      feedback
-                    </Icon>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        whiteSpace: "normal",
-                        textAlign: "center",
-                        wordBreak: "break-word",
-                        minWidth: 65,
-                        paddingTop: 6
-                      }}
-                    >
-                      {t("feedback")}
-                    </div>
-                  </ListItem>
-                </Link>
-              </ListGroup>
+              
             </List>
           </DrawerContent>
         </Drawer>
@@ -188,11 +129,7 @@ function Dashboard({
           <DrawerContent tag="main">
             <List>
               <ListGroup>
-                <Link to={paths.MyOrganizations.toPath()}>
-                  <ListItem>
-                    <ListItemText primaryText={t("my_organizations_label")} />
-                  </ListItem>
-                </Link>
+                
                 <Link to={paths.MyProjects.toPath()}>
                   <ListItem>
                     <ListItemText primaryText={t("my_projects_label")} />
@@ -200,14 +137,7 @@ function Dashboard({
                 </Link>
               </ListGroup>
               <Favorites favorites={favoritesList} />
-              <ListGroup>
-                <ListDivider />
-                <Link to={paths.FeebackForm.toPath()}>
-                  <ListItem>
-                    <ListItemText primaryText={t("leave_feedback")} />
-                  </ListItem>
-                </Link>
-              </ListGroup>
+              
             </List>
           </DrawerContent>
         </Drawer>

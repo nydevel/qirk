@@ -43,8 +43,6 @@ import { setSelectedLinkedTaskListDispatch } from "../../actions/taskLinksAction
 
 const mapStateToProps = state => ({
   userId: state.user.id,
-
-  orgUiid: state.organization.info && state.organization.info.ui_id,
   loadingTaskContentInProgress:
     state.project.selectedTaskFetchStatus === constants.WAITING,
   requestStatus: state.project.requestStatus,
@@ -77,7 +75,7 @@ function TaskContent({
   linkedTaskList,
   match: { params }
 }) {
-  const { project_uiid, organization_uiid } = params;
+  const { project_uiid } = params;
   const taskStatuses = provideTaskStatusesOptions();
   const parsed = queryString.parse(location.search);
 
@@ -237,7 +235,6 @@ function TaskContent({
         {
           params: {
             prefix: searchString,
-            organization_ui_id: organization_uiid,
             me_first: true,
             show_first: userId
           }
@@ -273,7 +270,6 @@ function TaskContent({
               <div>
                 <GoBackButton
                   pathToBack={`${paths.ProjectSingle.toPath({
-                    organization_uiid: organization_uiid,
                     project_uiid: project_uiid
                   })}?${queryString.stringify(filterParams, {
                     arrayFormat: "comma"

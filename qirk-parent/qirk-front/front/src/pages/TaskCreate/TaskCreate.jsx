@@ -66,7 +66,7 @@ function TaskCreate({
   canCreateTask,
   match: { params }
 }) {
-  const { project_uiid, organization_uiid } = params;
+  const { project_uiid } = params;
   const taskStatuses = provideTaskStatusesOptions();
 
   const [isEmptyDescriptionError, setIsEmptyDescriptionError] = useState(false);
@@ -158,7 +158,6 @@ function TaskCreate({
         {
           params: {
             prefix: "",
-            organization_ui_id: params.organization_uiid,
             me_first: true,
             show_first: userId
           }
@@ -239,7 +238,6 @@ function TaskCreate({
         <div>
           <GoBackButton
             pathToBack={`${paths.ProjectSingle.toPath({
-              organization_uiid: organization_uiid,
               project_uiid: project_uiid
             })}?${queryString.stringify(filterParams, {
               arrayFormat: "comma"

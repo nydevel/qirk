@@ -14,10 +14,8 @@ import taskSearch from "./taskSearchReducer";
 import userSearch from "./userSearchReducer";
 import cacheUsers from "./cacheUsersReducer";
 import attachments from "./attachmentsReducer";
-import organization from "./organizationReducer";
 import notifications from "./notificationReducer";
 import projectSearch from "./projectSearchReducer";
-import organizationSearch from "./organizationSearchReducer";
 import helpForSelectedTask from "./helpForSelectedTaskReducer";
 
 export default history =>
@@ -36,10 +34,8 @@ export default history =>
     userSearch,
     cacheUsers,
     attachments,
-    organization,
     notifications,
     projectSearch,
-    organizationSearch,
     helpForSelectedTask,
     router: connectRouter(history)
   });

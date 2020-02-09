@@ -26,7 +26,7 @@ function ProjectMembersOverview({
   canManage,
   projectInfo,
   match: {
-    params: { project_uiid, organization_uiid }
+    params: { project_uiid }
   }
 }) {
   const [invites, setInvites] = useState([]);
@@ -136,7 +136,6 @@ function ProjectMembersOverview({
                   {invites.map(invite => (
                     <ProjectMemberInviteListItem
                       invite={invite}
-                      organizationUiId={organization_uiid}
                       projectUiId={project_uiid}
                       cancelInvite={cancelInvite}
                       key={`invite_${invite.id}`}
