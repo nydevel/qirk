@@ -1,4 +1,4 @@
-ws://localhost:8000/clb-chat-web/chat/
+ws://localhost:8000/qirk-chat-web/chat/
 
 Request
 {
