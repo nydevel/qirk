@@ -168,7 +168,4 @@ public interface ProjectSecurityService {
 
     public Long authzCanDeleteMemo(User user,
             @NotNull(message = "memoId must not be null") Long memoId) throws SecurityException;
-
-    public Long authzCanDeleteTaskHashtag(User user,
-            @NotNull(message = "hashtagId must not be null") Long hashtagId) throws SecurityException;
 }

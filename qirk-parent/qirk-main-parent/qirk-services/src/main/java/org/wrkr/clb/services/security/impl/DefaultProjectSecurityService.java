@@ -19,7 +19,6 @@ package org.wrkr.clb.services.security.impl;
 import java.util.Arrays;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,18 +28,13 @@ import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 
 @Validated
 @Service
 public class DefaultProjectSecurityService extends BaseProjectSecurityService implements ProjectSecurityService {
-
-    @Autowired
-    private TaskHashtagRepo taskHashtagRepo;
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
@@ -525,26 +519,5 @@ public class DefaultProjectSecurityService extends BaseProjectSecurityService im
         requirePaymentOrThrowException(memo.getProject());
         authzCanManageProjectOrIsOrgMemberId(user, memo.getProject(), Arrays.asList(memo.getAuthorId()));
         return memo.getId();
-    }
-
-    /**
-     * @return id of the task hashtag; null if it does not exist
-     */
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true, propagation = Propagation.REQUIRES_NEW)
-    public Long authzCanDeleteTaskHashtag(User user, Long hashtagId)
-            throws SecurityException {
-        requireAuthnOrThrowException(user);
-        if (taskHashtagRepo.existsTaskIdByTaskHashtagId(hashtagId)) {
-            throw new SecurityException("Task hashtag is used");
-        }
-        TaskHashtag hashtag = getTaskHashtagWithProjectAndOrgMemberAndProjectMemberByUserAndMemoId(user, hashtagId);
-        if (hashtag == null) {
-            return null;
-        }
-
-        requirePaymentOrThrowException(hashtag.getProject());
-        authzCanManageProject(user, hashtag.getProject());
-        return hashtag.getId();
     }
 }

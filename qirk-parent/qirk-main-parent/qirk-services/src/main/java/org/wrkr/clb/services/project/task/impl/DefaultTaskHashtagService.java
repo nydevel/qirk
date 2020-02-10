@@ -16,7 +16,6 @@
  */
 package org.wrkr.clb.services.project.task.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +28,6 @@ import org.wrkr.clb.repo.project.task.TaskHashtagRepo;
 import org.wrkr.clb.services.dto.project.task.TaskHashtagDTO;
 import org.wrkr.clb.services.project.task.TaskHashtagService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
-import org.wrkr.clb.services.util.exception.ApplicationException;
-import org.wrkr.clb.services.util.exception.NotFoundException;
 
 @Validated
 @Service
@@ -44,46 +41,23 @@ public class DefaultTaskHashtagService implements TaskHashtagService {
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<TaskHashtagDTO> searchByProjectId(User currentUser, String prefix, Long projectId, boolean includeUsed) {
+    public List<TaskHashtagDTO> searchByProjectId(User currentUser, String prefix, Long projectId) {
         // security start
         securityService.authzCanReadProject(currentUser, projectId);
         // security finish
 
-        List<TaskHashtag> hashtagList = new ArrayList<TaskHashtag>();
-        if (includeUsed) {
-            hashtagList = hashtagRepo.listByProjectIdAndNamePrefixAndFetchTasksCount(prefix, projectId);
-        } else {
-            hashtagList = hashtagRepo.listByProjectIdAndNamePrefix(prefix, projectId);
-        }
+        List<TaskHashtag> hashtagList = hashtagRepo.listByProjectIdAndNamePrefix(prefix, projectId);
         return TaskHashtagDTO.fromEntities(hashtagList);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<TaskHashtagDTO> searchByProjectUiId(User currentUser, String prefix, String projectUiId, boolean includeUsed) {
+    public List<TaskHashtagDTO> searchByProjectUiId(User currentUser, String prefix, String projectUiId) {
         // security start
         securityService.authzCanReadProject(currentUser, projectUiId);
         // security finish
 
-        List<TaskHashtag> hashtagList = new ArrayList<TaskHashtag>();
-        if (includeUsed) {
-            hashtagList = hashtagRepo.listByProjectUiIdAndNamePrefixAndFetchTasksCount(prefix, projectUiId);
-        } else {
-            hashtagList = hashtagRepo.listByProjectUiIdAndNamePrefix(prefix, projectUiId);
-        }
+        List<TaskHashtag> hashtagList = hashtagRepo.listByProjectUiIdAndNamePrefix(prefix, projectUiId);
         return TaskHashtagDTO.fromEntities(hashtagList);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public void delete(User currentUser, Long id) throws ApplicationException {
-        // security start
-        Long hashtagId = securityService.authzCanDeleteTaskHashtag(currentUser, id);
-        // security finish
-
-        if (hashtagId == null) {
-            throw new NotFoundException("Task hashtag");
-        }
-        hashtagRepo.deleteById(hashtagId);
     }
 }

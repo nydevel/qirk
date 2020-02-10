@@ -31,8 +31,7 @@ public class ImportStatusDTO {
         WRONG_MAPPING("NOT_FOUND"),
         NOT_FOUND("WRONG_MAPPING"),
         CREATE_FAILED("CREATE_FAILED"),
-        UPDATE_FAILED("UPDATE_FAILED"),
-        FAILED("FAILED"); // not used
+        UPDATE_FAILED("UPDATE_FAILED");
 
         @SuppressWarnings("unused")
         private final String nameCode;

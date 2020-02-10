@@ -38,14 +38,9 @@ import org.wrkr.clb.model.project.task.TaskHashtagMeta;
 import org.wrkr.clb.model.project.task.TaskHashtagToTaskMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 import org.wrkr.clb.repo.mapper.project.task.TaskHashtagMapper;
-import org.wrkr.clb.repo.mapper.project.task.TaskHashtagWithTaskCountMapper;
 
 @Repository
 public class TaskHashtagRepo extends JDBCBaseMainRepo {
-
-    private static final String SELECT_1_BY_TASK_HASHTAG_ID = "SELECT 1 FROM " + TaskHashtagToTaskMeta.TABLE_NAME + " " +
-            "WHERE " + TaskHashtagToTaskMeta.taskHashtagId + " = ? " + // 1
-            "LIMIT 1;";
 
     private static final String SELECT_IDS_BY_TASK_ID = "SELECT " +
             TaskHashtagToTaskMeta.taskHashtagId + " " +
@@ -90,32 +85,6 @@ public class TaskHashtagRepo extends JDBCBaseMainRepo {
             "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ? " + // 1
             "AND " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.name + " LIKE ?;";// 2
 
-    private static final TaskHashtagWithTaskCountMapper TASK_HASHTAG_WITH_TASK_COUNT_MAPPER = new TaskHashtagWithTaskCountMapper(
-            TaskHashtagMeta.TABLE_NAME);
-
-    private static final String SELECT_BY_PROJECT_ID_AND_NAME_LIKE_AND_FETCH_TASKS_COUNT = "SELECT " +
-            TASK_HASHTAG_WITH_TASK_COUNT_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskHashtagMeta.TABLE_NAME + " " +
-            "LEFT JOIN " + TaskHashtagToTaskMeta.TABLE_NAME + " " +
-            "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + " = " +
-            TaskHashtagToTaskMeta.TABLE_NAME + "." + TaskHashtagToTaskMeta.taskHashtagId + " " +
-            "WHERE " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.projectId + " = ? " + // 1
-            "AND " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.name + " LIKE ? " + // 2
-            "GROUP BY " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + ";";
-
-    private static final String SELECT_BY_PROJECT_UI_ID_AND_NAME_LIKE_AND_FETCH_TASKS_COUNT = "SELECT " +
-            TASK_HASHTAG_WITH_TASK_COUNT_MAPPER.generateSelectColumnsStatement() + " " +
-            "FROM " + TaskHashtagMeta.TABLE_NAME + " " +
-            "INNER JOIN " + ProjectMeta.TABLE_NAME + " " +
-            "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.projectId + " = " +
-            ProjectMeta.TABLE_NAME + "." + ProjectMeta.id + " " +
-            "LEFT JOIN " + TaskHashtagToTaskMeta.TABLE_NAME + " " +
-            "ON " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + " = " +
-            TaskHashtagToTaskMeta.TABLE_NAME + "." + TaskHashtagToTaskMeta.taskHashtagId + " " +
-            "WHERE " + ProjectMeta.TABLE_NAME + "." + ProjectMeta.uiId + " = ? " + // 1
-            "AND " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.name + " LIKE ? " + // 2
-            "GROUP BY " + TaskHashtagMeta.TABLE_NAME + "." + TaskHashtagMeta.id + ";";
-
     private static final String DELETE_FROM_TASK_HASHTAG_TASK_BY_TASK_ID_PREFIX = "DELETE FROM " +
             TaskHashtagToTaskMeta.TABLE_NAME + " " +
             "WHERE " + TaskHashtagToTaskMeta.taskId + " = ?"; // 1
@@ -150,10 +119,6 @@ public class TaskHashtagRepo extends JDBCBaseMainRepo {
             TaskHashtagMeta.TABLE_NAME + " " +
             "WHERE " + TaskHashtagMeta.id + " = ?;";
 
-    public boolean existsTaskIdByTaskHashtagId(Long hashtagId) {
-        return exists(SELECT_1_BY_TASK_HASHTAG_ID, hashtagId);
-    }
-
     public TaskHashtag getByProjectIdAndName(Long projectId, String hashtagName) {
         return queryForObjectOrNull(SELECT_BY_PROJECT_ID_AND_NAME, TASK_HASHTAG_MAPPER,
                 projectId, hashtagName);
@@ -183,18 +148,6 @@ public class TaskHashtagRepo extends JDBCBaseMainRepo {
     public List<TaskHashtag> listByProjectUiIdAndNamePrefix(String prefix, String projectUiId) {
         return queryForList(SELECT_BY_PROJECT_UI_ID_AND_NAME_LIKE,
                 TABLENAME_TASK_HASHTAG_MAPPER,
-                projectUiId, prefix + "%");
-    }
-
-    public List<TaskHashtag> listByProjectIdAndNamePrefixAndFetchTasksCount(String prefix, Long projectId) {
-        return queryForList(SELECT_BY_PROJECT_ID_AND_NAME_LIKE_AND_FETCH_TASKS_COUNT,
-                TASK_HASHTAG_WITH_TASK_COUNT_MAPPER,
-                projectId, prefix + "%");
-    }
-
-    public List<TaskHashtag> listByProjectUiIdAndNamePrefixAndFetchTasksCount(String prefix, String projectUiId) {
-        return queryForList(SELECT_BY_PROJECT_UI_ID_AND_NAME_LIKE_AND_FETCH_TASKS_COUNT,
-                TASK_HASHTAG_WITH_TASK_COUNT_MAPPER,
                 projectUiId, prefix + "%");
     }
 

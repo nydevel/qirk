@@ -578,25 +578,4 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
         assertEquals("memo id doesn't match", memo1.getId(), memoId);
     }
 
-    @Test
-    public void test_adminCanDeleteTheirProjectUnusedTaskHashtag() {
-        User admin = userRepo.getByEmail(projectOwnerEmail);
-        Project project = projectRepo.getByUiId(privateProjectUiId);
-        TaskHashtag unusedHashtag = hashtagRepo.getByProjectIdAndName(project.getId(), unusedTaskHashtagName);
-
-        Long hashtagId = securityService.authzCanDeleteTaskHashtag(admin, unusedHashtag.getId());
-
-        assertEquals("task hashtag id doesn't match", unusedHashtag.getId(), hashtagId);
-    }
-
-    @Test
-    public void test_adminCantDeleteTheirProjectUsedTaskHashtag() {
-        expectedException.expect(SecurityException.class);
-
-        User admin = userRepo.getByEmail(projectOwnerEmail);
-        Project project = projectRepo.getByUiId(privateProjectUiId);
-        TaskHashtag usedHashtag = hashtagRepo.getByProjectIdAndName(project.getId(), usedTaskHashtagName);
-
-        securityService.authzCanDeleteTaskHashtag(admin, usedHashtag.getId());
-    }
 }

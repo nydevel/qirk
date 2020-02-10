@@ -9,17 +9,17 @@ Response structure:
 
 /csrf/refresh
 Method: GET
-Response.data: [{}]
+Response.data: [{}]]
 
 /authn/login/
 Method: POST
 Request: {"username":"aaa", "password":"121212", "g_recaptcha_response":""}
-Response.data: [{}]
+Response.data: [{}]]
 
 /authn/logout/
 Method: POST
 Request: {}
-Response.data: [{}]
+Response.data: [{}]]
 
 /authn/check/
 Method: GET
@@ -49,7 +49,7 @@ Response.data: [{"email_sent":true}
 /user/activate/
 Method: POST
 Request: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
-Response.data: [{}]
+Response.data: [{}]]
 
 /user/reset-password/
 Method: POST
@@ -63,7 +63,7 @@ Request: {
 	"new_password":"aaa",
 	"token":"aaa"
 }
-Response.data: [{}]
+Response.data: [{}]]
 
 /user/
 Method: GET
@@ -318,8 +318,8 @@ Response.data: [{
 	"description_md":"aaa",
 	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"task_type":{"id":1,"name_code":"TASK"},
 	"task_priority":{"id":1, "name_code":"TRIVIAL"},
 	"task_status":{"id":1, "name_code":"OPEN"},
@@ -349,8 +349,8 @@ Response.data: [{
 	"description_md":"aaa",
 	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"task_type":{"id":1,"name_code":"TASK"},
 	"task_priority":{"id":1, "name_code":"TRIVIAL"},
 	"task_status":{"id":1, "name_code":"OPEN"},
@@ -373,8 +373,8 @@ Response.data: [{
 	"description_md":"aaa",
 	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"task_type":{"id":1,"name_code":"TASK"},
 	"task_priority":{"id":1, "name_code":"TRIVIAL"},
 	"task_status":{"id":1, "name_code":"OPEN"},
@@ -402,7 +402,7 @@ Request: {
 	"task1":1,
 	"task2":2
 }
-Response.data: [{}]
+Response.data: [{}]]
 
 /task/link/
 Method: DELETE
@@ -410,7 +410,7 @@ Request: {
 	"task1":1,
 	"task2":2
 }
-Response.data: [{}]
+Response.data: [{}]]
 
 /task/list-cardless/
 Method: GET
@@ -470,8 +470,8 @@ Response.data: [{
 	"summary":"a...",
 	"reporter": {"id":1},
 	"assignee": {"id":1}, (nullable)
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"task_type": {"name_code":"TASK"},
 	"task_priority": {"name_code":"TRIVIAL"},
 	"task_status": {"name_code":"OPEN"}
@@ -481,7 +481,7 @@ Response.meta: {"total":100}
 /task/chat-token/
 Method: GET
 Request parameters: id=1
-Response.data: {
+Response.data: [{
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -521,7 +521,7 @@ Headers:
 	Content-Type: multipart/form-data
 Method: POST
 Request: project_id=1&file=<binary_data>
-Response.data: {"uuid":"aaa"}
+Response.data: [{"uuid":"aaa"}
 Response.meta:: {"external_uuid":"aaa"}
 
 /file/get/{id}/{filename}/
@@ -552,12 +552,12 @@ Method: DELETE
 Request: {
 	"id":1
 }
-Response.data: {}
+Response.data: [{}]
 
 /user-favorite/
 Method: POST
 Request: {"project":1}
-Response.data: {
+Response.data: [{
 	"id":1,
 	"project": {
 		"id":1,
@@ -572,7 +572,7 @@ Request: {
 	"id":1,
 	"previous":2 (nullable)
 }
-Response.data: {
+Response.data: [{
 	"id":1,
 	"project": {
 		"id":1,
@@ -596,7 +596,7 @@ Response.data: [{
 /user-favorite/
 Method: DELETE
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /memo/
 Method: POST
@@ -611,7 +611,7 @@ OR {
 Response.data: [{
 	"id":1,
 	"body":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
 	"author": {"id":1, "username":"aaa"},
 	"can_delete":true
 }]
@@ -624,7 +624,7 @@ Request parameters:
 Response.data: [{
 	"id":1,
 	"body":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
 	"author": {"id":1, "username":"aaa"},
 	"can_delete":false
 }]
@@ -632,7 +632,7 @@ Response.data: [{
 /memo/
 Method: DELETE
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /issue/
 Method: POST
@@ -646,12 +646,12 @@ OR {
 	"summary":"a",
 	"description":"aaa"
 }
-Response.data: {
+Response.data: [{
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
-	"created_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000"
 }
 
 /issue/
@@ -661,23 +661,23 @@ Request: {
 	"summary":"a",
 	"description":"aaa"
 }
-Response.data: {
+Response.data: [{
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
-	"created_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000"
 }
 
 /issue/
 Method: GET
 Request parameters: id=1
-Response.data: {
+Response.data: [{
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
-	"created_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000"
 }
 
 /issue/list/
@@ -690,13 +690,13 @@ Response.data: [{
 	"summary":"a",
 	"description":"aaa",
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"created_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000"
 }]
 
 /issue/chat-token/
 Request parameters: id=1
 Method: GET
-Response.data: {
+Response.data: [{
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -715,13 +715,13 @@ Request: {
 DEPRECATED
 /project-invite/?id=1
 Method: GET
-Response.data: {
+Response.data: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"}
 }
 
@@ -732,8 +732,8 @@ Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000"
 }]
 
 DEPRECATED
@@ -757,8 +757,8 @@ Response.data: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"}
 }]
 
@@ -793,8 +793,8 @@ Response.data: [{
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"},
 	"write_allowed":false,
 	"manager":false
@@ -813,8 +813,8 @@ Response.data: [{
 	"email": "a@qirk.org",
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"},
 	"write_allowed":false,
 	"manager":false
@@ -829,8 +829,8 @@ Request: {
 Response.data: [{
 	"id":1,
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"write_allowed":false,
 	"manager":false
 }]
@@ -844,8 +844,8 @@ Response.data: [{
 	"email": "a@qirk.org",									(only one of 'user', 'email' will be present)
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"},
 	"write_allowed":false,
 	"manager":false
@@ -857,8 +857,8 @@ Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"write_allowed":false,
 	"manager":false
 }]
@@ -866,7 +866,7 @@ Response.data: [{
 /granted-permissions-project-invite/accept/
 Method: POST
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /granted-permissions-project-invite/reject/
 Method: PUT
@@ -878,8 +878,8 @@ Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"write_allowed":false,
 	"manager":false
 }]
@@ -896,8 +896,8 @@ Response.data: [{
 	"email": "a@qirk.org",									(only one of 'user', 'email' will be present)
 	"email": "a@qirk.org",
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"},
 	"write_allowed":false,
 	"manager":false
@@ -906,12 +906,12 @@ Response.data: [{
 /granted-permissions-project-invite/cancel/
 Method: DELETE
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /project-invite-token/check-token/
 Method: GET
 Request parameters: token=aaa
-Response.data: {"registered":false}
+Response.data: [{"registered":false}
 
 /project-invite-token/accept/
 Method: POST
@@ -921,7 +921,7 @@ Request: {
 	"username":"aaa", (nullable)
 	"full_name":"aaa" (nullable)
 }
-Response.data: {}
+Response.data: [{}]
 
 /project-invite-token/reject/
 Method: PUT
@@ -933,8 +933,8 @@ Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"write_allowed":false,
 	"manager":false
 }]
@@ -949,8 +949,8 @@ Response.data: [{
 	"id":1,
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"}
 }]
 
@@ -963,8 +963,8 @@ Response.data: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000"
 }]
 
 /project-application/reject/
@@ -977,8 +977,8 @@ Response.data: [{
 	"id":1,
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000"
 }]
 
 /project-application/accept/
@@ -992,8 +992,8 @@ Response.data: [{
 	"id":1,
 	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500"
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000"
 }]
 
 /project-application/list-by-user/
@@ -1002,15 +1002,15 @@ Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"created_at":"2019-03-20T17:12:36.3+0000",
+	"updated_at":"2019-03-20T17:12:36.3+0000",
 	"status": {"id":1, "name_code":"PENDING"}
 }]
 
 /project-application/cancel/
 Method: DELETE
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /project-member/
 Method: POST
@@ -1076,82 +1076,93 @@ Request parameters: user_id=1
 Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
-	"hired_at":"2019-03-20T17:12:36.3+0500",
-	"fired_at":"2019-03-20T17:12:36.3+0500",
+	"hired_at":"2019-03-20T17:12:36.3+0000",
+	"fired_at":"2019-03-20T17:12:36.3+0000",
 	"fired":true
 }]
 
 /project-member/
 Method: DELETE
 Request: {"id":1}
-Response.data: {}
+Response.data: [{}]
 
 /project-member/leave/
 Method: DELETE
 Request: {"project":1}
-Response.data: {}
+Response.data: [{}]
 
-/task-hashtag/search/?prefix=a&project_id=&include_used=
-/task-hashtag/search/?prefix=a&project_ui_id=&include_used=
-(include_used=false by default)
-Method: GET: [
-	{"id":1, "name":"aaa", "used":true}, (no "used" field if include_used=false)
-	{"id":2, "name":"abb", "used":true}
+/task-hashtag/search/
+Method: GET
+Request parameters:
+	prefix=a
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [
+	{"id":1, "name":"aaa"},
+	{"id":2, "name":"abb"}
 ]
 
 /task-hashtag/
-Method: DELETE: {
-	"id":1
-}
+Method: DELETE
+Request: {"id":1}
+Response.data: [{}]
 
 /task-subscriber/
-Method: POST: {
-	"task_id":1
-}
+Method: POST
+Request: {"task_id":1}
+Response.data: [{}]
 
 /task-subscriber/list/?task_id=1
-Method: GET: {
-	"users": [1, 2]
-}
+Method: GET
+Response.data: [{"users": [1, 2]}
 
 /task-subscriber/
-Method: DELETE: {
-	"task_id":1
-}
-
-/static-data/changelog/
-Accept: text/html
-Method: GET: <HTML file>
-
-/static-data/license/
-Accept: text/html
-Method: GET: <HTML file>
+Method: DELETE
+Request: {"task_id":1}
+Response.data: [{}]
 
 /road/
-Method: POST: {
+Method: POST
+Request: {
 	"project":1,
 	"name":"aaa"
 }
-
-/road/
-Method: PUT: {
+Response.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa"
 }
 
-/road/move/
-Method: PUT: {
+/road/
+Method: PUT
+Request: {
 	"id":1,
-	"old_previous":1, (nullable)
-	"old_next":1, (nullable)
-	"previous":1, (nullable)
-	"next":1 (nullable)
+	"record_version":1,
+	"name":"aaa"
+}
+Response.data: [{
+	"id":1,
+	"record_version":2,
+	"name":"aaa"
 }
 
-/road/list/?project_id=
-/road/list/?project_ui_id=
-Method: GET: [{
+/road/move/
+Method: PUT
+Request: {
+	"id":1,
+	"old_previous":1,	(nullable)
+	"old_next":1,		(nullable)
+	"previous":1,		(nullable)
+	"next":1			(nullable)
+}
+Response.data: [{}]
+
+/road/list/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
@@ -1160,112 +1171,145 @@ Method: GET: [{
 		"record_version":1,
 		"name":"aaa",
 		"status":"ACTIVE",
-		"created_at":""2019-03-20T17:12:36.3+0500",
+		"created_at":""2019-03-20T17:12:36.3+0000",
 		"tasks": [{
 			"id"1,
 			"record_version":1,
 			"number":1,
 			"summary":"aaa",
-			"task_priority":{"id":1, "name_code":"TRIVIAL"},
-			"task_status":{"id":1, "name_code":"OPEN"}
+			"task_priority": {"id":1, "name_code":"TRIVIAL"},
+			"task_status": {"id":1, "name_code":"OPEN"}
 		}]
 	}]
 }]
 
 /road/
-Method: DELETE: {
-	"id":1
-}
+Method: DELETE
+Request: {"id":1}
+Response.data: [{}]
 
 /task-card/
-Method: POST: {
+Method: POST
+Request: {
 	"road":1,
 	"name":"aaa",
 	"status":"ACTIVE"
 }
+Response.data: [{
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"status":"ACTIVE",
+	"created_at":""2019-03-20T17:12:36.3+0000",
+	"road": {"id":1, "record_version":1, "name":"aaa"}
+}]
 
 /task-card/
-Method: PUT: {
+Method: PUT
+Request: {
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
 	"status":"ACTIVE"
 }
-
-/task-card/move/
-Method: PUT: {
-	"id":1,
-	"old_previous":1, (nullable)
-	"old_next":1, (nullable)
-	"previous":1, (nullable)
-	"next":1, (nullable)
-	"road":1 (nullable)
-}
-
-/task-card/list/?project_id=
-/task-card/list/?project_ui_id=
-Method: GET: [{
+Response.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
 	"status":"ACTIVE",
-	"created_at":""2019-03-20T17:12:36.3+0500",
-	"archieved_at":""2019-03-20T17:12:36.3+0500",
+	"created_at":""2019-03-20T17:12:36.3+0000",
+	"road": {"id":1, "record_version":1, "name":"aaa"}
+}]
+
+/task-card/move/
+Method: PUT
+Request: {
+	"id":1,
+	"old_previous":1,	(nullable)
+	"old_next":1,		(nullable)
+	"previous":1,		(nullable)
+	"next":1,			(nullable)
+	"road":1			(nullable; null means staying in the same road)
+}
+Response.data: [{}]
+
+/task-card/list/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
+	"id":1,
+	"record_version":1,
+	"name":"aaa",
+	"status":"ACTIVE",
+	"created_at":""2019-03-20T17:12:36.3+0000",
 	"road": {"id":1, "record_version":1, "name":"aaa"}
 }]
 
 /task-card/archive/
-Method: PUT: {
+Method: PUT
+Request: {
 	"id":1,
 	"record_version":1
 }
+Response.data: [{}]
 
-/task-card/archive/?project_id=
-/task-card/archive/?project_ui_id=
-Method: GET: [{
+/task-card/archive/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+esponse.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
 	"status":"ACTIVE",
-	"created_at":""2019-03-20T17:12:36.3+0500",
-	"archieved_at":""2019-03-20T17:12:36.3+0500",
+	"created_at":""2019-03-20T17:12:36.3+0000",
+	"archieved_at":""2019-03-20T17:12:36.3+0000",
 	"road": {"id":1, "record_version":1, "name":"aaa"}
 }]
 
 /task-card/
-Method: DELETE: {
-	"id":1
-}
+Method: DELETE: {"id":1}
+Response.data: [{}]
 
 /jira-import/upload/
-Content-Type: multipart/form-data
-Method: POST: organization_id=1&file=
+Headers:
+	Content-Type: multipart/form-data
+Method: POST
+Request: organization_id=1&file=<binary_data>
 Response.data:  {
-	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
+	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0000", "epoch_milli":1},
 	"archive_filename":"aaa.zip",
 	"imported_projects" []
 }
 
-/jira-import/list-uploads/?organization_id=
-Method: GET: [{
-	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
+/jira-import/list-uploads/
+Method: GET
+Response.data: [{
+	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0000", "epoch_milli":1},
 	"archive_filename":"aaa.zip",
 	"imported_projects" [
-		{"id":1, "name":"aaa", "jira_id":10000, "jira_key":"AAA", "jira_name":"aaa", "updated_at": "2019-03-20T17:12:36.3+0500"},
-		{"id":2, "name":"bbb", "jira_id":10001, "jira_key":"BBB", "jira_name":"bbb", "updated_at": "2019-03-20T17:12:36.3+0500"}
+		{"id":1, "name":"aaa", "jira_id":10000, "jira_key":"AAA", "jira_name":"aaa", "updated_at": "2019-03-20T17:12:36.3+0000"},
+		{"id":2, "name":"bbb", "jira_id":10001, "jira_key":"BBB", "jira_name":"bbb", "updated_at": "2019-03-20T17:12:36.3+0000"}
 	]
 }]
 
-/jira-import/list-projects/?organization_id=&timestamp=
-Method: GET: [
+/jira-import/list-projects/
+Method: GET
+Request parameters: timestamp=1
+Response.data: [
 	{"id":"10000", "key":"AAA", "name":"aaa"},
 	{"id":"10001", "key":"BBB", "name":"bbb"}
 ]
-Error codes:
-ENTITIES_FILE_NOT_FOUND - file 'entities.xml' was not found in upload at said timestamp
 
-/jira-import/list-projects-data/?organization_id=&timestamp=&project_id=10000,10001
-Method: GET: {
+/jira-import/list-projects-data/
+Method: GET
+Request parameters:
+	timestamp=1
+	project_id=10000,10001
+Response.data: [{
 	"projects": [
 		{"id":"10000", "key":"AAA", "name":"aaa"},
 		{"id":"10001", "key":"BBB", "name":"bbb"}
@@ -1292,8 +1336,8 @@ Method: GET: {
 			{"id":2, "name":"bbb", "ui_id":"bbb"}
 		],
 		"members": [
-			{"id":1, "enabled":true, "user": {"id":1, "username":"aaa", "full_name":"aaa"}},
-			{"id":2, "enabled":true, "user": {"id":2, "username":"bbb", "full_name":"bbb"}}
+			{"id":1, "user": {"id":1, "username":"aaa", "full_name":"aaa"}},
+			{"id":2, "user": {"id":2, "username":"bbb", "full_name":"bbb"}}
 		],
 		"types": [
 			{"name_code":"TASK", "default":true},
@@ -1319,19 +1363,19 @@ Request: {
 	"private"false,
 	"override_tasks": "ALL", (one of: "ALL", "NON_UPDATED", "NONE"; default: "ALL")
 	"project_mapping": {
-		"10000":1 (jira id to qirk id)
+		"10000":1 (jira project id to qirk project id)
 	}.
 	"members": {
-		"admin":1 (jira username to qirk id)
+		"admin":1 (jira username to qirk user id)
 	}.
 	"types": {
-		"10000":"TASK" (jira id to qirk name_code)
+		"10000":"TASK" (jira type id to qirk type name_code)
 	},
 	"priorities": {
-		"10000":"MAJOR" (jira id to qirk name_code)
+		"10000":"MAJOR" (jira priority id to qirk priority name_code)
 	},
 	"statuses": {
-		"10000":"OPEN" (jira id to qirk name_code)
+		"10000":"OPEN" (jira status id to qirk status name_code)
 	}
 }
 Response.data: [
@@ -1341,12 +1385,18 @@ Response.data: [
 	{"jira_project":"10003", "status":"CREATE_FAILED", "error_code": "ERROR"},
 	{"jira_project":"10004", "status":"UPDATE_FAILED", "error_code": "ERROR"}
 ]
+'status' is one of CREATED, UPDATED, PARTIALLY_UPDATED, WRONG_MAPPING, NOT_FOUND, CREATE_FAILED, UPDATE_FAILED
 
 /notification-settings/
 Method: PUT
 Request: {
 	"token":"aaa",
 	"IV":"aaa",
+	"task_created":true,
+	"task_updated":true,
+	"task_commented":true
+}
+Response.data: [{
 	"task_created":true,
 	"task_updated":true,
 	"task_commented":true

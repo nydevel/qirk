@@ -22,24 +22,15 @@ import java.util.List;
 import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.services.dto.IdDTO;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
 public class TaskHashtagDTO extends IdDTO {
 
     public String name;
-
-    @JsonInclude(Include.NON_NULL)
-    public Boolean used;
 
     public static TaskHashtagDTO fromEntity(TaskHashtag hashtag) {
         TaskHashtagDTO dto = new TaskHashtagDTO();
 
         dto.id = hashtag.getId();
         dto.name = hashtag.getName();
-        if (hashtag.getTasksCount() != null) {
-            dto.used = (hashtag.getTasksCount() != 0);
-        }
 
         return dto;
     }

@@ -24,12 +24,10 @@ import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.model.project.task.TaskHashtag;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.security.SecurityIssueRepo;
 import org.wrkr.clb.repo.security.SecurityMemoRepo;
 import org.wrkr.clb.repo.security.SecurityProjectRepo;
-import org.wrkr.clb.repo.security.SecurityTaskHashtagRepo;
 import org.wrkr.clb.repo.security.SecurityTaskRepo;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.util.exception.PaymentRequiredException;
@@ -47,9 +45,6 @@ public abstract class BaseProjectSecurityService extends BaseSecurityService {
 
     @Autowired
     private SecurityMemoRepo memoRepo;
-
-    @Autowired
-    private SecurityTaskHashtagRepo taskHashtagRepo;
 
     protected Project getProjectWithOrgMemberAndProjectMemberByUserAndProjectId(User user, Long projectId) {
         if (user == null) {
@@ -297,12 +292,5 @@ public abstract class BaseProjectSecurityService extends BaseSecurityService {
             return memoRepo.getByIdAndFetchProjectForSecurity(memoId);
         }
         return memoRepo.getByIdAndFetchProjectAndMembershipByUserIdForSecurity(memoId, user.getId());
-    }
-
-    protected TaskHashtag getTaskHashtagWithProjectAndOrgMemberAndProjectMemberByUserAndMemoId(User user, Long hashtagId) {
-        if (user == null) {
-            return taskHashtagRepo.getByIdAndFetchProjectForSecurity(hashtagId);
-        }
-        return taskHashtagRepo.getByIdAndFetchProjectAndMembershipByUserIdForSecurity(hashtagId, user.getId());
     }
 }
