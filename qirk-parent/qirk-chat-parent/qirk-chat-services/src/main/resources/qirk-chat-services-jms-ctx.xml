@@ -77,15 +77,15 @@
     </bean>
 
     <!-- uncomment in full version -->
-    <!-- <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/qirk.stat.q" /> <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.DefaultStatisticsSender" 
+    <!-- <jee:jndi-lookup id="jmsStatisticsQueue" jndi-name="jms/queue/qirk.stat.q" /> <bean id="statisticsSender" class="org.wrkr.clb.common.jms.services.DefaultStatisticsSender" 
         /> <bean id="statisticsJmsTemplate" class="org.springframework.jms.core.JmsTemplate"> <constructor-arg ref="jmsConnectionFactory" /> 
         <property name="defaultDestination"> <ref bean="jmsStatisticsQueue" /> </property> <property name="sessionTransacted" value="false" 
         /> <property name="sessionAcknowledgeModeName" value="AUTO_ACKNOWLEDGE" /> </bean> -->
     <!-- comment in full version -->
-    <bean id="statisticsSender" class="org.wrkr.clb.common.jms.statistics.StatisticsSenderStub" />
+    <bean id="statisticsSender" class="org.wrkr.clb.common.jms.services.StatisticsSenderStub" />
 
     <jee:jndi-lookup id="jmsTaskLookupSubscribersQueue" jndi-name="jms/queue/qirk.notif.task.lookupsuscribers.q" />
-    <bean id="taskLookupSubscribersSender" class="org.wrkr.clb.common.jms.notification.TaskLookupSubscribersSender" />
+    <bean id="taskLookupSubscribersSender" class="org.wrkr.clb.common.jms.services.TaskLookupSubscribersSender" />
     <bean id="taskLookupSubscribersJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
         <constructor-arg ref="jmsConnectionFactory" />
         <property name="defaultDestination">

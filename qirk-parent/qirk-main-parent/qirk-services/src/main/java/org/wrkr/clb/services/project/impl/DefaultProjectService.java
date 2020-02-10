@@ -17,6 +17,7 @@
 package org.wrkr.clb.services.project.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -55,7 +56,6 @@ import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
 import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
@@ -207,15 +207,10 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         securityService.authzCanCreateProject(currentUser);
         // security finish
 
-        List<User> membersToCreate = new ArrayList<User>();
-        if (projectDTO.makeMeMember) {
-            membersToCreate.add(currentUser);
-        }
-
+        List<User> membersToCreate = Arrays.asList(currentUser);
         Project project = create(currentUser, projectDTO, membersToCreate);
-        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocs(project);
 
-        return dto;
+        return ProjectReadDTO.fromEntityWithDescAndDocs(project);
     }
 
     @Override
@@ -318,90 +313,6 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
 
         return ProjectReadDTO.fromEntityWithDescAndDocs(project);
     }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public void makePublic(User currentUser, RecordVersionDTO projectDTO) throws Exception {
-        // security start
-        securityService.authzCanUpdateProject(currentUser, projectDTO.id);
-        // security finish
-
-        Project project = projectRepo.get(projectDTO.id);
-        if (project == null) {
-            throw new NotFoundException("Project");
-        }
-        project = checkRecordVersion(project, projectDTO.recordVersion);
-
-        project.setPrivate(false);
-        projectRepo.merge(project);
-    }
-
-    /*@formatter:off
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public ProjectReadDTO addDropbox(User currentUser, OAuthCodeDTO codeDTO) throws Exception {
-        // security start
-        securityService.authzCanUpdateProject(currentUser, codeDTO.id);
-        // security finish
-
-        Project project = projectRepo.get(codeDTO.id);
-        if (project == null) {
-            throw new NotFoundException("Project");
-        }
-        project = checkRecordVersion(project, codeDTO.recordVersion);
-
-        String token = dropboxService.getToken(codeDTO.code, dropboxService.getRedirectURIForProject());
-        DropboxSettings dropboxSettings = new DropboxSettings();
-        dropboxSettings.setToken(token);
-        dropboxSettingsRepo.persist(dropboxSettings);
-
-        project.setDropboxSettings(dropboxSettings);
-
-        project = projectRepo.merge(project);
-        return ProjectReadDTO.fromEntityWithDescAndDocsAndDropboxSettings(project);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public ProjectDropboxDTO getDropbox(User currentUser, Long id) {
-        // security start
-        securityService.authzCanReadProject(currentUser, id);
-        // security finish
-
-        Project project = jdbcProjectRepo.getByIdAndFetchDropboxSettings(id);
-        return ProjectDropboxDTO.fromEntity(project);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public ProjectDropboxDTO getDropboxByUiId(User currentUser, String uiId) {
-        // security start
-        securityService.authzCanReadProject(currentUser, uiId);
-        // security finish
-
-        Project project = jdbcProjectRepo.getByUiIdAndFetchDropboxSettings(uiId);
-        return ProjectDropboxDTO.fromEntity(project);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public ProjectReadDTO removeDropbox(User currentUser, RecordVersionDTO projectDTO) throws ApplicationException {
-        // security start
-        securityService.authzCanUpdateProject(currentUser, projectDTO.id);
-        // security finish
-
-        Project project = projectRepo.get(projectDTO.id);
-        if (project == null) {
-            throw new NotFoundException("Project");
-        }
-        project = checkRecordVersion(project, projectDTO.recordVersion);
-
-        project.setDropboxSettings(null);
-
-        project = projectRepo.merge(project);
-        return ProjectReadDTO.fromEntityWithDescAndDocsAndDropboxSettings(project);
-    }
-    @formatter:on*/
 
     private Project getProjectByIdWithEverythingForReadAndFetchMembershipForSecurity(User currentUser, Long projectId) {
         if (currentUser == null) {

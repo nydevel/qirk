@@ -1,8 +1,9 @@
+
 --
--- Name: activation_token; Type: TABLE; Schema: public
+-- Name: password_activation_token; Type: TABLE; Schema: public
 --
 
-CREATE TABLE activation_token (
+CREATE TABLE password_activation_token (
     id bigint NOT NULL,
     token character varying(23) NOT NULL,
     user_id bigint NOT NULL,
@@ -30,7 +31,7 @@ CREATE SEQUENCE activation_token_id_seq
 -- Name: activation_token_id_seq; Type: SEQUENCE OWNED BY; Schema: public
 --
 
-ALTER SEQUENCE activation_token_id_seq OWNED BY activation_token.id;
+ALTER SEQUENCE activation_token_id_seq OWNED BY password_activation_token.id;
 
 
 --
@@ -75,7 +76,6 @@ CREATE TABLE attachment (
     filename character varying(511) NOT NULL,
     path character varying(511) NOT NULL,
     task_id bigint NOT NULL,
-    dropbox_settings_id bigint,
     deleted boolean DEFAULT false NOT NULL
 );
 
@@ -101,40 +101,6 @@ CREATE SEQUENCE attachment_id_seq
 --
 
 ALTER SEQUENCE attachment_id_seq OWNED BY attachment.id;
-
-
---
--- Name: dropbox_settings; Type: TABLE; Schema: public
---
-
-CREATE TABLE dropbox_settings (
-    id bigint NOT NULL,
-    purge_on_delete boolean DEFAULT false NOT NULL,
-    token character varying(127) NOT NULL
-);
-
-
-
-
---
--- Name: dropbox_settings_id_seq; Type: SEQUENCE; Schema: public
---
-
-CREATE SEQUENCE dropbox_settings_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
-
---
--- Name: dropbox_settings_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
-ALTER SEQUENCE dropbox_settings_id_seq OWNED BY dropbox_settings.id;
 
 
 --
@@ -232,7 +198,6 @@ ALTER SEQUENCE granted_permissions_project_invite_id_seq OWNED BY granted_permis
 --
 
 CREATE TABLE imported_jira_project (
-    organization_id bigint NOT NULL,
     project_id bigint NOT NULL,
     upload_timestamp bigint NOT NULL,
     jira_project_id bigint NOT NULL,
@@ -418,7 +383,7 @@ ALTER SEQUENCE login_statistics_id_seq OWNED BY login_statistics.id;
 CREATE TABLE memo (
     id bigint NOT NULL,
     project_id bigint NOT NULL,
-    author_user_organization_id bigint NOT NULL,
+    author_project_member_id bigint NOT NULL,
     created_at timestamp with time zone NOT NULL,
     body character varying(10000) NOT NULL
 );
@@ -462,58 +427,6 @@ CREATE TABLE notification_settings (
 
 
 --
--- Name: organization; Type: TABLE; Schema: public
---
-
-CREATE TABLE organization (
-    id bigint NOT NULL,
-    name character varying(127) NOT NULL,
-    ui_id character varying(23) NOT NULL,
-    private boolean DEFAULT false NOT NULL,
-    dropbox_settings_id bigint,
-    record_version bigint NOT NULL,
-    predefined_for_user boolean NOT NULL,
-    owner_user_id bigint NOT NULL,
-    frozen boolean DEFAULT false NOT NULL
-);
-
-
-
-
---
--- Name: organization_id_seq; Type: SEQUENCE; Schema: public
---
-
-CREATE SEQUENCE organization_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
-
---
--- Name: organization_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
-ALTER SEQUENCE organization_id_seq OWNED BY organization.id;
-
-
---
--- Name: organization_language; Type: TABLE; Schema: public
---
-
-CREATE TABLE organization_language (
-    organization_id bigint NOT NULL,
-    language_id bigint NOT NULL
-);
-
-
-
-
---
 -- Name: project; Type: TABLE; Schema: public
 --
 
@@ -521,9 +434,7 @@ CREATE TABLE project (
     id bigint NOT NULL,
     name character varying(127) NOT NULL,
     ui_id character varying(23) NOT NULL,
-    organization_id bigint NOT NULL,
     private boolean DEFAULT false NOT NULL,
-    dropbox_settings_id bigint,
     record_version bigint NOT NULL,
     documentation_md text NOT NULL,
     documentation_html text NOT NULL,
@@ -531,7 +442,8 @@ CREATE TABLE project (
     description_md character varying(10000) NOT NULL,
     description_html character varying(20000) NOT NULL,
     frozen boolean DEFAULT false NOT NULL,
-    key character varying(10) NOT NULL
+    key character varying(10) NOT NULL,
+    owner_user_id bigint NOT NULL
 );
 
 
@@ -693,7 +605,6 @@ CREATE TABLE project_language (
 CREATE TABLE project_member (
     id bigint NOT NULL,
     user_id bigint NOT NULL,
-    user_organization_id bigint NOT NULL,
     project_id bigint NOT NULL,
     write_allowed boolean DEFAULT false NOT NULL,
     manager boolean DEFAULT false NOT NULL,
@@ -778,7 +689,6 @@ ALTER SEQUENCE project_task_number_sequence_id_seq OWNED BY project_task_number_
 CREATE TABLE road (
     id bigint NOT NULL,
     record_version bigint NOT NULL,
-    organization_id bigint NOT NULL,
     project_id bigint NOT NULL,
     name character varying(127) NOT NULL,
     previous_id bigint,
@@ -851,9 +761,8 @@ CREATE TABLE task (
     record_version bigint NOT NULL,
     number bigint NOT NULL,
     summary character varying(80) NOT NULL,
-    parent_task_id bigint,
-    reporter_user_organization_id bigint NOT NULL,
-    assignee_user_organization_id bigint,
+    reporter_project_member_id bigint NOT NULL,
+    assignee_project_member_id bigint,
     created_at timestamp with time zone NOT NULL,
     updated_at timestamp with time zone NOT NULL,
     type_id bigint NOT NULL,
@@ -876,7 +785,6 @@ CREATE TABLE task (
 CREATE TABLE task_card (
     id bigint NOT NULL,
     record_version bigint NOT NULL,
-    organization_id bigint NOT NULL,
     project_id bigint NOT NULL,
     road_id bigint NOT NULL,
     name character varying(127) NOT NULL,
@@ -1111,7 +1019,6 @@ CREATE TABLE temporary_attachment (
     filename character varying(511) NOT NULL,
     path character varying(511) NOT NULL,
     project_id bigint NOT NULL,
-    dropbox_settings_id bigint,
     created_at bigint NOT NULL
 );
 
@@ -1166,58 +1073,17 @@ CREATE TABLE user_language (
 
 
 --
--- Name: user_organization; Type: TABLE; Schema: public
---
-
-CREATE TABLE user_organization (
-    id bigint NOT NULL,
-    user_id bigint NOT NULL,
-    organization_id bigint NOT NULL,
-    enabled boolean DEFAULT false NOT NULL,
-    manager boolean DEFAULT false NOT NULL,
-    record_version bigint NOT NULL,
-    fired boolean DEFAULT false NOT NULL
-);
-
-
-
-
---
--- Name: user_organization_id_seq; Type: SEQUENCE; Schema: public
---
-
-CREATE SEQUENCE user_organization_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
-
---
--- Name: user_organization_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
-ALTER SEQUENCE user_organization_id_seq OWNED BY user_organization.id;
-
-
---
 -- Name: user_profile; Type: TABLE; Schema: public
 --
 
 CREATE TABLE user_profile (
     id bigint NOT NULL,
-    username character varying(256) NOT NULL,
     email_address character varying(256) NOT NULL,
-    enabled boolean DEFAULT true NOT NULL,
     password_hash character varying(128) NOT NULL,
     created_at timestamp with time zone NOT NULL,
-    dont_recommend boolean DEFAULT true NOT NULL,
+    username character varying(255) NOT NULL,
     full_name character varying(255) NOT NULL,
-    about character varying(10000) NOT NULL,
-    license_accepted boolean DEFAULT false NOT NULL
+    manager boolean DEFAULT false NOT NULL
 );
 
 
@@ -1257,229 +1123,208 @@ CREATE TABLE user_tag (
 
 
 --
--- Name: activation_token id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE ONLY activation_token ALTER COLUMN id SET DEFAULT nextval('activation_token_id_seq'::regclass);
-
-
---
 -- Name: application_status id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY application_status ALTER COLUMN id SET DEFAULT nextval('application_status_id_seq'::regclass);
+ALTER TABLE application_status ALTER COLUMN id SET DEFAULT nextval('application_status_id_seq'::regclass);
 
 
 --
 -- Name: attachment id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY attachment ALTER COLUMN id SET DEFAULT nextval('attachment_id_seq'::regclass);
-
-
---
--- Name: dropbox_settings id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE ONLY dropbox_settings ALTER COLUMN id SET DEFAULT nextval('dropbox_settings_id_seq'::regclass);
+ALTER TABLE attachment ALTER COLUMN id SET DEFAULT nextval('attachment_id_seq'::regclass);
 
 
 --
 -- Name: email_activation_token id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY email_activation_token ALTER COLUMN id SET DEFAULT nextval('email_activation_token_id_seq'::regclass);
+ALTER TABLE email_activation_token ALTER COLUMN id SET DEFAULT nextval('email_activation_token_id_seq'::regclass);
 
 
 --
 -- Name: granted_permissions_project_invite id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY granted_permissions_project_invite ALTER COLUMN id SET DEFAULT nextval('granted_permissions_project_invite_id_seq'::regclass);
+ALTER TABLE granted_permissions_project_invite ALTER COLUMN id SET DEFAULT nextval('granted_permissions_project_invite_id_seq'::regclass);
 
 
 --
 -- Name: invite_status id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY invite_status ALTER COLUMN id SET DEFAULT nextval('invite_status_id_seq'::regclass);
+ALTER TABLE invite_status ALTER COLUMN id SET DEFAULT nextval('invite_status_id_seq'::regclass);
 
 
 --
 -- Name: issue id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY issue ALTER COLUMN id SET DEFAULT nextval('issue_id_seq'::regclass);
+ALTER TABLE issue ALTER COLUMN id SET DEFAULT nextval('issue_id_seq'::regclass);
 
 
 --
 -- Name: languages id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY languages ALTER COLUMN id SET DEFAULT nextval('languages_id_seq'::regclass);
+ALTER TABLE languages ALTER COLUMN id SET DEFAULT nextval('languages_id_seq'::regclass);
 
 
 --
 -- Name: login_statistics id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY login_statistics ALTER COLUMN id SET DEFAULT nextval('login_statistics_id_seq'::regclass);
+ALTER TABLE login_statistics ALTER COLUMN id SET DEFAULT nextval('login_statistics_id_seq'::regclass);
 
 
 --
 -- Name: memo id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY memo ALTER COLUMN id SET DEFAULT nextval('memo_id_seq'::regclass);
+ALTER TABLE memo ALTER COLUMN id SET DEFAULT nextval('memo_id_seq'::regclass);
 
 
 --
--- Name: organization id; Type: DEFAULT; Schema: public
+-- Name: password_activation_token id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY organization ALTER COLUMN id SET DEFAULT nextval('organization_id_seq'::regclass);
+ALTER TABLE password_activation_token ALTER COLUMN id SET DEFAULT nextval('activation_token_id_seq'::regclass);
 
 
 --
 -- Name: project id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project ALTER COLUMN id SET DEFAULT nextval('project_id_seq'::regclass);
+ALTER TABLE project ALTER COLUMN id SET DEFAULT nextval('project_id_seq'::regclass);
 
 
 --
 -- Name: project_application id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project_application ALTER COLUMN id SET DEFAULT nextval('project_application_id_seq'::regclass);
+ALTER TABLE project_application ALTER COLUMN id SET DEFAULT nextval('project_application_id_seq'::regclass);
 
 
 --
 -- Name: project_invite id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite ALTER COLUMN id SET DEFAULT nextval('project_invite_id_seq'::regclass);
+ALTER TABLE project_invite ALTER COLUMN id SET DEFAULT nextval('project_invite_id_seq'::regclass);
 
 
 --
 -- Name: project_invite_token id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite_token ALTER COLUMN id SET DEFAULT nextval('project_invite_token_id_seq'::regclass);
+ALTER TABLE project_invite_token ALTER COLUMN id SET DEFAULT nextval('project_invite_token_id_seq'::regclass);
 
 
 --
 -- Name: project_member id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project_member ALTER COLUMN id SET DEFAULT nextval('project_member_id_seq'::regclass);
+ALTER TABLE project_member ALTER COLUMN id SET DEFAULT nextval('project_member_id_seq'::regclass);
 
 
 --
 -- Name: project_task_number_sequence id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY project_task_number_sequence ALTER COLUMN id SET DEFAULT nextval('project_task_number_sequence_id_seq'::regclass);
+ALTER TABLE project_task_number_sequence ALTER COLUMN id SET DEFAULT nextval('project_task_number_sequence_id_seq'::regclass);
 
 
 --
 -- Name: road id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY road ALTER COLUMN id SET DEFAULT nextval('road_id_seq'::regclass);
+ALTER TABLE road ALTER COLUMN id SET DEFAULT nextval('road_id_seq'::regclass);
 
 
 --
 -- Name: tag id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY tag ALTER COLUMN id SET DEFAULT nextval('tag_id_seq'::regclass);
+ALTER TABLE tag ALTER COLUMN id SET DEFAULT nextval('tag_id_seq'::regclass);
 
 
 --
 -- Name: task id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task ALTER COLUMN id SET DEFAULT nextval('task_id_seq'::regclass);
+ALTER TABLE task ALTER COLUMN id SET DEFAULT nextval('task_id_seq'::regclass);
 
 
 --
 -- Name: task_card id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task_card ALTER COLUMN id SET DEFAULT nextval('task_card_id_seq'::regclass);
+ALTER TABLE task_card ALTER COLUMN id SET DEFAULT nextval('task_card_id_seq'::regclass);
 
 
 --
 -- Name: task_hashtag id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag ALTER COLUMN id SET DEFAULT nextval('task_hashtag_id_seq'::regclass);
+ALTER TABLE task_hashtag ALTER COLUMN id SET DEFAULT nextval('task_hashtag_id_seq'::regclass);
 
 
 --
 -- Name: task_priority id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task_priority ALTER COLUMN id SET DEFAULT nextval('task_priority_id_seq'::regclass);
+ALTER TABLE task_priority ALTER COLUMN id SET DEFAULT nextval('task_priority_id_seq'::regclass);
 
 
 --
 -- Name: task_status id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task_status ALTER COLUMN id SET DEFAULT nextval('task_status_id_seq'::regclass);
+ALTER TABLE task_status ALTER COLUMN id SET DEFAULT nextval('task_status_id_seq'::regclass);
 
 
 --
 -- Name: task_type id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY task_type ALTER COLUMN id SET DEFAULT nextval('task_type_id_seq'::regclass);
+ALTER TABLE task_type ALTER COLUMN id SET DEFAULT nextval('task_type_id_seq'::regclass);
 
 
 --
 -- Name: user_favorite id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY user_favorite ALTER COLUMN id SET DEFAULT nextval('user_favorite_id_seq'::regclass);
-
-
---
--- Name: user_organization id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE ONLY user_organization ALTER COLUMN id SET DEFAULT nextval('user_organization_id_seq'::regclass);
+ALTER TABLE user_favorite ALTER COLUMN id SET DEFAULT nextval('user_favorite_id_seq'::regclass);
 
 
 --
 -- Name: user_profile id; Type: DEFAULT; Schema: public
 --
 
-ALTER TABLE ONLY user_profile ALTER COLUMN id SET DEFAULT nextval('user_profile_id_seq'::regclass);
+ALTER TABLE user_profile ALTER COLUMN id SET DEFAULT nextval('user_profile_id_seq'::regclass);
 
 
 --
--- Name: activation_token activation_token__token_uniq; Type: CONSTRAINT; Schema: public
+-- Name: password_activation_token activation_token__token_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY activation_token
+ALTER TABLE password_activation_token
     ADD CONSTRAINT activation_token__token_uniq UNIQUE (token);
 
 
 --
--- Name: activation_token activation_token__user_id_uniq; Type: CONSTRAINT; Schema: public
+-- Name: password_activation_token activation_token__user_id_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY activation_token
+ALTER TABLE password_activation_token
     ADD CONSTRAINT activation_token__user_id_uniq UNIQUE (user_id);
 
 
 --
--- Name: activation_token activation_token_pkey; Type: CONSTRAINT; Schema: public
+-- Name: password_activation_token activation_token_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY activation_token
+ALTER TABLE password_activation_token
     ADD CONSTRAINT activation_token_pkey PRIMARY KEY (id);
 
 
@@ -1487,7 +1332,7 @@ ALTER TABLE ONLY activation_token
 -- Name: application_status application_status__name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY application_status
+ALTER TABLE application_status
     ADD CONSTRAINT application_status__name_code_uniq UNIQUE (name_code);
 
 
@@ -1495,7 +1340,7 @@ ALTER TABLE ONLY application_status
 -- Name: application_status application_status_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY application_status
+ALTER TABLE application_status
     ADD CONSTRAINT application_status_pkey PRIMARY KEY (id);
 
 
@@ -1503,23 +1348,15 @@ ALTER TABLE ONLY application_status
 -- Name: attachment attachment_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY attachment
+ALTER TABLE attachment
     ADD CONSTRAINT attachment_pkey PRIMARY KEY (id);
-
-
---
--- Name: dropbox_settings dropbox_settings_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY dropbox_settings
-    ADD CONSTRAINT dropbox_settings_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: email_activation_token email_activation_token__email_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY email_activation_token
+ALTER TABLE email_activation_token
     ADD CONSTRAINT email_activation_token__email_uniq UNIQUE (email_address);
 
 
@@ -1527,7 +1364,7 @@ ALTER TABLE ONLY email_activation_token
 -- Name: email_activation_token email_activation_token_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY email_activation_token
+ALTER TABLE email_activation_token
     ADD CONSTRAINT email_activation_token_pkey PRIMARY KEY (id);
 
 
@@ -1535,23 +1372,15 @@ ALTER TABLE ONLY email_activation_token
 -- Name: granted_permissions_project_invite granted_permissions_project_invite_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY granted_permissions_project_invite
+ALTER TABLE granted_permissions_project_invite
     ADD CONSTRAINT granted_permissions_project_invite_pkey PRIMARY KEY (id);
-
-
---
--- Name: imported_jira_project imported_jira_project__organization_id__project_id_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY imported_jira_project
-    ADD CONSTRAINT imported_jira_project__organization_id__project_id_uniq UNIQUE (organization_id, project_id);
 
 
 --
 -- Name: invite_status invite_status__name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY invite_status
+ALTER TABLE invite_status
     ADD CONSTRAINT invite_status__name_code_uniq UNIQUE (name_code);
 
 
@@ -1559,7 +1388,7 @@ ALTER TABLE ONLY invite_status
 -- Name: invite_status invite_status_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY invite_status
+ALTER TABLE invite_status
     ADD CONSTRAINT invite_status_pkey PRIMARY KEY (id);
 
 
@@ -1567,7 +1396,7 @@ ALTER TABLE ONLY invite_status
 -- Name: issue issue_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY issue
+ALTER TABLE issue
     ADD CONSTRAINT issue_pkey PRIMARY KEY (id);
 
 
@@ -1575,7 +1404,7 @@ ALTER TABLE ONLY issue
 -- Name: jira_upload jira_upload__organization_id__upload_timestamp_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY jira_upload
+ALTER TABLE jira_upload
     ADD CONSTRAINT jira_upload__organization_id__upload_timestamp_uniq UNIQUE (organization_id, upload_timestamp);
 
 
@@ -1583,7 +1412,7 @@ ALTER TABLE ONLY jira_upload
 -- Name: languages languages_name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY languages
+ALTER TABLE languages
     ADD CONSTRAINT languages_name_code_uniq UNIQUE (name_code);
 
 
@@ -1591,7 +1420,7 @@ ALTER TABLE ONLY languages
 -- Name: languages languages_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY languages
+ALTER TABLE languages
     ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
 
 
@@ -1599,7 +1428,7 @@ ALTER TABLE ONLY languages
 -- Name: login_statistics login_statistics_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY login_statistics
+ALTER TABLE login_statistics
     ADD CONSTRAINT login_statistics_pkey PRIMARY KEY (id);
 
 
@@ -1607,7 +1436,7 @@ ALTER TABLE ONLY login_statistics
 -- Name: memo memo_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY memo
+ALTER TABLE memo
     ADD CONSTRAINT memo_pkey PRIMARY KEY (id);
 
 
@@ -1615,39 +1444,15 @@ ALTER TABLE ONLY memo
 -- Name: notification_settings notification_settings__user_id_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY notification_settings
+ALTER TABLE notification_settings
     ADD CONSTRAINT notification_settings__user_id_uniq UNIQUE (user_id);
-
-
---
--- Name: organization organization__ui_id_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT organization__ui_id_uniq UNIQUE (ui_id);
-
-
---
--- Name: organization_language organization_language_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization_language
-    ADD CONSTRAINT organization_language_pkey PRIMARY KEY (organization_id, language_id);
-
-
---
--- Name: organization organization_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT organization_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: project project__task_number_sequence_id__uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project
+ALTER TABLE project
     ADD CONSTRAINT project__task_number_sequence_id__uniq UNIQUE (task_number_sequence_id);
 
 
@@ -1655,7 +1460,7 @@ ALTER TABLE ONLY project
 -- Name: project project__ui_id_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project
+ALTER TABLE project
     ADD CONSTRAINT project__ui_id_uniq UNIQUE (ui_id);
 
 
@@ -1663,7 +1468,7 @@ ALTER TABLE ONLY project
 -- Name: project_application project_application_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_application
+ALTER TABLE project_application
     ADD CONSTRAINT project_application_pkey PRIMARY KEY (id);
 
 
@@ -1671,7 +1476,7 @@ ALTER TABLE ONLY project_application
 -- Name: project_invite project_invite_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite
+ALTER TABLE project_invite
     ADD CONSTRAINT project_invite_pkey PRIMARY KEY (id);
 
 
@@ -1679,7 +1484,7 @@ ALTER TABLE ONLY project_invite
 -- Name: project_invite_token project_invite_token__invite_id_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite_token
+ALTER TABLE project_invite_token
     ADD CONSTRAINT project_invite_token__invite_id_uniq UNIQUE (invite_id);
 
 
@@ -1687,7 +1492,7 @@ ALTER TABLE ONLY project_invite_token
 -- Name: project_invite_token project_invite_token__token_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite_token
+ALTER TABLE project_invite_token
     ADD CONSTRAINT project_invite_token__token_uniq UNIQUE (token);
 
 
@@ -1695,7 +1500,7 @@ ALTER TABLE ONLY project_invite_token
 -- Name: project_invite_token project_invite_token_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite_token
+ALTER TABLE project_invite_token
     ADD CONSTRAINT project_invite_token_pkey PRIMARY KEY (id);
 
 
@@ -1703,7 +1508,7 @@ ALTER TABLE ONLY project_invite_token
 -- Name: project_language project_language_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_language
+ALTER TABLE project_language
     ADD CONSTRAINT project_language_pkey PRIMARY KEY (project_id, language_id);
 
 
@@ -1711,7 +1516,7 @@ ALTER TABLE ONLY project_language
 -- Name: project_member project_member_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_member
+ALTER TABLE project_member
     ADD CONSTRAINT project_member_pkey PRIMARY KEY (id);
 
 
@@ -1719,7 +1524,7 @@ ALTER TABLE ONLY project_member
 -- Name: project project_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project
+ALTER TABLE project
     ADD CONSTRAINT project_pkey PRIMARY KEY (id);
 
 
@@ -1727,7 +1532,7 @@ ALTER TABLE ONLY project
 -- Name: project_tag project_tag_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_tag
+ALTER TABLE project_tag
     ADD CONSTRAINT project_tag_pkey PRIMARY KEY (project_id, tag_id);
 
 
@@ -1735,7 +1540,7 @@ ALTER TABLE ONLY project_tag
 -- Name: project_task_number_sequence project_task_number_sequence_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_task_number_sequence
+ALTER TABLE project_task_number_sequence
     ADD CONSTRAINT project_task_number_sequence_pkey PRIMARY KEY (id);
 
 
@@ -1743,7 +1548,7 @@ ALTER TABLE ONLY project_task_number_sequence
 -- Name: road road_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY road
+ALTER TABLE road
     ADD CONSTRAINT road_pkey PRIMARY KEY (id);
 
 
@@ -1751,7 +1556,7 @@ ALTER TABLE ONLY road
 -- Name: tag tag__name_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY tag
+ALTER TABLE tag
     ADD CONSTRAINT tag__name_uniq UNIQUE (name);
 
 
@@ -1759,7 +1564,7 @@ ALTER TABLE ONLY tag
 -- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY tag
+ALTER TABLE tag
     ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
 
 
@@ -1767,7 +1572,7 @@ ALTER TABLE ONLY tag
 -- Name: task task__project_id_number_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__project_id_number_uniq UNIQUE (number, project_id);
 
 
@@ -1775,7 +1580,7 @@ ALTER TABLE ONLY task
 -- Name: task_card task_card_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_card
+ALTER TABLE task_card
     ADD CONSTRAINT task_card_pkey PRIMARY KEY (id);
 
 
@@ -1783,7 +1588,7 @@ ALTER TABLE ONLY task_card
 -- Name: task_hashtag task_hashtag__name_project_id_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag
+ALTER TABLE task_hashtag
     ADD CONSTRAINT task_hashtag__name_project_id_uniq UNIQUE (name, project_id);
 
 
@@ -1791,7 +1596,7 @@ ALTER TABLE ONLY task_hashtag
 -- Name: task_hashtag__task task_hashtag__task__pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag__task
+ALTER TABLE task_hashtag__task
     ADD CONSTRAINT task_hashtag__task__pkey PRIMARY KEY (task_id, task_hashtag_id);
 
 
@@ -1799,7 +1604,7 @@ ALTER TABLE ONLY task_hashtag__task
 -- Name: task_hashtag task_hashtag_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag
+ALTER TABLE task_hashtag
     ADD CONSTRAINT task_hashtag_pkey PRIMARY KEY (id);
 
 
@@ -1807,7 +1612,7 @@ ALTER TABLE ONLY task_hashtag
 -- Name: task task_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task_pkey PRIMARY KEY (id);
 
 
@@ -1815,7 +1620,7 @@ ALTER TABLE ONLY task
 -- Name: task_priority task_priority__importance_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_priority
+ALTER TABLE task_priority
     ADD CONSTRAINT task_priority__importance_uniq UNIQUE (importance);
 
 
@@ -1823,7 +1628,7 @@ ALTER TABLE ONLY task_priority
 -- Name: task_priority task_priority__name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_priority
+ALTER TABLE task_priority
     ADD CONSTRAINT task_priority__name_code_uniq UNIQUE (name_code);
 
 
@@ -1831,7 +1636,7 @@ ALTER TABLE ONLY task_priority
 -- Name: task_priority task_priority_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_priority
+ALTER TABLE task_priority
     ADD CONSTRAINT task_priority_pkey PRIMARY KEY (id);
 
 
@@ -1839,7 +1644,7 @@ ALTER TABLE ONLY task_priority
 -- Name: task_status task_status__name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_status
+ALTER TABLE task_status
     ADD CONSTRAINT task_status__name_code_uniq UNIQUE (name_code);
 
 
@@ -1847,7 +1652,7 @@ ALTER TABLE ONLY task_status
 -- Name: task_status task_status_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_status
+ALTER TABLE task_status
     ADD CONSTRAINT task_status_pkey PRIMARY KEY (id);
 
 
@@ -1855,7 +1660,7 @@ ALTER TABLE ONLY task_status
 -- Name: task_type task_type__name_code_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_type
+ALTER TABLE task_type
     ADD CONSTRAINT task_type__name_code_uniq UNIQUE (name_code);
 
 
@@ -1863,7 +1668,7 @@ ALTER TABLE ONLY task_type
 -- Name: task_type task_type_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_type
+ALTER TABLE task_type
     ADD CONSTRAINT task_type_pkey PRIMARY KEY (id);
 
 
@@ -1871,7 +1676,7 @@ ALTER TABLE ONLY task_type
 -- Name: temporary_attachment temporary_attachment__uuid_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY temporary_attachment
+ALTER TABLE temporary_attachment
     ADD CONSTRAINT temporary_attachment__uuid_uniq UNIQUE (uuid);
 
 
@@ -1879,7 +1684,7 @@ ALTER TABLE ONLY temporary_attachment
 -- Name: user_favorite user_favorite_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_favorite
+ALTER TABLE user_favorite
     ADD CONSTRAINT user_favorite_pkey PRIMARY KEY (id);
 
 
@@ -1887,47 +1692,23 @@ ALTER TABLE ONLY user_favorite
 -- Name: user_language user_language_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_language
+ALTER TABLE user_language
     ADD CONSTRAINT user_language_pkey PRIMARY KEY (user_id, language_id);
-
-
---
--- Name: user_organization user_organization__user_id_organization_id_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY user_organization
-    ADD CONSTRAINT user_organization__user_id_organization_id_uniq UNIQUE (user_id, organization_id);
-
-
---
--- Name: user_organization user_organization_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY user_organization
-    ADD CONSTRAINT user_organization_pkey PRIMARY KEY (id);
 
 
 --
 -- Name: user_profile user_profile__email_uniq; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_profile
+ALTER TABLE user_profile
     ADD CONSTRAINT user_profile__email_uniq UNIQUE (email_address);
-
-
---
--- Name: user_profile user_profile__username_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY user_profile
-    ADD CONSTRAINT user_profile__username_uniq UNIQUE (username);
 
 
 --
 -- Name: user_profile user_profile_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_profile
+ALTER TABLE user_profile
     ADD CONSTRAINT user_profile_pkey PRIMARY KEY (id);
 
 
@@ -1935,15 +1716,8 @@ ALTER TABLE ONLY user_profile
 -- Name: user_tag user_tag_pkey; Type: CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_tag
+ALTER TABLE user_tag
     ADD CONSTRAINT user_tag_pkey PRIMARY KEY (user_id, tag_id);
-
-
---
--- Name: attachment__dropbox_settings_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX attachment__dropbox_settings_id_idx ON attachment USING btree (dropbox_settings_id);
 
 
 --
@@ -2027,7 +1801,7 @@ CREATE INDEX login_statistics__user_id_idx ON login_statistics USING btree (user
 -- Name: memo__author_user_organization_id_idx; Type: INDEX; Schema: public
 --
 
-CREATE INDEX memo__author_user_organization_id_idx ON memo USING btree (author_user_organization_id);
+CREATE INDEX memo__author_user_organization_id_idx ON memo USING btree (author_project_member_id);
 
 
 --
@@ -2035,27 +1809,6 @@ CREATE INDEX memo__author_user_organization_id_idx ON memo USING btree (author_u
 --
 
 CREATE INDEX memo__project_id_idx ON memo USING btree (project_id);
-
-
---
--- Name: organization__dropbox_settings_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX organization__dropbox_settings_id_idx ON organization USING btree (dropbox_settings_id);
-
-
---
--- Name: project__dropbox_settings_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX project__dropbox_settings_id_idx ON project USING btree (dropbox_settings_id);
-
-
---
--- Name: project__organization_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX project__organization_id_idx ON project USING btree (organization_id);
 
 
 --
@@ -2122,13 +1875,6 @@ CREATE INDEX project_member__user_id_idx ON project_member USING btree (user_id)
 
 
 --
--- Name: project_member__user_organization_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX project_member__user_organization_id_idx ON project_member USING btree (user_organization_id);
-
-
---
 -- Name: road__project_id_idx; Type: INDEX; Schema: public
 --
 
@@ -2139,14 +1885,7 @@ CREATE INDEX road__project_id_idx ON road USING btree (project_id);
 -- Name: task__assignee_user_organization_id_idx; Type: INDEX; Schema: public
 --
 
-CREATE INDEX task__assignee_user_organization_id_idx ON task USING btree (assignee_user_organization_id);
-
-
---
--- Name: task__parent_task_id_idx; Type: INDEX; Schema: public
---
-
-CREATE INDEX task__parent_task_id_idx ON task USING btree (parent_task_id);
+CREATE INDEX task__assignee_user_organization_id_idx ON task USING btree (assignee_project_member_id);
 
 
 --
@@ -2160,7 +1899,7 @@ CREATE INDEX task__priority_id_idx ON task USING btree (priority_id);
 -- Name: task__reporter_user_organization_id_idx; Type: INDEX; Schema: public
 --
 
-CREATE INDEX task__reporter_user_organization_id_idx ON task USING btree (reporter_user_organization_id);
+CREATE INDEX task__reporter_user_organization_id_idx ON task USING btree (reporter_project_member_id);
 
 
 --
@@ -2248,33 +1987,18 @@ CREATE INDEX user_favorite__user_id_idx ON user_favorite USING btree (user_id);
 
 
 --
--- Name: user_organization__organization_id_idx; Type: INDEX; Schema: public
+-- Name: password_activation_token activation_token_user_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-CREATE INDEX user_organization__organization_id_idx ON user_organization USING btree (organization_id);
-
-
---
--- Name: activation_token activation_token_user_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY activation_token
+ALTER TABLE password_activation_token
     ADD CONSTRAINT activation_token_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
-
-
---
--- Name: attachment attachment__dropbox_settings_id__dropbox_settings_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY attachment
-    ADD CONSTRAINT attachment__dropbox_settings_id__dropbox_settings_fkey FOREIGN KEY (dropbox_settings_id) REFERENCES dropbox_settings(id);
 
 
 --
 -- Name: attachment attachment__task_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY attachment
+ALTER TABLE attachment
     ADD CONSTRAINT attachment__task_id__task_fkey FOREIGN KEY (task_id) REFERENCES task(id);
 
 
@@ -2282,23 +2006,15 @@ ALTER TABLE ONLY attachment
 -- Name: failed_login_attempt failed_login_attempt__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY failed_login_attempt
+ALTER TABLE failed_login_attempt
     ADD CONSTRAINT failed_login_attempt__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
-
-
---
--- Name: imported_jira_project imported_jira_project__organization_id__organization_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY imported_jira_project
-    ADD CONSTRAINT imported_jira_project__organization_id__organization_fkey FOREIGN KEY (organization_id) REFERENCES organization(id);
 
 
 --
 -- Name: imported_jira_project imported_jira_project__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY imported_jira_project
+ALTER TABLE imported_jira_project
     ADD CONSTRAINT imported_jira_project__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2306,7 +2022,7 @@ ALTER TABLE ONLY imported_jira_project
 -- Name: imported_jira_task imported_jira_task__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY imported_jira_task
+ALTER TABLE imported_jira_task
     ADD CONSTRAINT imported_jira_task__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2314,7 +2030,7 @@ ALTER TABLE ONLY imported_jira_task
 -- Name: imported_jira_task imported_jira_task__task_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY imported_jira_task
+ALTER TABLE imported_jira_task
     ADD CONSTRAINT imported_jira_task__task_id__task_fkey FOREIGN KEY (task_id) REFERENCES task(id);
 
 
@@ -2322,7 +2038,7 @@ ALTER TABLE ONLY imported_jira_task
 -- Name: issue issue__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY issue
+ALTER TABLE issue
     ADD CONSTRAINT issue__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2330,7 +2046,7 @@ ALTER TABLE ONLY issue
 -- Name: issue issue__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY issue
+ALTER TABLE issue
     ADD CONSTRAINT issue__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
@@ -2338,23 +2054,23 @@ ALTER TABLE ONLY issue
 -- Name: login_statistics login_statistics_user_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY login_statistics
+ALTER TABLE login_statistics
     ADD CONSTRAINT login_statistics_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
 --
--- Name: memo memo__author_user_organization_id__user_organization_fkey; Type: FK CONSTRAINT; Schema: public
+-- Name: memo memo__author_project_member_id__project_member_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY memo
-    ADD CONSTRAINT memo__author_user_organization_id__user_organization_fkey FOREIGN KEY (author_user_organization_id) REFERENCES user_organization(id);
+ALTER TABLE memo
+    ADD CONSTRAINT memo__author_project_member_id__project_member_fkey FOREIGN KEY (author_project_member_id) REFERENCES project_member(id);
 
 
 --
 -- Name: memo memo__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY memo
+ALTER TABLE memo
     ADD CONSTRAINT memo__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2362,63 +2078,23 @@ ALTER TABLE ONLY memo
 -- Name: notification_settings notification_settings__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY notification_settings
+ALTER TABLE notification_settings
     ADD CONSTRAINT notification_settings__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
 --
--- Name: organization organization__dropbox_settings_id__dropbox_settings_fkey; Type: FK CONSTRAINT; Schema: public
+-- Name: project project__owner_user_id__user_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT organization__dropbox_settings_id__dropbox_settings_fkey FOREIGN KEY (dropbox_settings_id) REFERENCES dropbox_settings(id);
-
-
---
--- Name: organization organization__owner_user_id__user_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization
-    ADD CONSTRAINT organization__owner_user_id__user_fkey FOREIGN KEY (owner_user_id) REFERENCES user_profile(id);
-
-
---
--- Name: organization_language organization_language_language_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization_language
-    ADD CONSTRAINT organization_language_language_id_fkey FOREIGN KEY (language_id) REFERENCES languages(id) ON UPDATE CASCADE;
-
-
---
--- Name: organization_language organization_language_organization_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY organization_language
-    ADD CONSTRAINT organization_language_organization_id_fkey FOREIGN KEY (organization_id) REFERENCES organization(id) ON UPDATE CASCADE;
-
-
---
--- Name: project project__dropbox_settings_id__dropbox_settings_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY project
-    ADD CONSTRAINT project__dropbox_settings_id__dropbox_settings_fkey FOREIGN KEY (dropbox_settings_id) REFERENCES dropbox_settings(id);
-
-
---
--- Name: project project__organization_fk; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY project
-    ADD CONSTRAINT project__organization_fk FOREIGN KEY (organization_id) REFERENCES organization(id);
+ALTER TABLE project
+    ADD CONSTRAINT project__owner_user_id__user_fkey FOREIGN KEY (owner_user_id) REFERENCES user_profile(id);
 
 
 --
 -- Name: project project__task_number_sequence_id__task_number_sequence_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project
+ALTER TABLE project
     ADD CONSTRAINT project__task_number_sequence_id__task_number_sequence_fkey FOREIGN KEY (task_number_sequence_id) REFERENCES project_task_number_sequence(id);
 
 
@@ -2426,7 +2102,7 @@ ALTER TABLE ONLY project
 -- Name: project_application project_application__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_application
+ALTER TABLE project_application
     ADD CONSTRAINT project_application__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2434,7 +2110,7 @@ ALTER TABLE ONLY project_application
 -- Name: project_application project_application__status_id__application_status_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_application
+ALTER TABLE project_application
     ADD CONSTRAINT project_application__status_id__application_status_fkey FOREIGN KEY (status_id) REFERENCES application_status(id);
 
 
@@ -2442,7 +2118,7 @@ ALTER TABLE ONLY project_application
 -- Name: project_application project_application__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_application
+ALTER TABLE project_application
     ADD CONSTRAINT project_application__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
@@ -2450,7 +2126,7 @@ ALTER TABLE ONLY project_application
 -- Name: project_invite project_invite__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite
+ALTER TABLE project_invite
     ADD CONSTRAINT project_invite__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2458,7 +2134,7 @@ ALTER TABLE ONLY project_invite
 -- Name: project_invite project_invite__sender_user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite
+ALTER TABLE project_invite
     ADD CONSTRAINT project_invite__sender_user_id__user_profile_fkey FOREIGN KEY (sender_user_id) REFERENCES user_profile(id);
 
 
@@ -2466,7 +2142,7 @@ ALTER TABLE ONLY project_invite
 -- Name: project_invite project_invite__status_id__invite_status_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite
+ALTER TABLE project_invite
     ADD CONSTRAINT project_invite__status_id__invite_status_fkey FOREIGN KEY (status_id) REFERENCES invite_status(id);
 
 
@@ -2474,7 +2150,7 @@ ALTER TABLE ONLY project_invite
 -- Name: project_invite project_invite__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite
+ALTER TABLE project_invite
     ADD CONSTRAINT project_invite__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
@@ -2482,7 +2158,7 @@ ALTER TABLE ONLY project_invite
 -- Name: project_invite_token project_invite_token__invite_id__granted_perms_proj_invite_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_invite_token
+ALTER TABLE project_invite_token
     ADD CONSTRAINT project_invite_token__invite_id__granted_perms_proj_invite_fkey FOREIGN KEY (invite_id) REFERENCES granted_permissions_project_invite(id);
 
 
@@ -2490,7 +2166,7 @@ ALTER TABLE ONLY project_invite_token
 -- Name: project_language project_language_language_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_language
+ALTER TABLE project_language
     ADD CONSTRAINT project_language_language_id_fkey FOREIGN KEY (language_id) REFERENCES languages(id) ON UPDATE CASCADE;
 
 
@@ -2498,7 +2174,7 @@ ALTER TABLE ONLY project_language
 -- Name: project_language project_language_project_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_language
+ALTER TABLE project_language
     ADD CONSTRAINT project_language_project_id_fkey FOREIGN KEY (project_id) REFERENCES project(id) ON UPDATE CASCADE;
 
 
@@ -2506,7 +2182,7 @@ ALTER TABLE ONLY project_language
 -- Name: project_member project_member__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_member
+ALTER TABLE project_member
     ADD CONSTRAINT project_member__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2514,23 +2190,15 @@ ALTER TABLE ONLY project_member
 -- Name: project_member project_member__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_member
+ALTER TABLE project_member
     ADD CONSTRAINT project_member__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
-
-
---
--- Name: project_member project_member__user_organization_id__user_organization_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY project_member
-    ADD CONSTRAINT project_member__user_organization_id__user_organization_fkey FOREIGN KEY (user_organization_id) REFERENCES user_organization(id);
 
 
 --
 -- Name: project_tag project_tag_project_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_tag
+ALTER TABLE project_tag
     ADD CONSTRAINT project_tag_project_id_fkey FOREIGN KEY (project_id) REFERENCES project(id) ON UPDATE CASCADE;
 
 
@@ -2538,23 +2206,15 @@ ALTER TABLE ONLY project_tag
 -- Name: project_tag project_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY project_tag
+ALTER TABLE project_tag
     ADD CONSTRAINT project_tag_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON UPDATE CASCADE;
-
-
---
--- Name: road road__organization_id__organization_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY road
-    ADD CONSTRAINT road__organization_id__organization_fkey FOREIGN KEY (organization_id) REFERENCES organization(id);
 
 
 --
 -- Name: road road__previous_id__road_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY road
+ALTER TABLE road
     ADD CONSTRAINT road__previous_id__road_fkey FOREIGN KEY (previous_id) REFERENCES road(id);
 
 
@@ -2562,31 +2222,23 @@ ALTER TABLE ONLY road
 -- Name: road road__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY road
+ALTER TABLE road
     ADD CONSTRAINT road__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
 --
--- Name: task task__assignee_user_organization_id__user_organization_fkey; Type: FK CONSTRAINT; Schema: public
+-- Name: task task__assignee_proj_member_id__proj_member_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT task__assignee_user_organization_id__user_organization_fkey FOREIGN KEY (assignee_user_organization_id) REFERENCES user_organization(id);
-
-
---
--- Name: task task__parent_task_id__task_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY task
-    ADD CONSTRAINT task__parent_task_id__task_fkey FOREIGN KEY (parent_task_id) REFERENCES task(id);
+ALTER TABLE task
+    ADD CONSTRAINT task__assignee_proj_member_id__proj_member_fkey FOREIGN KEY (assignee_project_member_id) REFERENCES project_member(id);
 
 
 --
 -- Name: task task__priority_id__task_priority_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__priority_id__task_priority_fkey FOREIGN KEY (priority_id) REFERENCES task_priority(id);
 
 
@@ -2594,23 +2246,23 @@ ALTER TABLE ONLY task
 -- Name: task task__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
 --
--- Name: task task__reporter_user_organization_id__user_organization_fkey; Type: FK CONSTRAINT; Schema: public
+-- Name: task task__reporter_proj_member_id__proj_member_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
-    ADD CONSTRAINT task__reporter_user_organization_id__user_organization_fkey FOREIGN KEY (reporter_user_organization_id) REFERENCES user_organization(id);
+ALTER TABLE task
+    ADD CONSTRAINT task__reporter_proj_member_id__proj_member_fkey FOREIGN KEY (reporter_project_member_id) REFERENCES project_member(id);
 
 
 --
 -- Name: task task__status_id__task_status_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__status_id__task_status_fkey FOREIGN KEY (status_id) REFERENCES task_status(id);
 
 
@@ -2618,7 +2270,7 @@ ALTER TABLE ONLY task
 -- Name: task task__task_card_id__task_card_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__task_card_id__task_card_fkey FOREIGN KEY (task_card_id) REFERENCES task_card(id);
 
 
@@ -2626,23 +2278,15 @@ ALTER TABLE ONLY task
 -- Name: task task__type_id__task_type_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task
+ALTER TABLE task
     ADD CONSTRAINT task__type_id__task_type_fkey FOREIGN KEY (type_id) REFERENCES task_type(id);
-
-
---
--- Name: task_card task_card__organization_id__organization_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY task_card
-    ADD CONSTRAINT task_card__organization_id__organization_fkey FOREIGN KEY (organization_id) REFERENCES organization(id);
 
 
 --
 -- Name: task_card task_card__previous_id__task_card_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_card
+ALTER TABLE task_card
     ADD CONSTRAINT task_card__previous_id__task_card_fkey FOREIGN KEY (previous_id) REFERENCES task_card(id);
 
 
@@ -2650,7 +2294,7 @@ ALTER TABLE ONLY task_card
 -- Name: task_card task_card__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_card
+ALTER TABLE task_card
     ADD CONSTRAINT task_card__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2658,7 +2302,7 @@ ALTER TABLE ONLY task_card
 -- Name: task_card task_card__road_id__road_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_card
+ALTER TABLE task_card
     ADD CONSTRAINT task_card__road_id__road_fkey FOREIGN KEY (road_id) REFERENCES road(id);
 
 
@@ -2666,7 +2310,7 @@ ALTER TABLE ONLY task_card
 -- Name: task_hashtag task_hashtag__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag
+ALTER TABLE task_hashtag
     ADD CONSTRAINT task_hashtag__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2674,7 +2318,7 @@ ALTER TABLE ONLY task_hashtag
 -- Name: task_hashtag__task task_hashtag_task__task_hashtag_id__task_hashtag_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag__task
+ALTER TABLE task_hashtag__task
     ADD CONSTRAINT task_hashtag_task__task_hashtag_id__task_hashtag_fkey FOREIGN KEY (task_hashtag_id) REFERENCES task_hashtag(id);
 
 
@@ -2682,7 +2326,7 @@ ALTER TABLE ONLY task_hashtag__task
 -- Name: task_hashtag__task task_hashtag_task__task_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_hashtag__task
+ALTER TABLE task_hashtag__task
     ADD CONSTRAINT task_hashtag_task__task_id__task_fkey FOREIGN KEY (task_id) REFERENCES task(id);
 
 
@@ -2690,7 +2334,7 @@ ALTER TABLE ONLY task_hashtag__task
 -- Name: task_link task_link__task1_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_link
+ALTER TABLE task_link
     ADD CONSTRAINT task_link__task1_id__task_fkey FOREIGN KEY (task1_id) REFERENCES task(id);
 
 
@@ -2698,7 +2342,7 @@ ALTER TABLE ONLY task_link
 -- Name: task_link task_link__task2_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_link
+ALTER TABLE task_link
     ADD CONSTRAINT task_link__task2_id__task_fkey FOREIGN KEY (task2_id) REFERENCES task(id);
 
 
@@ -2706,7 +2350,7 @@ ALTER TABLE ONLY task_link
 -- Name: task_subscriber task_subscriber__task_id__task_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_subscriber
+ALTER TABLE task_subscriber
     ADD CONSTRAINT task_subscriber__task_id__task_fkey FOREIGN KEY (task_id) REFERENCES task(id);
 
 
@@ -2714,23 +2358,15 @@ ALTER TABLE ONLY task_subscriber
 -- Name: task_subscriber task_subscriber__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY task_subscriber
+ALTER TABLE task_subscriber
     ADD CONSTRAINT task_subscriber__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
-
-
---
--- Name: temporary_attachment temporary_attachment__dropbox_settings_id__dropbox_settings_fk; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY temporary_attachment
-    ADD CONSTRAINT temporary_attachment__dropbox_settings_id__dropbox_settings_fk FOREIGN KEY (dropbox_settings_id) REFERENCES dropbox_settings(id);
 
 
 --
 -- Name: temporary_attachment temporary_attachment__project_id__dropbox_settings_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY temporary_attachment
+ALTER TABLE temporary_attachment
     ADD CONSTRAINT temporary_attachment__project_id__dropbox_settings_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2738,7 +2374,7 @@ ALTER TABLE ONLY temporary_attachment
 -- Name: user_favorite user_favorite__previous_id__user_favorite_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_favorite
+ALTER TABLE user_favorite
     ADD CONSTRAINT user_favorite__previous_id__user_favorite_fkey FOREIGN KEY (previous_id) REFERENCES user_favorite(id);
 
 
@@ -2746,7 +2382,7 @@ ALTER TABLE ONLY user_favorite
 -- Name: user_favorite user_favorite__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_favorite
+ALTER TABLE user_favorite
     ADD CONSTRAINT user_favorite__project_id__project_fkey FOREIGN KEY (project_id) REFERENCES project(id);
 
 
@@ -2754,7 +2390,7 @@ ALTER TABLE ONLY user_favorite
 -- Name: user_favorite user_favorite__user_id__user_profile_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_favorite
+ALTER TABLE user_favorite
     ADD CONSTRAINT user_favorite__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
@@ -2762,7 +2398,7 @@ ALTER TABLE ONLY user_favorite
 -- Name: user_language user_language_language_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_language
+ALTER TABLE user_language
     ADD CONSTRAINT user_language_language_id_fkey FOREIGN KEY (language_id) REFERENCES languages(id) ON UPDATE CASCADE;
 
 
@@ -2770,31 +2406,15 @@ ALTER TABLE ONLY user_language
 -- Name: user_language user_language_user_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_language
+ALTER TABLE user_language
     ADD CONSTRAINT user_language_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id) ON UPDATE CASCADE;
-
-
---
--- Name: user_organization user_organization__organization_fk; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY user_organization
-    ADD CONSTRAINT user_organization__organization_fk FOREIGN KEY (organization_id) REFERENCES organization(id);
-
-
---
--- Name: user_organization user_organization_user_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE ONLY user_organization
-    ADD CONSTRAINT user_organization_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
 
 --
 -- Name: user_tag user_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_tag
+ALTER TABLE user_tag
     ADD CONSTRAINT user_tag_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON UPDATE CASCADE;
 
 
@@ -2802,39 +2422,5 @@ ALTER TABLE ONLY user_tag
 -- Name: user_tag user_tag_user_id_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
-ALTER TABLE ONLY user_tag
+ALTER TABLE user_tag
     ADD CONSTRAINT user_tag_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id) ON UPDATE CASCADE;
-
-
-INSERT INTO languages(name_code) VALUES('EN_US');
-INSERT INTO languages(name_code) VALUES('RU_RU');
-
-
-INSERT INTO task_type(name_code) VALUES('TASK');
-INSERT INTO task_type(name_code) VALUES('BUG');
-INSERT INTO task_type(name_code) VALUES('IMPROVEMENT');
-INSERT INTO task_type(name_code) VALUES('NEW_FEATURE');
-
-
-INSERT INTO task_priority(name_code, importance) VALUES('TRIVIAL', 10);
-INSERT INTO task_priority(name_code, importance) VALUES('MINOR', 20);
-INSERT INTO task_priority(name_code, importance) VALUES('MAJOR', 30);
-INSERT INTO task_priority(name_code, importance) VALUES('CRITICAL', 40);
-INSERT INTO task_priority(name_code, importance) VALUES('BLOCKING', 50);
-
-
-INSERT INTO task_status(name_code) VALUES('OPEN');
-INSERT INTO task_status(name_code) VALUES('REJECTED');
-INSERT INTO task_status(name_code) VALUES('IN_DEVELOPMENT');
-INSERT INTO task_status(name_code) VALUES('WAITING_FOR_QA');
-INSERT INTO task_status(name_code) VALUES('IN_QA_REVIEW');
-INSERT INTO task_status(name_code) VALUES('CLOSED');
-
-
-INSERT INTO invite_status(name_code) VALUES('PENDING');
-INSERT INTO invite_status(name_code) VALUES('REJECTED');
-INSERT INTO invite_status(name_code) VALUES('ACCEPTED');
-
-
-INSERT INTO application_status(name_code) VALUES('PENDING');
-INSERT INTO application_status(name_code) VALUES('REJECTED');

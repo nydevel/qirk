@@ -56,24 +56,6 @@
                 <SizeBasedTriggeringPolicy size="50 MB" />
             </Policies>
         </RollingFile>
-        <RollingFile name="File-Crdt" append="true" fileName="${sys:catalina.home}/logs/qirk-crdt.log"
-            filePattern="${sys:catalina.home}/logs/qirk-crdt.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
-            <PatternLayout>
-                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
-            </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="50 MB" />
-            </Policies>
-        </RollingFile>
-        <RollingFile name="File-Admin" append="true" fileName="${sys:catalina.home}/logs/qirk-admin.log"
-            filePattern="${sys:catalina.home}/logs/qirk-admin.%d{yyyy-MM-dd_HH-mm-ss}.%i.log">
-            <PatternLayout>
-                <Pattern>%d{dd MMM yyyy HH:mm:ss.SSS} %-5level [%t] %logger{36}:%L - %msg%n</Pattern>
-            </PatternLayout>
-            <Policies>
-                <SizeBasedTriggeringPolicy size="50 MB" />
-            </Policies>
-        </RollingFile>
     </Appenders>
 
     <Loggers>
@@ -105,12 +87,6 @@
         </Logger>
         <Logger name="org.wrkr.clb.notification" level="info">
             <AppenderRef ref="File-Notif" />
-        </Logger>
-        <Logger name="org.wrkr.clb.crdt" level="info">
-            <AppenderRef ref="File-Crdt" />
-        </Logger>
-        <Logger name="org.wrkr.clb.admin" level="info">
-            <AppenderRef ref="File-Admin" />
         </Logger>
     </Loggers>
 </Configuration>

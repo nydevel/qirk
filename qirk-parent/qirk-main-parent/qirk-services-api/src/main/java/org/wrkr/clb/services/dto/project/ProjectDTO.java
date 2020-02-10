@@ -57,9 +57,6 @@ public class ProjectDTO extends IdDTO {
     @Size(max = 10000, message = "description in ProjectDTO must not be no more than 10000 characters")
     public String description;
 
-    @JsonProperty(value = "make_me_member")
-    public boolean makeMeMember = false;
-
     @JsonProperty(value = "tags")
     @NotNull(message = "tags in ProjectDTO must not be null")
     public Set<String> tagNames = new HashSet<String>();

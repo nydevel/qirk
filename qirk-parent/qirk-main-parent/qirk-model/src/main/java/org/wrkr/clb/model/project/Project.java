@@ -50,7 +50,7 @@ public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEnti
     private Long recordVersion = 1L;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_owner_id", nullable = false)
+    @JoinColumn(name = ProjectMeta.ownerId, nullable = false)
     private User owner;
     @Transient
     private Long ownerId;

@@ -25,11 +25,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.wrkr.clb.common.crypto.HashEncoder;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
+import org.wrkr.clb.model.project.ApplicationStatus;
 import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
 import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.roadmap.Road;
@@ -66,19 +68,30 @@ public abstract class BaseServiceTest {
         return saveUser(email, DEFAULT_USER_PASSWORD);
     }
 
+    protected User saveUser(String email, boolean manager)
+            throws Exception {
+        return saveUser(email.split("@")[0].toLowerCase(), email, DEFAULT_USER_PASSWORD, manager);
+    }
+
     protected User saveUser(String email, String password)
             throws Exception {
         return saveUser(email.split("@")[0].toLowerCase(), email, password);
     }
 
-    protected User saveUser(String username, String email, String password) throws Exception {
+    protected User saveUser(String username, String email, String password)
+            throws Exception {
+        return saveUser(username, email, password, false);
+    }
+
+    protected User saveUser(String username, String email, String password, boolean manager) throws Exception {
         User user = new User();
 
         user.setUsername(username);
         user.setEmailAddress(email);
         user.setPasswordHash(HashEncoder.encryptToHex(password));
         user.setCreatedAt(DateTimeUtils.now());
-        user.setFullName(email.split("@")[0]);
+        user.setFullName(username);
+        user.setManager(manager);
 
         testRepo.persistEntity(user);
         return user;
@@ -100,8 +113,10 @@ public abstract class BaseServiceTest {
         project.setDescriptionHtml("");
         project.setDocumentationMd("");
         project.setDocumentationHtml("");
-
         testRepo.persistEntity(project);
+
+        saveProjectMember(owner, project, true, true);
+
         return project;
     }
 
@@ -140,23 +155,21 @@ public abstract class BaseServiceTest {
         return invite;
     }
 
-    /*
-     * protected ProjectApplication saveProjectApplication(User user, Project project, ApplicationStatus status) {
-     * ProjectApplication application = new ProjectApplication();
-     * 
-     * application.setUser(user);
-     * application.setProject(project);
-     * application.setStatus(status);
-     * application.setText("");
-     * 
-     * OffsetDateTime now = DateTimeUtils.now();
-     * application.setCreatedAt(now);
-     * application.setUpdatedAt(now);
-     * 
-     * testRepo.persistEntity(application);
-     * return application;
-     * }
-     */
+    protected ProjectApplication saveProjectApplication(User user, Project project, ApplicationStatus status) {
+        ProjectApplication application = new ProjectApplication();
+
+        application.setUser(user);
+        application.setProject(project);
+        application.setStatus(status);
+        application.setText("");
+
+        OffsetDateTime now = DateTimeUtils.now();
+        application.setCreatedAt(now);
+        application.setUpdatedAt(now);
+
+        testRepo.persistEntity(application);
+        return application;
+    }
 
     protected ProjectMember saveProjectMember(User user, Project project,
             boolean manager, boolean writeAllowed) {

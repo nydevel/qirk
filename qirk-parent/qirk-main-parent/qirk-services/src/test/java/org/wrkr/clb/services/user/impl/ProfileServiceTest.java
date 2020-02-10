@@ -39,15 +39,15 @@ import org.wrkr.clb.services.user.ProfileService;
 @SuppressWarnings("unused")
 public class ProfileServiceTest extends BaseServiceTest {
 
-    private Long enabledUserId;
-    private static final String enabledUserEmail = "enableduser@test.com";
-    private static final String enabledUserPassword = "enabled";
-    private static final String enabledUserNewPassword = "enablednew";
+    private Long user1Id;
+    private static final String user1Email = "user1@test.com";
+    private static final String user1Password = "user1";
+    private static final String user1NewPassword = "new";
 
-    private Long enabledUserWithTokenId;
-    private static final String enabledUserWithTokenEmail = "enableduserwithtoken@test.com";
-    private static final String enabledUserWithTokenPassword = "enabledwithtoken";
-    private static final String enabledUserWithTokenToken = Long.valueOf(10 ^ 23).toString(); // 24 symbols
+    private Long userWithTokenId;
+    private static final String userWithTokenEmail = "userwithtoken@test.com";
+    private static final String userWithTokenPassword = "withtoken";
+    private static final String userWithTokenToken = Long.valueOf(10 ^ 23).toString(); // 24 symbols
 
     private static final String nonExistingPassword = "nonexisting";
 
@@ -94,9 +94,9 @@ public class ProfileServiceTest extends BaseServiceTest {
 
     @Before
     public void beforeTest() throws Exception {
-        enabledUserId = saveUser(enabledUserEmail, enabledUserPassword).getId();
-        enabledUserWithTokenId = saveUserWithToken(enabledUserWithTokenEmail, enabledUserWithTokenPassword,
-                enabledUserWithTokenToken);
+        user1Id = saveUser(user1Email, user1Password).getId();
+        userWithTokenId = saveUserWithToken(userWithTokenEmail, userWithTokenPassword,
+                userWithTokenToken);
 
         numberOfActivationTokens = testRepo.countEntities(PasswordActivationToken.class);
     }
@@ -109,13 +109,13 @@ public class ProfileServiceTest extends BaseServiceTest {
 
     @Test
     public void test_resetPassword() throws Exception {
-        EmailAddressDTO dto = createEmailDTO(enabledUserEmail);
+        EmailAddressDTO dto = createEmailDTO(user1Email);
 
         profileService.resetPassword(dto);
 
         long tokenCount = testRepo.countEntities(PasswordActivationToken.class);
         assertEquals("exactly 1 token should be created", numberOfActivationTokens + 1L, tokenCount);
-        boolean exists = activationTokenRepo.existsByUserId(enabledUserId);
-        assertEquals("user id doesn't match", true, exists);
+        boolean exists = activationTokenRepo.existsByUserId(user1Id);
+        assertEquals("activation token doesn't exist", true, exists);
     }
 }

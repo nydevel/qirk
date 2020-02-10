@@ -66,7 +66,7 @@ public class ProjectController extends BaseExceptionHandlerController {
             @RequestBody ProjectDTO projectDTO) throws Exception {
         long startTime = System.currentTimeMillis();
         ProjectReadDTO projectReadDTO = projectService.create(getSessionUser(session), projectDTO);
-        logProcessingTimeFromStartTime(startTime, "create", projectDTO.uiId, projectDTO.makeMeMember);
+        logProcessingTimeFromStartTime(startTime, "create", projectDTO.uiId);
         return new JsonContainer<ProjectReadDTO, Void>(projectReadDTO);
     }
 
@@ -78,17 +78,6 @@ public class ProjectController extends BaseExceptionHandlerController {
         logProcessingTimeFromStartTime(startTime, "update", projectDTO.id);
         return new JsonContainer<ProjectReadDTO, Void>(projectReadDTO);
     }
-
-    /*@formatter:off
-    @PutMapping(value = "public")
-    public JsonContainer<Void, Void> makePublic(HttpSession session,
-            @RequestBody RecordVersionDTO projectDTO) throws Exception {
-        long startTime = System.currentTimeMillis();
-        projectService.makePublic(getSessionUser(session), projectDTO);
-        logProcessingTimeFromStartTime(startTime, "makePublic", projectDTO.id);
-        return new JsonContainer<Void, Void>();
-    }
-    @formatter:on*/
 
     @GetMapping(value = "documentation")
     public JsonContainer<ProjectDocDTO, Void> readDocumentation(HttpSession session,
@@ -115,44 +104,6 @@ public class ProjectController extends BaseExceptionHandlerController {
         logProcessingTimeFromStartTime(startTime, "updateDocumentation", documentationDTO.id);
         return new JsonContainer<ProjectReadDTO, Void>(projectDTO);
     }
-
-    /*@formatter:off
-    @PostMapping(value = "dropbox")
-    @ResponseStatus(HttpStatus.CREATED)
-    public JsonContainer<ProjectReadDTO, Void> addDropbox(HttpSession session,
-            @RequestBody OAuthCodeDTO codeDTO) throws Exception {
-        long startTime = System.currentTimeMillis();
-        ProjectReadDTO projectReadDTO = projectService.addDropbox(getSessionUser(session), codeDTO);
-        logProcessingTimeFromStartTime(startTime, "addDropbox", codeDTO.id);
-        return new JsonContainer<ProjectReadDTO, Void>(projectReadDTO);
-    }
-
-    @GetMapping(value = "dropbox")
-    public JsonContainer<ProjectDropboxDTO, Void> readDropbox(HttpSession session,
-            @RequestParam(name = "id", required = false) Long id,
-            @RequestParam(name = "ui_id", required = false) String uiId) throws Exception {
-        long startTime = System.currentTimeMillis();
-        ProjectDropboxDTO dropboxDTO = null;
-        if (id != null) {
-            dropboxDTO = projectService.getDropbox(getSessionUser(session), id);
-        } else if (uiId != null) {
-            dropboxDTO = projectService.getDropboxByUiId(getSessionUser(session), uiId.strip());
-        } else {
-            throw new BadRequestException("Neither parameter 'id' nor parameter 'ui_id' is present.");
-        }
-        logProcessingTimeFromStartTime(startTime, "readDropbox", id, uiId);
-        return new JsonContainer<ProjectDropboxDTO, Void>(dropboxDTO);
-    }
-
-    @DeleteMapping(value = "dropbox")
-    public JsonContainer<ProjectReadDTO, Void> removeDropbox(HttpSession session,
-            @RequestBody RecordVersionDTO dto) throws Exception {
-        long startTime = System.currentTimeMillis();
-        ProjectReadDTO projectDTO = projectService.removeDropbox(getSessionUser(session), dto);
-        logProcessingTimeFromStartTime(startTime, "removeDropbox", dto.id);
-        return new JsonContainer<ProjectReadDTO, Void>(projectDTO);
-    }
-    @formatter:on*/
 
     @GetMapping(value = "/")
     public JsonContainer<ProjectReadDTO, Void> read(HttpSession session,

@@ -70,31 +70,19 @@
         <property name="chatTokenLifetimeSeconds" value="${chat.token.lifetime.seconds}" />
     </bean>
 
-    <bean class="org.wrkr.clb.services.api.dropbox.impl.DefaultDropboxApiService">
-        <property name="clientId" value="${dropbox.client.id}" />
-        <property name="clientSercet" value="${dropbox.client.secret}" />
-        <property name="redirectURIForOrganization" value="${dropbox.redirecturi.organization}" />
-        <property name="redirectURIForProject" value="${dropbox.redirecturi.project}" />
-    </bean>
-
     <jee:jndi-lookup id="yandexcloudClient" jndi-name="yandexcloud/client/storage" />
     <bean class="org.wrkr.clb.services.api.yandexcloud.impl.DefaultYandexCloudApiService">
         <property name="bucketName" value="${yandexcloud.bucket.name}" />
+    </bean>
+    <bean class="org.wrkr.clb.services.file.impl.DefaultYandexCloudFileService">
+        <property name="frontUrl" value="${front.url}" />
+        <property name="taskUrl" value="${front.url.task}" />
     </bean>
 
     <bean class="org.wrkr.clb.services.project.task.impl.DefaultTaskService">
         <property name="chatTokenNotBeforeToleranceSeconds" value="${chat.token.notbefore.tolerance.seconds}" />
         <property name="chatTokenLifetimeSeconds" value="${chat.token.lifetime.seconds}" />
         <property name="searchSize" value="${task.list.limit}" />
-    </bean>
-
-    <bean class="org.wrkr.clb.services.file.impl.DefaultDropboxFileService">
-        <property name="frontUrl" value="${front.url}" />
-        <property name="taskUrl" value="${front.url.task}" />
-    </bean>
-    <bean class="org.wrkr.clb.services.file.impl.DefaultYandexCloudFileService">
-        <property name="frontUrl" value="${front.url}" />
-        <property name="taskUrl" value="${front.url.task}" />
     </bean>
 
     <bean class="org.wrkr.clb.services.project.task.attachment.impl.DefaultTemporaryAttachmentService">

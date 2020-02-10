@@ -26,11 +26,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.wrkr.clb.model.project.ApplicationStatus;
 import org.wrkr.clb.model.project.GrantedPermissionsProjectInvite;
 import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.Memo;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.model.project.roadmap.Road;
@@ -43,6 +45,7 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.user.User;
+import org.wrkr.clb.repo.project.ApplicationStatusRepo;
 import org.wrkr.clb.repo.project.InviteStatusRepo;
 import org.wrkr.clb.repo.project.ProjectMemberRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
@@ -86,8 +89,8 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
     @Autowired
     private InviteStatusRepo inviteStatusRepo;
 
-    // @Autowired
-    // private ApplicationStatusRepo applicationStatusRepo;
+    @Autowired
+    private ApplicationStatusRepo applicationStatusRepo;
 
     @Autowired
     private TaskHashtagRepo hashtagRepo;
@@ -100,7 +103,7 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
 
     @Before
     public void beforeTest() throws Exception {
-        User projectOwnerUser = saveUser(projectOwnerEmail);
+        User projectOwnerUser = saveUser(projectOwnerEmail, true);
         User projectManagerUser = saveUser(projectManagerEmail);
         User projectMemberUser = saveUser(projectMemberEmail);
         User taskAssigneeUser = saveUser(taskAssigneeEmail);
@@ -114,8 +117,8 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
                 inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING));
         saveGrantedPermissionsProjectInvite(nonMemberUser, privateProject, projectMemberUser,
                 inviteStatusRepo.getByNameCode(InviteStatus.Status.PENDING));
-        // saveProjectApplication(nonMemberUser, privateProject,
-        // applicationStatusRepo.getByNameCode(ApplicationStatus.Status.PENDING));
+        saveProjectApplication(nonMemberUser, privateProject,
+                applicationStatusRepo.getByNameCode(ApplicationStatus.Status.PENDING));
 
         saveProjectMember(projectManagerUser, privateProject, true, true);
         ProjectMember projectMember = saveProjectMember(projectMemberUser, privateProject, false, true);
@@ -152,7 +155,7 @@ public class ProjectSecurityServiceTest extends BaseServiceTest {
         testRepo.clearTable(TaskCard.class);
         testRepo.clearTable(Road.class);
         testRepo.clearTable(ProjectMember.class);
-        // testRepo.clearTable(ProjectApplication.class);
+        testRepo.clearTable(ProjectApplication.class);
         testRepo.clearTable(GrantedPermissionsProjectInvite.class);
         testRepo.clearTable(ProjectInvite.class);
         testRepo.clearTable(Project.class);

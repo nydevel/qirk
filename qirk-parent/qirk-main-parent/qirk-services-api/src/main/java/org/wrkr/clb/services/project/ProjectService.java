@@ -30,7 +30,6 @@ import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
@@ -61,17 +60,6 @@ public interface ProjectService {
             @NotNull(message = "uiId must not be null") String uiId) throws Exception;
 
     public ProjectReadDTO updateDocumentation(User currentUser, @Valid ProjectDocDTO documentationDTO) throws Exception;
-
-    public void makePublic(User currentUser, @Valid RecordVersionDTO projectDTO) throws Exception;
-
-    // public ProjectReadDTO addDropbox(User currentUser, @Valid OAuthCodeDTO codeDTO) throws Exception;
-
-    // public ProjectDropboxDTO getDropbox(User currentUser, @NotNull(message = "id must not be null") Long id);
-
-    // public ProjectDropboxDTO getDropboxByUiId(User currentUser, @NotNull(message = "uiId must not be null")
-    // String uiId);
-
-    // public ProjectReadDTO removeDropbox(User currentUser, @Valid RecordVersionDTO projectDTO) throws Exception;
 
     public ProjectReadDTO get(User currentUser,
             @NotNull(message = "id must not be null") Long id,

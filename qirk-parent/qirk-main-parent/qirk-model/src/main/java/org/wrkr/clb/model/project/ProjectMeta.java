@@ -22,7 +22,7 @@ public class ProjectMeta extends BaseVersionedEntityMeta {
 
     public static final String TABLE_NAME = "project";
 
-    public static final String ownerId = "user_owner_id";
+    public static final String ownerId = "owner_user_id";
     public static final String taskNumberSequenceId = "task_number_sequence_id";
     public static final String name = "name";
     public static final String uiId = "ui_id";
