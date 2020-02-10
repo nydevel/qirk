@@ -106,13 +106,6 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     }
 
     @Deprecated
-    @PostMapping(value = "register-no-password")
-    public JsonContainer<EmailSentDTO, Void> registerNoPassword(HttpSession session,
-            @RequestBody EmailAddressDTO emailDTO) throws Exception {
-        return register(session, emailDTO);
-    }
-
-    @Deprecated
     @PostMapping(value = "activate")
     public JsonContainer<Void, Void> activate(
             HttpServletRequest request, HttpServletResponse response, HttpSession session,
@@ -122,14 +115,6 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
         response = authnService.login(response, session, user, request.getHeader(Header.X_FORWARDED_FOR));
         logProcessingTimeFromStartTime(startTime, "activate");
         return new JsonContainer<Void, Void>();
-    }
-
-    @Deprecated
-    @PostMapping(value = "activate-no-password")
-    public JsonContainer<Void, Void> activateNoPassword(
-            HttpServletRequest request, HttpServletResponse response, HttpSession session,
-            @RequestBody ActivationDTO activationDTO) throws Exception {
-        return activate(request, response, session, activationDTO);
     }
 
     @PostMapping(value = "reset-password")

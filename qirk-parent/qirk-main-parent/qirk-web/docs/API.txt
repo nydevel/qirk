@@ -461,8 +461,8 @@ Request parameters:
 	status=OPEN,IN_DEVELOPMENT	(nullable)
 	text=aaa		(nullable)
 	hashtag=aaa		(nullable)
-	sort_by=		(one of: CREATED_AT, UPDATED_AT, default: UPDATED_AT)
-	ordering=		(one of: ASC, DESC, default: DESC)
+	sort_by=		(one of: CREATED_AT, UPDATED_AT; default: UPDATED_AT)
+	ordering=		(one of: ASC, DESC; default: DESC)
 	search_after=	(last value of sorted field in previous request; nullable)
 Response.data: [{
 	"id":1,
@@ -481,7 +481,7 @@ Response.meta: {"total":100}
 /task/chat-token/
 Method: GET
 Request parameters: id=1
-Response: {
+Response.data: {
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -599,14 +599,29 @@ Request: {"id":1}
 Response.data: {}
 
 /memo/
-Method: POST: {
-	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+Method: POST
+Request: {
+	"project": {"id":1},
 	"body":"aaa"
 }
+OR {
+	"project": {"ui_id":"aaa"},
+	"body":"aaa"
+}
+Response.data: [{
+	"id":1,
+	"body":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"author": {"id":1, "username":"aaa"},
+	"can_delete":true
+}]
 
-/memo/list/?project_id=
-/memo/list/?project_ui_id=
-Method: GET: [{
+/memo/list/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
 	"id":1,
 	"body":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
@@ -615,36 +630,62 @@ Method: GET: [{
 }]
 
 /memo/
-Method: DELETE: {
-	"id":1
-}
+Method: DELETE
+Request: {"id":1}
+Response.data: {}
 
 /issue/
-Method: POST: {
-	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+Method: POST
+Request: {
+	"project": {"id":1},
 	"summary":"a",
 	"description":"aaa"
 }
-
-/issue/
-Method: PUT: {
-	"id":1,
+OR {
+	"project": {"ui_id":"aaa"},
 	"summary":"a",
 	"description":"aaa"
 }
-
-/issue/?id=
-Method: GET: {
+Response.data: {
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
-	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
 	"created_at":"2019-03-20T17:12:36.3+0500"
 }
 
-/issue/list/?project_id=
-/issue/list/?project_ui_id=
-Method: GET: [{
+/issue/
+Method: PUT
+Request: {
+	"id":1,
+	"summary":"a",
+	"description":"aaa"
+}
+Response.data: {
+	"id":1,
+	"summary":"a",
+	"description":"aaa",
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"created_at":"2019-03-20T17:12:36.3+0500"
+}
+
+/issue/
+Method: GET
+Request parameters: id=1
+Response.data: {
+	"id":1,
+	"summary":"a",
+	"description":"aaa",
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"created_at":"2019-03-20T17:12:36.3+0500"
+}
+
+/issue/list/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
@@ -652,8 +693,10 @@ Method: GET: [{
 	"created_at":"2019-03-20T17:12:36.3+0500"
 }]
 
-/issue/chat-token/?id=
-Method: GET: {
+/issue/chat-token/
+Request parameters: id=1
+Method: GET
+Response.data: {
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -662,7 +705,8 @@ Method: GET: {
 
 DEPRECATED
 /project-invite/
-Method: POST: {
+Method: POST
+Request: {
 	"user":1,
 	"project":1,
 	"text":"aaa"
@@ -670,7 +714,8 @@ Method: POST: {
 
 DEPRECATED
 /project-invite/?id=1
-Method: GET: {
+Method: GET
+Response.data: {
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
@@ -682,7 +727,8 @@ Method: GET: {
 
 DEPRECATED
 /project-invite/list-by-user/
-Method: GET: [{
+Method: GET
+Response.data: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
@@ -692,13 +738,13 @@ Method: GET: [{
 
 DEPRECATED
 /project-invite/accept/
-Method: PUT: {
-	"id":1
-}
+Method: PUT
+Request: {"id":1}
 
 DEPRECATED
 /project-invite/reject/
-Method: PUT: {
+Method: PUT
+Request: {
 	"id":1,
 	"reported":false
 }
@@ -706,7 +752,8 @@ Method: PUT: {
 DEPRECATED
 /project-invite/list-by-project/?project_id=1
 /project-invite/list-by-project/?project_ui_id=aaa
-Method: GET: [{
+Method: GET
+Response.data: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"text":"aaa",
@@ -717,144 +764,85 @@ Method: GET: [{
 
 DEPRECATED
 /project-invite/cancel/
-Method: DELETE: {
+Method: DELETE
+Request: {
 	"id":1
 }
 
 DEPRECATED
 /project-invite/execute/
-Method: POST: {
+Method: POST
+Request: {
 	"id":1,
 	"write_allowed":false,
 	"manager":false
 }
 
-/project-application/
-Method: POST: {
-	"project":1,
-	"text":"aaa"
-}
-
-/project-application/list-by-project/?project_id=1
-/project-application/list-by-project/?project_ui_id=aaa
-Method: GET: [{
-	"id":1,
-	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500"
-}]
-
-/project-application/reject/
-Method: PUT: {
-	"id":1,
-	"reported":false
-}
-
-/project-application/accept/
-Method: POST: {
-	"id":1,
-	"write_allowed":false,
-	"manager":false
-}
-
-/project-application/list-by-user/
-Method: GET: [{
-	"id":1,
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
-	"text":"aaa",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
-	"status": {"id":1, "name_code":"PENDING"}
-}]
-
-/project-application/cancel/
-Method: DELETE: {
-	"id":1
-}
-
-/project-member/
-Method: POST: {
-	"organization_member":1, (-1 for current user)
-	"project":1,
-	"write_allowed":false,
-	"manager":false
-}
-
-/project-member/create-batch/
-Method: POST: {
-	"project":1,
-	"members": {
-		"organization_member":1,
-		"write_allowed":false,
-		"manager":false
-	}
-}
-
-/project-member/
-Method: PUT: {
-	"id":1,
-	"write_allowed":false,
-	"manager":false
-}
-
-/project-member/list-by-project/?project_id=1
-/project-member/list-by-project/?project_ui_id=aaa
-Method: GET: [{
-	"id":1,
-	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"write_allowed":false,
-	"manager":false
-}]
-
-/project-member/list-by-user/?user_id=1
-Method: GET: [{
-	"id":1,
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
-	"hired_at":"2019-03-20T17:12:36.3+0500",
-	"fired_at":"2019-03-20T17:12:36.3+0500",
-	"fired":true
-}]
-
-/project-member/
-Method: DELETE: {
-	"id":1
-}
-
-/project-member/leave/
-Method: DELETE: {
-	"project":1
-}
 
 /granted-permissions-project-invite/
-Method: POST: {
+Method: POST
+Request: {
 	"user":1,
 	"project":1,
 	"text":"aaa",
 	"write_allowed":false,
 	"manager":false
 }
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"},
+	"write_allowed":false,
+	"manager":false
+}]
 
 /granted-permissions-project-invite/create-by-email/
-Method: POST: {
+Method: POST
+Request: {
 	"email":"a@qirk.org",
 	"project":1,
 	"write_allowed":false,
 	"manager":false
 }
+Response.data: [{
+	"id":1,
+	"email": "a@qirk.org",
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"},
+	"write_allowed":false,
+	"manager":false
+}]
 
 /granted-permissions-project-invite/
-Method: PUT: {
+Method: PUT
+Request: {
 	"write_allowed":false,
 	"manager":false
 }
-
-/granted-permissions-project-invite/?id=
-Method: GET: [{
+Response.data: [{
 	"id":1,
-	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"email": "a@qirk.org",
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"write_allowed":false,
+	"manager":false
+}]
+
+/granted-permissions-project-invite/
+Method: GET
+Request parameters: id=1
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},	(only one of 'user', 'email' will be present)
+	"email": "a@qirk.org",									(only one of 'user', 'email' will be present)
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
 	"updated_at":"2019-03-20T17:12:36.3+0500",
@@ -864,9 +852,10 @@ Method: GET: [{
 }]
 
 /granted-permissions-project-invite/list-by-user/
-Method: GET: [{
+Method: GET
+Response.data: [{
 	"id":1,
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
 	"updated_at":"2019-03-20T17:12:36.3+0500",
@@ -875,21 +864,36 @@ Method: GET: [{
 }]
 
 /granted-permissions-project-invite/accept/
-Method: POST: {
-	"id":1
-}
+Method: POST
+Request: {"id":1}
+Response.data: {}
 
 /granted-permissions-project-invite/reject/
-Method: PUT: {
+Method: PUT
+Request: {
 	"id":1,
 	"reported":false
 }
-
-/granted-permissions-project-invite/list-by-project/?project_id=1&include_email=
-/granted-permissions-project-invite/list-by-project/?project_ui_id=aaa&include_email=
-Method: GET: [{
+Response.data: [{
 	"id":1,
-	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"write_allowed":false,
+	"manager":false
+}]
+
+/granted-permissions-project-invite/list-by-project/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+	include_email=true
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},	(only one of 'user', 'email' will be present)
+	"email": "a@qirk.org",									(only one of 'user', 'email' will be present)
 	"email": "a@qirk.org",
 	"text":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
@@ -900,28 +904,192 @@ Method: GET: [{
 }]
 
 /granted-permissions-project-invite/cancel/
-Method: DELETE: {
-	"id":1
-}
+Method: DELETE
+Request: {"id":1}
+Response.data: {}
 
-/project-invite-token/check-token/?token=
-Method: GET: {
-	"registered":false,
-}
+/project-invite-token/check-token/
+Method: GET
+Request parameters: token=aaa
+Response.data: {"registered":false}
 
 /project-invite-token/accept/
-Method: POST: {
+Method: POST
+Request: {
 	"token":"aaa",
 	"password":"aaa", (nullable)
 	"username":"aaa", (nullable)
 	"full_name":"aaa" (nullable)
 }
+Response.data: {}
 
 /project-invite-token/reject/
-Method: PUT: {
+Method: PUT
+Request: {
 	"token":"aaa",
 	"reported":false
 }
+Response.data: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-application/
+Method: POST
+Request: {
+	"project":1,
+	"text":"aaa"
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"}
+}]
+
+/project-application/list-by-project/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+/project-application/reject/
+Method: PUT
+Request: {
+	"id":1,
+	"reported":false
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+/project-application/accept/
+Method: POST
+Request: {
+	"id":1,
+	"write_allowed":false,
+	"manager":false
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500"
+}]
+
+/project-application/list-by-user/
+Method: GET
+Response.data: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"text":"aaa",
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"status": {"id":1, "name_code":"PENDING"}
+}]
+
+/project-application/cancel/
+Method: DELETE
+Request: {"id":1}
+Response.data: {}
+
+/project-member/
+Method: POST
+Request: {
+	"user":1, (-1 for current user)
+	"project":1,
+	"write_allowed":false,
+	"manager":false
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-member/create-batch/
+Method: POST
+Request: {
+	"project":1,
+	"members": [{
+		"user":1,
+		"write_allowed":false,
+		"manager":false
+	}]
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-member/
+Method: PUT: {
+	"id":1,
+	"write_allowed":false,
+	"manager":false
+}
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-member/list-by-project/?project_id=1
+/project-member/list-by-project/?project_ui_id=aaa
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
+	"id":1,
+	"user": {"id":1, "username":"aaa", "full_name":"aaa"},
+	"write_allowed":false,
+	"manager":false
+}]
+
+/project-member/list-by-user/
+Method: GET
+Request parameters: user_id=1
+Response.data: [{
+	"id":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"hired_at":"2019-03-20T17:12:36.3+0500",
+	"fired_at":"2019-03-20T17:12:36.3+0500",
+	"fired":true
+}]
+
+/project-member/
+Method: DELETE
+Request: {"id":1}
+Response.data: {}
+
+/project-member/leave/
+Method: DELETE
+Request: {"project":1}
+Response.data: {}
 
 /task-hashtag/search/?prefix=a&project_id=&include_used=
 /task-hashtag/search/?prefix=a&project_ui_id=&include_used=
@@ -1072,7 +1240,7 @@ Method: DELETE: {
 /jira-import/upload/
 Content-Type: multipart/form-data
 Method: POST: organization_id=1&file=
-Response:  {
+Response.data:  {
 	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
 	"archive_filename":"aaa.zip",
 	"imported_projects" []
@@ -1149,7 +1317,7 @@ Request: {
 	"timestamp":1,
 	"projects": ["10000", "10001"],
 	"private"false,
-	"override_tasks": "ALL"/"NON_UPDATED"/"NONE", ("ALL" by default)
+	"override_tasks": "ALL", (one of: "ALL", "NON_UPDATED", "NONE"; default: "ALL")
 	"project_mapping": {
 		"10000":1 (jira id to qirk id)
 	}.

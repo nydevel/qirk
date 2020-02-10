@@ -1,0 +1,6 @@
+/event/
+Accept: text/plain
+POST: {
+	"code":"AAA",
+	...
+}
