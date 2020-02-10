@@ -44,7 +44,7 @@ import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
 import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
-import org.wrkr.clb.services.dto.user.CurrentUserProfileDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.LoginDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
@@ -155,7 +155,7 @@ public class DefaultProfileService implements ProfileService {
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public CurrentUserProfileDTO getProfile(User sessionUser) throws ApplicationException {
+    public ProfileDTO getProfile(User sessionUser) throws ApplicationException {
         // security start
         securityService.isAuthenticated(sessionUser);
         // security finish
@@ -168,12 +168,12 @@ public class DefaultProfileService implements ProfileService {
         user.setTags(tagRepo.listByUserId(user.getId()));
         user.setLanguages(languageRepo.listByUserId(user.getId()));
         // user.setLinks(profileLinkRepo.getByUser(user));
-        return CurrentUserProfileDTO.fromEntity(user);
+        return ProfileDTO.fromEntity(user);
     }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public CurrentUserProfileDTO updateProfile(HttpSession session, User sessionUser, PriofileUpdateDTO profileDTO)
+    public ProfileDTO updateProfile(HttpSession session, User sessionUser, PriofileUpdateDTO profileDTO)
             throws ApplicationException {
         // security start
         securityService.isAuthenticated(sessionUser);
@@ -204,7 +204,7 @@ public class DefaultProfileService implements ProfileService {
         } catch (Exception e) {
             LOG.error("Could not update user " + user.getId() + " in elasticsearch", e);
         }
-        return CurrentUserProfileDTO.fromEntity(user, tags, languages);
+        return ProfileDTO.fromEntity(user, tags, languages);
     }
 
     @Override

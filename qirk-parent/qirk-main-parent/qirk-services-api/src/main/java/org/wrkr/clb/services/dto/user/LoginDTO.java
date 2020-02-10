@@ -28,10 +28,6 @@ public class LoginDTO {
     @NotNull(message = "password in LoginDTO must not be null")
     public String password;
 
-    @JsonProperty(value = "license_accepted")
-    @NotNull(message = "license_accepted in LoginDTO must not be null")
-    public Boolean licenseAccepted = false;
-
     @JsonProperty(value = "g_recaptcha_response")
     public String gRecaptchaResponse;
 
@@ -41,6 +37,5 @@ public class LoginDTO {
     public LoginDTO(String username, String password) {
         this.username = username;
         this.password = password;
-        this.licenseAccepted = true;
     }
 }

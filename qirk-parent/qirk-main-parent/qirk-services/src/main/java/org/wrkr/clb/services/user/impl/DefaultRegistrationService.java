@@ -75,8 +75,8 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public ExistsDTO checkEmail(String email, boolean excludeDisabled) {
-        return new ExistsDTO(userRepo.existsByEmail(email, excludeDisabled));
+    public ExistsDTO checkEmail(String email) {
+        return new ExistsDTO(userRepo.existsByEmail(email));
     }
 
     @Override

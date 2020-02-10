@@ -32,7 +32,7 @@ import org.wrkr.clb.services.dto.IdDTO;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchNestedProjectDTO;
 import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchUserDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
-import org.wrkr.clb.services.dto.user.PublicUserWithEmailDTO;
+import org.wrkr.clb.services.dto.user.AccountUserDTO;
 
 public class ProjectMemberUserDTO extends IdDTO {
 
@@ -54,7 +54,7 @@ public class ProjectMemberUserDTO extends IdDTO {
         ProjectMemberUserDTO dto = new ProjectMemberUserDTO();
 
         dto.id = member.getId();
-        dto.user = PublicUserWithEmailDTO.fromEntity(member.getUser());
+        dto.user = AccountUserDTO.fromEntity(member.getUser());
 
         return dto;
     }

@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service;
 import org.wrkr.clb.common.jdbc.transaction.Executor;
 import org.wrkr.clb.common.jdbc.transaction.RetryOnCannotAcquireLock;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.services.dto.user.CurrentUserProfileDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
 import org.wrkr.clb.services.user.ProfileRetryWrapperService;
 import org.wrkr.clb.services.user.ProfileService;
@@ -35,12 +35,12 @@ public class DefaultProfileRetryWrapperService implements ProfileRetryWrapperSer
     private ProfileService profileService;
 
     @Override
-    public CurrentUserProfileDTO updateProfile(HttpSession session, User sessionUser, PriofileUpdateDTO profileDTO)
+    public ProfileDTO updateProfile(HttpSession session, User sessionUser, PriofileUpdateDTO profileDTO)
             throws Exception {
-        return RetryOnCannotAcquireLock.<CurrentUserProfileDTO>exec(new Executor() {
+        return RetryOnCannotAcquireLock.<ProfileDTO>exec(new Executor() {
             @SuppressWarnings({ "unchecked", "unused" })
             @Override
-            public CurrentUserProfileDTO exec(int retryNumber) throws Exception {
+            public ProfileDTO exec(int retryNumber) throws Exception {
                 return profileService.updateProfile(session, sessionUser, profileDTO);
             }
         });

@@ -21,25 +21,28 @@ import java.util.List;
 
 import org.wrkr.clb.model.user.User;
 
-public class PublicUserWithEmailDTO extends PublicUserDTO {
+public class AccountUserDTO extends PublicUserDTO {
 
     public String email;
 
-    public static PublicUserWithEmailDTO fromEntity(User user) {
-        PublicUserWithEmailDTO dto = new PublicUserWithEmailDTO();
+    public Boolean manager;
+
+    public static AccountUserDTO fromEntity(User user) {
+        AccountUserDTO dto = new AccountUserDTO();
 
         if (user != null) {
             dto.id = user.getId();
             dto.username = user.getUsername();
             dto.fullName = user.getFullName();
             dto.email = user.getEmailAddress();
+            dto.manager = user.isManager();
         }
 
         return dto;
     }
 
-    public static List<PublicUserWithEmailDTO> fromEntitiesWithEmail(List<User> userList) {
-        List<PublicUserWithEmailDTO> dtoList = new ArrayList<PublicUserWithEmailDTO>(userList.size());
+    public static List<AccountUserDTO> fromEntitiesWithEmail(List<User> userList) {
+        List<AccountUserDTO> dtoList = new ArrayList<AccountUserDTO>(userList.size());
         for (User user : userList) {
             dtoList.add(fromEntity(user));
         }

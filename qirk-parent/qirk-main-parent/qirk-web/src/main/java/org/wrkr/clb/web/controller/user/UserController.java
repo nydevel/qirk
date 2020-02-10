@@ -40,7 +40,7 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
-import org.wrkr.clb.services.dto.user.CurrentUserProfileDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
@@ -80,11 +80,10 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
 
     @GetMapping(value = "check-email")
     public JsonContainer<ExistsDTO, Void> checkEmail(@SuppressWarnings("unused") HttpSession session,
-            @RequestParam(name = "email") String email,
-            @RequestParam(name = "exclude_disabled", required = false, defaultValue = "false") Boolean excludeDisabled) {
+            @RequestParam(name = "email") String email) {
         long startTime = System.currentTimeMillis();
-        ExistsDTO dto = registrationService.checkEmail(email, excludeDisabled);
-        logProcessingTimeFromStartTime(startTime, "checkEmail", excludeDisabled);
+        ExistsDTO dto = registrationService.checkEmail(email);
+        logProcessingTimeFromStartTime(startTime, "checkEmail");
         return new JsonContainer<ExistsDTO, Void>(dto);
     }
 
@@ -152,23 +151,23 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     }
 
     @GetMapping(value = "profile")
-    public JsonContainer<CurrentUserProfileDTO, Void> readProfile(HttpSession session)
+    public JsonContainer<ProfileDTO, Void> readProfile(HttpSession session)
             throws Exception {
         long startTime = System.currentTimeMillis();
         User currentUser = getSessionUser(session);
-        CurrentUserProfileDTO dto = profileService.getProfile(currentUser);
+        ProfileDTO dto = profileService.getProfile(currentUser);
         logProcessingTimeFromStartTime(startTime, "readProfile", currentUser);
-        return new JsonContainer<CurrentUserProfileDTO, Void>(dto);
+        return new JsonContainer<ProfileDTO, Void>(dto);
     }
 
     @PutMapping(value = "profile")
-    public JsonContainer<CurrentUserProfileDTO, Void> updateProfile(HttpSession session,
+    public JsonContainer<ProfileDTO, Void> updateProfile(HttpSession session,
             @RequestBody PriofileUpdateDTO profileDTO) throws Exception {
         long startTime = System.currentTimeMillis();
         User currentUser = getSessionUser(session);
-        CurrentUserProfileDTO dto = profileRWService.updateProfile(session, currentUser, profileDTO);
+        ProfileDTO dto = profileRWService.updateProfile(session, currentUser, profileDTO);
         logProcessingTimeFromStartTime(startTime, "updateProfile", currentUser);
-        return new JsonContainer<CurrentUserProfileDTO, Void>(dto);
+        return new JsonContainer<ProfileDTO, Void>(dto);
     }
 
     /*@formatter:off

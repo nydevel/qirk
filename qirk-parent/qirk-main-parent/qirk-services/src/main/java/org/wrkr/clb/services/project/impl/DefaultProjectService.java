@@ -210,7 +210,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         List<User> membersToCreate = Arrays.asList(currentUser);
         Project project = create(currentUser, projectDTO, membersToCreate);
 
-        return ProjectReadDTO.fromEntityWithDescAndDocs(project);
+        return ProjectReadDTO.fromEntityWithDescription(project);
     }
 
     @Override
@@ -253,9 +253,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
             taskSubscriberRepo.deleteNonMembersByProjectId(project.getId());
         }
 
-        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescAndDocs(project);
-
-        return dto;
+        return ProjectReadDTO.fromEntityWithDescription(project);
     }
 
     @Override
@@ -311,7 +309,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         statisticsSender.send(new ProjectDocUpdateMessage(currentUser.getId()));
         // statistics
 
-        return ProjectReadDTO.fromEntityWithDescAndDocs(project);
+        return ProjectReadDTO.fromEntityWithDescription(project);
     }
 
     private Project getProjectByIdWithEverythingForReadAndFetchMembershipForSecurity(User currentUser, Long projectId) {

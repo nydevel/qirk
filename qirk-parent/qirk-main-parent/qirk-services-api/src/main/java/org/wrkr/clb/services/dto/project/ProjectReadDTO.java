@@ -41,7 +41,7 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
 
     @Deprecated
     @JsonProperty(value = "can_be_public")
-    public Boolean canBePublic;
+    public Boolean canBePublic = true;
 
     @JsonProperty(value = "description_html")
     @JsonInclude(Include.NON_NULL)
@@ -81,8 +81,8 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     // @JsonInclude(Include.NON_NULL)
     // public ProjectApplicationStatusDTO application;
 
-    public static ProjectReadDTO fromEntity(Project project,
-            boolean includeDescAndDocs, boolean includeTags, boolean includeLanguages) {
+    private static ProjectReadDTO fromEntity(Project project,
+            boolean includeDescription, boolean includeDocs, boolean includeTagsAndLanguages) {
         ProjectReadDTO dto = new ProjectReadDTO();
 
         dto.id = project.getId();
@@ -90,36 +90,36 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
         dto.name = project.getName();
         dto.uiId = project.getUiId();
         dto.key = project.getKey();
-        dto.canBePublic = true;
         dto.isPrivate = project.isPrivate();
 
-        if (includeDescAndDocs) {
+        if (includeDescription) {
             dto.descriptionHtml = project.getDescriptionHtml();
             dto.descriptionMd = project.getDescriptionMd();
+        }
+
+        if (includeDocs) {
             dto.documentationHtml = project.getDocumentationHtml();
             dto.documentationMd = project.getDocumentationMd();
         }
 
-        if (includeTags) {
+        if (includeTagsAndLanguages) {
             dto.tags = project.getTags();
-        }
-        if (includeLanguages) {
             dto.languages = project.getLanguages();
         }
 
         return dto;
     }
 
-    public static ProjectReadDTO fromEntity(Project project) {
-        return fromEntity(project, false, false, false);
-    }
-
-    public static ProjectReadDTO fromEntityWithDescAndDocs(Project project) {
+    public static ProjectReadDTO fromEntityWithDescription(Project project) {
         return fromEntity(project, true, false, false);
     }
 
+    public static ProjectReadDTO fromEntityWithDescriptionAndDocs(Project project) {
+        return fromEntity(project, true, true, false);
+    }
+
     public static ProjectReadDTO fromEntityWithEverythingForRead(Project project) {
-        ProjectReadDTO dto = fromEntity(project, true, true, true);
+        ProjectReadDTO dto = fromEntity(project, true, false, true);
 
         ProjectMember currentProjectMember = (project.getMembers().isEmpty()
                 ? null
@@ -132,20 +132,11 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
         return dto;
     }
 
-    public static List<ProjectReadDTO> fromEntities(List<Project> projectList,
-            boolean includeTags, boolean includeLanguages) {
+    public static List<ProjectReadDTO> fromEntitiesWithEverythingForList(List<Project> projectList) {
         List<ProjectReadDTO> dtoList = new ArrayList<ProjectReadDTO>(projectList.size());
         for (Project project : projectList) {
-            dtoList.add(fromEntity(project, false, includeTags, includeLanguages));
+            dtoList.add(fromEntity(project, false, false, false));
         }
         return dtoList;
-    }
-
-    public static List<ProjectReadDTO> fromEntitiesWithoutTags(List<Project> projectList) {
-        return fromEntities(projectList, false, false);
-    }
-
-    public static List<ProjectReadDTO> fromEntitiesWithTags(List<Project> projectList) {
-        return fromEntities(projectList, true, false);
     }
 }

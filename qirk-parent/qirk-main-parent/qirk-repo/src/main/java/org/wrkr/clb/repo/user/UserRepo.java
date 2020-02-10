@@ -44,23 +44,12 @@ public class UserRepo extends JPAIdEntityRepo<User> {
     }
 
     public boolean existsByEmail(String email) {
-        return existsByEmail(email, false);
-    }
-
-    @Deprecated
-    public boolean existsEnabledByEmail(String email) {
-        return existsByEmail(email, true);
-    }
-
-    public boolean existsByEmail(String email, @SuppressWarnings("unused") boolean excludeDisabled) {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Long> query = cb.createQuery(Long.class);
 
         Root<User> root = query.from(User.class);
 
-        List<Predicate> predicates = new ArrayList<Predicate>(Arrays.asList(
-                cb.equal(root.get(User_.emailAddress), email)));
-        query.where(predicates.toArray(new Predicate[0]));
+        query.where(cb.equal(root.get(User_.emailAddress), email));
         return exists(root, query);
     }
 

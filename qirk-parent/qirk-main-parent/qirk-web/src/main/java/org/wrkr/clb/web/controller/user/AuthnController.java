@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.services.dto.user.PublicUserWithEmailDTO;
+import org.wrkr.clb.services.dto.user.AccountUserDTO;
 import org.wrkr.clb.services.dto.user.LoginDTO;
 import org.wrkr.clb.services.http.CookieService;
 import org.wrkr.clb.services.user.AuthnService;
@@ -53,9 +53,9 @@ public class AuthnController extends BaseAuthenticationExceptionHandlerControlle
     private CookieService cookieService;
 
     @GetMapping(value = "check")
-    public JsonContainer<PublicUserWithEmailDTO, Void> check(HttpSession session) {
+    public JsonContainer<AccountUserDTO, Void> check(HttpSession session) {
         User user = (User) session.getAttribute(SessionAttribute.AUTHN_USER);
-        return new JsonContainer<PublicUserWithEmailDTO, Void>(PublicUserWithEmailDTO.fromEntity(user));
+        return new JsonContainer<AccountUserDTO, Void>(AccountUserDTO.fromEntity(user));
     }
 
     @PostMapping(value = "login")

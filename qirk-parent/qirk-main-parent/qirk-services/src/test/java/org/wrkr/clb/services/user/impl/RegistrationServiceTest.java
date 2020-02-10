@@ -139,7 +139,7 @@ public class RegistrationServiceTest extends BaseServiceTest {
 
     @Test
     public void test_checkNonExistingEmail() throws Exception {
-        ExistsDTO dto = registrationService.checkEmail(user1email, false);
+        ExistsDTO dto = registrationService.checkEmail(user1email);
         assertEquals("email must not exist", false, dto.exists);
     }
 

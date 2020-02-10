@@ -9,6 +9,6 @@ POST: {
 POST: {
 	"code":"STAT_FEEDBACK"
 	"sender_id":1,
-	"sender_email":"a@a.com",
+	"sender_email":"a@qirk.org",
 	"feedback":"aaa"
 }

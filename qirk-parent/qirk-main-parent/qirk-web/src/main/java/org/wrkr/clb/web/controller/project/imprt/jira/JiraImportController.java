@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.web.controller.project;
+package org.wrkr.clb.web.controller.project.imprt.jira;
 
 import java.util.List;
 import java.util.Set;

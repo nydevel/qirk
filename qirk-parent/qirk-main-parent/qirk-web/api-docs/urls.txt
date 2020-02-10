@@ -8,324 +8,167 @@ Response structure:
 }
 
 /csrf/refresh
-GET: {}
+GET
+Response: {}
 
 /authn/login/
-POST: {"username":"a@a.com", "password":"121212", "g_recaptcha_response":"", "license_accepted":true} // by email
-POST: {"username":"aaa", "password":"121212", "g_recaptcha_response":"", "license_accepted":true} // by username
+POST
+Request: {"username":"aaa", "password":"121212", "g_recaptcha_response":""}
+Response: {}
 
 /authn/logout/
-POST: {}
+POST
+Request: {}
+Response: {}
 
 /authn/check/
-GET: {
-	"id":1 (null if not authenticated),
-	"email":"a@a.com",
+GET
+Response: {
+	"id":1, (null if not authenticated)
+	"email":"a@qirk.org",
 	"username":"aaa",
 	"full_name":"aaa"
 }
 
-/user/check-email/?email=&exclude_disabled=
-(exclude_disabled=false by default)
-GET: {"exists":false}
+/user/check-email/
+GET
+Request parameters: email=a@qirk.org
+Response: {"exists":false}
 
-/user/check-username/?username=
-GET: {"exists":false}
+/user/check-username/
+GET
+Request parameters: username=aaa
+Response: {"exists":false}
 
 /user/register/
-POST: {"email":"a@a.com", "license_accepted":true}
+POST
+Request: {"email":"a@qirk.org", "license_accepted":true}
+Response: {"email_sent":true}
 
 /user/activate/
-POST: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
-
-/user/accept-license/
-POST: {}
+POST
+Request: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
+Response: {}
 
 /user/reset-password/
-POST: {"email": "a@a.com"}
+POST
+Request: {"email": "a@qirk.org"}
+Response: {"email_sent":true}
 
 /user/change-password/
-PUT: {
+PUT
+Request: {
 	"password":"aaa",
 	"new_password":"aaa",
 	"token":"aaa"
 }
+Response: {}
 
-/user/?id=
-GET: [{
+/user/
+GET
+Request parameters: id=1
+Response: {
 	"id":2,
-	"alias":"t1614668",
-	"first_name":"My humble name",
-	"last_name":"My humble second name",
-	"tags": [{"id":3, "name":"te2"}, {"id":4, "name":"te1"}],
+	"username":"t1614668",
+	"full_name":"My humble name",
+	"tags": [{"id":3, "name":"tag2"}, {"id":4, "name":"tag1"}],
 	"languages": [{"id":1,"name_code":""}, {"id":2,"name_code":""}]
-}]
+}
 
-/user/list/?id=
-GET: [
-	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb"}
+/user/list/
+GET
+Request parameters: id=1,2
+Response: [
+	{"id":1, "username":"aaa", "full_name":"aaa"},
+	{"id":2, "username":"bbb", "full_name":"bbb"}
 ]
 
 /user/profile/
-GET: {
+GET
+Response: {
 	"email":"",
 	"username":"",
 	"full_name":"a",
 	"tags":[{"id":1,"name":""}],
 	"languages": [{"id":1,"name_code":""}, {"id":2,"name_code":""}],
-	"about":"",
-	"dont_recommend":false,
 	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
 }
 
 /user/profile/
-PUT: {
+PUT
+Request: {
 	"full_name":"",
 	"tags":["aaa","bbb"],
 	"languages":[1,2],
-	"about":"",
-	"dont_recommend":false,
+	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
+}
+Response: {
+	"email":"",
+	"username":"",
+	"full_name":"a",
+	"tags":[{"id":1,"name":""}],
+	"languages": [{"id":1,"name_code":""}, {"id":2,"name_code":""}],
 	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
 }
 
 /language/list/
-GET: [
+GET
+Response: [
 	{"id":1, "name_code":"EN_US"},
 	{"id":2, "name_code":"RU_RU"}
 ]
 
-/user/chat-token/?id=1
-GET: {
-	"token":"aaa",
-	"IV":"aaa"
-}
-
 /user/notification-token/
-GET: {
+GET
+Response: {
 	"token":"aaa",
 	"IV":"aaa"
 }
-
-/user/credit-token/
-GET: {
-	"token":"aaa",
-	"IV":"aaa"
-}
-
-/user/search-for-organization/?prefix=aaa&organization_id=
-/user/search-for-organization/?prefix=aaa&organization_ui_id=
-GET: [
-	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb"}
-]
 
 /user/search-for-project/?prefix=aaa&project_id=
 /user/search-for-project/?prefix=aaa&project_ui_id=
-GET: [
-	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa", "is_member":false},
-	{"id":2, "alias":"bbb", "first_name":"bbb", "last_name":"bbb", "is_member":false}
-]
-
-/user/search/?prefix=a&include_tags=false
-GET: [
-	{"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	{"id":2, "alias":"abb", "first_name":"abb", "last_name":"abb"}
-]
-
-/organization/check-ui-id/?ui_id=
-GET: {"exists": false}
-
-/organization/
-POST: {
-	"name":"",
-	"ui_id":"",
-	"languages":[1,2]
-}
-
-/organization/
-PUT: {
-	"id":1,
-	"record_version":1,
-	"name":"",
-	"ui_id":"",
-	"languages":[1,2],
-	"projects": {["id":1, "name":"aaa", "ui_id":"aaa"]}
-}
-
-/organization/dropbox/
-POST: {
-	"id":1,
-	"record_version":1,
-	"code":"aaa"
-}
-
-/organization/dropbox/
-DELETE: {
-	"id":1,
-	"record_version":1
-}
-
-/organization/?id=&include_can_leave=
-/organization/?ui_id=&include_can_leave=
-(include_can_leave=false by default)
-GET: {
-	"id":1,
-	"record_version":1,
-	"name":"",
-	"ui_id":"",
-	"private":false,
-	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"is_member":true,
-	"can_manage":false,
-	"is_owner":false,
-	"can_leave":true, (null if include_can_leave=false)
-	"languages":[1,2]
-}
-
-/organization/list/?can_create_project=
-(can_create_project=false by default)
-GET: [
-	{"id":1, "name":"aaa", "ui_id":"aaa"},
-	{"id":2, "name":"bbb", "ui_id":"bbb"}
-]
-
-/organization/search/?prefix=a
-GET: [
-	{"id":1, "name":"aaa", "ui_id":"aaa"},
-	{"id":2, "name":"abb", "ui_id":"abb"}
-]
-
-DEPRECATED
-/organization-member-group/
-POST: {
-	"name":"",
-	"organization":1,
-	"organization_members":[1,2]
-}
-
-DEPRECATED
-/organization-member-group/
-PUT: {
-	"id": 1,
-	"record_version":1,
-	"name":"",
-	"organization_members":[1,2]
-}
-
-DEPRECATED
-/organization-member-group/?id=
-GET: {
-	"id": 1,
-	"record_version":1,
-	"name":"",
-	"organization_members":[{"id":1, "alias":"aaa"}]
-}
-
-DEPRECATED
-/organization-member-group/list/?organization_id=
-GET: [
-	{"id":1, "name":"aaa"},
-	{"id":2, "name":"bbb"}
-]
-
-DEPRECATED
-/organization-member-group/list-by-project/?project_id=
-GET: [
-	{"id":1, "name":"aaa"},
-	{"id":2, "name":"bbb"}
-]
-
-DEPRECATED
-/organization-member-group/
-DELETE: {
-	"id":1
-}
-
-/organization-member/
-POST: {
-	"user":1,
-	"organization": {"id":1, "ui_id":"aaa"},
-	"role":"aaa",
-	"manager":false
-}
-
-/organization-member/
-PUT: {
-	"id":1,
-	"record_version":1,
-	"role":"aaa",
-	"enabled":false,
-	"manager":false
-}
-
-/organization-member/?id=
-GET: {
-	"id":1,
-	"record_version":1,
-	"alias":"aaa",
-	"role":"aaa",
-	"enabled":false,
-	"manager":false
-}
-
-/organization-member/
-DELETE: {
-	"id":1
-}
-
-/organization-member/leave/
-DELETE: {
-	"organization": {"id":1, "ui_id":"aaa"}
-}
-
-/organization-member/list-by-organization/?organization_id=
-/organization-member/list-by-organization/?organization_ui_id=
-GET: [
-	{"id":1, "alias":"aaa", "role":"aaa", "enabled":true, "manager":false, "owner":false},
-	{"id":2, "alias":"bbb", "role":"bbb", "enabled":true, "manager":false, "owner":false}
-]
-
-/organization-member/list-by-ids/?organization_id=&ids=
-GET: [
-	{"id":1, "enabled":true, "user": {"id":1, "username":"aaa", "full_name":"aaa"}},
-	{"id":2, "enabled":true, "user": {"id":2, "username":"bbb", "full_name":"bbb"}},
-]
-
-/organization-member/search/?prefix=a&organization_id=&me_first=
-/organization-member/search/?prefix=a&organization_ui_id=&me_first=
-(me_first=false by default)
-GET: [
+GET
+Request parameters:
+	prefix=a
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response: [
 	{"id":1, "username":"aaa", "full_name":"aaa"},
 	{"id":2, "username":"bbb", "full_name":"bbb"}
 ]
 
-/organization-member/search-for-project/?prefix=a&project_id=&me_first=
-/organization-member/search-for-project/?prefix=a&project_ui_id=&me_first=
-(me_first=false by default)
-GET: [
-	{"id":1, "username":"aaa", "full_name":"aaa"},
-	{"id":2, "username":"bbb", "full_name":"bbb"}
-]
-
-/project/check-ui-id/?ui_id=
-GET: {"exists": false}
+/project/check-ui-id/
+GET
+Request parameters: ui_id=aaa
+Response: {"exists": false}
 
 /project/
-POST: {
+POST
+Request: {
 	"name":"",
 	"ui_id":"",
 	"key":"",
-	"organization": {"id":1, "ui_id":"aaa"},
-	"make_me_member":false,
 	"private":false,
 	"description":"",
 	"tags":["aaa","bbb"],
 	"languages":[1,2]
 }
+Response: {
+	"id":1,
+	"record_version":1,
+	"name":"",
+	"ui_id":"",
+	"key":"",
+	"private":false,
+	"description_md":"abc",
+	"description_html":"<p>abc</p>",
+	"tags":[{"id":1,"name":"aaa"}, {"id":2,"name":"bbb"}],
+	"languages":[{"id":1,"name_code":"EN_US"}, {"id":2,"name_code":"RU_RU"}]
+}
 
 /project/
-PUT: {
+PUT
+Request: {
 	"id":1,
 	"record_version":1,
 	"name":"",
@@ -335,35 +178,26 @@ PUT: {
 	"description":"",
 	"tags":["aaa","bbb"],
 	"languages":[1,2]
+}
+Response: {
+	"id":1,
+	"record_version":2,
+	"name":"",
+	"ui_id":"",
+	"key":"",
+	"private":false,
+	"description_md":"abc",
+	"description_html":"<p>abc</p>",
+	"tags":[{"id":1,"name":"aaa"}, {"id":2,"name":"bbb"}],
+	"languages":[{"id":1,"name_code":"EN_US"}, {"id":2,"name_code":"RU_RU"}]
 }
 
 /project/documentation/
-PUT: {
+PUT
+Request: {
 	"id":1,
 	"record_version":1,
 	"documentation":"aaa"
-}
-
-/project/dropbox/
-POST: {
-	"id":1,
-	"record_version":1,
-	"code":"aaa"
-}
-
-/project/dropbox/?id=
-/project/dropbox/?ui_id=
-GET: {
-	"id":1,
-	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}
-}
-
-/project/dropbox/
-DELETE: {
-	"id":1,
-	"record_version":1,
-	"code":"aaa"
 }
 
 /project/?id=&include_application=
@@ -537,8 +371,8 @@ GET: {
 	"has_organization_dropbox_settings": true,
 	"description_html":"<p>aaa</p>",
 	"description_md":"aaa",
-	"reporter": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
-	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
+	"reporter": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"created_at":"2019-03-20T17:12:36.3+0500",
 	"updated_at":"2019-03-20T17:12:36.3+0500",
 	"task_type":{"id":1,"name_code":"TASK"},
@@ -581,7 +415,7 @@ GET: [{
 	"id":1,
 	"number":1,
 	"summary":"a...",
-	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@a.com"}},
+	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"task_status": {"id":1, "name_code":"OPEN"}
 }]
 
@@ -969,7 +803,7 @@ POST: {
 
 /granted-permissions-project-invite/create-by-email/
 POST: {
-	"email":"a@a.com",
+	"email":"a@qirk.org",
 	"project":1,
 	"write_allowed":false,
 	"manager":false
@@ -985,7 +819,7 @@ PUT: {
 GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"email": "a@a.com",
+	"email": "a@qirk.org",
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
@@ -1022,7 +856,7 @@ PUT: {
 GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
-	"email": "a@a.com",
+	"email": "a@qirk.org",
 	"text":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
 	"updated_at":"2019-03-20T17:12:36.3+0500",
@@ -1235,7 +1069,7 @@ GET: {
 		{"id":"10001", "key":"BBB", "name":"bbb"}
 	],
 	"users": [
-		{"id":"10000", "username":"aaa", "display_name":"aaa", "email":"a@a.com"},
+		{"id":"10000", "username":"aaa", "display_name":"aaa", "email":"a@qirk.org"},
 		{"id":"10002", "username":"bbb", "display_name":"bbb", "email":"b@b.com"}
 	],
 	"types": [

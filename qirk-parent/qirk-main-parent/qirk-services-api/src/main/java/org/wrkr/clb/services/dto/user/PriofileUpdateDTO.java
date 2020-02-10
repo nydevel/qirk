@@ -49,8 +49,4 @@ public class PriofileUpdateDTO {
     @JsonProperty(value = "languages")
     @NotNull(message = "languages in PriofileUpdateDTO must not be null")
     public Set<Long> languageIds = new HashSet<Long>();
-
-    // @JsonProperty(value = "links")
-    // @NotNull
-    // public List<String> links = new ArrayList<String>();
 }

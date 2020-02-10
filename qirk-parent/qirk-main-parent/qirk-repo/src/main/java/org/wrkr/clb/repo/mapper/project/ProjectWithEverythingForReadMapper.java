@@ -35,7 +35,7 @@ public class ProjectWithEverythingForReadMapper extends ProjectNameAndUiIdMapper
                 generateSelectColumnStatement(ProjectMeta.key) + ", " +
                 generateSelectColumnStatement(ProjectMeta.isPrivate) + ", " +
                 generateSelectColumnStatement(ProjectMeta.descriptionHtml) + ", " +
-                generateSelectColumnStatement(ProjectMeta.descriptionMd) + ", ";
+                generateSelectColumnStatement(ProjectMeta.descriptionMd);
     }
 
     @Override

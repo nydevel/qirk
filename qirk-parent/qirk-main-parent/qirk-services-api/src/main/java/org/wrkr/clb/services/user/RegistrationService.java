@@ -36,8 +36,7 @@ import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 public interface RegistrationService {
 
     public ExistsDTO checkEmail(
-            @NotEmpty(message = "email must not be empty") @Email(message = "email must be valid") String email,
-            boolean excludeDisabled);
+            @NotEmpty(message = "email must not be empty") @Email(message = "email must be valid") String email);
 
     public ExistsDTO checkUsername(
             @NotNull(message = "username must not be null") @Pattern(regexp = RegExpPattern.LOWER_CASE_SLUG
