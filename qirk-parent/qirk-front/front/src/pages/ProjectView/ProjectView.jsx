@@ -69,7 +69,6 @@ function ProjectView({
                   <Link
                     style={{ display: "flex", marginRight: 8 }}
                     to={paths.TaskCreate.toPath({
-                      organization_uiid: params.organization_uiid || "a",
                       project_uiid: params.project_uiid || "a"
                     })}
                   >
@@ -84,30 +83,10 @@ function ProjectView({
                     </Button>
                   </Link>
                 )}
-                {/* {(projectInfo.documentation_html || canUpdateProject) && (
-                  <Link
-                    style={{ display: "flex", marginRight: 8 }}
-                    to={paths.Documentation.toPath({
-                      organization_uiid: params && params.organization_uiid,
-                      project_uiid: params && params.project_uiid
-                    })}
-                  >
-                    <Button
-                      style={{
-                        margin: "auto",
-                        height: "40px"
-                      }}
-                      dense
-                      raised
-                    >
-                      {t("Documentation")}
-                    </Button>
-                  </Link>
-                )} */}
+               
                 <Link
                   style={{ display: "flex", marginRight: 8 }}
                   to={paths.ProjectDiscussion.toPath({
-                    organization_uiid: params && params.organization_uiid,
                     project_uiid: params && params.project_uiid
                   })}
                 >
@@ -126,7 +105,6 @@ function ProjectView({
                   <Link
                     style={{ display: "flex", marginRight: 8 }}
                     to={paths.ProjectRoadmap.toPath({
-                      organization_uiid: params && params.organization_uiid,
                       project_uiid: params && params.project_uiid
                     })}
                   >
@@ -173,7 +151,6 @@ function ProjectView({
                           handleClose(e);
                         }}
                         to={paths.ProjectEdit.toPath({
-                          organization_uiid: params && params.organization_uiid,
                           project_uiid: params && params.project_uiid
                         })}
                       >
@@ -185,7 +162,6 @@ function ProjectView({
                         handleClose(e);
                       }}
                       to={paths.ProjectMembers.toPath({
-                        organization_uiid: params && params.organization_uiid,
                         project_uiid: params && params.project_uiid
                       })}
                     >

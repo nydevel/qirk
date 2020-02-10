@@ -24,7 +24,6 @@ function ProjectDocumentation(props) {
               {props.canUpdateProject && (
                 <Link
                   to={paths.DocumentationEdit.toPath({
-                    organization_uiid: props.orgInfo.ui_id,
                     project_uiid: props.projectInfo.ui_id
                   })}
                 >
@@ -50,7 +49,6 @@ function ProjectDocumentation(props) {
 
 export default connect(state => ({
   projectInfo: state.project.info,
-  orgInfo: state.organization.info,
   canUpdateProject: state.project.info && state.project.info.can_manage,
   loadingInProgress: state.project.fetchStatus === constants.WAITING
 }))(ProjectDocumentation);

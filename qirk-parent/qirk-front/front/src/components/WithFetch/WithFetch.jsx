@@ -8,10 +8,6 @@ import {
   fetchTask,
   fetchTaskById
 } from "./../../actions/projectActions";
-import {
-  fetchOrganizationByUIID,
-  fetchOrganizationMembers
-} from "./../../actions/organizationActions";
 import { fetchLanguages } from "./../../actions/commonActions";
 import {
   fetchFoundUserInfo,
@@ -27,12 +23,10 @@ function WithFetch({
   fetchList,
   fetchLanguagesStatus,
   languages,
-  fetchOrganizationByUIID,
   fetchProjectByUIID,
   fetchProjectMembers,
   fetchProjectMember,
   fetchLanguages,
-  fetchOrganizationMembers,
   fetchTask,
   fetchTaskById,
   fetchFoundUserInfo,
@@ -119,17 +113,7 @@ function WithFetch({
     fetchLanguagesStatus
   ]);
 
-  useEffect(() => {
-    if (
-      fetchList.some(fetchEnt => fetchEnt === constants.FETCH_ORGANIZATION) &&
-      params.organization_uiid
-    ) {
-      fetchOrganizationByUIID(params.organization_uiid);
-    }
-  }, [
-    fetchList.some(fetchEnt => fetchEnt === constants.FETCH_ORGANIZATION),
-    params.organization_uiid
-  ]);
+  
 
   useEffect(() => {
     if (
@@ -197,21 +181,6 @@ function WithFetch({
     params.userId
   ]);
 
-  useEffect(() => {
-    if (
-      fetchList.some(
-        fetchEnt => fetchEnt === constants.FETCH_ORGANIZATION_MEMBERS
-      ) &&
-      params.organization_uiid
-    ) {
-      fetchOrganizationMembers(params.organization_uiid);
-    }
-  }, [
-    fetchList.some(
-      fetchEnt => fetchEnt === constants.FETCH_ORGANIZATION_MEMBERS
-    ),
-    params.organization_uiid
-  ]);
 
   useEffect(() => {
     if (
@@ -285,22 +254,18 @@ export default withRouter(
     state => ({
       fetchLanguagesStatus: state.common.fetchLanguagesStatus,
       languages: state.common.languages,
-      organizationNotFound:
-        state.organization.fetchStatus === constants.NOT_FOUND,
       projectNotFound: state.project.fetchStatus === constants.NOT_FOUND,
       taskNotFound: state.selectedTask,
       projectMemberNotFound:
         state.project.selectedProjectMemberFetchStatus === constants.NOT_FOUND
     }),
     {
-      fetchOrganizationByUIID,
       fetchProjectByUIID,
       fetchProjectMembers,
       fetchProjectMember,
       fetchTask,
       fetchTaskById,
       fetchLanguages,
-      fetchOrganizationMembers,
       fetchFoundUserInfo,
       fetchUserProjectMemberships,
       fetchUserProjectManagerProjects,

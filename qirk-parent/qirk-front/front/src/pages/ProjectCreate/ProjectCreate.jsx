@@ -26,8 +26,6 @@ import Loading from "../../components/Loading/Loading";
 import queryString from "query-string";
 
 const mapStateToProps = state => ({
-  orgId: state.organization.id,
-  requestStatus: state.organization.requestStatus,
   languages: state.common.languages,
   languagesFetchInProgress:
     state.common.fetchLanguagesStatus === constants.WAITING
@@ -47,9 +45,6 @@ function ProjectsCreate({
   const [predefinedOrganizationMode, setPredefinedOrganizationMode] = useState(
     false
   );
-  const [loadingOrgs, setLoadingOrgs] = useState(false);
-  const [orgOptions, setOrgOptions] = useState([]);
-  const [selectedOrg, setSelectedOrg] = useState(null);
   const [name, setName] = useState("");
   const [projectUIID, setProjectUIID] = useState("");
   const [isPrivate, setIsPrivate] = useState(true);
@@ -60,31 +55,6 @@ function ProjectsCreate({
   const [UIIDTypingTimeout, setUIIDTypingTimeout] = useState(null);
   const [error, setError] = useState("");
   useRequestResultToast(requestStatus);
-
-  useEffect(() => {
-    if (params && params.organization_uiid) {
-      setPredefinedOrganizationMode(true);
-    } else {
-      setPredefinedOrganizationMode(false);
-    }
-  }, [params]);
-
-  useEffect(() => {
-    if (loginConfirmed && !predefinedOrganizationMode) {
-      fetchOrganizations();
-    }
-  }, [loginConfirmed, predefinedOrganizationMode]);
-
-  useEffect(() => {
-    if (
-      orgOptions &&
-      orgOptions.length > 0 &&
-      !predefinedOrganizationMode &&
-      null === selectedOrg
-    ) {
-      setSelectedOrg(orgOptions[0]);
-    }
-  }, [orgOptions, selectedOrg, predefinedOrganizationMode]);
 
   const onProjectSubmit = async e => {
     e.preventDefault();
@@ -97,11 +67,6 @@ function ProjectsCreate({
       const data = {
         name: name.trim(),
         ui_id: projectUIID.trim(),
-        organization: {
-          ui_id: predefinedOrganizationMode
-            ? params && params.organization_uiid
-            : selectedOrg && selectedOrg.value
-        },
         private: isPrivate,
         description: description.trim(),
         tags,
@@ -120,57 +85,15 @@ function ProjectsCreate({
     }
   };
 
-  const fetchOrganizations = async () => {
-    try {
-      setLoadingOrgs(true);
-      const response = await axios.get(endpoints.ORGANIZATION_LIST, {
-        params: { can_create_project: true }
-      });
-
-      if (responseIsStatusOk(response)) {
-        setOrgOptions(
-          response.data.data.map(org => ({
-            value: org.ui_id,
-            label: org.name
-          }))
-        );
-      }
-    } catch (e) {
-      console.error(e);
-      toast.error(t("Errors.Error"));
-    } finally {
-      setLoadingOrgs(false);
-    }
-  };
-
   return (
     <PrivatePage
       onLoginConfirmed={() => setLoginConfirmed(true)}
       className="organization-project-create"
     >
-      <WithFetch
-        fetchList={[
-          constants.FETCH_ORGANIZATION,
-          constants.LAZY_FETCH_LANGUAGES
-        ]}
-      >
+      <WithFetch fetchList={[constants.LAZY_FETCH_LANGUAGES]}>
         <h1>{t("Project creation")}</h1>
         <form onSubmit={onProjectSubmit}>
-          {loadingOrgs && <Loading />}
-          {orgOptions &&
-            orgOptions.length > 0 &&
-            selectedOrg &&
-            selectedOrg.value && (
-              <div style={{ paddingBottom: 30 }}>
-                <SimpleSelect
-                  style={{ width: "100%" }}
-                  label={t("Organization")}
-                  value={selectedOrg && selectedOrg.value}
-                  onChange={e => setSelectedOrg(e)}
-                  options={orgOptions}
-                />
-              </div>
-            )}
+
           <TextInput
             id="project_title"
             required
@@ -252,7 +175,7 @@ function ProjectsCreate({
           )}
           <Button
             type="submit"
-            disabled={UIIDTypingTimeout || loadingOrgs}
+            disabled={UIIDTypingTimeout}
             isLoading={requestStatus === actions.WAITING}
           >
             {t("Button.Create")}
@@ -264,8 +187,5 @@ function ProjectsCreate({
 }
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    { createProject }
-  )(ProjectsCreate)
+  connect(mapStateToProps, { createProject })(ProjectsCreate)
 );

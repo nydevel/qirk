@@ -1,10 +1,7 @@
 import { t } from "i18next";
 import { push } from "connected-react-router";
 import { toast } from "react-toastify";
-import {
-  setOrgRequestStatus,
-  setOrganizationInfo
-} from "./organizationActions";
+
 import axios from "../utils/axios";
 import endpoints from "../utils/endpoints";
 import actions from "../utils/constants";
@@ -150,7 +147,6 @@ const setProjectMembers = members => ({
 export const createProject = data => async (dispatch, getState) => {
   const state = getState();
   try {
-    dispatch(setOrgRequestStatus(actions.WAITING));
     const response = await axios.post(endpoints.PROJECT, data);
     if (responseIsStatusOk(response)) {
       const project_uiid =
@@ -159,7 +155,6 @@ export const createProject = data => async (dispatch, getState) => {
         response.data.data &&
         response.data.data[0] &&
         response.data.data[0].ui_id;
-      dispatch(setOrgRequestStatus(actions.SUCCESS));
       if (data.redirect_to_defhomepage) {
         response &&
           response.data &&
@@ -178,11 +173,6 @@ export const createProject = data => async (dispatch, getState) => {
         dispatch(
           push(
             paths.ProjectSingle.toPath({
-              organization_uiid:
-                (state.organization &&
-                  state.organization.info &&
-                  state.organization.info.ui_id) ||
-                data.organization.ui_id,
               project_uiid
             })
           )
@@ -191,9 +181,7 @@ export const createProject = data => async (dispatch, getState) => {
     }
   } catch (e) {
     console.error(e);
-    dispatch(setOrgRequestStatus(actions.FAILED));
   } finally {
-    dispatch(setOrgRequestStatus(actions.NOT_REQUESTED));
   }
 };
 
@@ -211,8 +199,7 @@ export const updateProject = data => async (dispatch, getState) => {
       dispatch(
         push(
           paths.ProjectSingle.toPath({
-            project_uiid: data.ui_id,
-            organization_uiid: getState().organization.info.ui_id
+            project_uiid: data.ui_id
           })
         )
       );
@@ -272,11 +259,7 @@ export const fetchTaskById = id => async (dispatch, getState) => {
         response.data.data[0].project &&
         response.data.data[0].project.id &&
         response.data.data[0].project.name &&
-        response.data.data[0].project.ui_id &&
-        response.data.data[0].project.organization &&
-        response.data.data[0].project.organization.id &&
-        response.data.data[0].project.organization.name &&
-        response.data.data[0].project.organization.ui_id
+        response.data.data[0].project.ui_id
       ) {
         dispatch(
           setProjectInfo({
@@ -284,14 +267,6 @@ export const fetchTaskById = id => async (dispatch, getState) => {
             id: response.data.data[0].project.id,
             name: response.data.data[0].project.name,
             ui_id: response.data.data[0].project.ui_id
-          })
-        );
-        dispatch(
-          setOrganizationInfo({
-            ...getState().organization.info,
-            id: response.data.data[0].project.organization.id,
-            name: response.data.data[0].project.organization.name,
-            ui_id: response.data.data[0].project.organization.ui_id
           })
         );
       }
@@ -329,11 +304,7 @@ export const fetchTask = (project_uiid, task_number) => async (
         response.data.data[0].project &&
         response.data.data[0].project.id &&
         response.data.data[0].project.name &&
-        response.data.data[0].project.ui_id &&
-        response.data.data[0].project.organization &&
-        response.data.data[0].project.organization.id &&
-        response.data.data[0].project.organization.name &&
-        response.data.data[0].project.organization.ui_id
+        response.data.data[0].project.ui_id
       ) {
         dispatch(
           setProjectInfo({
@@ -341,14 +312,6 @@ export const fetchTask = (project_uiid, task_number) => async (
             id: response.data.data[0].project.id,
             name: response.data.data[0].project.name,
             ui_id: response.data.data[0].project.ui_id
-          })
-        );
-        dispatch(
-          setOrganizationInfo({
-            ...getState().organization.info,
-            id: response.data.data[0].project.organization.id,
-            name: response.data.data[0].project.organization.name,
-            ui_id: response.data.data[0].project.organization.ui_id
           })
         );
       }
@@ -386,14 +349,7 @@ export const fetchProjectByUIID = (ui_id, includeApplication = false) => async (
       dispatch(setProjectId(response.data.data[0].id));
       dispatch(setProjectUiid(response.data.data[0].ui_id));
       dispatch(setProjectInfo(response.data.data[0]));
-      if (response.data.data[0].organization) {
-        dispatch(
-          setOrganizationInfo({
-            ...getState().organization.info,
-            ...response.data.data[0].organization
-          })
-        );
-      }
+
       dispatch(setProjectFetchStatus(actions.SUCCESS));
     }
   } catch (error) {
@@ -427,14 +383,7 @@ export const fetchProjectById = id => async (dispatch, getState) => {
       dispatch(setProjectId(response.data.data[0].id));
       dispatch(setProjectUiid(response.data.data[0].ui_id));
       dispatch(setProjectInfo(response.data.data[0]));
-      if (response.data.data[0].organization) {
-        dispatch(
-          setOrganizationInfo({
-            ...getState().organization.info,
-            ...response.data.data[0].organization
-          })
-        );
-      }
+
       dispatch(setProjectFetchStatus(actions.SUCCESS));
     }
   } catch (error) {
@@ -490,7 +439,6 @@ export const createProjectTask = (
         dispatch(
           push(
             `${paths.ProjectSingle.toPath({
-              organization_uiid: state.organization.info.ui_id,
               project_uiid: state.project.info.ui_id
             })}?${queryString.stringify(filterParams, {
               arrayFormat: "comma"
@@ -574,7 +522,6 @@ export const updateProjectDocumentation = documentation => async (
       dispatch(
         push(
           paths.Documentation.toPath({
-            organization_uiid: getState().organization.info.ui_id,
             project_uiid: getState().project.info.ui_id
           })
         )

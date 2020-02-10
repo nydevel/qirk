@@ -7,14 +7,7 @@ import Home from "../pages/Home/Home";
 import Join from "../pages/Join/Join";
 import Login from "../pages/Login/Login";
 import MyProfile from "../pages/MyProfile/MyProfile";
-import MyOrganizations from "../pages/MyOrganizations/MyOrganizations";
 import MyProjects from "../pages/MyProjects/MyProjects";
-import OrganizationCreate from "../pages/OrganizationCreate/OrganizationCreate";
-import OrganizationEdit from "../pages/OrganizationEdit/OrganizationEdit";
-import OrganizationMemberAdd from "../pages/OrganizationMemberAdd/OrganizationMemberAdd";
-import OrganizationMemberEdit from "../pages/OrganizationMemberEdit/OrganizationMemberEdit";
-import OrganizationMembersOverview from "../pages/OrganizationMembersOverview/OrganizationMembersOverview";
-import OrganizationOverview from "../pages/OrganizationOverview/OrganizationOverview";
 import NotFoundPage from "../pages/NotFoundPage/NotFoundPage";
 import ProjectCreate from "../pages/ProjectCreate/ProjectCreate";
 import ProjectEdit from "../pages/ProjectEdit/ProjectEdit";
@@ -28,18 +21,11 @@ import DocumentationEdit from "../pages/ProjectDocumentationEdit/ProjectDocument
 import ProjectMembersOverview from "../pages/ProjectMembersOverview/ProjectMembersOverview";
 import ErrorPage from "../pages/Error/Error";
 import ProjectMemberEditing from "../pages/ProjectMemberEditing/ProjectMemberEditing";
-import Feedback from "../pages/Feedback/Feedback";
 import FavoritesItems from "../pages/FavoritesItems/FavoritesItems";
 import ProjectPredefinedPermissionsInviteEdit from "../pages/ProjectPredefinedPermissionsInviteEdit/ProjectPredefinedPermissionsInviteEdit";
 import AcceptEmailInvite from "../pages/AcceptEmailInvite/AcceptEmailInvite";
-import AboutUs from "../pages/AboutUs/AboutUs";
-import LicenseContract from "../pages/LicenseContract/LicenseContract";
-import PrivacyPolicy from "../pages/PrivacyPolicy/PrivacyPolicy";
-import ChangeLog from "../pages/ChangeLog/ChangeLog";
 import RegisterConfirmation from "../pages/RegisterConfirmation/RegisterConfirmation";
 import Roadmap from "../pages/Roadmap/Roadmap";
-import UpdatedLicense from "../pages/UpdatedLicense/UpdatedLicense";
-import AddBalance from "../pages/AddBalance/AddBalance";
 import JiraImport from "../pages/JiraImport/JiraImport";
 import JiraImportMappingPage from "../pages/JiraImport/JiraImportMappingPage";
 
@@ -57,17 +43,11 @@ export default () => (
       path={paths.RegisterConfirmation.url}
       component={RegisterConfirmation}
     />
-    <Route exact path={paths.ChangeLog.url} component={ChangeLog} />
     <Route
       exact
       path={paths.ProjectCreateWithoutPredefinedOrganization.url}
       component={ProjectCreate}
     />
-    <Route exact path={paths.AddBalance.url} component={AddBalance} />
-    <Route exact path={paths.AboutUs.url} component={AboutUs} />
-    <Route exact path={paths.LicenseContract.url} component={LicenseContract} />
-    <Route exact path={paths.UpdatedLicense.url} component={UpdatedLicense} />
-    <Route exact path={paths.PrivacyPolicy.url} component={PrivacyPolicy} />
     <Route
       exact
       path={paths.AcceptEmailInvite.url}
@@ -78,49 +58,17 @@ export default () => (
       path={paths.ProjectPredefinedPermissionsInviteEdit.url}
       component={ProjectPredefinedPermissionsInviteEdit}
     />
-    <Route exact path={paths.FeebackForm.url} component={Feedback} />
     <Route exact path={paths.Login.url} component={Login} />
     <Route exact path={paths.Join.url} component={Join} />
     <Route exact path={paths.MyProfile.url} component={MyProfile} />
     <Route exact path={paths.ProjectCreate.url} component={ProjectCreate} />
-    <Route
-      exact
-      path={paths.OrganizationCreate.url}
-      component={OrganizationCreate}
-    />
-    <Route exact path={paths.MyOrganizations.url} component={MyOrganizations} />
     <Route exact path={paths.MyProjects.url} component={MyProjects} />
     <Route exact path={paths.FavoritesItems.url} component={FavoritesItems} />
     <Route exact path={paths.ResetPassword.url} component={ResetPassword} />
     <Route
       exact
-      path={paths.OrganizationEdit.url}
-      component={OrganizationEdit}
-    />
-    <Route
-      exact
-      path={paths.OrganizationMemberEdit.url}
-      component={OrganizationMemberEdit}
-    />
-    <Route
-      exact
-      path={paths.OrganizationMemberAdd.url}
-      component={OrganizationMemberAdd}
-    />
-    <Route
-      exact
-      path={paths.OrganizationMembers.url}
-      component={OrganizationMembersOverview}
-    />
-    <Route
-      exact
       path={paths.ProjectMemberEditing.url}
       component={ProjectMemberEditing}
-    />
-    <Route
-      exact
-      path={paths.OrganizationOverview.url}
-      component={OrganizationOverview}
     />
     <Route exact path={paths.ProjectSingle.url} component={ProjectSingle} />
     <Route

@@ -17,33 +17,10 @@ export default {
   POST_ACCEPT_LICENSE: "/user/accept-license/",
 
   USER: "/user/profile/",
-  GET_USER_SEARCH_BY_USERNAME:
-    "/user/search-by-username/?username={username}&organization_id={org_id}",
-  GET_USER_SEARCH_FOR_ORGANIZATION: "user/search-for-organization/",
   GET_USER_SEARCH_FOR_PROJECT: "user/search-for-project/",
-  GET_USER_SEARCH_FOR_ORGANIZATION_WITH_OLD_PLACEHOLDERS:
-    "user/search-for-organization/?prefix={alias}&organization_ui_id={org_uiid}",
-  GET_USER_SEARCH_BY_ALIAS_WITH_OLD_PLACEHOLDERS:
-    "/user/search-by-alias/?alias={alias}&organization_id={org_id}",
   GET_USER_SEARCH_BY_ALIAS: "/user/search-by-alias/",
   GET_USER: "/user/",
   GET_USER_INVITE_TO_PROJECT_OPTIONS: "/project/list-invite-options/",
-
-  ORGANIZATION_LIST: "/organization/list/",
-  ORGANIZATION: "/organization/",
-  ORGANIZATION_BY_UIID: "/organization/?ui_id={ui_id}",
-  ORGANIZATION_BY_ID: "/organization/?id={id}",
-  CHECK_ORG_UIID_AVAILABILITY: "/organization/check-ui-id/?ui_id={ui_id}",
-  GET_SEARCH_ORGANIZATION: "/organization/search/",
-
-  ORG_MEMBER: "/organization-member/",
-  GET_ORGANIZATION_MEMBER_SEARCH: "organization-member/search/",
-  ORG_MEMBER_SEARCH:
-    "/organization-member/search/?me_first=true&prefix={alias}&organization_ui_id={org_uiid}",
-  ORG_MEMBER_BY_ID: "/organization-member/?id={member_id}",
-  ORG_MEMBERS_LIST: "/organization-member/list/?organization_ui_id={org_uiid}",
-  ORG_MEMBER_LEAVE: "/organization-member/leave/",
-  GET_ORGANIZATION_MEMBER_LIST_BY_IDS: "/organization-member/list-by-ids/",
 
   PROJECT: "/project/",
   PUT_PROJECT_DOCUMENTATION: "/project/documentation/",

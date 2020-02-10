@@ -27,31 +27,3 @@ logs/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-### front dependencies ### 
-node_modules/
-npm/
-.npm/
-tmp/
-.tmp/
-.pnp
-.pnp.js
-package-lock.json
-
-### front testing ### 
-coverage/
-
-### front production ### 
-build/
-build.zip
-
-### front misc ### 
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-### GitLab CI ###
-.gitlab-ci.yml
-/.gitlab-ci.yml

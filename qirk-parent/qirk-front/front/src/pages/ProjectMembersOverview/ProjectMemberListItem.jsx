@@ -149,7 +149,6 @@ function ProjectMemberListItem({
                 <Link
                   to={paths.ProjectMemberEditing.toPath({
                     project_member_id: member.id,
-                    organization_uiid: params.organization_uiid,
                     project_uiid: params.project_uiid
                   })}
                   onClick={e => {
