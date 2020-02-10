@@ -14,7 +14,7 @@
  * If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package org.wrkr.clb.web.controller;
+package org.wrkr.clb.web.controller.project.task.attachment;
 
 import java.io.IOException;
 import java.util.List;
@@ -49,8 +49,8 @@ import org.wrkr.clb.services.project.task.attachment.AttachmentFileService;
 import org.wrkr.clb.services.util.exception.ApplicationException;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.RequestEntityTooLargeException;
+import org.wrkr.clb.web.controller.BaseController;
 import org.wrkr.clb.web.json.JsonContainer;
-
 
 @Controller
 @RequestMapping(path = "file")
@@ -172,14 +172,6 @@ public class FileController extends BaseController {
     @PostMapping(value = "upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody
     public JsonContainer<?, ExternalUuidDTO> upload(HttpServletRequest request, HttpServletResponse response,
-            HttpSession session) {
-        return upload(yandexCloudFileService, request, response, session);
-    }
-
-    @Deprecated // is used by front now
-    @PostMapping(value = "upload-v2", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @ResponseBody
-    public JsonContainer<?, ExternalUuidDTO> uploadToYandexCloud(HttpServletRequest request, HttpServletResponse response,
             HttpSession session) {
         return upload(yandexCloudFileService, request, response, session);
     }

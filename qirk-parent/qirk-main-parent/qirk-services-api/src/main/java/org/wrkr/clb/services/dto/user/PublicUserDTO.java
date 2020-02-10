@@ -40,11 +40,9 @@ public class PublicUserDTO extends IdDTO {
     public static PublicUserDTO fromEntity(User user) {
         PublicUserDTO dto = new PublicUserDTO();
 
-        if (user != null) {
-            dto.id = user.getId();
-            dto.username = user.getUsername();
-            dto.fullName = user.getFullName();
-        }
+        dto.id = user.getId();
+        dto.username = user.getUsername();
+        dto.fullName = user.getFullName();
 
         return dto;
     }

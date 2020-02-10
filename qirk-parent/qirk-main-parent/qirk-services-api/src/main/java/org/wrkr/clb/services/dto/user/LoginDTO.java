@@ -22,20 +22,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class LoginDTO {
 
+    @JsonProperty(value = "username")
     @NotNull(message = "username in LoginDTO must not be null")
-    public String username;
+    public String usernameOrEmailAdress;
 
     @NotNull(message = "password in LoginDTO must not be null")
     public String password;
 
     @JsonProperty(value = "g_recaptcha_response")
     public String gRecaptchaResponse;
-
-    public LoginDTO() {
-    }
-
-    public LoginDTO(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }

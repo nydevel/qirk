@@ -147,10 +147,13 @@ public class DefaultProfileService implements ProfileService {
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public User getAccount(LoginDTO loginDTO) {
-        if (loginDTO.username.indexOf('@') >= 0) {
-            return userRepo.getByEmailForAccount(loginDTO.username);
+        if (loginDTO.usernameOrEmailAdress.contains("@")) {
+            User user = userRepo.getByEmailForAccount(loginDTO.usernameOrEmailAdress);
+            if (user != null) {
+                return user;
+            }
         }
-        return userRepo.getByUsernameForAccount(loginDTO.username);
+        return userRepo.getByUsernameForAccount(loginDTO.usernameOrEmailAdress);
     }
 
     @Override

@@ -27,7 +27,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class ProfileDTO extends PublicProfileDTO {
 
-    public String email;
+    @JsonProperty("email")
+    public String emailAddress;
 
     @JsonProperty(value = "notification_settings")
     public NotificationSettings notificationSettings;
@@ -38,7 +39,7 @@ public class ProfileDTO extends PublicProfileDTO {
         dto.id = user.getId();
         dto.username = user.getUsername();
         dto.fullName = user.getFullName();
-        dto.email = user.getEmailAddress();
+        dto.emailAddress = user.getEmailAddress();
         dto.notificationSettings = user.getNotificationSettings();
         dto.tags = tags;
         dto.languages = languages;

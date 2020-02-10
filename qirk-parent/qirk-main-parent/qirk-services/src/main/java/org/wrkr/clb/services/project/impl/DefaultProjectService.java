@@ -43,12 +43,14 @@ import org.wrkr.clb.common.util.strings.MarkdownUtils;
 import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.Project;
+import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
+import org.wrkr.clb.repo.project.ProjectApplicationRepo;
 import org.wrkr.clb.repo.project.ProjectInviteRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
@@ -56,6 +58,7 @@ import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
 import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
+import org.wrkr.clb.services.dto.project.ProjectApplicationStatusDTO;
 import org.wrkr.clb.services.dto.project.ProjectDTO;
 import org.wrkr.clb.services.dto.project.ProjectDocDTO;
 import org.wrkr.clb.services.dto.project.ProjectInviteOptionDTO;
@@ -113,8 +116,8 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     @Autowired
     private ProjectInviteRepo projectInviteRepo;
 
-    // @Autowired
-    // private ProjectApplicationRepo projectApplicationRepo;
+    @Autowired
+    private ProjectApplicationRepo projectApplicationRepo;
 
     @Autowired
     private TagRepo tagRepo;
@@ -319,8 +322,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         return jdbcProjectRepo.getByIdWithEverythingForReadAndFetchMembershipForSecurity(projectId, currentUser.getId());
     }
 
-    private ProjectReadDTO getDTOWithPermissions(User currentUser, Long projectId,
-            @SuppressWarnings("unused") boolean includeApplication)
+    private ProjectReadDTO getDTOWithPermissions(User currentUser, Long projectId, boolean includeApplication)
             throws ApplicationException {
         if (projectId == null) {
             throw new NotFoundException("Project");
@@ -334,10 +336,10 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         project.setLanguages(languageRepo.listByProjectId(project.getId()));
 
         ProjectReadDTO dto = ProjectReadDTO.fromEntityWithEverythingForRead(project);
-        // if (includeApplication) {
-        // ProjectApplication application = projectApplicationRepo.getLastByUserAndProject(currentUser, project);
-        // dto.application = ProjectApplicationStatusDTO.fromEntity(application);
-        // }
+        if (includeApplication) {
+            ProjectApplication application = projectApplicationRepo.getLastByUserAndProject(currentUser, project);
+            dto.application = ProjectApplicationStatusDTO.fromEntity(application);
+        }
         return dto;
     }
 

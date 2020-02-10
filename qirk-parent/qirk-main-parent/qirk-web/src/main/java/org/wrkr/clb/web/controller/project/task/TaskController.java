@@ -33,7 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.context.TaskSearchContext;
 import org.wrkr.clb.repo.sort.SortingOption;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
@@ -51,7 +50,6 @@ import org.wrkr.clb.services.project.task.TaskService;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
 import org.wrkr.clb.web.json.JsonContainer;
-
 
 @RestController
 @RequestMapping(path = "task", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -129,39 +127,6 @@ public class TaskController extends BaseExceptionHandlerController {
         logProcessingTimeFromStartTime(startTime, "read", id, projectId, projectUiId, number);
         return new JsonContainer<TaskReadDTO, Void>(taskDTO);
     }
-
-    /*@formatter:off
-    @Deprecated
-    @GetMapping(value = "list-by-project")
-    public JsonContainer<TaskReadDTO, Void> listByProject(HttpSession session,
-            @RequestParam(name = "project_id", required = false) Long projectId,
-            @RequestParam(name = "project_ui_id", required = false) String projectUiId,
-            @RequestParam(name = "assigned_to_me", required = false, defaultValue = "false") boolean assignedToMe)
-            throws Exception {
-        long startTime = System.currentTimeMillis();
-        List<TaskReadDTO> taskDTOList = new ArrayList<TaskReadDTO>();
-        if (assignedToMe) {
-            taskDTOList = taskService.listAssignedToCurrentUserByProject(getSessionUser(session),
-                    new IdOrUiIdDTO(projectId, projectUiId));
-        } else {
-            taskDTOList = taskService.listByProject(getSessionUser(session),
-                    new IdOrUiIdDTO(projectId, projectUiId));
-        }
-        logProcessingTimeFromStartTime(startTime, "listByProject", projectId, projectUiId, assignedToMe);
-        return new JsonContainer<TaskReadDTO, Void>(taskDTOList);
-    }
-
-    @GetMapping(value = "list-parent-options")
-    public JsonContainer<TaskReadDTO, Void> listParentOptions(HttpSession session,
-            @RequestParam(name = "project_id", required = false) Long projectId,
-            @RequestParam(name = "project_ui_id", required = false) String projectUiId) {
-        long startTime = System.currentTimeMillis();
-        List<TaskReadDTO> taskDTOList = taskService.listParentOptions(getSessionUser(session),
-                new IdOrUiIdDTO(projectId, projectUiId));
-        logProcessingTimeFromStartTime(startTime, "listParentOptions", projectId, projectUiId);
-        return new JsonContainer<TaskReadDTO, Void>(taskDTOList);
-    }
-    @formatter:on*/
 
     @GetMapping(value = "list-link-options")
     public JsonContainer<LinkedTaskDTO, Void> listLinkOptions(HttpSession session,
@@ -245,9 +210,7 @@ public class TaskController extends BaseExceptionHandlerController {
     public JsonContainer<SearchedTaskDTO, PaginationMetaDTO> textSearch(HttpSession session,
             @RequestParam(name = "project_id", required = false) Long projectId,
             @RequestParam(name = "project_ui_id", required = false) String projectUiId,
-            @RequestParam(name = "reported_by_me", required = false, defaultValue = "false") boolean reportedByMe,
             @RequestParam(name = "reporter_id", required = false) Long reporterId,
-            @RequestParam(name = "assigned_to_me", required = false, defaultValue = "false") boolean assignedToMe,
             @RequestParam(name = "assignee_id", required = false) Long assigneeId,
             @RequestParam(name = "type", required = false, defaultValue = "") List<String> types,
             @RequestParam(name = "priority", required = false, defaultValue = "") List<String> priorities,
@@ -265,19 +228,9 @@ public class TaskController extends BaseExceptionHandlerController {
         TaskSearchContext searchContext = new TaskSearchContext(new IdOrUiIdDTO(projectId, projectUiId), reporterId, assigneeId,
                 types, priorities, statuses, text, hashtag, sortBy, sortOrder, searchAfter);
 
-        User currentUser = getSessionUser(session);
-        if (currentUser != null) {
-            if (reportedByMe) {
-                searchContext.reporterId = TaskSearchContext.REPORTED_BY_ME_ID;
-            }
-            if (assignedToMe) {
-                searchContext.assigneeId = TaskSearchContext.ASSIGNED_TO_ME_ID;
-            }
-        }
-
-        PaginatedListDTO<SearchedTaskDTO> taskDTOList = taskService.textSearch(currentUser, searchContext);
+        PaginatedListDTO<SearchedTaskDTO> taskDTOList = taskService.textSearch(getSessionUser(session), searchContext);
         logProcessingTimeFromStartTime(startTime, "textSearch", projectId, projectUiId,
-                reportedByMe, reporterId, assignedToMe, assigneeId,
+                reporterId, assigneeId,
                 types, priorities, statuses, sortByString, sortOrderString, searchAfter);
         return JsonContainer.fromPaginatedList(taskDTOList);
     }

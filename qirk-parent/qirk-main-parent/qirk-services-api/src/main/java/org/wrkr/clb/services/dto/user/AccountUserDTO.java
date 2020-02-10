@@ -21,9 +21,12 @@ import java.util.List;
 
 import org.wrkr.clb.model.user.User;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AccountUserDTO extends PublicUserDTO {
 
-    public String email;
+    @JsonProperty("email")
+    public String emailAddress;
 
     public Boolean manager;
 
@@ -34,7 +37,7 @@ public class AccountUserDTO extends PublicUserDTO {
             dto.id = user.getId();
             dto.username = user.getUsername();
             dto.fullName = user.getFullName();
-            dto.email = user.getEmailAddress();
+            dto.emailAddress = user.getEmailAddress();
             dto.manager = user.isManager();
         }
 

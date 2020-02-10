@@ -77,12 +77,12 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     @JsonInclude(Include.NON_NULL)
     public boolean canManage = false;
 
-    // @JsonProperty(value = "application")
-    // @JsonInclude(Include.NON_NULL)
-    // public ProjectApplicationStatusDTO application;
+    @JsonProperty(value = "application")
+    @JsonInclude(Include.NON_NULL)
+    public ProjectApplicationStatusDTO application;
 
     private static ProjectReadDTO fromEntity(Project project,
-            boolean includeDescription, boolean includeDocs, boolean includeTagsAndLanguages) {
+            boolean includeDescription, boolean includeDoc, boolean includeTagsAndLanguages) {
         ProjectReadDTO dto = new ProjectReadDTO();
 
         dto.id = project.getId();
@@ -97,7 +97,7 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
             dto.descriptionMd = project.getDescriptionMd();
         }
 
-        if (includeDocs) {
+        if (includeDoc) {
             dto.documentationHtml = project.getDocumentationHtml();
             dto.documentationMd = project.getDocumentationMd();
         }

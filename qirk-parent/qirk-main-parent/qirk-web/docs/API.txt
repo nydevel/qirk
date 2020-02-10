@@ -8,66 +8,67 @@ Response structure:
 }
 
 /csrf/refresh
-GET
-Response: {}
+Method: GET
+Response.data: [{}]
 
 /authn/login/
-POST
+Method: POST
 Request: {"username":"aaa", "password":"121212", "g_recaptcha_response":""}
-Response: {}
+Response.data: [{}]
 
 /authn/logout/
-POST
+Method: POST
 Request: {}
-Response: {}
+Response.data: [{}]
 
 /authn/check/
-GET
-Response: {
+Method: GET
+Response.data: [{
 	"id":1, (null if not authenticated)
 	"email":"a@qirk.org",
 	"username":"aaa",
-	"full_name":"aaa"
+	"full_name":"aaa",
+	"manager":false
 }
 
 /user/check-email/
-GET
+Method: GET
 Request parameters: email=a@qirk.org
-Response: {"exists":false}
+Response.data: [{"exists":false}
 
 /user/check-username/
-GET
+Method: GET
 Request parameters: username=aaa
-Response: {"exists":false}
+Response.data: [{"exists":false}
 
 /user/register/
-POST
+Method: POST
 Request: {"email":"a@qirk.org", "license_accepted":true}
-Response: {"email_sent":true}
+Response.data: [{"email_sent":true}
 
 /user/activate/
-POST
+Method: POST
 Request: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
-Response: {}
+Response.data: [{}]
 
 /user/reset-password/
-POST
+Method: POST
 Request: {"email": "a@qirk.org"}
-Response: {"email_sent":true}
+Response.data: [{"email_sent":true}
 
 /user/change-password/
-PUT
+Method: PUT
 Request: {
 	"password":"aaa",
 	"new_password":"aaa",
 	"token":"aaa"
 }
-Response: {}
+Response.data: [{}]
 
 /user/
-GET
+Method: GET
 Request parameters: id=1
-Response: {
+Response.data: [{
 	"id":2,
 	"username":"t1614668",
 	"full_name":"My humble name",
@@ -76,16 +77,16 @@ Response: {
 }
 
 /user/list/
-GET
+Method: GET
 Request parameters: id=1,2
-Response: [
+Response.data: [
 	{"id":1, "username":"aaa", "full_name":"aaa"},
 	{"id":2, "username":"bbb", "full_name":"bbb"}
 ]
 
 /user/profile/
-GET
-Response: {
+Method: GET
+Response.data: [{
 	"email":"",
 	"username":"",
 	"full_name":"a",
@@ -95,14 +96,14 @@ Response: {
 }
 
 /user/profile/
-PUT
+Method: PUT
 Request: {
 	"full_name":"",
 	"tags":["aaa","bbb"],
 	"languages":[1,2],
 	"notification_settings": {"task_created":true, "task_updated":true, "task_commented":true}
 }
-Response: {
+Response.data: [{
 	"email":"",
 	"username":"",
 	"full_name":"a",
@@ -112,38 +113,38 @@ Response: {
 }
 
 /language/list/
-GET
-Response: [
+Method: GET
+Response.data: [
 	{"id":1, "name_code":"EN_US"},
 	{"id":2, "name_code":"RU_RU"}
 ]
 
 /user/notification-token/
-GET
-Response: {
+Method: GET
+Response.data: [{
 	"token":"aaa",
 	"IV":"aaa"
 }
 
 /user/search-for-project/?prefix=aaa&project_id=
 /user/search-for-project/?prefix=aaa&project_ui_id=
-GET
+Method: GET
 Request parameters:
 	prefix=a
 	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
 	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
-Response: [
+Response.data: [
 	{"id":1, "username":"aaa", "full_name":"aaa"},
 	{"id":2, "username":"bbb", "full_name":"bbb"}
 ]
 
 /project/check-ui-id/
-GET
+Method: GET
 Request parameters: ui_id=aaa
-Response: {"exists": false}
+Response.data: [{"exists": false}
 
 /project/
-POST
+Method: POST
 Request: {
 	"name":"",
 	"ui_id":"",
@@ -153,7 +154,7 @@ Request: {
 	"tags":["aaa","bbb"],
 	"languages":[1,2]
 }
-Response: {
+Response.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"",
@@ -167,7 +168,7 @@ Response: {
 }
 
 /project/
-PUT
+Method: PUT
 Request: {
 	"id":1,
 	"record_version":1,
@@ -179,7 +180,7 @@ Request: {
 	"tags":["aaa","bbb"],
 	"languages":[1,2]
 }
-Response: {
+Response.data: [{
 	"id":1,
 	"record_version":2,
 	"name":"",
@@ -192,72 +193,76 @@ Response: {
 	"languages":[{"id":1,"name_code":"EN_US"}, {"id":2,"name_code":"RU_RU"}]
 }
 
-/project/documentation/
-PUT
-Request: {
-	"id":1,
-	"record_version":1,
-	"documentation":"aaa"
-}
-
-/project/?id=&include_application=
-/project/?ui_id=&include_application=
-(include_application=false by default)
-GET: {
+/project/
+Method: GET
+Request parameters:
+	id=1						(exactly one of 'id', 'ui_id' must be present)
+	ui_id=aaa					(exactly one of 'id', 'ui_id' must be present)
+	include_application=true	(default: false)
+Response.data: [{
 	"id":1,
 	"record_version":1,
 	"name":"",
 	"ui_id":"",
 	"key":"",
 	"private":false,
-	"can_be_public":true,
 	"description_md":"abc",
 	"description_html":"<p>abc</p>",
-	"documentation_md": "doc in here",
-	"documentation_html": "<p>doc in here</p>",
-	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"tags":[{"id":1,"name":""}],
-	"languages":[1,2],
+	"tags":[{"id":1,"name":"aaa"}, {"id":2,"name":"bbb"}],
+	"languages":[{"id":1,"name_code":"EN_US"}, {"id":2,"name_code":"RU_RU"}],
 	"is_member":false,
 	"write_allowed":false,
 	"can_manage":false,
 	"application": {"id":1, "status": {"id":1, "name_code":"PENDING"}} (if include_application=true)
 }
 
-/project/list-by-organization/?organization_id=
-/project/list-by-organization/?organization_ui_id=
-GET: [{
+/project/documentation/
+Method: PUT
+Request: {
 	"id":1,
-	"name":"aaa",
-	"ui_id":"aaa",
+	"record_version":1,
+	"documentation":"aaa"
+}
+Response.data: [{
+	"id":1,
+	"record_version":2,
+	"name":"",
+	"ui_id":"",
+	"key":"",
 	"private":false,
-	"can_be_public":true,
-	"description_md":"aaa",
-	"description_html":"<p>aaa</p>",
-	"documentation_md": "doc in here",
-	"documentation_html": "<p>doc in here</p>",
-	"dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"organization_dropbox_settings": {"id":1, "purge_on_delete":false}, (nullable)
-	"tags":[{"id":1,"name":"aaa"}]
-}]
+	"description_md":"abc",
+	"description_html":"<p>abc</p>",
+	"documentation_md":"abc",
+	"documentation_html":"<p>abc</p>",
+	"tags":[{"id":1,"name":"aaa"}, {"id":2,"name":"bbb"}],
+	"languages":[{"id":1,"name_code":"EN_US"}, {"id":2,"name_code":"RU_RU"}]
+}
 
-/project/list-by-user/?managed=
-(managed=false by default)
-GET: [{
+/project/documentation/
+Method: GET
+Request parameters:
+	id=1		(exactly one of 'id', 'ui_id' must be present)
+	ui_id=aaa	(exactly one of 'id', 'ui_id' must be present)
+Response.data: [{
+	"id":1,
+	"record_version":1,
+	"documentation_md":"abc",
+	"documentation_html":"<p>abc</p>"
+}
+
+/project/list-by-user/
+Method: GET
+Request parameters: managed=true (default: false)
+Response.data: [{
 	"id":1,
 	"name":"aaa",
-	"ui_id":"aaa",
-	"organization": {
-		"id":1,
-		"name":"aaa",
-		"ui_id":"aaa"
-	}
+	"ui_id":"aaa"
 }]
 
-DEPRECATED
-/project/list-invite-options/?user_id=
-GET: [{
+/project/list-invite-options/
+Method: GET
+Request parameters: user_id=1
+Response.data: [{
 	"id":1,
 	"name":"aaa",
 	"ui_id":"aaa",
@@ -265,40 +270,13 @@ GET: [{
 	"invite": { (nullable)
 		"id":1,
 		"status": {"id":1, "name_code":"PENDING"},
-	},
-	"organization": {
-		"id":1,
-		"name":"aaa",
-		"ui_id":"aaa"
 	}
 }]
 
-/project/top/
-GET: [{
-	"id":1,
-	"name":"aaa",
-	"ui_id":"aaa",
-	"organization": {
-		"id":1,
-		"name":"aaa",
-		"ui_id":"aaa"
-	}
-}]
-
-/project/search/?text=a&include_description=false
-GET: [{
-	"id":1,
-	"name":"aaa",
-	"ui_id":"aaa",
-	"organization": {
-		"id":1,
-		"name":"aaa",
-		"ui_id":"aaa"
-	}
-}]
-
-/project/chat-token/?id=
-GET: {
+/project/chat-token/
+Method: GET
+Request parameters: id=1
+Response.data: [{
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -306,8 +284,9 @@ GET: {
 }
 
 /task/
-POST: {
-	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
+Method: POST
+Request: {
+	"project": {"id":1},
 	"description":"aaa",
 	"assignee":1, (nullable)
 	"assign_to_me":false, (nullable)
@@ -318,9 +297,38 @@ POST: {
 	"hashtag_ids": [1, 2],
 	"hashtag_names": ["aaa", "bbb"]
 }
+OR {
+	"project": {"ui_id":"aaa"},
+	"description":"aaa",
+	"assignee":1, (nullable)
+	"assign_to_me":false, (nullable)
+	"task_type":"TYPE", (nullable)
+	"task_priority":"PRIORITY", (nullable)
+	"task_status":"STATUS",
+	"linked_tasks": [1, 2],
+	"hashtag_ids": [1, 2],
+	"hashtag_names": ["aaa", "bbb"]
+}
+Response.data: [{
+	"id":2,
+	"record_version":1,
+	"number":2,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"description_html":"<p>aaa</p>",
+	"description_md":"aaa",
+	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"task_type":{"id":1,"name_code":"TASK"},
+	"task_priority":{"id":1, "name_code":"TRIVIAL"},
+	"task_status":{"id":1, "name_code":"OPEN"},
+	"hashtags":[{"id":1, "name":"aaa"}]
+}
 
 /task/
-PUT: {
+Method: PUT
+Request: {
 	"id":1,
 	"record_version":1,
 	"description":"aaa",
@@ -332,47 +340,39 @@ PUT: {
 	"hashtag_ids": [1, 2],
 	"hashtag_names": ["aaa", "bbb"]
 }
-
-/task/card/
-PUT: {
+Response.data: [{
 	"id":1,
-	"record_version":1,
-	"card":1 (nullable)
-}
-Response: {
-	"id":1,
-	"record_version":1,
-	"card":1 (nullable)
-}
-
-/task/link/
-POST: {
-	"task1":1,
-	"task2":2
-}
-Error codes:
-ALREADY_EXISTS
-
-/task/link/
-DELETE: {
-	"task1":1,
-	"task2":2
-}
-
-/task/?id=
-/task/?project_id=1&number=
-/task/?project_ui_id=aaa&number=
-GET: {
-	"id":2,
-	"record_version":1,
-	"number":2,
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization": {"id":1, "name":"aaa", "ui_id":"aaa"}},
-	"has_dropbox_settings": true,
-	"has_organization_dropbox_settings": true,
+	"record_version":2,
+	"number":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"description_html":"<p>aaa</p>",
 	"description_md":"aaa",
-	"reporter": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
-	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"task_type":{"id":1,"name_code":"TASK"},
+	"task_priority":{"id":1, "name_code":"TRIVIAL"},
+	"task_status":{"id":1, "name_code":"OPEN"},
+	"hashtags":[{"id":1, "name":"aaa"}]
+}
+
+/task/
+Method: GET
+Request parameters:
+	id=1		(exactly one of 'id', 'number' must be present)
+	number=1	(exactly one of 'id', 'number' must be present)
+	project_id=1		(if 'number' is present, exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(if 'number' is present, exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
+	"id":1,
+	"record_version":1,
+	"number":1,
+	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
+	"description_html":"<p>aaa</p>",
+	"description_md":"aaa",
+	"reporter": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"created_at":"2019-03-20T17:12:36.3+0500",
 	"updated_at":"2019-03-20T17:12:36.3+0500",
 	"task_type":{"id":1,"name_code":"TASK"},
@@ -383,25 +383,41 @@ GET: {
 	"subscribers_count":1
 }
 
-DEPRECATED
-/task/list-by-project/?project_id=&assigned_to_me=
-/task/list-by-project/?project_ui_id=&assigned_to_me=
-(assigned_to_me=false by default)
-(top 10 if assigned_to_me=true)
-GET: [{
+/task/card/
+Method: PUT
+Request: {
 	"id":1,
-	"number":1,
-	"summary":"a...",
-	"created_at":"2019-03-20T17:12:36.3+0500",
-	"updated_at":"2019-03-20T17:12:36.3+0500",
-	"task_priority":{"id":1, "name_code":"TRIVIAL"},
-	"task_status":{"id":1, "name_code":"OPEN"},
-	"project": {"id":1, "name":"aaa", "ui_id":"aaa"}
-}]
+	"record_version":1,
+	"card":1 (nullable)
+}
+Response.data: [{
+	"id":1,
+	"record_version":1,
+	"card":1 (nullable)
+}
 
-/task/list-cardless/?project_id=
-/task/list-cardless/?project_ui_id=
-GET: [{
+/task/link/
+Method: POST
+Request: {
+	"task1":1,
+	"task2":2
+}
+Response.data: [{}]
+
+/task/link/
+Method: DELETE
+Request: {
+	"task1":1,
+	"task2":2
+}
+Response.data: [{}]
+
+/task/list-cardless/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
 	"id":1,
 	"number":1,
 	"summary":"a...",
@@ -409,20 +425,21 @@ GET: [{
 	"task_status":{"id":1, "name_code":"OPEN"}
 }]
 
-/task/list-link-options/?task_id=
-/task/list-link-options/?project_id=
-GET: [{
+/task/list-link-options/
+Method: GET
+Request parameters:
+	project_id=1		(exactly one of 'project_id', 'project_ui_id' must be present)
+	project_ui_id=aaa	(exactly one of 'project_id', 'project_ui_id' must be present)
+Response.data: [{
 	"id":1,
 	"number":1,
 	"summary":"a...",
-	"assignee": {"id":1, "enabled":true, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
+	"assignee": {"id":1, "user": {"id":1, "full_name":"aaa", "username":"a@qirk.org"}},
 	"task_status": {"id":1, "name_code":"OPEN"}
 }]
 
 /task/text-search/
 ?project_id=1
-&reported_by_me=false
-&assigned_to_me=false
 &assignee_id=1
 &type=type1,type2
 &priority=priority1,priority2
@@ -434,24 +451,37 @@ GET: [{
 (reported_by_me, assigned_to_me, assignee and sort_by not required)
 (sort_by in: updated_at, assignee, created_at, number, priority, reporter, summary; sort_by=updated_at by default)
 (ordering in: asc, desc; ordering=desc by default)
-GET: {
-	"data": [{
-		"id":1,
-		"number":1,
-		"summary":"a...",
-		"reporter": {"id":1},
-		"assignee": {"id":1}, (nullable)
-		"created_at":"2019-03-20T17:12:36.3+0500",
-		"updated_at":"2019-03-20T17:12:36.3+0500",
-		"task_type":{"name_code":"TASK"},
-		"task_priority":{"name_code":"TRIVIAL"},
-		"task_status":{"name_code":"OPEN"}
-	}],
-	"meta": {"total":10}
-}
+Method: GET
+Request parameters:
+	project_id=1
+	reporter_id=1	(-1 for reported by current user; nullable)
+	assignee_id=1	(-1 for assigned to current user; -2 for unassigned; nullable)
+	type=TASk,BUG	(nullable)
+	priority=MAJOR,MINOR		(nullable)
+	status=OPEN,IN_DEVELOPMENT	(nullable)
+	text=aaa		(nullable)
+	hashtag=aaa		(nullable)
+	sort_by=		(one of: CREATED_AT, UPDATED_AT, default: UPDATED_AT)
+	ordering=		(one of: ASC, DESC, default: DESC)
+	search_after=	(last value of sorted field in previous request; nullable)
+Response.data: [{
+	"id":1,
+	"number":1,
+	"summary":"a...",
+	"reporter": {"id":1},
+	"assignee": {"id":1}, (nullable)
+	"created_at":"2019-03-20T17:12:36.3+0500",
+	"updated_at":"2019-03-20T17:12:36.3+0500",
+	"task_type": {"name_code":"TASK"},
+	"task_priority": {"name_code":"TRIVIAL"},
+	"task_status": {"name_code":"OPEN"}
+}]
+Response.meta: {"total":100}
 
-/task/chat-token/?id=
-GET: {
+/task/chat-token/
+Method: GET
+Request parameters: id=1
+Response: {
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -459,120 +489,124 @@ GET: {
 }
 
 /task-type/list/
-GET: [
+Method: GET
+Response.data: [
 	{"id":1, "name_code":"AAA"},
 	{"id":2, "name_code":"BBB"}
 ]
 
 /task-priority/list/
-GET: [
+Method: GET
+Response.data: [
 	{"id":1, "name_code":"AAA"},
 	{"id":2, "name_code":"BBB"}
 ]
 
 /task-status/list/
-GET: [
+Method: GET
+Response.data: [
 	{"id":1, "name_code":"AAA"},
 	{"id":2, "name_code":"BBB"}
 ]
 
 /file/upload/
-Content-Type: multipart/form-data
-POST: task_id=1&file=
-Response: {
-	"meta": {"external_uuid":"aaa"}
-}
+Headers:
+	Content-Type: multipart/form-data
+Method: POST
+Request: task_id=1&file=<binary_data>
+Response.meta: {"external_uuid":"aaa"}
 
 /file/upload/
-Content-Type: multipart/form-data
-POST: project_id=1&file=
-Response: {
-	"data": {"uuid":"aaa"},
-	"meta": {"external_uuid":"aaa"}
-}
-
-/file/upload-v2/
-Content-Type: multipart/form-data
-POST: task_id=1&file=
-Response: {
-	"meta": {"external_uuid":"aaa"}
-}
-
-/file/upload-v2/
-Content-Type: multipart/form-data
-POST: project_id=1&file=
-Response: {
-	"data": {"uuid":"aaa"},
-	"meta": {"external_uuid":"aaa"}
-}
+Headers:
+	Content-Type: multipart/form-data
+Method: POST
+Request: project_id=1&file=<binary_data>
+Response.data: {"uuid":"aaa"}
+Response.meta:: {"external_uuid":"aaa"}
 
 /file/get/{id}/{filename}/
-GET: downloads file
+Method: GET
+Response status: 303 (redirects to download link)
 
 /attachment/
-POST: {
+Method: POST
+Request: {
 	"task":1,
 	"uuids": ["aaa","bbb"]
 }
-Response: [
+Response.data: [
 	{"id":1, "filename":"aaa.txt", "url": "/file/get/1/aaa.txt"},
 	{"id":2, "filename":"bbb.txt", "url": "/file/get/2/bbb.txt"}
 ]
 
-/attachment/list/?task_id=
-GET: [
+/attachment/list/
+Method: GET
+Request parameters: task_id=1
+Response.data: [
 	{"id":1, "filename":"aaa.txt", "url": "/file/get/1/aaa.txt"},
 	{"id":2, "filename":"bbb.txt", "url": "/file/get/2/bbb.txt"}
 ]
-
-/attachment/thumbnail/?id=
-Accept: image/gif, image/jpeg, image/png
-GET: <bytes>
-Error codes:
-(400) UNSUPPORTED_EXTENSION - file is not an image
-(400) UNSUPPORTED_IMAGE - thumbnails not supported for this image
 
 /attachment/
-DELETE: {
+Method: DELETE
+Request: {
 	"id":1
 }
+Response.data: {}
 
 /user-favorite/
-POST: {
-	"project":1,
-}
-
-/user-favorite/move/
-PUT: {
-	"id":1,
-	"previous":2 (nullable)
-}
-
-/user-favorite/list/
-GET: [{
+Method: POST
+Request: {"project":1}
+Response.data: {
 	"id":1,
 	"project": {
 		"id":1,
 		"name":"aaa",
-		"ui_id":"aaa",
-		"organization": {"id":1, "ui_id":"aaa"}
+		"ui_id":"aaa"
 	}
+}
+
+/user-favorite/move/
+Method: PUT
+Request: {
+	"id":1,
+	"previous":2 (nullable)
+}
+Response.data: {
+	"id":1,
+	"project": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	}
+}
+
+/user-favorite/list/
+Method: GET
+Response.data: [{
+	"id":1,
+	"project": {
+		"id":1,
+		"name":"aaa",
+		"ui_id":"aaa"
+	},
+	"can_create_task":true
 }]
 
 /user-favorite/
-DELETE: {
-	"id":1,
-}
+Method: DELETE
+Request: {"id":1}
+Response.data: {}
 
 /memo/
-POST: {
+Method: POST: {
 	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
 	"body":"aaa"
 }
 
 /memo/list/?project_id=
 /memo/list/?project_ui_id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"body":"aaa",
 	"created_at":"2019-03-20T17:12:36.3+0500",
@@ -581,26 +615,26 @@ GET: [{
 }]
 
 /memo/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /issue/
-POST: {
+Method: POST: {
 	"project": {"id":1, "ui_id":"aaa"}, (exactly ONE of id or ui_id)
 	"summary":"a",
 	"description":"aaa"
 }
 
 /issue/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"summary":"a",
 	"description":"aaa"
 }
 
 /issue/?id=
-GET: {
+Method: GET: {
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
@@ -610,7 +644,7 @@ GET: {
 
 /issue/list/?project_id=
 /issue/list/?project_ui_id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"summary":"a",
 	"description":"aaa",
@@ -619,7 +653,7 @@ GET: [{
 }]
 
 /issue/chat-token/?id=
-GET: {
+Method: GET: {
 	"token": "aaa",
 	"IV": "aaa",
 	"can_read":true,
@@ -628,7 +662,7 @@ GET: {
 
 DEPRECATED
 /project-invite/
-POST: {
+Method: POST: {
 	"user":1,
 	"project":1,
 	"text":"aaa"
@@ -636,7 +670,7 @@ POST: {
 
 DEPRECATED
 /project-invite/?id=1
-GET: {
+Method: GET: {
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
@@ -648,7 +682,7 @@ GET: {
 
 DEPRECATED
 /project-invite/list-by-user/
-GET: [{
+Method: GET: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
@@ -658,13 +692,13 @@ GET: [{
 
 DEPRECATED
 /project-invite/accept/
-PUT: {
+Method: PUT: {
 	"id":1
 }
 
 DEPRECATED
 /project-invite/reject/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"reported":false
 }
@@ -672,7 +706,7 @@ PUT: {
 DEPRECATED
 /project-invite/list-by-project/?project_id=1
 /project-invite/list-by-project/?project_ui_id=aaa
-GET: [{
+Method: GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"text":"aaa",
@@ -683,27 +717,27 @@ GET: [{
 
 DEPRECATED
 /project-invite/cancel/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 DEPRECATED
 /project-invite/execute/
-POST: {
+Method: POST: {
 	"id":1,
 	"write_allowed":false,
 	"manager":false
 }
 
 /project-application/
-POST: {
+Method: POST: {
 	"project":1,
 	"text":"aaa"
 }
 
 /project-application/list-by-project/?project_id=1
 /project-application/list-by-project/?project_ui_id=aaa
-GET: [{
+Method: GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"text":"aaa",
@@ -712,20 +746,20 @@ GET: [{
 }]
 
 /project-application/reject/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"reported":false
 }
 
 /project-application/accept/
-POST: {
+Method: POST: {
 	"id":1,
 	"write_allowed":false,
 	"manager":false
 }
 
 /project-application/list-by-user/
-GET: [{
+Method: GET: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"text":"aaa",
@@ -735,12 +769,12 @@ GET: [{
 }]
 
 /project-application/cancel/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /project-member/
-POST: {
+Method: POST: {
 	"organization_member":1, (-1 for current user)
 	"project":1,
 	"write_allowed":false,
@@ -748,7 +782,7 @@ POST: {
 }
 
 /project-member/create-batch/
-POST: {
+Method: POST: {
 	"project":1,
 	"members": {
 		"organization_member":1,
@@ -758,7 +792,7 @@ POST: {
 }
 
 /project-member/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"write_allowed":false,
 	"manager":false
@@ -766,7 +800,7 @@ PUT: {
 
 /project-member/list-by-project/?project_id=1
 /project-member/list-by-project/?project_ui_id=aaa
-GET: [{
+Method: GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"write_allowed":false,
@@ -774,7 +808,7 @@ GET: [{
 }]
 
 /project-member/list-by-user/?user_id=1
-GET: [{
+Method: GET: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa"},
 	"hired_at":"2019-03-20T17:12:36.3+0500",
@@ -783,17 +817,17 @@ GET: [{
 }]
 
 /project-member/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /project-member/leave/
-DELETE: {
+Method: DELETE: {
 	"project":1
 }
 
 /granted-permissions-project-invite/
-POST: {
+Method: POST: {
 	"user":1,
 	"project":1,
 	"text":"aaa",
@@ -802,7 +836,7 @@ POST: {
 }
 
 /granted-permissions-project-invite/create-by-email/
-POST: {
+Method: POST: {
 	"email":"a@qirk.org",
 	"project":1,
 	"write_allowed":false,
@@ -810,13 +844,13 @@ POST: {
 }
 
 /granted-permissions-project-invite/
-PUT: {
+Method: PUT: {
 	"write_allowed":false,
 	"manager":false
 }
 
 /granted-permissions-project-invite/?id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"email": "a@qirk.org",
@@ -830,7 +864,7 @@ GET: [{
 }]
 
 /granted-permissions-project-invite/list-by-user/
-GET: [{
+Method: GET: [{
 	"id":1,
 	"project": {"id":1, "name":"aaa", "ui_id":"aaa", "organization:{"id":1, "name":"aaa", "ui_id":"aaa"}},
 	"text":"aaa",
@@ -841,19 +875,19 @@ GET: [{
 }]
 
 /granted-permissions-project-invite/accept/
-POST: {
+Method: POST: {
 	"id":1
 }
 
 /granted-permissions-project-invite/reject/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"reported":false
 }
 
 /granted-permissions-project-invite/list-by-project/?project_id=1&include_email=
 /granted-permissions-project-invite/list-by-project/?project_ui_id=aaa&include_email=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"user": {"id":1, "alias":"aaa", "first_name":"aaa", "last_name":"aaa"},
 	"email": "a@qirk.org",
@@ -866,17 +900,17 @@ GET: [{
 }]
 
 /granted-permissions-project-invite/cancel/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /project-invite-token/check-token/?token=
-GET: {
+Method: GET: {
 	"registered":false,
 }
 
 /project-invite-token/accept/
-POST: {
+Method: POST: {
 	"token":"aaa",
 	"password":"aaa", (nullable)
 	"username":"aaa", (nullable)
@@ -884,7 +918,7 @@ POST: {
 }
 
 /project-invite-token/reject/
-PUT: {
+Method: PUT: {
 	"token":"aaa",
 	"reported":false
 }
@@ -892,54 +926,54 @@ PUT: {
 /task-hashtag/search/?prefix=a&project_id=&include_used=
 /task-hashtag/search/?prefix=a&project_ui_id=&include_used=
 (include_used=false by default)
-GET: [
+Method: GET: [
 	{"id":1, "name":"aaa", "used":true}, (no "used" field if include_used=false)
 	{"id":2, "name":"abb", "used":true}
 ]
 
 /task-hashtag/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /task-subscriber/
-POST: {
+Method: POST: {
 	"task_id":1
 }
 
 /task-subscriber/list/?task_id=1
-GET: {
+Method: GET: {
 	"users": [1, 2]
 }
 
 /task-subscriber/
-DELETE: {
+Method: DELETE: {
 	"task_id":1
 }
 
 /static-data/changelog/
 Accept: text/html
-GET: <HTML file>
+Method: GET: <HTML file>
 
 /static-data/license/
 Accept: text/html
-GET: <HTML file>
+Method: GET: <HTML file>
 
 /road/
-POST: {
+Method: POST: {
 	"project":1,
 	"name":"aaa"
 }
 
 /road/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"record_version":1,
 	"name":"aaa"
 }
 
 /road/move/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"old_previous":1, (nullable)
 	"old_next":1, (nullable)
@@ -949,7 +983,7 @@ PUT: {
 
 /road/list/?project_id=
 /road/list/?project_ui_id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
@@ -971,19 +1005,19 @@ GET: [{
 }]
 
 /road/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /task-card/
-POST: {
+Method: POST: {
 	"road":1,
 	"name":"aaa",
 	"status":"ACTIVE"
 }
 
 /task-card/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
@@ -991,7 +1025,7 @@ PUT: {
 }
 
 /task-card/move/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"old_previous":1, (nullable)
 	"old_next":1, (nullable)
@@ -1002,7 +1036,7 @@ PUT: {
 
 /task-card/list/?project_id=
 /task-card/list/?project_ui_id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
@@ -1013,14 +1047,14 @@ GET: [{
 }]
 
 /task-card/archive/
-PUT: {
+Method: PUT: {
 	"id":1,
 	"record_version":1
 }
 
 /task-card/archive/?project_id=
 /task-card/archive/?project_ui_id=
-GET: [{
+Method: GET: [{
 	"id":1,
 	"record_version":1,
 	"name":"aaa",
@@ -1031,13 +1065,13 @@ GET: [{
 }]
 
 /task-card/
-DELETE: {
+Method: DELETE: {
 	"id":1
 }
 
 /jira-import/upload/
 Content-Type: multipart/form-data
-POST: organization_id=1&file=
+Method: POST: organization_id=1&file=
 Response:  {
 	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
 	"archive_filename":"aaa.zip",
@@ -1045,7 +1079,7 @@ Response:  {
 }
 
 /jira-import/list-uploads/?organization_id=
-GET: [{
+Method: GET: [{
 	"timestamp": {"iso8601":"2019-03-20T17:12:36.3+0500", "epoch_milli":1},
 	"archive_filename":"aaa.zip",
 	"imported_projects" [
@@ -1055,7 +1089,7 @@ GET: [{
 }]
 
 /jira-import/list-projects/?organization_id=&timestamp=
-GET: [
+Method: GET: [
 	{"id":"10000", "key":"AAA", "name":"aaa"},
 	{"id":"10001", "key":"BBB", "name":"bbb"}
 ]
@@ -1063,7 +1097,7 @@ Error codes:
 ENTITIES_FILE_NOT_FOUND - file 'entities.xml' was not found in upload at said timestamp
 
 /jira-import/list-projects-data/?organization_id=&timestamp=&project_id=10000,10001
-GET: {
+Method: GET: {
 	"projects": [
 		{"id":"10000", "key":"AAA", "name":"aaa"},
 		{"id":"10001", "key":"BBB", "name":"bbb"}
@@ -1107,11 +1141,10 @@ GET: {
 		]
 	}
 }
-Error codes:
-ENTITIES_FILE_NOT_FOUND - file 'entities.xml' was not found in upload at said timestamp
 
 /jira-import/
-POST: {
+Method: POST
+Request: {
 	"organization":1,
 	"timestamp":1,
 	"projects": ["10000", "10001"],
@@ -1133,7 +1166,7 @@ POST: {
 		"10000":"OPEN" (jira id to qirk name_code)
 	}
 }
-Response: [
+Response.data: [
 	{"jira_project":"10000", "status":"CREATED"},
 	{"jira_project":"10001", "status":"UPDATED"},
 	{"jira_project":"10002", "status":"PARTIALLY_UPDATED", "failed_task_numbers":[1, 2]},
@@ -1141,55 +1174,9 @@ Response: [
 	{"jira_project":"10004", "status":"UPDATE_FAILED", "error_code": "ERROR"}
 ]
 
-/project-document/
-POST: {
-	"project":1,
-	"name":"A",
-	"body":"aaa"
-}
-
-/project-document/
-PUT: {
-	"id":1,
-	"record_version":1,
-	"name":"A",
-	"body":"aaa"
-}
-
-/project-document/move/
-POST: {
-	"id":1,
-	"old_previous":1, (nullable)
-	"old_next":1, (nullable)
-	"previous":1, (nullable)
-	"next":1, (nullable)
-}
-
-/project-document/
-DELETE: {
-	"id":1
-}
-
-/project-document/get/
-GET: {
-		"id":2,
-		"record_version":1,
-		"name":"A",
-		"body_md":"aaa",
-		"body_html":"aaa",
-		"previous":1 (nullable)
-}
-
-/project-document/list/?project_id=1
-GET: [{
-		"id":2,
-		"record_version":1,
-		"name":"A",
-		"previous":1 (nullable)
-}]
-
 /notification-settings/
-PUT: {
+Method: PUT
+Request: {
 	"token":"aaa",
 	"IV":"aaa",
 	"task_created":true,
