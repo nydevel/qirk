@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.wrkr.clb.services.dto.IdDTO;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
+import org.wrkr.clb.services.dto.VersionedEntityDTO;
 import org.wrkr.clb.services.dto.project.MoveToRoadDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardReadDTO;
@@ -95,7 +95,7 @@ public class TaskCardController extends BaseExceptionHandlerController {
 
     @PutMapping(value = "archive")
     public JsonContainer<Void, Void> archive(HttpSession session,
-            @RequestBody RecordVersionDTO dto) throws Exception {
+            @RequestBody VersionedEntityDTO dto) throws Exception {
         long startTime = System.currentTimeMillis();
         cardService.archive(getSessionUser(session), dto);
         logProcessingTimeFromStartTime(startTime, "archive", dto.id);

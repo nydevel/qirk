@@ -33,7 +33,7 @@ import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.roadmap.RoadRepo;
 import org.wrkr.clb.repo.project.roadmap.TaskCardRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
+import org.wrkr.clb.services.dto.VersionedEntityDTO;
 import org.wrkr.clb.services.dto.project.MoveToRoadDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardReadDTO;
@@ -226,7 +226,7 @@ public class DefaultTaskCardService extends VersionedEntityService implements Ta
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public void archive(User currentUser, RecordVersionDTO dto) throws ApplicationException {
+    public void archive(User currentUser, VersionedEntityDTO dto) throws ApplicationException {
         // security
         securityService.authzCanModifyTaskCard(currentUser, dto.id);
         // security

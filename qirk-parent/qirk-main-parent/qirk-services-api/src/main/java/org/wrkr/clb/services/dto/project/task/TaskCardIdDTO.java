@@ -17,11 +17,11 @@
 package org.wrkr.clb.services.dto.project.task;
 
 import org.wrkr.clb.model.project.task.Task;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
+import org.wrkr.clb.services.dto.VersionedEntityDTO;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TaskCardIdDTO extends RecordVersionDTO {
+public class TaskCardIdDTO extends VersionedEntityDTO {
 
     @JsonProperty(value = "card")
     public Long cardId;

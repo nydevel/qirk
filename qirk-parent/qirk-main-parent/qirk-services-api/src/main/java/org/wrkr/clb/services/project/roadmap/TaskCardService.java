@@ -23,7 +23,7 @@ import javax.validation.constraints.NotNull;
 
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
+import org.wrkr.clb.services.dto.VersionedEntityDTO;
 import org.wrkr.clb.services.dto.project.MoveToRoadDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardDTO;
 import org.wrkr.clb.services.dto.project.roadmap.TaskCardReadDTO;
@@ -44,7 +44,7 @@ public interface TaskCardService {
     public List<TaskCardReadDTO> list(User currentUser,
             @NotNull(message = "projectUiId must not be null") String projectUiId);
 
-    public void archive(User currentUser, @Valid RecordVersionDTO dto) throws Exception;
+    public void archive(User currentUser, @Valid VersionedEntityDTO dto) throws Exception;
 
     public void archiveBatchByRoadId(Long roadId);
 

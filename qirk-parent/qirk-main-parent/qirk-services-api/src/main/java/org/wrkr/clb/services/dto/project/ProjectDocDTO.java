@@ -20,13 +20,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.services.dto.RecordVersionDTO;
+import org.wrkr.clb.services.dto.VersionedEntityDTO;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProjectDocDTO extends RecordVersionDTO {
+public class ProjectDocDTO extends VersionedEntityDTO {
 
     @JsonInclude(Include.NON_NULL)
     @NotNull(message = "documentation in DocumentationDTO must not be null")
