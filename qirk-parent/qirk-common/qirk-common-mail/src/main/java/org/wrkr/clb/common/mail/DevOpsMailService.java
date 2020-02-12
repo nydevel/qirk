@@ -29,11 +29,15 @@ public class DevOpsMailService extends BaseMailService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DevOpsMailService.class);
 
-    private static final String MESSAGE_TEMPLATES_DIR = "message-templates/to-devops/";
+    private static final String DEVOPS_MESSAGE_TEMPLATES_DIR = HTML_TEMPLATES_DIR + "to-devops/";
+
+    // message templates
+    private static class MessageTemplate {
+        private static final String RESOURCE_FAILED = DEVOPS_MESSAGE_TEMPLATES_DIR + "resource-failed.vm";
+    }
 
     // email subjects
     private static class Subject {
-        private static final String SERVER_OK = "[QIRK INFO] Server is up in %s environment";
         private static final String RESOURCE_FAILED = "[QIRK WARNING] Resource failed: %s in %s environment";
     }
 
@@ -58,24 +62,6 @@ public class DevOpsMailService extends BaseMailService {
         sendEmail(devOpsEmails, subject, body);
     }
 
-    void _sendServerOKEmail() throws Exception {
-        VelocityContext velocityContext = new VelocityContext();
-        velocityContext.put("environment", environment);
-        velocityContext.put("nodeId", nodeId);
-
-        String body = renderTemplate(MESSAGE_TEMPLATES_DIR + "server-ok-en.vm", velocityContext);
-
-        sendEmailToDevOps(String.format(Subject.SERVER_OK, environment), body);
-    }
-
-    public void sendServerOKEmail() {
-        try {
-            _sendServerOKEmail();
-        } catch (Exception e) {
-            LOG.error("Could not send server OK email", e);
-        }
-    }
-
     void _sendResourceFailedEmail(String resourceName, Exception resourceException) throws Exception {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("environment", environment);
@@ -84,7 +70,7 @@ public class DevOpsMailService extends BaseMailService {
         velocityContext.put("exceptionMessage", ExceptionUtils.getFullStackTrace(resourceException));
         velocityContext.put("timestamp", DateTimeUtils.now().format(DateTimeUtils.WEB_DATETIME_FORMATTER));
 
-        String body = renderTemplate(MESSAGE_TEMPLATES_DIR + "resource-failed-en.vm", velocityContext);
+        String body = renderTemplate(MessageTemplate.RESOURCE_FAILED, velocityContext);
 
         sendEmailToDevOps(String.format(Subject.RESOURCE_FAILED, resourceName, environment), body);
     }

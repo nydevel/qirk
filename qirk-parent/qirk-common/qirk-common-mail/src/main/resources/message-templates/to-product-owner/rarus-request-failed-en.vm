@@ -1,3 +1,0 @@
-Request to Rarus failed.<br>
-Cloudpayments transaction ID: ${transactionId}<br>
-Exception stack-trace: ${rarusRequestException}

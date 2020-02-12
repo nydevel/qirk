@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-
 @ContextConfiguration({ "classpath:qirk-services-test-root-ctx.xml" })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class DevOpsMailServiceTest {
@@ -42,12 +41,5 @@ public class DevOpsMailServiceTest {
         expectedException.expect(AddressException.class);
 
         mailService._sendResourceFailedEmail("test", new RuntimeException("Resource exception"));
-    }
-
-    @Test
-    public void test_sendServerOKEmail() throws Exception {
-        expectedException.expect(AddressException.class);
-
-        mailService._sendServerOKEmail();
     }
 }

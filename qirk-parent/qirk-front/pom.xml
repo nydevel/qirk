@@ -12,8 +12,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <front.directory>front</front.directory>
-        <npm.install.directory>.tmp</npm.install.directory>
-        <npm.output.directory>build</npm.output.directory>
+        <npm.install.directory>${front.directory}/.tmp</npm.install.directory>
+        <npm.output.directory>${front.directory}/build</npm.output.directory>
     </properties>
 
     <build>
@@ -36,7 +36,7 @@
                 <configuration>
                     <webResources>
                         <resource>
-                            <directory>${front.directory}/${npm.output.directory}</directory>
+                            <directory>${npm.output.directory}</directory>
                         </resource>
                     </webResources>
                 </configuration>
@@ -51,16 +51,15 @@
                     <npmVersion>6.13.4</npmVersion>
 
                     <workingDirectory>${front.directory}</workingDirectory>
-                    <!-- where to install npm -->
-                    <installDirectory>${front.directory}/${npm.install.directory}</installDirectory>
+                    <installDirectory>${npm.install.directory}</installDirectory>
 
                     <environmentVariables>
+                        <SASS_PATH>./node_modules</SASS_PATH>
                         <CI>false</CI>
                         <!-- The following parameters create an NPM sandbox for CI -->
                         <NPM_CONFIG_PREFIX>${basedir}/${front.directory}/.npm</NPM_CONFIG_PREFIX>
                         <NPM_CONFIG_CACHE>${NPM_CONFIG_PREFIX}/cache</NPM_CONFIG_CACHE>
                         <NPM_CONFIG_TMP>${project.build.directory}/npmtmp</NPM_CONFIG_TMP>
-                        <PUBLIC_URL>https://qirk.org</PUBLIC_URL>
                     </environmentVariables>
                 </configuration>
 
@@ -81,12 +80,12 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>prod</id>
+                        <id>npm run build</id>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run build-production</arguments>
+                            <arguments>run build</arguments>
                         </configuration>
                     </execution>
                 </executions>

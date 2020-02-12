@@ -80,7 +80,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
 
-        LOG.info("remore host: " + httpRequest.getRemoteHost());
         LOG.info("request url: " + httpRequest.getRequestURL().toString());
 
         // remember-me: set user to session

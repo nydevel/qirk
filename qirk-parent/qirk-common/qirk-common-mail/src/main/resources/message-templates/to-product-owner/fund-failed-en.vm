@@ -1,6 +1,0 @@
-Funding ${amount} coins to user [id=${userId}] ${balanceType} balance failed. Transaction type: ${transactionType}, id: ${transactionId}).<br>
-<br>
-Exception during funding: ${fundExceptionMessage}<br>
-#if ( $reverseFundFailed )
-  Exception during reversing funding: ${reverseFundExceptionMessage}
-#end

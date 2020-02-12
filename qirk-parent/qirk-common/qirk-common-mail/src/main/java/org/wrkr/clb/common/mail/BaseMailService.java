@@ -42,6 +42,8 @@ public abstract class BaseMailService implements InitializingBean {
 
     private static final String CONTENT_TYPE_TEXT_HTML = MediaType.TEXT_HTML_VALUE + ";charset=" + CharSet.UTF8;
 
+    protected static final String HTML_TEMPLATES_DIR = "message-templates/";
+
     // email config values
     private String emailHost;
     private Integer emailPort;

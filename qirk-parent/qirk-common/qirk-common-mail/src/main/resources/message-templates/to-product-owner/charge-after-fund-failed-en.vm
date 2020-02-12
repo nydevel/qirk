@@ -1,3 +1,0 @@
-Charging user [id=${userId}] immediately after they recharged their account to unfreeze their projects failed. Projects will still unfreeze during daily charge at 2a.m. CST.<br>
-<br>
-Exception stack-trace: ${chargeExceptionMessage}

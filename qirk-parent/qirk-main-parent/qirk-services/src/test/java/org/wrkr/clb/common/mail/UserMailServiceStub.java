@@ -25,17 +25,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
 
-
 @SuppressWarnings("unused")
 public class UserMailServiceStub extends UserMailService {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-    }
-
-    @Override
-    public EmailSentDTO sendConfirmationEmail(String emailAddress, String token) {
-        return new EmailSentDTO(true);
     }
 
     @Override

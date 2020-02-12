@@ -20,14 +20,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.wrkr.clb.common.mail.DevOpsMailService;
 import org.wrkr.clb.repo.MainDatabaseRepo;
 import org.wrkr.clb.repo.auth.AuthDatabaseRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchClusterService;
 import org.wrkr.clb.services.jms.JMSCheckService;
-
 
 @Component("mainSelfCheckJobService")
 @EnableScheduling
@@ -50,11 +48,6 @@ public class SelfCheckJobService {
 
     @Autowired
     private JMSCheckService jmsService;
-
-    @Scheduled(cron = "1 0 12 * * *")
-    public void checkServer() {
-        mailService.sendServerOKEmail();
-    }
 
     public void checkPostgresMain() {
         try {

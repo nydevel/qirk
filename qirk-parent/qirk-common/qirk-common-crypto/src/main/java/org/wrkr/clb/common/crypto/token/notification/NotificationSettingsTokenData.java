@@ -16,12 +16,14 @@
  */
 package org.wrkr.clb.common.crypto.token.notification;
 
+import org.wrkr.clb.common.util.strings.JSONifiable;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-public class NotificationSettingsTokenData {
+public class NotificationSettingsTokenData implements JSONifiable {
 
     private static final ObjectWriter NOTIFICATION_TOKEN_DATA_WRITER = new ObjectMapper()
             .writerFor(NotificationSettingsTokenData.class);
@@ -39,6 +41,7 @@ public class NotificationSettingsTokenData {
         this.type = type;
     }
 
+    @Override
     public String toJson() throws JsonProcessingException {
         return NOTIFICATION_TOKEN_DATA_WRITER.writeValueAsString(this);
     }

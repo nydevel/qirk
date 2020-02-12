@@ -1,3 +1,0 @@
-Updating Rarus check status to "${status}" successful.<br>
-Cloudpayments transaction ID: ${transactionId}<br>
-Rarus operation ID: ${operationId}

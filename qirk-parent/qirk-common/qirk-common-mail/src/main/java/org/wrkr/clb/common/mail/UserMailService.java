@@ -41,32 +41,42 @@ public class UserMailService extends BaseMailService {
 
     private static final Logger LOG = LoggerFactory.getLogger(UserMailService.class);
 
-    // html templates
-    private static final String DEFAULT_HTML_TEMPLATE = "message-templates/default-html-template-en.vm";
-    private static final String NON_REGISTERED_HTML_TEMPLATE = "message-templates/non-registered-html-template-en.vm";
+    // base html templates
+    private static final String DEFAULT_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "default-html-template.vm";
+    private static final String NON_REGISTERED_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "non-registered-html-template.vm";
     @SuppressWarnings("unused")
-    private static final String SUBSCRIPTION_FOOTER_HTML_TEMPLATE = "message-templates/subscription-footer-html-template-en.vm";
+    private static final String SUBSCRIPTION_FOOTER_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "subscription-footer-html-template.vm";
+
+    // message templates
+    private static class MessageTemplate {
+        private static final String REGISTRATION = HTML_TEMPLATES_DIR + "registration.vm";
+        private static final String PASSWORD_RESET = HTML_TEMPLATES_DIR + "password-reset.vm";
+        private static final String PROJECT_INVITE = HTML_TEMPLATES_DIR + "project-invite.vm";
+        private static final String TASK_CREATED = HTML_TEMPLATES_DIR + "task-created-en";
+        private static final String TASK_UPDATED = HTML_TEMPLATES_DIR + "task-updated-en";
+        private static final String TASK_COMMENTED = HTML_TEMPLATES_DIR + "task-commented-en";
+    }
 
     // email subjects
     private static class Subject {
-        private static final String REGISTRATION_CONFIRMATION = "Registration confirmation instructions";
         private static final String REGISTRATION = "Registration instructions";
         private static final String PASSWORD_RESET = "Password reset instructions";
-
         private static final String PROJECT_INVITE = "[Qirk] %s has invited you to %s";
-
         private static final String TASK_NOTIFICATION = "Qirk Report: task #%d in %s";
     }
 
-    // front url config values
+    // front uri values
+    private static class FrontURI {
+        private static final String ACTIVATE_EMAIL_TOKEN = "/register?code=";
+        private static final String RESET_PASSWORD = "/reset-password/";
+        private static final String ACCEPT_INVITE = "/accept-email-invite?invite_key=";
+        @SuppressWarnings("unused")
+        private static final String DECLINE_INVITE = "/decline-email-invite?invite_key=";
+        private static final String MANAGE_SUBSCRIPTIONS = "/manage-subscriptions/";
+        private static final String GET_TASK = "/project/{projectUiId}/task/{taskNumber}";
+    }
+
     private String frontUrl;
-    private String activateTokenUrl;
-    private String activateEmailTokenUrl;
-    private String resetPasswordUrl;
-    private String acceptInviteUrl;
-    private String declineInviteUrl;
-    private String manageSubscriptionsUrl;
-    private String frontTaskUrl;
 
     public String getFrontUrl() {
         return frontUrl;
@@ -74,62 +84,6 @@ public class UserMailService extends BaseMailService {
 
     public void setFrontUrl(String frontUrl) {
         this.frontUrl = frontUrl;
-    }
-
-    public String getActivateTokenUrl() {
-        return activateTokenUrl;
-    }
-
-    public void setActivateTokenUrl(String activateTokenUrl) {
-        this.activateTokenUrl = activateTokenUrl;
-    }
-
-    public String getActivateEmailTokenUrl() {
-        return activateEmailTokenUrl;
-    }
-
-    public void setActivateEmailTokenUrl(String activateEmailTokenUrl) {
-        this.activateEmailTokenUrl = activateEmailTokenUrl;
-    }
-
-    public String getResetPasswordUrl() {
-        return resetPasswordUrl;
-    }
-
-    public void setResetPasswordUrl(String resetPasswordUrl) {
-        this.resetPasswordUrl = resetPasswordUrl;
-    }
-
-    public String getAcceptInviteUrl() {
-        return acceptInviteUrl;
-    }
-
-    public void setAcceptInviteUrl(String acceptInviteUrl) {
-        this.acceptInviteUrl = acceptInviteUrl;
-    }
-
-    public String getDeclineInviteUrl() {
-        return declineInviteUrl;
-    }
-
-    public void setDeclineInviteUrl(String declineInviteUrl) {
-        this.declineInviteUrl = declineInviteUrl;
-    }
-
-    public String getManageSubscriptionsUrl() {
-        return manageSubscriptionsUrl;
-    }
-
-    public void setManageSubscriptionsUrl(String manageSubscriptionsUrl) {
-        this.manageSubscriptionsUrl = manageSubscriptionsUrl;
-    }
-
-    public String getFrontTaskUrl() {
-        return frontTaskUrl;
-    }
-
-    public void setFrontTaskUrl(String frontTaskUrl) {
-        this.frontTaskUrl = frontTaskUrl;
     }
 
     @Autowired
@@ -140,12 +94,12 @@ public class UserMailService extends BaseMailService {
         return tokenGenerator.encrypt(tokenData.toJson());
     }
 
-    protected String renderSubscriptionFooterHTMLTemplate(String body, TokenAndIvDTO tokenDTO)
+    private String renderSubscriptionFooterHTMLTemplate(String body, TokenAndIvDTO tokenDTO)
             throws UnsupportedEncodingException {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("body", body);
         velocityContext.put("url",
-                frontUrl + manageSubscriptionsUrl +
+                frontUrl + FrontURI.MANAGE_SUBSCRIPTIONS +
                         "?token=" + URLEncoder.encode(tokenDTO.token, CharSet.UTF8_UPPER) +
                         "&iv=" + URLEncoder.encode(tokenDTO.IV, CharSet.UTF8_UPPER));
         return renderTemplate(DEFAULT_HTML_TEMPLATE, velocityContext);
@@ -173,34 +127,16 @@ public class UserMailService extends BaseMailService {
         sendEmail(recipients, subject, body);
     }
 
-    public EmailSentDTO sendConfirmationEmail(String emailAddress, String token) {
-        try {
-            String subject = Subject.REGISTRATION_CONFIRMATION;
-
-            VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("url", frontUrl + activateTokenUrl + token);
-
-            String body = renderHTMLTemplate(DEFAULT_HTML_TEMPLATE,
-                    renderTemplate("message-templates/registration-confirmation-en.vm", velocityContext));
-
-            sendEmail(emailAddress, subject, body);
-            return new EmailSentDTO(true);
-        } catch (Exception e) {
-            LOG.error("Could not send registration confirmation email", e);
-            return new EmailSentDTO(false);
-        }
-    }
-
     public EmailSentDTO sendRegistrationEmail(String emailAddress, String password, String token) {
         try {
             String subject = Subject.REGISTRATION;
 
             VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("url", frontUrl + activateEmailTokenUrl + token);
+            velocityContext.put("url", frontUrl + FrontURI.ACTIVATE_EMAIL_TOKEN + token);
             velocityContext.put("password", password);
 
             String body = renderHTMLTemplate(DEFAULT_HTML_TEMPLATE,
-                    renderTemplate("message-templates/registration-en.vm", velocityContext));
+                    renderTemplate(MessageTemplate.REGISTRATION, velocityContext));
 
             sendEmail(emailAddress, subject, body);
             return new EmailSentDTO(true);
@@ -215,10 +151,10 @@ public class UserMailService extends BaseMailService {
             String subject = Subject.PASSWORD_RESET;
 
             VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("url", frontUrl + resetPasswordUrl + token);
+            velocityContext.put("url", frontUrl + FrontURI.RESET_PASSWORD + token);
 
             String body = renderHTMLTemplate(DEFAULT_HTML_TEMPLATE,
-                    renderTemplate("message-templates/password-reset-en.vm", velocityContext));
+                    renderTemplate(MessageTemplate.PASSWORD_RESET, velocityContext));
 
             sendEmail(emailAddress, subject, body);
             return new EmailSentDTO(true);
@@ -235,13 +171,13 @@ public class UserMailService extends BaseMailService {
 
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("frontUrl", frontUrl);
-            velocityContext.put("acceptUrl", frontUrl + acceptInviteUrl + token);
+            velocityContext.put("acceptUrl", frontUrl + FrontURI.ACCEPT_INVITE + token);
             velocityContext.put("senderName", senderName);
             velocityContext.put("projectName", projectName);
             velocityContext.put("password", password);
 
             String body = renderHTMLTemplate(NON_REGISTERED_HTML_TEMPLATE,
-                    renderTemplate("message-templates/project-invite-en.vm", velocityContext));
+                    renderTemplate(MessageTemplate.PROJECT_INVITE, velocityContext));
 
             sendEmail(emailAddress, subject, body);
             return new EmailSentDTO(true);
@@ -252,7 +188,7 @@ public class UserMailService extends BaseMailService {
     }
 
     private String generateTaskUrl(Map<String, Object> messageBody, Long taskNumber) {
-        return frontUrl + StringSubstitutor.replace(frontTaskUrl,
+        return frontUrl + StringSubstitutor.replace(FrontURI.GET_TASK,
                 new MapBuilder<String, String>()
                         .put("organizationUiId", "")
                         .put("projectUiId", (String) messageBody.get(BaseTaskNotificationMessage.PROJECT_UI_ID))
@@ -278,7 +214,7 @@ public class UserMailService extends BaseMailService {
             velocityContext.put("projectName", projectName);
             velocityContext.put("taskUrl", generateTaskUrl(messageBody, taskNumber));
 
-            String body = renderTemplate("message-templates/task-created-en.vm", velocityContext);
+            String body = renderTemplate(MessageTemplate.TASK_CREATED, velocityContext);
 
             sendEmail(recipients, subject, body);
         } catch (Exception e) {
@@ -329,7 +265,7 @@ public class UserMailService extends BaseMailService {
             velocityContext.put("newStatus",
                     messageBody.getOrDefault(TaskUpdateNotificationMessage.NEW_STATUS_HUMAN_READABLE, newStatus));
 
-            String body = renderTemplate("message-templates/task-updated-en.vm", velocityContext);
+            String body = renderTemplate(MessageTemplate.TASK_UPDATED, velocityContext);
 
             sendEmail(recipients, subject, body);
         } catch (Exception e) {
@@ -356,7 +292,7 @@ public class UserMailService extends BaseMailService {
             velocityContext.put("taskUrl", generateTaskUrl(messageBody, taskNumber));
             velocityContext.put("message", (String) messageBody.get(TaskCommentMessage.MESSAGE));
 
-            String body = renderTemplate("message-templates/task-commented-en.vm", velocityContext);
+            String body = renderTemplate(MessageTemplate.TASK_COMMENTED, velocityContext);
 
             sendEmail(recipients, subject, body);
         } catch (Exception e) {

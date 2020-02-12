@@ -1,2 +1,0 @@
-Daily charge successfully performed at node ${environment}-${nodeId}.<br>
-Total amount: ${amount} dollars (from ${userCount} users).

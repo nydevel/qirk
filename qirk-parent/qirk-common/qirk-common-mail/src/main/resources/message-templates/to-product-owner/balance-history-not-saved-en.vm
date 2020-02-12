@@ -1,1 +1,0 @@
-Saving transaction on ${amount} coins for user [id=${userId}] ${balanceType} balance to cassandra failed (transaction id ${transactionId}).

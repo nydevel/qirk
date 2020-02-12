@@ -25,13 +25,6 @@
         <property name="emailFrom" value="${email.from}" />
 
         <property name="frontUrl" value="${front.url}" />
-        <property name="activateTokenUrl" value="${front.url.activate}" />
-        <property name="activateEmailTokenUrl" value="${front.url.activate.email}" />
-        <property name="resetPasswordUrl" value="${front.url.reset.password}" />
-        <property name="acceptInviteUrl" value="${front.url.accept.invite}" />
-        <property name="declineInviteUrl" value="${front.url.decline.invite}" />
-        <property name="manageSubscriptionsUrl" value="${front.url.manage.subscriptions}" />
-        <property name="frontTaskUrl" value="${front.url.task}" />
     </bean>
 
     <bean class="org.wrkr.clb.common.mail.DevOpsMailService">
