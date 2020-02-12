@@ -41,7 +41,6 @@ import org.wrkr.clb.web.controller.BaseAuthenticationExceptionHandlerController;
 import org.wrkr.clb.web.http.Header;
 import org.wrkr.clb.web.json.JsonContainer;
 
-
 @RestController
 @RequestMapping(path = "authn", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class AuthnController extends BaseAuthenticationExceptionHandlerController {
@@ -59,20 +58,18 @@ public class AuthnController extends BaseAuthenticationExceptionHandlerControlle
     }
 
     @PostMapping(value = "login")
-    public JsonContainer<Void, Void> login(
-            HttpServletRequest request, HttpServletResponse response, HttpSession session, @RequestBody LoginDTO loginDTO)
-            throws AuthenticationException, BadRequestException {
+    public JsonContainer<Void, Void> login(HttpServletRequest request, HttpServletResponse response, HttpSession session,
+            @RequestBody LoginDTO loginDTO) throws AuthenticationException, BadRequestException {
         long startTime = System.currentTimeMillis();
 
-        response = authnService.login(request, response, session, loginDTO, request.getHeader(Header.X_FORWARDED_FOR));
+        response = authnService.login(response, session, loginDTO, request.getHeader(Header.X_FORWARDED_FOR));
 
         logProcessingTimeFromStartTime(startTime, "login");
         return new JsonContainer<Void, Void>();
     }
 
     @PostMapping(value = "logout")
-    public JsonContainer<Void, Void> logout(HttpServletRequest request, HttpServletResponse response,
-            HttpSession session) {
+    public JsonContainer<Void, Void> logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         session.removeAttribute(SessionAttribute.AUTHN_USER);
 
         Cookie rememberMeCookie = cookieService.getCookie(request, Cookies.REMEMBER_ME);

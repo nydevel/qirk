@@ -23,8 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.token.notification.NotificationSettingsTokenData;
-import org.wrkr.clb.common.jms.message.statistics.NotificationUnsubscriptionMessage;
-import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.strings.JsonUtils;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.User;
@@ -35,7 +33,6 @@ import org.wrkr.clb.services.user.NotificationSettingsService;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.NotFoundException;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
-
 
 @Validated
 @Service
@@ -49,9 +46,6 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
 
     @Autowired
     private TokenGenerator tokenGenerator;
-
-    @Autowired
-    private StatisticsSender statisticsSender;
 
     @Override
     public NotificationSettings updateByToken(NotificationSettingsDTO notifSettingsDTO) throws Exception {
@@ -76,10 +70,6 @@ public class DefaultNotificationSettingsService implements NotificationSettingsS
         notifSettings.setTaskUpdated(notifSettingsDTO.taskUpdated);
         notifSettings.setTaskCommented(notifSettingsDTO.taskCommented);
         notifSettingsRepo.update(notifSettings);
-
-        // statistics
-        statisticsSender.send(new NotificationUnsubscriptionMessage(user.getId(), tokenData.type));
-        // statistics
 
         return notifSettings;
     }

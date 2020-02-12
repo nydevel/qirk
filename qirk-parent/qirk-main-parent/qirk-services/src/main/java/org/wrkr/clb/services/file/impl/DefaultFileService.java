@@ -22,12 +22,8 @@ import java.util.UUID;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.text.StringSubstitutor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.common.util.collections.MapBuilder;
-import org.wrkr.clb.model.project.Project;
-import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
 import org.wrkr.clb.services.file.FileService;
@@ -66,26 +62,6 @@ public abstract class DefaultFileService implements FileService {
     @Autowired
     protected ProjectSecurityService securityService;
 
-    // front url config values
-    protected String frontUrl;
-    protected String taskUrl;
-
-    public String getFrontUrl() {
-        return frontUrl;
-    }
-
-    public void setFrontUrl(String frontUrl) {
-        this.frontUrl = frontUrl;
-    }
-
-    public String getTaskUrl() {
-        return taskUrl;
-    }
-
-    public void setTaskUrl(String taskUrl) {
-        this.taskUrl = taskUrl;
-    }
-
     private String generateTemporaryFileName(String filename) {
         String fileUuid = UUID.randomUUID().toString();
         if (filename == null || filename.isBlank()) {
@@ -112,16 +88,5 @@ public abstract class DefaultFileService implements FileService {
         uploadedStream.close();
 
         return temporaryFile;
-    }
-
-    @Override
-    public String generateTaskUrl(Task task) {
-        Project project = projectRepo.getNameAndUiIdByTaskId(task.getId());
-        return frontUrl + StringSubstitutor.replace(taskUrl,
-                new MapBuilder<String, String>()
-                        .put("organizationUiId", "")
-                        .put("projectUiId", project.getUiId())
-                        .put("taskNumber", task.getNumber().toString()).build(),
-                "{", "}");
     }
 }

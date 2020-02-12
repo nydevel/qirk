@@ -18,8 +18,6 @@ package org.wrkr.clb.services.user.impl;
 
 import java.time.OffsetDateTime;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +25,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import org.wrkr.clb.common.jms.message.statistics.UserRegisteredMessage;
-import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
@@ -41,10 +37,8 @@ import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
-import org.wrkr.clb.services.http.CookieService;
 import org.wrkr.clb.services.user.EmailActivationTokenService;
 import org.wrkr.clb.services.user.RegistrationService;
-import org.wrkr.clb.services.util.http.Cookies;
 
 @Validated
 @Service
@@ -65,13 +59,7 @@ public class DefaultRegistrationService implements RegistrationService {
     private EmailActivationTokenService emailTokenService;
 
     @Autowired
-    private CookieService cookieService;
-
-    @Autowired
     private ElasticsearchUserService elasticsearchService;
-
-    @Autowired
-    private StatisticsSender statisticsSender;
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
@@ -114,24 +102,6 @@ public class DefaultRegistrationService implements RegistrationService {
         return user;
     }
 
-    private void sendUserRegisteredStatistics(HttpServletRequest request, User user) {
-        String cookieUuid = null;
-        try {
-            String userStatisticsCookie = cookieService.getCookieValue(request, Cookies.USER_STAT);
-            if (userStatisticsCookie != null) {
-                Integer lastColumnIndex = userStatisticsCookie.lastIndexOf(':');
-                if (lastColumnIndex >= 0) {
-                    cookieUuid = userStatisticsCookie.substring(0, lastColumnIndex);
-                }
-            }
-        } catch (Exception e) {
-            LOG.error("Could not get or parse cookie " + Cookies.USER_STAT);
-        }
-        if (cookieUuid != null) {
-            statisticsSender.send(new UserRegisteredMessage(cookieUuid, user.getId(), user.getCreatedAt()));
-        }
-    }
-
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
     public EmailSentDTO register(EmailAddressDTO registerDTO) throws Exception {
@@ -142,12 +112,11 @@ public class DefaultRegistrationService implements RegistrationService {
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
-    public User activate(HttpServletRequest request, ActivationDTO activationDTO) throws Exception {
+    public User activate(ActivationDTO activationDTO) throws Exception {
         EmailActivationToken activationToken = emailTokenService.getAndDelete(activationDTO.token);
         User user = createUserWithEmailAndPasswordHash(
                 activationToken.getEmailAddress(), activationToken.getPasswordHash(),
                 activationDTO.username, activationDTO.fullName.strip());
-        sendUserRegisteredStatistics(request, user);
         return user;
     }
 }

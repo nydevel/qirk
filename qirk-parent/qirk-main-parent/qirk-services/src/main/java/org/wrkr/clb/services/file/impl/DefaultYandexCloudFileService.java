@@ -26,6 +26,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.Task;
@@ -39,7 +40,7 @@ import org.wrkr.clb.services.util.exception.NotFoundException;
 
 import com.amazonaws.services.s3.model.AmazonS3Exception;
 
-//@Service configured in clb-services-ctx.xml
+@Service
 @Validated
 public class DefaultYandexCloudFileService extends DefaultFileService implements YandexCloudFileService {
 
@@ -51,7 +52,6 @@ public class DefaultYandexCloudFileService extends DefaultFileService implements
     private YandexCloudApiService yandexCloudService;
 
     /**
-     * 
      * @return path to yandex cloud file
      */
     private String upload(FileItem file, String folderPath) throws Exception {

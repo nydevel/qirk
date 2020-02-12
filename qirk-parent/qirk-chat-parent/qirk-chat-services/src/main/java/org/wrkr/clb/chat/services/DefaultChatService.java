@@ -27,7 +27,7 @@ import org.wrkr.clb.chat.model.sql.BaseChatMessage;
 import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.jms.message.statistics.NewMessageStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.NewCommentMessage;
 import org.wrkr.clb.common.jms.services.StatisticsSender;
 
 public abstract class DefaultChatService implements ChatService {
@@ -61,7 +61,7 @@ public abstract class DefaultChatService implements ChatService {
     }
 
     protected void sendNewMessageStatistics(ChatTokenData tokenData, BaseChatMessage messageEntity) {
-        statisticsSender.send(new NewMessageStatisticsMessage(
+        statisticsSender.send(new NewCommentMessage(
                 messageEntity.getChatType(), tokenData.chatId, messageEntity.getTimestamp()));
     }
 

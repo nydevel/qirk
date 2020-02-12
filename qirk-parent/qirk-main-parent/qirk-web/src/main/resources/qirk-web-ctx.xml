@@ -11,14 +11,6 @@
     <context:component-scan base-package="org.wrkr.clb.web.controller" />
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" />
 
-    <bean id="frontUrl" class="java.lang.String">
-        <constructor-arg value="${front.url}" />
-    </bean>
-
-    <bean id="csrfBackdoorEnabled" class="java.lang.Boolean">
-        <constructor-arg value="${csrf.backdoor.enabled}" />
-    </bean>
-
     <bean id="rememberMeTokenLifetimeSeconds" class="java.lang.Integer">
         <constructor-arg value="${rememberme.token.lifetime.seconds}" />
     </bean>

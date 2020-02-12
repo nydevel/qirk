@@ -16,8 +16,6 @@
  */
 package org.wrkr.clb.services.user.impl;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wrkr.clb.common.jdbc.transaction.Executor;
@@ -47,12 +45,12 @@ public class DefaultRegistrationRetryWrapperService implements RegistrationRetry
     }
 
     @Override
-    public User activate(HttpServletRequest request, ActivationDTO activationDTO) throws Exception {
+    public User activate(ActivationDTO activationDTO) throws Exception {
         return RetryOnCannotAcquireLock.<User>exec(new Executor() {
             @SuppressWarnings({ "unchecked", "unused" })
             @Override
             public User exec(int retryNumber) throws Exception {
-                return registrationService.activate(request, activationDTO);
+                return registrationService.activate(activationDTO);
             }
         });
     }

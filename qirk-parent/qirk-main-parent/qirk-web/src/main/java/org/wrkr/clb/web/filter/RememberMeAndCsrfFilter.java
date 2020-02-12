@@ -17,7 +17,6 @@
 package org.wrkr.clb.web.filter;
 
 import java.io.IOException;
-import java.time.OffsetDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -39,8 +38,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.ContextLoader;
 import org.springframework.web.context.WebApplicationContext;
-import org.wrkr.clb.common.jms.message.statistics.RememberMeLoginMessage;
-import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.services.http.CookieService;
@@ -62,7 +59,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
     private CookieService cookieService;
     private RememberMeTokenService rememberMeService;
     private JDBCUserRepo userRepo;
-    private StatisticsSender statisticsSender;
 
     @Override
     public void init(@SuppressWarnings("unused") FilterConfig filterConfig) {
@@ -70,7 +66,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
         cookieService = ctx.getBean(CookieService.class);
         rememberMeService = ctx.getBean(RememberMeTokenService.class);
         userRepo = ctx.getBean(JDBCUserRepo.class);
-        statisticsSender = ctx.getBean(StatisticsSender.class);
     }
 
     @Override
@@ -79,8 +74,6 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         HttpSession session = httpRequest.getSession();
-
-        LOG.info("request url: " + httpRequest.getRequestURL().toString());
 
         // remember-me: set user to session
         if (session.getAttribute(SessionAttribute.AUTHN_USER) == null) {
@@ -94,14 +87,7 @@ public class RememberMeAndCsrfFilter extends ResponseBodyFilter {
                 if (user == null) {
                     httpResponse = cookieService.removeCookie(httpResponse, rememberMeCookie);
                 } else {
-                    OffsetDateTime updatedAt = rememberMeService.updateRememberMeToken(rememberMeToken);
                     session.setAttribute(SessionAttribute.AUTHN_USER, user);
-
-                    // statistics
-                    if (updatedAt != null) {
-                        statisticsSender.send(new RememberMeLoginMessage(userId, updatedAt.toInstant().toEpochMilli()));
-                    }
-                    // statistics
                 }
             }
         }

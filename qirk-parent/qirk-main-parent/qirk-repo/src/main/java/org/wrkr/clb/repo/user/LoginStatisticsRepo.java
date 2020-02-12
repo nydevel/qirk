@@ -23,7 +23,6 @@ import org.wrkr.clb.model.user.LoginStatistics;
 import org.wrkr.clb.model.user.LoginStatisticsMeta;
 import org.wrkr.clb.repo.JDBCBaseMainRepo;
 
-
 @Repository
 public class LoginStatisticsRepo extends JDBCBaseMainRepo {
 
@@ -33,16 +32,9 @@ public class LoginStatisticsRepo extends JDBCBaseMainRepo {
             LoginStatisticsMeta.loginAt + ") " + // 3
             "VALUES (?, ?, ?);";
 
-    private static final String SELECT_1_BY_USER_ID = "SELECT 1 FROM " + LoginStatisticsMeta.TABLE_NAME + " " +
-            "WHERE " + LoginStatisticsMeta.userId + " = ?;"; // 1
-
     public void save(LoginStatistics statistics) {
         getJdbcTemplate().update(INSERT,
                 statistics.getInternetAddress(), statistics.getUser().getId(),
                 Timestamp.from(statistics.getLoginAt().toInstant()));
-    }
-
-    public boolean existsByUserId(Long userId) {
-        return exists(SELECT_1_BY_USER_ID, userId);
     }
 }

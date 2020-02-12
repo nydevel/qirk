@@ -23,13 +23,11 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.wrkr.clb.services.dto.TokenDTO;
 import org.wrkr.clb.services.http.CookieService;
 import org.wrkr.clb.services.util.http.Cookies;
 import org.wrkr.clb.services.util.http.SessionAttribute;
@@ -49,10 +47,6 @@ public class CsrfController extends BaseExceptionHandlerController {
     @Autowired
     private CookieService cookieService;
 
-    @Autowired
-    @Qualifier("csrfBackdoorEnabled")
-    private Boolean csrfBackdoorEnabled = false;
-
     @GetMapping(value = "refresh")
     public JsonContainer<Void, Void> refresh(HttpServletRequest request, HttpServletResponse response,
             HttpSession session) {
@@ -63,17 +57,5 @@ public class CsrfController extends BaseExceptionHandlerController {
             response = cookieService.addCookie(response, Cookies.CSRF, newToken, null, false);
         }
         return new JsonContainer<Void, Void>();
-    }
-
-    @Deprecated
-    @GetMapping(value = "/")
-    public JsonContainer<TokenDTO, Void> get(HttpServletResponse response, HttpSession session) {
-        if (!csrfBackdoorEnabled) {
-            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-            return null;
-        }
-
-        String csrfToken = (String) session.getAttribute(SessionAttribute.CSRF);
-        return new JsonContainer<TokenDTO, Void>(new TokenDTO(csrfToken));
     }
 }

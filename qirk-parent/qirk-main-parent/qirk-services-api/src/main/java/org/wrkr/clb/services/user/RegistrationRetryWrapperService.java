@@ -16,8 +16,6 @@
  */
 package org.wrkr.clb.services.user;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
@@ -27,5 +25,5 @@ public interface RegistrationRetryWrapperService {
 
     public EmailSentDTO register(EmailAddressDTO emailDTO) throws Exception;
 
-    public User activate(HttpServletRequest request, ActivationDTO activationDTO) throws Exception;
+    public User activate(ActivationDTO activationDTO) throws Exception;
 }

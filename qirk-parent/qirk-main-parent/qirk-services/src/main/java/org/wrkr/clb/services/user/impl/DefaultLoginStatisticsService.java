@@ -19,8 +19,6 @@ package org.wrkr.clb.services.user.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.common.jms.message.statistics.FirstLoginMessage;
-import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
 import org.wrkr.clb.common.util.strings.ExtStringUtils;
 import org.wrkr.clb.model.user.LoginStatistics;
@@ -28,15 +26,11 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.LoginStatisticsRepo;
 import org.wrkr.clb.services.user.LoginStatisticsService;
 
-
 @Service
 public class DefaultLoginStatisticsService implements LoginStatisticsService {
 
     @Autowired
     private LoginStatisticsRepo loginStatisticsRepo;
-
-    @Autowired
-    private StatisticsSender statisticsSender;
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class)
@@ -48,14 +42,7 @@ public class DefaultLoginStatisticsService implements LoginStatisticsService {
         loginStatistics.setUser(user);
         loginStatistics.setLoginAt(DateTimeUtils.now());
 
-        boolean firstLogin = !loginStatisticsRepo.existsByUserId(user.getId());
         loginStatisticsRepo.save(loginStatistics);
-
-        if (firstLogin) {
-            statisticsSender.send(new FirstLoginMessage(
-                    user.getId(), loginStatistics.getLoginAt().toInstant().toEpochMilli()));
-        }
-
         return loginStatistics;
     }
 }

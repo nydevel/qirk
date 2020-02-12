@@ -105,13 +105,12 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
         return new JsonContainer<EmailSentDTO, Void>(dto);
     }
 
-    @Deprecated
     @PostMapping(value = "activate")
     public JsonContainer<Void, Void> activate(
             HttpServletRequest request, HttpServletResponse response, HttpSession session,
             @RequestBody ActivationDTO activationDTO) throws Exception {
         long startTime = System.currentTimeMillis();
-        User user = registrationRWService.activate(request, activationDTO);
+        User user = registrationRWService.activate(activationDTO);
         response = authnService.login(response, session, user, request.getHeader(Header.X_FORWARDED_FOR));
         logProcessingTimeFromStartTime(startTime, "activate");
         return new JsonContainer<Void, Void>();

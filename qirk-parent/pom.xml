@@ -20,7 +20,6 @@
         <velocity.version>1.7</velocity.version>
         <velocity.tools.version>2.0</velocity.tools.version>
         <commons.lang3.version>3.8.1</commons.lang3.version>
-        <commons.text.version>1.8</commons.text.version>
         <commons.dbcp2.version>2.6.0</commons.dbcp2.version>
         <file.upload.version>1.4</file.upload.version>
         <hsqldb.version>2.4.1</hsqldb.version>
@@ -278,11 +277,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-text</artifactId>
-                <version>${commons.text.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>

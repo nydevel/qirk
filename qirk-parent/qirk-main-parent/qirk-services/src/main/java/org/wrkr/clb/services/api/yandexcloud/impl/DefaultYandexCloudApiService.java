@@ -37,7 +37,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 
-
 //@Service configured in clb-services-ctx.xml
 public class DefaultYandexCloudApiService implements YandexCloudApiService {
 
@@ -48,12 +47,8 @@ public class DefaultYandexCloudApiService implements YandexCloudApiService {
         public static final String FILE_NOT_FOUND = "FILE_NOT_FOUND";
     }
 
-    // config value
-    private String bucketName;
-
-    public void setBucketName(String bucketName) {
-        this.bucketName = bucketName;
-    }
+    @Deprecated
+    private String bucketName = "";
 
     @Autowired
     private AmazonS3 client;

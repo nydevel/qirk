@@ -25,7 +25,7 @@ import org.wrkr.clb.chat.services.dto.MessageDTO;
 import org.wrkr.clb.chat.services.sql.SQLChatService;
 import org.wrkr.clb.chat.services.sql.SQLDialogChatService;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
-import org.wrkr.clb.common.jms.message.statistics.NewMessageStatisticsMessage;
+import org.wrkr.clb.common.jms.message.statistics.NewCommentMessage;
 
 @Component
 public class DefaultDialogChatService extends DefaultChatService implements DialogChatService {
@@ -63,7 +63,7 @@ public class DefaultDialogChatService extends DefaultChatService implements Dial
 
     @Override
     protected void sendNewMessageStatistics(@SuppressWarnings("unused") ChatTokenData tokenData, BaseChatMessage messageEntity) {
-        statisticsSender.send(new NewMessageStatisticsMessage(
+        statisticsSender.send(new NewCommentMessage(
                 messageEntity.getChatType(), messageEntity.getSenderId(), messageEntity.getTimestamp()));
     }
 }

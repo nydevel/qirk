@@ -5,7 +5,7 @@
     <bean id="qirkProperties" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations">
             <list>
-                 <value>file:${catalina.home}/conf/common.properties</value>
+                <value>file:${catalina.home}/conf/qirk.properties</value>
             </list>
         </property>
     </bean>

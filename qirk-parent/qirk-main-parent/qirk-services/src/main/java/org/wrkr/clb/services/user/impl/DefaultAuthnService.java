@@ -18,7 +18,6 @@ package org.wrkr.clb.services.user.impl;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -34,7 +33,6 @@ import org.wrkr.clb.model.auth.RememberMeToken;
 import org.wrkr.clb.model.user.FailedLoginAttempt;
 import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.repo.user.FailedLoginAttemptRepo;
-import org.wrkr.clb.services.api.grecaptcha.GRecaptchaService;
 import org.wrkr.clb.services.dto.user.LoginDTO;
 import org.wrkr.clb.services.http.CookieService;
 import org.wrkr.clb.services.user.AuthnService;
@@ -44,7 +42,6 @@ import org.wrkr.clb.services.user.RememberMeTokenService;
 import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.services.util.exception.TooManyLoginAttemptsException;
 import org.wrkr.clb.services.util.http.Cookies;
-import org.wrkr.clb.services.util.http.JsonStatusCode;
 import org.wrkr.clb.services.util.http.SessionAttribute;
 
 //@Service configured in clb-services-ctx.xml
@@ -53,7 +50,7 @@ public class DefaultAuthnService implements AuthnService {
 
     private static final Logger LOG = LoggerFactory.getLogger(DefaultAuthnService.class);
 
-    private static final long FAILED_LOGIN_ATTEMPT_LIFETIME_MILLIS = 10 * 60 * 1000; // 10 minutes
+    private static final long FAILED_LOGIN_ATTEMPT_LIFETIME_MILLIS = 5 * 60 * 1000; // 5 minutes
 
     // config value
     private Integer maxFailedLoginAttempts;
@@ -82,12 +79,8 @@ public class DefaultAuthnService implements AuthnService {
     @Autowired
     private RememberMeTokenService rememberMeService;
 
-    @Autowired
-    private GRecaptchaService recaptchaService;
-
     @Override
-    public HttpServletResponse login(HttpServletRequest request,
-            HttpServletResponse response, HttpSession session,
+    public HttpServletResponse login(HttpServletResponse response, HttpSession session,
             LoginDTO loginDTO, String forwardedFor) throws AuthenticationException, BadRequestException {
         User user = profileService.getAccount(loginDTO);
         if (user == null) {
@@ -104,10 +97,6 @@ public class DefaultAuthnService implements AuthnService {
             if (retryAfterMillis > 0L) {
                 if (loginDTO.gRecaptchaResponse == null) {
                     throw new TooManyLoginAttemptsException(retryAfterMillis, "");
-                }
-
-                if (!recaptchaService.verifyRecaptcha(request.getRemoteAddr(), loginDTO.gRecaptchaResponse)) {
-                    throw new BadRequestException(JsonStatusCode.INVALID_RECAPTCHA, "Invalid recaptcha.");
                 }
             }
         }

@@ -75,7 +75,7 @@ public abstract class BaseMailService implements InitializingBean {
     protected VelocityEngine velocityEngine;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         // instantiate mail sender
         mailSender = new JavaMailSenderImpl();
         mailSender.setHost(emailHost);
@@ -141,7 +141,7 @@ public abstract class BaseMailService implements InitializingBean {
         _sendEmail(emailFrom, to, subject, body);
     }
 
-    protected void sendEmail(String from, String to, String subject, String body) throws Exception {
+    protected void sendEmail(String from, String to, String subject, String body) throws AddressException, MessagingException {
         long startTime = System.currentTimeMillis();
 
         _sendEmail(from, to, subject, body);
@@ -156,7 +156,8 @@ public abstract class BaseMailService implements InitializingBean {
         sendEmail(emailFrom, to, subject, body);
     }
 
-    protected void sendEmail(Collection<String> recipients, String subject, String body) throws Exception {
+    protected void sendEmail(Collection<String> recipients, String subject, String body)
+            throws AddressException, MessagingException {
         long startTime = System.currentTimeMillis();
 
         for (String to : recipients) {

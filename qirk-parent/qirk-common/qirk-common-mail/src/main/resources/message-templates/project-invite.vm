@@ -1,4 +1,4 @@
-${senderName} has invited you to the ${projectName} project on <a target="_blank" href="${frontUrl}" style="color: blue;text-decoration: underline;">Qirk.org</a>.<br>
+${senderName} has invited you to the ${projectName} project on <a target="_blank" href="${host}" style="color: blue;text-decoration: underline;">${host}</a>.<br>
 <br>
 If you aren't registered on Qirk.org yet and accept this invitation, you will need to go through registration process after clicking the link below.<br>
 If you were not expecting this invitation, you can ignore this email.<br>

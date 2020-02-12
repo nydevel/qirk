@@ -21,11 +21,13 @@ import java.io.IOException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.wrkr.clb.common.util.web.FrontURI;
+import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.task.attachment.Attachment;
 import org.wrkr.clb.model.user.User;
+import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.task.attachment.AttachmentRepo;
 import org.wrkr.clb.services.file.FileService;
 import org.wrkr.clb.services.file.YandexCloudFileService;
@@ -33,7 +35,7 @@ import org.wrkr.clb.services.project.task.attachment.AttachmentFileService;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.util.http.JsonStatusCode;
 
-@Service
+//@Service configured in clb-services-ctx.xml
 @Validated
 public class DefaultAttachmentFileService implements AttachmentFileService {
 
@@ -45,10 +47,20 @@ public class DefaultAttachmentFileService implements AttachmentFileService {
     private AttachmentRepo attachmentRepo;
 
     @Autowired
+    protected JDBCProjectRepo projectRepo;
+
+    @Autowired
     private ProjectSecurityService securityService;
 
     @Autowired
     private YandexCloudFileService yandexCloudFileService;
+
+    // front url config values
+    protected String host;
+
+    public void setHost(String host) {
+        this.host = host;
+    }
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
@@ -78,6 +90,8 @@ public class DefaultAttachmentFileService implements AttachmentFileService {
             }
         }
 
-        return fileService.generateTaskUrl(attachment.getTask()) + "?" + GET_FILE_ERROR_CODE_PARAMETER + "=" + errorCode;
+        Project project = projectRepo.getNameAndUiIdByTaskId(attachment.getTask().getId());
+        return FrontURI.generateGetTaskURI(host, project.getUiId(), attachment.getTask().getNumber()) +
+                "?" + GET_FILE_ERROR_CODE_PARAMETER + "=" + errorCode;
     }
 }

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import org.apache.commons.text.StringSubstitutor;
 import org.apache.velocity.VelocityContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.wrkr.clb.common.crypto.TokenGenerator;
 import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
 import org.wrkr.clb.common.crypto.token.notification.NotificationSettingsTokenData;
-import org.wrkr.clb.common.jms.message.notification.BaseTaskNotificationMessage;
 import org.wrkr.clb.common.jms.message.notification.TaskCommentMessage;
 import org.wrkr.clb.common.jms.message.notification.TaskUpdateNotificationMessage;
-import org.wrkr.clb.common.util.collections.MapBuilder;
 import org.wrkr.clb.common.util.strings.CharSet;
+import org.wrkr.clb.common.util.web.FrontURI;
 
 public class UserMailService extends BaseMailService {
 
@@ -44,7 +42,6 @@ public class UserMailService extends BaseMailService {
     // base html templates
     private static final String DEFAULT_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "default-html-template.vm";
     private static final String NON_REGISTERED_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "non-registered-html-template.vm";
-    @SuppressWarnings("unused")
     private static final String SUBSCRIPTION_FOOTER_HTML_TEMPLATE = HTML_TEMPLATES_DIR + "subscription-footer-html-template.vm";
 
     // message templates
@@ -65,25 +62,11 @@ public class UserMailService extends BaseMailService {
         private static final String TASK_NOTIFICATION = "Qirk Report: task #%d in %s";
     }
 
-    // front uri values
-    private static class FrontURI {
-        private static final String ACTIVATE_EMAIL_TOKEN = "/register?code=";
-        private static final String RESET_PASSWORD = "/reset-password/";
-        private static final String ACCEPT_INVITE = "/accept-email-invite?invite_key=";
-        @SuppressWarnings("unused")
-        private static final String DECLINE_INVITE = "/decline-email-invite?invite_key=";
-        private static final String MANAGE_SUBSCRIPTIONS = "/manage-subscriptions/";
-        private static final String GET_TASK = "/project/{projectUiId}/task/{taskNumber}";
-    }
+    // config value
+    private String host;
 
-    private String frontUrl;
-
-    public String getFrontUrl() {
-        return frontUrl;
-    }
-
-    public void setFrontUrl(String frontUrl) {
-        this.frontUrl = frontUrl;
+    public void setHost(String host) {
+        this.host = host;
     }
 
     @Autowired
@@ -99,16 +82,16 @@ public class UserMailService extends BaseMailService {
         VelocityContext velocityContext = new VelocityContext();
         velocityContext.put("body", body);
         velocityContext.put("url",
-                frontUrl + FrontURI.MANAGE_SUBSCRIPTIONS +
+                host + FrontURI.MANAGE_SUBSCRIPTIONS +
                         "?token=" + URLEncoder.encode(tokenDTO.token, CharSet.UTF8_UPPER) +
                         "&iv=" + URLEncoder.encode(tokenDTO.IV, CharSet.UTF8_UPPER));
-        return renderTemplate(DEFAULT_HTML_TEMPLATE, velocityContext);
-        // return renderTemplate(SUBSCRIPTION_FOOTER_HTML_TEMPLATE, velocityContext); TODO uncomment when front is ready
+        return renderTemplate(SUBSCRIPTION_FOOTER_HTML_TEMPLATE, velocityContext);
     }
 
     @SuppressWarnings("unused")
     private void sendEmailsWithSubscriptionToken(
-            Collection<String> recipients, String subject, String body, String notificationSettingsType) throws Exception {
+            Collection<String> recipients, String subject, String body, String notificationSettingsType)
+            throws Exception {
         long startTime = System.currentTimeMillis();
 
         for (String to : recipients) {
@@ -132,7 +115,7 @@ public class UserMailService extends BaseMailService {
             String subject = Subject.REGISTRATION;
 
             VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("url", frontUrl + FrontURI.ACTIVATE_EMAIL_TOKEN + token);
+            velocityContext.put("url", host + FrontURI.ACTIVATE_EMAIL_TOKEN + token);
             velocityContext.put("password", password);
 
             String body = renderHTMLTemplate(DEFAULT_HTML_TEMPLATE,
@@ -151,7 +134,7 @@ public class UserMailService extends BaseMailService {
             String subject = Subject.PASSWORD_RESET;
 
             VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("url", frontUrl + FrontURI.RESET_PASSWORD + token);
+            velocityContext.put("url", host + FrontURI.RESET_PASSWORD + token);
 
             String body = renderHTMLTemplate(DEFAULT_HTML_TEMPLATE,
                     renderTemplate(MessageTemplate.PASSWORD_RESET, velocityContext));
@@ -170,8 +153,8 @@ public class UserMailService extends BaseMailService {
             String subject = String.format(Subject.PROJECT_INVITE, senderName, projectName);
 
             VelocityContext velocityContext = new VelocityContext();
-            velocityContext.put("frontUrl", frontUrl);
-            velocityContext.put("acceptUrl", frontUrl + FrontURI.ACCEPT_INVITE + token);
+            velocityContext.put("host", host);
+            velocityContext.put("acceptUrl", host + FrontURI.ACCEPT_INVITE + token);
             velocityContext.put("senderName", senderName);
             velocityContext.put("projectName", projectName);
             velocityContext.put("password", password);
@@ -187,32 +170,24 @@ public class UserMailService extends BaseMailService {
         }
     }
 
-    private String generateTaskUrl(Map<String, Object> messageBody, Long taskNumber) {
-        return frontUrl + StringSubstitutor.replace(FrontURI.GET_TASK,
-                new MapBuilder<String, String>()
-                        .put("organizationUiId", "")
-                        .put("projectUiId", (String) messageBody.get(BaseTaskNotificationMessage.PROJECT_UI_ID))
-                        .put("taskNumber", taskNumber.toString()).build(),
-                "{", "}");
-    }
-
-    public void sendTaskCreatedEmail(List<String> recipients, Map<String, Object> messageBody) {
+    public void sendTaskCreatedEmail(List<String> recipients, Map<String, Object> notificationBody) {
         if (recipients.isEmpty()) {
             return;
         }
 
         try {
-            Long taskNumber = (Long) messageBody.get(TaskUpdateNotificationMessage.TASK_NUMBER);
-            String projectName = (String) messageBody.get(TaskUpdateNotificationMessage.PROJECT_NAME);
+            Long taskNumber = (Long) notificationBody.get(TaskUpdateNotificationMessage.TASK_NUMBER);
+            String projectName = (String) notificationBody.get(TaskUpdateNotificationMessage.PROJECT_NAME);
+            String projectUiId = (String) notificationBody.get(TaskUpdateNotificationMessage.PROJECT_UI_ID);
             String subject = String.format(Subject.TASK_NOTIFICATION, taskNumber, projectName);
 
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("createdByName",
-                    ((String) messageBody.get(TaskUpdateNotificationMessage.UPDATED_BY_FULL_NAME)) + " " +
-                            "@" + ((String) messageBody.get(TaskUpdateNotificationMessage.UPDATED_BY_USERNAME)));
+                    ((String) notificationBody.get(TaskUpdateNotificationMessage.UPDATED_BY_FULL_NAME)) + " " +
+                            "@" + ((String) notificationBody.get(TaskUpdateNotificationMessage.UPDATED_BY_USERNAME)));
             velocityContext.put("taskNumber", taskNumber);
             velocityContext.put("projectName", projectName);
-            velocityContext.put("taskUrl", generateTaskUrl(messageBody, taskNumber));
+            velocityContext.put("taskUrl", FrontURI.generateGetTaskURI(host, projectUiId, taskNumber));
 
             String body = renderTemplate(MessageTemplate.TASK_CREATED, velocityContext);
 
@@ -222,48 +197,49 @@ public class UserMailService extends BaseMailService {
         }
     }
 
-    public void sendTaskUpdatedEmail(List<String> recipients, Map<String, Object> messageBody) {
+    public void sendTaskUpdatedEmail(List<String> recipients, Map<String, Object> notificationBody) {
         if (recipients.isEmpty()) {
             return;
         }
 
         try {
-            Long taskNumber = (Long) messageBody.get(TaskUpdateNotificationMessage.TASK_NUMBER);
-            String projectName = (String) messageBody.get(TaskUpdateNotificationMessage.PROJECT_NAME);
+            Long taskNumber = (Long) notificationBody.get(TaskUpdateNotificationMessage.TASK_NUMBER);
+            String projectName = (String) notificationBody.get(TaskUpdateNotificationMessage.PROJECT_NAME);
+            String projectUiId = (String) notificationBody.get(TaskUpdateNotificationMessage.PROJECT_UI_ID);
             String subject = String.format(Subject.TASK_NOTIFICATION, taskNumber, projectName);
 
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("updatedByName",
-                    ((String) messageBody.get(TaskUpdateNotificationMessage.UPDATED_BY_FULL_NAME)) + " " +
-                            "@" + ((String) messageBody.get(TaskUpdateNotificationMessage.UPDATED_BY_USERNAME)));
+                    ((String) notificationBody.get(TaskUpdateNotificationMessage.UPDATED_BY_FULL_NAME)) + " " +
+                            "@" + ((String) notificationBody.get(TaskUpdateNotificationMessage.UPDATED_BY_USERNAME)));
             velocityContext.put("taskNumber", taskNumber);
             velocityContext.put("projectName", projectName);
-            velocityContext.put("taskUrl", generateTaskUrl(messageBody, taskNumber));
+            velocityContext.put("taskUrl", FrontURI.generateGetTaskURI(host, projectUiId, taskNumber));
 
-            Long oldAssignee = (Long) messageBody.get(TaskUpdateNotificationMessage.OLD_ASSIGNEE);
-            Long newAssignee = (Long) messageBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE);
+            Long oldAssignee = (Long) notificationBody.get(TaskUpdateNotificationMessage.OLD_ASSIGNEE);
+            Long newAssignee = (Long) notificationBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE);
             velocityContext.put("assigneeChanged", !Objects.equals(oldAssignee, newAssignee));
             velocityContext.put("newAssignee",
-                    ((String) messageBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE_FULL_NAME)) + " " +
-                            "@" + ((String) messageBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE_USERNAME)));
+                    ((String) notificationBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE_FULL_NAME)) + " " +
+                            "@" + ((String) notificationBody.get(TaskUpdateNotificationMessage.NEW_ASSIGNEE_USERNAME)));
 
-            String oldType = (String) messageBody.get(TaskUpdateNotificationMessage.OLD_TYPE);
-            String newType = (String) messageBody.get(TaskUpdateNotificationMessage.NEW_TYPE);
+            String oldType = (String) notificationBody.get(TaskUpdateNotificationMessage.OLD_TYPE);
+            String newType = (String) notificationBody.get(TaskUpdateNotificationMessage.NEW_TYPE);
             velocityContext.put("typeChanged", !newType.equals(oldType));
             velocityContext.put("newType",
-                    messageBody.getOrDefault(TaskUpdateNotificationMessage.NEW_TYPE_HUMAN_READABLE, newType));
+                    notificationBody.getOrDefault(TaskUpdateNotificationMessage.NEW_TYPE_HUMAN_READABLE, newType));
 
-            String oldPriority = (String) messageBody.get(TaskUpdateNotificationMessage.OLD_PRIORITY);
-            String newPriority = (String) messageBody.get(TaskUpdateNotificationMessage.NEW_PRIORITY);
+            String oldPriority = (String) notificationBody.get(TaskUpdateNotificationMessage.OLD_PRIORITY);
+            String newPriority = (String) notificationBody.get(TaskUpdateNotificationMessage.NEW_PRIORITY);
             velocityContext.put("priorityChanged", !newPriority.equals(oldPriority));
             velocityContext.put("newPriority",
-                    messageBody.getOrDefault(TaskUpdateNotificationMessage.NEW_PRIORITY_HUMAN_READABLE, newPriority));
+                    notificationBody.getOrDefault(TaskUpdateNotificationMessage.NEW_PRIORITY_HUMAN_READABLE, newPriority));
 
-            String oldStatus = (String) messageBody.get(TaskUpdateNotificationMessage.OLD_STATUS);
-            String newStatus = (String) messageBody.get(TaskUpdateNotificationMessage.NEW_STATUS);
+            String oldStatus = (String) notificationBody.get(TaskUpdateNotificationMessage.OLD_STATUS);
+            String newStatus = (String) notificationBody.get(TaskUpdateNotificationMessage.NEW_STATUS);
             velocityContext.put("statusChanged", !newStatus.equals(oldStatus));
             velocityContext.put("newStatus",
-                    messageBody.getOrDefault(TaskUpdateNotificationMessage.NEW_STATUS_HUMAN_READABLE, newStatus));
+                    notificationBody.getOrDefault(TaskUpdateNotificationMessage.NEW_STATUS_HUMAN_READABLE, newStatus));
 
             String body = renderTemplate(MessageTemplate.TASK_UPDATED, velocityContext);
 
@@ -273,24 +249,25 @@ public class UserMailService extends BaseMailService {
         }
     }
 
-    public void sendTaskCommentedEmail(Collection<String> recipients, Map<String, Object> messageBody) {
+    public void sendTaskCommentedEmail(Collection<String> recipients, Map<String, Object> notificationBody) {
         if (recipients.isEmpty()) {
             return;
         }
 
         try {
-            Long taskNumber = (Long) messageBody.get(TaskCommentMessage.TASK_NUMBER);
-            String projectName = (String) messageBody.get(TaskCommentMessage.PROJECT_NAME);
+            Long taskNumber = (Long) notificationBody.get(TaskCommentMessage.TASK_NUMBER);
+            String projectName = (String) notificationBody.get(TaskCommentMessage.PROJECT_NAME);
+            String projectUiId = (String) notificationBody.get(TaskUpdateNotificationMessage.PROJECT_UI_ID);
             String subject = String.format(Subject.TASK_NOTIFICATION, taskNumber, projectName);
 
             VelocityContext velocityContext = new VelocityContext();
             velocityContext.put("commentedByName",
-                    (String) messageBody.get(TaskCommentMessage.SENDER_FULL_NAME) + "@ " +
-                            (String) messageBody.get(TaskCommentMessage.SENDER_USERNAME));
+                    (String) notificationBody.get(TaskCommentMessage.SENDER_FULL_NAME) + "@ " +
+                            (String) notificationBody.get(TaskCommentMessage.SENDER_USERNAME));
             velocityContext.put("taskNumber", taskNumber);
             velocityContext.put("projectName", projectName);
-            velocityContext.put("taskUrl", generateTaskUrl(messageBody, taskNumber));
-            velocityContext.put("message", (String) messageBody.get(TaskCommentMessage.MESSAGE));
+            velocityContext.put("taskUrl", FrontURI.generateGetTaskURI(host, projectUiId, taskNumber));
+            velocityContext.put("message", (String) notificationBody.get(TaskCommentMessage.MESSAGE));
 
             String body = renderTemplate(MessageTemplate.TASK_COMMENTED, velocityContext);
 

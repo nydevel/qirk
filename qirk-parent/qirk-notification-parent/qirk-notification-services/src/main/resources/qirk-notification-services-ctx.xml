@@ -28,7 +28,7 @@
         <property name="emailHostPassword" value="${email.host.password}" />
         <property name="emailFrom" value="${email.from}" />
 
-        <property name="frontUrl" value="${front.url}" />
+        <property name="host" value="${front.host}" />
     </bean>
 
     <bean class="org.wrkr.clb.common.mail.DevOpsMailService">

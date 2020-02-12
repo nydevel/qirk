@@ -87,10 +87,6 @@ public class FileController extends BaseController {
     @Qualifier("maxFileSize")
     private Long fileUploadMaxSize;
 
-    @Autowired
-    @Qualifier("frontUrl")
-    private String frontUrl;
-
     private JsonContainer<?, ExternalUuidDTO> upload(FileService fileService,
             HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         String externalUuid = null;

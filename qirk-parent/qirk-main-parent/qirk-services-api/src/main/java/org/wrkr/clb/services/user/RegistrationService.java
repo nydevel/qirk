@@ -16,7 +16,6 @@
  */
 package org.wrkr.clb.services.user;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -51,5 +50,5 @@ public interface RegistrationService {
 
     public EmailSentDTO register(@Valid EmailAddressDTO registerDTO) throws Exception;
 
-    public User activate(HttpServletRequest request, @Valid ActivationDTO activationDTO) throws Exception;
+    public User activate(@Valid ActivationDTO activationDTO) throws Exception;
 }

@@ -24,7 +24,7 @@
         <property name="emailHostPassword" value="${email.host.password}" />
         <property name="emailFrom" value="${email.from}" />
 
-        <property name="frontUrl" value="${front.url}" />
+        <property name="host" value="${front.host}" />
     </bean>
 
     <bean class="org.wrkr.clb.common.mail.DevOpsMailService">
@@ -44,10 +44,6 @@
         <property name="rememberMeTokenLifetimeSeconds" value="${rememberme.token.lifetime.seconds}" />
     </bean>
 
-    <bean class="org.wrkr.clb.services.api.grecaptcha.impl.DefaultGRecaptchaService">
-        <property name="recaptchaSecret" value="${recaptcha.client.secret}" />
-    </bean>
-
     <bean class="org.wrkr.clb.services.user.impl.DefaultProfileService">
         <property name="notificationTokenNotBeforeToleranceSeconds" value="${notif.token.notbefore.tolerance.seconds}" />
         <property name="notificationTokenLifetimeSeconds" value="${notif.token.lifetime.seconds}" />
@@ -65,11 +61,10 @@
 
     <jee:jndi-lookup id="yandexcloudClient" jndi-name="yandexcloud/client/storage" />
     <bean class="org.wrkr.clb.services.api.yandexcloud.impl.DefaultYandexCloudApiService">
-        <property name="bucketName" value="${yandexcloud.bucket.name}" />
     </bean>
-    <bean class="org.wrkr.clb.services.file.impl.DefaultYandexCloudFileService">
-        <property name="frontUrl" value="${front.url}" />
-        <property name="taskUrl" value="${front.url.task}" />
+
+    <bean class="org.wrkr.clb.services.project.task.attachment.impl.DefaultAttachmentFileService">
+        <property name="host" value="${front.host}" />
     </bean>
 
     <bean class="org.wrkr.clb.services.project.task.impl.DefaultTaskService">
