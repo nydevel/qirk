@@ -1,12 +1,7 @@
-curl --user elastic -X DELETE http://127.0.0.1:9200/user
+curl --user elastic -X DELETE -H 'Content-Type: application/json' http://127.0.0.1:9200/user -d ''
 curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:9200/user -d '{
 	"mappings": {
 		"properties": {
-			"dont_recommend": {
-				"type": "boolean",
-				"index": true,
-				"doc_values": false
-			},
 			"username": {
 				"type": "keyword",
 				"index": false,
@@ -33,10 +28,10 @@ curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:
 				"index_options": "docs",
 				"doc_values": false
 			},
-			"organizations": {
+			"projects": {
 				"type": "nested",
 				"properties": {
-					"organization_id": {
+					"project_id": {
 						"type": "long",
 						"index": true,
 						"doc_values": true
@@ -45,18 +40,8 @@ curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:
 						"type": "long",
 						"index": false,
 						"doc_values": true
-					},
-					"enabled": {
-						"type": "boolean",
-						"index": false,
-						"doc_values": true
 					}
 				}
-			},
-			"projects": {
-				"type": "long",
-				"index": true,
-				"doc_values": true
 			},
 			"invited_projects": {
 				"type": "long",
@@ -67,7 +52,7 @@ curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:
 	}
 }'
 
-curl --user elastic -X DELETE http://127.0.0.1:9200/task
+curl --user elastic -X DELETE -H 'Content-Type: application/json' http://127.0.0.1:9200/task -d ''
 curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:9200/task -d '{
 	"mappings": {
 		"properties": {
@@ -154,4 +139,18 @@ curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:
 			}
 		}
 	}
+}'
+
+curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:9200/_scripts/user_add_project -d '{
+	"script": {
+		"lang": "painless",
+		"source": "ctx._source.projects.add(params);"
+ 	}
+}'
+
+curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:9200/_scripts/user_remove_project -d '{
+	"script": {
+		"lang": "painless",
+		"source": "for ( int i = ctx._source.projects.size() - 1; i >= 0; i -- ) {if ( ctx._source.projects[ i ].member_id == params.member_id) {ctx._source.projects.remove(i);} }"
+ 	}
 }'

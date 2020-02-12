@@ -55,7 +55,6 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
 
     private static class Scripts {
         private static final String ADD_PROJECT = "user_add_project";
-        private static final String UPDATE_PROJECT_MEMBER = "user_update_projectmember";
         private static final String REMOVE_PROJECT = "user_remove_project";
     }
 
@@ -96,23 +95,6 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
         updateRequest.script(
                 new Script(ScriptType.STORED, null, Scripts.ADD_PROJECT,
                         ElasticsearchNestedProjectDTO.fromEntity(member)));
-
-        UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
-        logResponse(updateResponse);
-    }
-
-    private Map<String, Object> getUpdateProjectMemberParams(ProjectMember member) {
-        Map<String, Object> map = new HashMap<String, Object>(1);
-        map.put(ElasticsearchNestedProjectDTO.MEMBER_ID, member.getId());
-        return map;
-    }
-
-    @Override
-    public void updateProject(Long userId, ProjectMember member) throws IOException {
-        UpdateRequest updateRequest = new UpdateRequest(getIndex(), userId.toString());
-        updateRequest.script(
-                new Script(ScriptType.STORED, null, Scripts.UPDATE_PROJECT_MEMBER,
-                        getUpdateProjectMemberParams(member)));
 
         UpdateResponse updateResponse = client.update(updateRequest, RequestOptions.DEFAULT);
         logResponse(updateResponse);

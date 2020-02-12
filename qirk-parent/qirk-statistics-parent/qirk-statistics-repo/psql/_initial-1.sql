@@ -1,6 +1,6 @@
 -- do it using postgres user
 -- exec \q if you are already connected to clb_auth database
-CREATE DATABASE clb_stat WITH TEMPLATE=template0 ENCODING='UTF8';
+CREATE DATABASE qirk_stat WITH TEMPLATE=template0 ENCODING='UTF8';
 
 -- requires password of hibernate user
 \c clb_stat

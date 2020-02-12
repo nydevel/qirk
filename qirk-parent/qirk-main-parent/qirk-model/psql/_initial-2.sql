@@ -2424,3 +2424,32 @@ ALTER TABLE user_tag
 
 ALTER TABLE user_tag
     ADD CONSTRAINT user_tag_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id) ON UPDATE CASCADE;
+
+
+INSERT INTO languages(name_code) VALUES('EN_US');
+INSERT INTO languages(name_code) VALUES('RU_RU');
+
+INSERT INTO task_type(name_code) VALUES('TASK');
+INSERT INTO task_type(name_code) VALUES('BUG');
+INSERT INTO task_type(name_code) VALUES('IMPROVEMENT');
+INSERT INTO task_type(name_code) VALUES('NEW_FEATURE');
+
+INSERT INTO task_priority(name_code, importance) VALUES('TRIVIAL', 10);
+INSERT INTO task_priority(name_code, importance) VALUES('MINOR', 20);
+INSERT INTO task_priority(name_code, importance) VALUES('MAJOR', 30);
+INSERT INTO task_priority(name_code, importance) VALUES('CRITICAL', 40);
+INSERT INTO task_priority(name_code, importance) VALUES('BLOCKING', 50);
+
+INSERT INTO task_status(name_code) VALUES('OPEN');
+INSERT INTO task_status(name_code) VALUES('REJECTED');
+INSERT INTO task_status(name_code) VALUES('IN_DEVELOPMENT');
+INSERT INTO task_status(name_code) VALUES('WAITING_FOR_QA');
+INSERT INTO task_status(name_code) VALUES('IN_QA_REVIEW');
+INSERT INTO task_status(name_code) VALUES('CLOSED');
+
+INSERT INTO invite_status(name_code) VALUES('PENDING');
+INSERT INTO invite_status(name_code) VALUES('REJECTED');
+INSERT INTO invite_status(name_code) VALUES('ACCEPTED');
+
+INSERT INTO application_status(name_code) VALUES('PENDING');
+INSERT INTO application_status(name_code) VALUES('REJECTED');

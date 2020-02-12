@@ -5,6 +5,10 @@
 target/
 *.class
 
+### mvn npm build ###
+.npm/
+.tmp/
+
 ### STS ###
 .metadata/
 .settings/

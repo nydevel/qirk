@@ -20,5 +20,5 @@ public abstract class Cookies {
 
     public static final String CSRF = "qirk-csrf";
     public static final String REMEMBER_ME = "qirk-remember-me";
-    public static final String USER_STAT = "user-stat";
+    public static final String USER_STAT = "qirk-user-stat";
 }
