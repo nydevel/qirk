@@ -29,9 +29,6 @@ public class UserMeta extends BaseIdEntityMeta {
     public static final String manager = "manager";
     public static final String fullName = "full_name";
 
-    public static final UserToTagMeta tags = new UserToTagMeta();
-    public static final UserToLanguageMeta languages = new UserToLanguageMeta();
-
     public static final UserMeta DEFAULT = new UserMeta(TABLE_NAME);
 
     public UserMeta(String tableAlias) {

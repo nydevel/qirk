@@ -126,7 +126,6 @@ public class DataSynchronizer {
         List<String> databaseIds = new ArrayList<String>();
         for (User user : databaseService.getAllUsers()) {
             databaseIds.add(user.getId().toString());
-            user.setTags(databaseService.getTagsByUser(user));
             try {
                 userService.datasync(user);
                 userService.setProjects(user);

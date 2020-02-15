@@ -40,11 +40,10 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
-import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
-import org.wrkr.clb.services.dto.user.PublicProfileDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
 import org.wrkr.clb.services.user.AuthnService;
 import org.wrkr.clb.services.user.ProfileRetryWrapperService;
@@ -176,12 +175,12 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     }
 
     @GetMapping(value = "/")
-    public JsonContainer<PublicProfileDTO, Void> get(@SuppressWarnings("unused") HttpSession session,
+    public JsonContainer<PublicUserDTO, Void> get(@SuppressWarnings("unused") HttpSession session,
             @RequestParam(name = "id") Long id) throws Exception {
         long startTime = System.currentTimeMillis();
-        PublicProfileDTO profileDTO = userService.get(id);
+        PublicUserDTO profileDTO = userService.get(id);
         logProcessingTimeFromStartTime(startTime, "get", id);
-        return new JsonContainer<PublicProfileDTO, Void>(profileDTO);
+        return new JsonContainer<PublicUserDTO, Void>(profileDTO);
     }
 
     @GetMapping(value = "list")

@@ -59,7 +59,7 @@ public class DefaultElasticsearchUserService extends DefaultElasticsearchService
     }
 
     private static final String[] DEFAULT_SEARCH_EXCLUDE_FIELDS = {
-            ElasticsearchUserDTO.NAME_SEARCH_FIELD, ElasticsearchUserDTO.TAGS,
+            ElasticsearchUserDTO.NAME_SEARCH_FIELD,
             ElasticsearchUserDTO.PROJECTS + ".*", ElasticsearchUserDTO.INVITED_PROJECTS };
 
     @Override

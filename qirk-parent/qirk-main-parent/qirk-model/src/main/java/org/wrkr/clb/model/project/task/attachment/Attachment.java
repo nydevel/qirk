@@ -34,8 +34,8 @@ public class Attachment extends BaseIdEntity {
     @Column(name = "filename", nullable = false)
     private String filename;
 
-    @Column(name = "path", nullable = false)
-    private String path;
+    @Column(name = AttachmentMeta.externalPath, nullable = false)
+    private String externalPath;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
@@ -55,11 +55,11 @@ public class Attachment extends BaseIdEntity {
     }
 
     public String getPath() {
-        return path;
+        return externalPath;
     }
 
     public void setPath(String path) {
-        this.path = path;
+        this.externalPath = path;
     }
 
     public Task getTask() {
@@ -88,5 +88,4 @@ public class Attachment extends BaseIdEntity {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
-
 }

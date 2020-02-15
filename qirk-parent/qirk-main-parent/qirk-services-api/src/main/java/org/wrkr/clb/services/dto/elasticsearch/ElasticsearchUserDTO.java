@@ -16,12 +16,10 @@
  */
 package org.wrkr.clb.services.dto.elasticsearch;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.user.User;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -39,8 +37,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
     public static final String FULL_NAME = "full_name";
     public static final String NAME_SEARCH_FIELD = "name_search_field";
 
-    public static final String TAGS = "tags";
-
     public static final String PROJECTS = "projects";
     public static final String INVITED_PROJECTS = "invited_projects";
 
@@ -50,9 +46,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
     public String fullName;
     @JsonProperty(value = NAME_SEARCH_FIELD)
     public List<String> nameSearchField;
-
-    @JsonProperty(value = TAGS)
-    public List<String> tags;
 
     @JsonProperty(value = PROJECTS)
     @JsonInclude(Include.NON_NULL)
@@ -67,11 +60,6 @@ public class ElasticsearchUserDTO extends ElasticsearchEntityDTO {
         dto.username = user.getUsername();
         dto.fullName = user.getFullName();
         dto.nameSearchField = Arrays.asList(dto.username, dto.fullName);
-
-        dto.tags = new ArrayList<String>(user.getTags().size());
-        for (Tag tag : user.getTags()) {
-            dto.tags.add(tag.getName());
-        }
 
         return dto;
     }

@@ -20,11 +20,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.task.Task;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.project.JDBCGrantedPermissionsProjectInviteRepo;
 import org.wrkr.clb.repo.project.JDBCProjectInviteRepo;
 import org.wrkr.clb.repo.project.task.TaskRepo;
@@ -34,9 +32,6 @@ public class DatabaseService {
 
     @Autowired
     private JDBCUserRepo userRepo;
-
-    @Autowired
-    private TagRepo tagRepo;
 
     @Autowired
     private JDBCGrantedPermissionsProjectInviteRepo grantedPermissionsProjectInviteRepo;
@@ -50,11 +45,6 @@ public class DatabaseService {
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
     public List<User> getAllUsers() {
         return userRepo.listAndFetchProjectMembership();
-    }
-
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<Tag> getTagsByUser(User user) {
-        return tagRepo.listByUserId(user.getId());
     }
 
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)

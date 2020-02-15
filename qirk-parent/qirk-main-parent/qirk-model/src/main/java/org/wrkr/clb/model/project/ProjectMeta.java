@@ -36,9 +36,6 @@ public class ProjectMeta extends BaseVersionedEntityMeta {
     public static final String dropboxSettingsId = "dropbox_settings_id";
     public static final String externalRepoId = "external_repo_id";
 
-    public static final ProjectToTagMeta tags = new ProjectToTagMeta();
-    public static final ProjectToLanguageMeta languages = new ProjectToLanguageMeta();
-
     public static final ProjectMeta DEFAULT = new ProjectMeta(TABLE_NAME);
 
     public ProjectMeta(String tableAlias) {

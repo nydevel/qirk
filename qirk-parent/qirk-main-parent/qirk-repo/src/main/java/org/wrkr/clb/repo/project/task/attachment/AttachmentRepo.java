@@ -40,14 +40,14 @@ public class AttachmentRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " + // 1
-            AttachmentMeta.path + ", " + // 2
+            AttachmentMeta.externalPath + ", " + // 2
             AttachmentMeta.taskId + ") " + // 3
             "VALUES (?, ?, ?) " +
             "RETURNING " + AttachmentMeta.id + ";";
 
     private static final String INSERT_BATCH = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " +
-            AttachmentMeta.path + ", " +
+            AttachmentMeta.externalPath + ", " +
             AttachmentMeta.taskId + ") " +
             "(SELECT " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.filename + ", " +
             TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.path + ", " +

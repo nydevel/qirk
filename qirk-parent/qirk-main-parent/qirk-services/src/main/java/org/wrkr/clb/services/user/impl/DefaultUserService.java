@@ -29,14 +29,11 @@ import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
 import org.wrkr.clb.common.crypto.token.chat.ChatTokenData;
 import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.LanguageRepo;
-import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.UserRepo;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
-import org.wrkr.clb.services.dto.user.PublicProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
 import org.wrkr.clb.services.security.ProjectSecurityService;
 import org.wrkr.clb.services.security.SecurityService;
@@ -77,12 +74,6 @@ public class DefaultUserService implements UserService {
     private JDBCUserRepo jdbcUserRepo;
 
     @Autowired
-    private TagRepo tagRepo;
-
-    @Autowired
-    private LanguageRepo languageRepo;
-
-    @Autowired
     private JDBCProjectRepo projectRepo;
 
     @Autowired
@@ -99,15 +90,12 @@ public class DefaultUserService implements UserService {
 
     @Override
     @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public PublicProfileDTO get(Long id) throws Exception {
+    public PublicUserDTO get(Long id) throws Exception {
         User user = jdbcUserRepo.getByIdForPublic(id);
         if (user == null) {
             throw new NotFoundException("User");
         }
-
-        user.setTags(tagRepo.listByUserId(user.getId()));
-        user.setLanguages(languageRepo.listByUserId(user.getId()));
-        return PublicProfileDTO.fromEntity(user);
+        return PublicUserDTO.fromEntity(user);
     }
 
     @Override

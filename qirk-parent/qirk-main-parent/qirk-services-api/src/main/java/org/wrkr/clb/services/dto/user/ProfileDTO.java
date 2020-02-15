@@ -16,16 +16,12 @@
  */
 package org.wrkr.clb.services.dto.user;
 
-import java.util.List;
-
-import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.User;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class ProfileDTO extends PublicProfileDTO {
+public class ProfileDTO extends PublicUserDTO {
 
     @JsonProperty("email")
     public String emailAddress;
@@ -33,7 +29,7 @@ public class ProfileDTO extends PublicProfileDTO {
     @JsonProperty(value = "notification_settings")
     public NotificationSettings notificationSettings;
 
-    public static ProfileDTO fromEntity(User user, List<Tag> tags, List<Language> languages) {
+    public static ProfileDTO fromEntity(User user) {
         ProfileDTO dto = new ProfileDTO();
 
         dto.id = user.getId();
@@ -41,13 +37,7 @@ public class ProfileDTO extends PublicProfileDTO {
         dto.fullName = user.getFullName();
         dto.emailAddress = user.getEmailAddress();
         dto.notificationSettings = user.getNotificationSettings();
-        dto.tags = tags;
-        dto.languages = languages;
 
         return dto;
-    }
-
-    public static ProfileDTO fromEntity(User user) {
-        return fromEntity(user, user.getTags(), user.getLanguages());
     }
 }

@@ -117,17 +117,6 @@ public class ProjectRepo extends JPAIdEntityRepo<Project> {
         return getResultList(idsQuery);
     }
 
-    public List<Project> listAndFetchTags() {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Project> query = cb.createQuery(Project.class);
-
-        Root<Project> root = query.from(Project.class);
-        root.fetch(Project_.tags, JoinType.LEFT);
-
-        query = query.select(root);
-        return getResultList(query);
-    }
-
     public List<Project> listAndOrderAscByName() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Project> query = cb.createQuery(Project.class);
@@ -197,20 +186,6 @@ public class ProjectRepo extends JPAIdEntityRepo<Project> {
                 cb.equal(projectMemberJoin.get(ProjectMember_.manager), true));
         query.orderBy(cb.asc(projectRoot.get(Project_.name)));
         query.distinct(true);
-        return getResultList(query);
-    }
-
-    public List<Project> searchPublicByNameAndFetchTagsAndOrderAscByName(String name) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Project> query = cb.createQuery(Project.class);
-
-        Root<Project> projectRoot = query.from(Project.class);
-        projectRoot.fetch(Project_.tags, JoinType.LEFT);
-
-        query.where(cb.like(cb.lower(projectRoot.get(Project_.name)), "%" + name.toLowerCase() + "%"),
-                cb.equal(projectRoot.get(Project_.isPrivate), false));
-        query.distinct(true);
-        query.orderBy(cb.asc(projectRoot.get(Project_.name)));
         return getResultList(query);
     }
 }

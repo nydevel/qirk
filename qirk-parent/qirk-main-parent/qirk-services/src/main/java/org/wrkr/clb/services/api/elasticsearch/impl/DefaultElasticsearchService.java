@@ -54,7 +54,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchService;
-import org.wrkr.clb.services.dto.elasticsearch.ElasticsearchUserDTO;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -203,7 +202,7 @@ public abstract class DefaultElasticsearchService<E extends BaseIdEntity> implem
     protected QueryBuilder buildPrefixOrMatchQuery(String field, String searchValue) {
         // only one word - search for prefix
         if (!searchValue.isBlank() && !searchValue.contains(" ")) {
-            return new PrefixQueryBuilder(ElasticsearchUserDTO.TAGS, searchValue);
+            return new PrefixQueryBuilder(field, searchValue);
         }
 
         MatchQueryBuilder queryBuilder = new MatchQueryBuilder(field, searchValue);

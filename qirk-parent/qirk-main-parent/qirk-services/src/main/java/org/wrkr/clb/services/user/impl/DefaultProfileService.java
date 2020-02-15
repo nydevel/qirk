@@ -16,8 +16,6 @@
  */
 package org.wrkr.clb.services.user.impl;
 
-import java.util.List;
-
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -32,23 +30,18 @@ import org.wrkr.clb.common.crypto.dto.TokenAndIvDTO;
 import org.wrkr.clb.common.crypto.token.notification.NotificationTokenData;
 import org.wrkr.clb.common.mail.EmailSentDTO;
 import org.wrkr.clb.common.mail.UserMailService;
-import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.user.NotificationSettings;
 import org.wrkr.clb.model.user.PasswordActivationToken;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.LanguageRepo;
-import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.user.JDBCUserRepo;
 import org.wrkr.clb.repo.user.NotificationSettingsRepo;
 import org.wrkr.clb.repo.user.PasswordActivationTokenRepo;
-import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.api.elasticsearch.ElasticsearchUserService;
-import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.LoginDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.security.SecurityService;
 import org.wrkr.clb.services.user.PasswordActivationTokenService;
 import org.wrkr.clb.services.user.ProfileService;
@@ -82,15 +75,6 @@ public class DefaultProfileService implements ProfileService {
 
     @Autowired
     private NotificationSettingsRepo notifSettingsRepo;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private LanguageRepo languageRepo;
-
-    @Autowired
-    private TagRepo tagRepo;
 
     @Autowired
     private PasswordActivationTokenService activationTokenService;
@@ -168,9 +152,6 @@ public class DefaultProfileService implements ProfileService {
             throw new NotFoundException("User");
         }
 
-        user.setTags(tagRepo.listByUserId(user.getId()));
-        user.setLanguages(languageRepo.listByUserId(user.getId()));
-        // user.setLinks(profileLinkRepo.getByUser(user));
         return ProfileDTO.fromEntity(user);
     }
 
@@ -196,18 +177,13 @@ public class DefaultProfileService implements ProfileService {
         notifSettingsRepo.update(notifSettings);
         user.setNotificationSettings(notifSettings);
 
-        List<Tag> tags = tagService.setTagsToUser(user, profileDTO.tagNames);
-
-        List<Language> languages = languageRepo.listByIds(profileDTO.languageIds);
-        languageRepo.setLanguagesToUser(user.getId(), languages);
-
         session.setAttribute(SessionAttribute.AUTHN_USER, user);
         try {
             elasticsearchService.updateOrIndex(user);
         } catch (Exception e) {
             LOG.error("Could not update user " + user.getId() + " in elasticsearch", e);
         }
-        return ProfileDTO.fromEntity(user, tags, languages);
+        return ProfileDTO.fromEntity(user);
     }
 
     @Override

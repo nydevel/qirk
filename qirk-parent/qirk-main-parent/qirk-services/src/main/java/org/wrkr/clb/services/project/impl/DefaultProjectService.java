@@ -40,22 +40,18 @@ import org.wrkr.clb.common.jms.message.statistics.ProjectDocUpdateMessage;
 import org.wrkr.clb.common.jms.services.StatisticsSender;
 import org.wrkr.clb.common.util.chat.ChatType;
 import org.wrkr.clb.common.util.strings.MarkdownUtils;
-import org.wrkr.clb.model.Language;
 import org.wrkr.clb.model.project.InviteStatus;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectApplication;
 import org.wrkr.clb.model.project.ProjectInvite;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.LanguageRepo;
-import org.wrkr.clb.repo.TagRepo;
 import org.wrkr.clb.repo.project.JDBCProjectRepo;
 import org.wrkr.clb.repo.project.ProjectApplicationRepo;
 import org.wrkr.clb.repo.project.ProjectInviteRepo;
 import org.wrkr.clb.repo.project.ProjectRepo;
 import org.wrkr.clb.repo.project.task.ProjectTaskNumberSequenceRepo;
 import org.wrkr.clb.repo.project.task.TaskSubscriberRepo;
-import org.wrkr.clb.services.TagService;
 import org.wrkr.clb.services.dto.ChatPermissionsDTO;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.project.ProjectApplicationStatusDTO;
@@ -120,15 +116,6 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
     private ProjectApplicationRepo projectApplicationRepo;
 
     @Autowired
-    private TagRepo tagRepo;
-
-    @Autowired
-    private TagService tagService;
-
-    @Autowired
-    private LanguageRepo languageRepo;
-
-    @Autowired
     private TaskSubscriberRepo taskSubscriberRepo;
 
     @Autowired
@@ -189,11 +176,6 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         }
         project.setUiId(uiId);
 
-        project.setTags(tagService.getOrCreate(projectDTO.tagNames));
-
-        List<Language> languages = languageRepo.listByIds(projectDTO.languageIds);
-        project.setLanguages(languages);
-
         projectRepo.persist(project);
 
         for (User user : membersToCreate) {
@@ -244,11 +226,6 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
         if (!projectDTO.uiId.isBlank()) {
             project.setUiId(projectDTO.uiId.strip().toLowerCase());
         }
-
-        project.setTags(tagService.getOrCreate(projectDTO.tagNames));
-
-        List<Language> languages = languageRepo.listByIds(projectDTO.languageIds);
-        project.setLanguages(languages);
 
         project = projectRepo.merge(project);
 
@@ -332,10 +309,7 @@ public class DefaultProjectService extends VersionedEntityService implements Pro
             throw new NotFoundException("Project");
         }
 
-        project.setTags(tagRepo.listByProjectId(project.getId()));
-        project.setLanguages(languageRepo.listByProjectId(project.getId()));
-
-        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithEverythingForRead(project);
+        ProjectReadDTO dto = ProjectReadDTO.fromEntityWithDescriptionAndPermissions(project);
         if (includeApplication) {
             ProjectApplication application = projectApplicationRepo.getLastByUserAndProject(currentUser, project);
             dto.application = ProjectApplicationStatusDTO.fromEntity(application);

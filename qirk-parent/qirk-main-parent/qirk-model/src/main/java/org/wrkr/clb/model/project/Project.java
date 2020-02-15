@@ -23,8 +23,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -33,8 +31,6 @@ import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
 import org.wrkr.clb.model.BaseVersionedEntityMeta;
-import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.UiIdEntity;
 import org.wrkr.clb.model.VersionedIdEntity;
 import org.wrkr.clb.model.project.task.ProjectTaskNumberSequence;
@@ -88,16 +84,6 @@ public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEnti
     @Deprecated
     @Column(name = "frozen", nullable = false)
     private boolean frozen = false;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "project_tag", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "tag_id") })
-    private List<Tag> tags = new ArrayList<Tag>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "project_language", joinColumns = { @JoinColumn(name = "project_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "language_id") })
-    private List<Language> languages = new ArrayList<Language>();
 
     @OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
     private List<ProjectMember> members = new ArrayList<ProjectMember>();
@@ -213,22 +199,6 @@ public class Project extends BaseIdEntity implements VersionedIdEntity, UiIdEnti
 
     public void setTaskNumberSequenceId(Long taskNumberSequenceId) {
         this.taskNumberSequenceId = taskNumberSequenceId;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public List<Language> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<Language> languages) {
-        this.languages = languages;
     }
 
     public boolean isPrivate() {

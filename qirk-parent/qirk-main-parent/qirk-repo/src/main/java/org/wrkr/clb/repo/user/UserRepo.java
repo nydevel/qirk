@@ -22,7 +22,6 @@ import java.util.List;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.JoinType;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -73,31 +72,8 @@ public class UserRepo extends JPAIdEntityRepo<User> {
         return getSingleResultOrNull(query);
     }
 
-    @Deprecated
-    public User getEnabled(Long id) {
-        return get(id);
-    }
-
-    @Deprecated
-    public User getEnabledAndFetchTags(Long id) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<User> query = cb.createQuery(User.class);
-
-        Root<User> root = query.from(User.class);
-        root.fetch(User_.tags, JoinType.LEFT);
-
-        query.where(cb.equal(root.get(User_.id), id));
-        query.distinct(true);
-        return getSingleResultOrNull(query);
-    }
-
     public User getByUsername(String username) {
         return getByUsername(username, false);
-    }
-
-    @Deprecated
-    public User getEnabledByUsername(String username) {
-        return getByUsername(username, true);
     }
 
     private User getByUsername(String username, @SuppressWarnings("unused") boolean excludeDisabled) {

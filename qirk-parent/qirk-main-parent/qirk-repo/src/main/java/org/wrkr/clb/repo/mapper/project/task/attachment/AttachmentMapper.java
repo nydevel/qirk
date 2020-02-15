@@ -33,7 +33,7 @@ public class AttachmentMapper extends BaseMapper<Attachment> {
     public String generateSelectColumnsStatement() {
         return generateSelectColumnStatement(AttachmentMeta.id) + ", " +
                 generateSelectColumnStatement(AttachmentMeta.filename) + ", " +
-                generateSelectColumnStatement(AttachmentMeta.path) + ", " +
+                generateSelectColumnStatement(AttachmentMeta.externalPath) + ", " +
                 generateSelectColumnStatement(AttachmentMeta.taskId);
     }
 
@@ -43,7 +43,7 @@ public class AttachmentMapper extends BaseMapper<Attachment> {
 
         attachment.setId(rs.getLong(generateColumnAlias(AttachmentMeta.id)));
         attachment.setFilename(rs.getString(generateColumnAlias(AttachmentMeta.filename)));
-        attachment.setPath(rs.getString(generateColumnAlias(AttachmentMeta.path)));
+        attachment.setPath(rs.getString(generateColumnAlias(AttachmentMeta.externalPath)));
         attachment.setTaskId(rs.getLong(generateColumnAlias(AttachmentMeta.taskId)));
 
         return attachment;

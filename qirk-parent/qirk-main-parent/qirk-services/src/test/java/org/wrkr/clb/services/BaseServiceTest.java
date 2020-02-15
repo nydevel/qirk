@@ -43,7 +43,6 @@ import org.wrkr.clb.model.project.task.TaskPriority;
 import org.wrkr.clb.model.project.task.TaskStatus;
 import org.wrkr.clb.model.project.task.TaskType;
 import org.wrkr.clb.model.user.User;
-import org.wrkr.clb.repo.LanguageRepo;
 import org.wrkr.clb.test.repo.JDBCTestRepo;
 import org.wrkr.clb.test.repo.TestRepo;
 
@@ -59,9 +58,6 @@ public abstract class BaseServiceTest {
 
     @Autowired
     protected JDBCTestRepo jdbcTestRepo;
-
-    @Autowired
-    protected LanguageRepo languageRepo;
 
     protected User saveUser(String email)
             throws Exception {
