@@ -54,12 +54,12 @@ public class Attachment extends BaseIdEntity {
         this.filename = filename;
     }
 
-    public String getPath() {
+    public String getExternalPath() {
         return externalPath;
     }
 
-    public void setPath(String path) {
-        this.externalPath = path;
+    public void setExternalPath(String externalPath) {
+        this.externalPath = externalPath;
     }
 
     public Task getTask() {

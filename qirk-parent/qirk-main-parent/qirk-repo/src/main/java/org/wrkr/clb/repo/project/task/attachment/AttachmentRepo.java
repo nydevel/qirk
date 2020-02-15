@@ -97,7 +97,7 @@ public class AttachmentRepo extends JDBCIdEntityRepo {
             PreparedStatement ps = connection.prepareStatement(INSERT,
                     new String[] { AttachmentMeta.id });
             ps.setString(1, attachment.getFilename());
-            ps.setString(2, attachment.getPath());
+            ps.setString(2, attachment.getExternalPath());
             ps.setLong(3, attachment.getTaskId());
             return ps;
         }, keyHolder);

@@ -43,7 +43,7 @@ public class AttachmentMapper extends BaseMapper<Attachment> {
 
         attachment.setId(rs.getLong(generateColumnAlias(AttachmentMeta.id)));
         attachment.setFilename(rs.getString(generateColumnAlias(AttachmentMeta.filename)));
-        attachment.setPath(rs.getString(generateColumnAlias(AttachmentMeta.externalPath)));
+        attachment.setExternalPath(rs.getString(generateColumnAlias(AttachmentMeta.externalPath)));
         attachment.setTaskId(rs.getLong(generateColumnAlias(AttachmentMeta.taskId)));
 
         return attachment;

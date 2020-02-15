@@ -58,7 +58,7 @@ public class DefaultAttachmentService implements AttachmentService {
         Attachment attachment = new Attachment();
 
         attachment.setFilename(ExtStringUtils.substringFromLastSymbol(externalPath, '/'));
-        attachment.setPath(externalPath);
+        attachment.setExternalPath(externalPath);
         attachment.setTask(task);
 
         attachment = attachmentRepo.save(attachment);

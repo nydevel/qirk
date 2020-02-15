@@ -74,7 +74,7 @@ ALTER SEQUENCE application_status_id_seq OWNED BY application_status.id;
 CREATE TABLE attachment (
     id bigint NOT NULL,
     filename character varying(511) NOT NULL,
-    path character varying(511) NOT NULL,
+    external_path character varying(511) NOT NULL,
     task_id bigint NOT NULL,
     deleted boolean DEFAULT false NOT NULL
 );

@@ -135,7 +135,7 @@ public class DefaultYandexCloudFileService extends DefaultFileService implements
 
     @Override
     public String getTemporaryLink(Attachment attachment) throws Exception {
-        return yandexCloudService.getTemporaryLink(attachment.getPath());
+        return yandexCloudService.getTemporaryLink(attachment.getExternalPath());
     }
 
     @Override
