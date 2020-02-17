@@ -1,7 +1,6 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Select, FormControl, InputLabel, MenuItem } from "@material-ui/core";
-import { uiUserFromOrgMember } from "../../../utils/variousUtils";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -50,7 +49,7 @@ const MapUsers = ({
                   >
                     {modelMembers.map(member => (
                       <MenuItem key={member.id} value={member.id}>
-                        {uiUserFromOrgMember(member)}
+                        {JSON.stringify(member, null, 2)}
                       </MenuItem>
                     ))}
                   </Select>

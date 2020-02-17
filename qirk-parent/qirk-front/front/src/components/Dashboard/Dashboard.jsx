@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
-import { t } from "i18next";
 import {
   fetchFavorites,
   addProjectToFavorites,
@@ -9,7 +8,6 @@ import {
 } from "../../actions/commonActions";
 import { setTaskSearchFilterSearchAfterDispatch } from "../../actions/taskSearchActions";
 import Favorites from "./Favorites/Favorites";
-import toast from "../../utils/hooks/useRequestResultToast";
 import paths from "../../routes/paths";
 import "./Dashboard.sass";
 import PathAuthConfirmed from "../PathAuthConfirmed/PathAuthConfirmed";
@@ -31,6 +29,7 @@ import constants from "../../utils/constants";
 import { unixMillisecondTimestamp } from "../../utils/timeUtils";
 import { saveItemToLocalStorageSafe } from "../../utils/variousUtils";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
 
 function Dashboard({
   requestStatus,
@@ -47,7 +46,7 @@ function Dashboard({
   loadingMissingTasks,
   location: { pathname }
 }) {
-  toast(requestStatus);
+  const { t } = useTranslation();
 
   const renderDashboard = () => {
     if (dashboardCollapsed) {
@@ -56,7 +55,6 @@ function Dashboard({
           <DrawerContent tag="main">
             <List>
               <ListGroup>
-             
                 <Link to={paths.MyProjects.toPath()}>
                   <ListItem
                     className="dashboard-list__item__icon-button"
@@ -118,7 +116,6 @@ function Dashboard({
                   </ListItem>
                 </Link>
               </ListGroup>
-              
             </List>
           </DrawerContent>
         </Drawer>
@@ -129,7 +126,6 @@ function Dashboard({
           <DrawerContent tag="main">
             <List>
               <ListGroup>
-                
                 <Link to={paths.MyProjects.toPath()}>
                   <ListItem>
                     <ListItemText primaryText={t("my_projects_label")} />
@@ -137,7 +133,6 @@ function Dashboard({
                 </Link>
               </ListGroup>
               <Favorites favorites={favoritesList} />
-              
             </List>
           </DrawerContent>
         </Drawer>
@@ -202,7 +197,6 @@ function Dashboard({
 
 const mapStateToProps = state => ({
   favoritesList: state.favorites.listOfFavorites,
-  requestStatus: state.common.requestStatus,
   isSignedIn: state.auth.isSignedIn,
   lastConfirmedSignedInPathname: state.auth.lastConfirmedSignedInPathname,
   dashboardCollapsed: state.ui.dashboardCollapsed,

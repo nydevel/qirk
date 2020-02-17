@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { t } from "i18next";
+
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Table from "@material-ui/core/Table";
@@ -19,6 +19,7 @@ import ProjectMemberInviteListItem from "./ProjectMemberInviteListItem";
 import { toast } from "react-toastify";
 import endpoints from "../../utils/endpoints";
 import { responseIsStatusOk } from "../../utils/variousUtils";
+import { useTranslation } from "react-i18next";
 
 function ProjectMembersOverview({
   fetchInProgress,
@@ -28,7 +29,7 @@ function ProjectMembersOverview({
   match: {
     params: { project_uiid }
   }
-}) {
+}) {const{t}=useTranslation()
   const [invites, setInvites] = useState([]);
   const [isFetchingInvites, setIsFetchingInvites] = useState(false);
   const [cancelRequstInProgress, setCancelRequestInProgress] = useState(false);

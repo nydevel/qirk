@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import qs from "query-string";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
 import { toast } from "react-toastify";
 import axios from "../../utils/axios";
 import endpoints from "../../utils/endpoints";
@@ -14,10 +13,12 @@ import {
 import TextInput from "../../components/TextInput/TextInput";
 import Button from "../../components/Button/Button";
 import constants from "../../utils/constants";
+import { useTranslation } from "react-i18next";
 
 const USERNAME_CHECK_TIMEOUT_MS = 350;
 
 const RegisterConfirmationForm = ({ location: { search }, history }) => {
+  const{t}=useTranslation()
   const { code, invite_key } = qs.parse(search);
 
   const invitedToProjectMode = !!invite_key;

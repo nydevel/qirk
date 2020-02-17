@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import { connect } from "react-redux";
-import { t } from "i18next";
 import { Animated } from "react-animated-css";
 import { IconButton, Icon, Paper } from "@material-ui/core";
 import {
@@ -10,14 +9,17 @@ import {
 import { clickIsInside } from "../../utils/variousUtils";
 import NotificationItem from "../NotificationItem/NotificationItem";
 import ExpandingListScrollNearBottomListener from "../ExpandingListScrollNearBottomListener/ExpandingListScrollNearBottomListener";
+import { useTranslation } from "react-i18next";
 
 const NotficationIcon = ({
   notifications,
+
   checkedAtTimestamp,
   isSignedIn,
   setNotificationsNeedToSendCheckAllRequestToSocketDispatch,
   setNotificationsLoadAfterDispatch
 }) => {
+  const { t } = useTranslation();
   const wrapperRef = useRef();
   const popupRef = useRef();
 

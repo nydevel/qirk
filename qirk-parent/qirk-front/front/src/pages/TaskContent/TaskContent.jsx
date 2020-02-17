@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+
 import { toast } from "react-toastify";
 import queryString from "query-string";
 import classNames from "classnames";
@@ -9,7 +9,6 @@ import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
 import "@webscopeio/react-textarea-autocomplete/style.css";
 import axios from "../../utils/axios";
 import {
-  uiUserFromOrgMember,
   provideTaskStatusesOptions,
   responseIsStatusOk,
   cutFirstString,
@@ -40,6 +39,7 @@ import TaskSearchFetchSelectFilter from "../../components/TaskSearchFetchSelectF
 import TaskSearchSelectFilter from "../../components/TaskSearchSelectFilter/TaskSearchSelectFilter";
 import TaskLinks from "../../components/TaskLinks/TaskLinks";
 import { setSelectedLinkedTaskListDispatch } from "../../actions/taskLinksActions";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   userId: state.user.id,
@@ -75,6 +75,7 @@ function TaskContent({
   linkedTaskList,
   match: { params }
 }) {
+  const { t } = useTranslation();
   const { project_uiid } = params;
   const taskStatuses = provideTaskStatusesOptions();
   const parsed = queryString.parse(location.search);
@@ -135,14 +136,6 @@ function TaskContent({
       setTaskId(initialData.id);
       setPresentHashtags(initialData.hashtags);
       setDescription(initialData.description_md);
-
-      setReporter(uiUserFromOrgMember(initialData.reporter));
-      setAssignee(
-        initialData.assignee && {
-          value: initialData.assignee.id,
-          label: uiUserFromOrgMember(initialData.assignee)
-        }
-      );
 
       setTaskStatus(
         initialData.task_status &&
@@ -653,12 +646,9 @@ function TaskContent({
 }
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      editProjectTask,
-      setProjectSelectedTaskInitialStateDispatch,
-      setSelectedLinkedTaskListDispatch
-    }
-  )(TaskContent)
+  connect(mapStateToProps, {
+    editProjectTask,
+    setProjectSelectedTaskInitialStateDispatch,
+    setSelectedLinkedTaskListDispatch
+  })(TaskContent)
 );

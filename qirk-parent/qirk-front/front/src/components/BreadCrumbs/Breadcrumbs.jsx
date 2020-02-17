@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
 import Crumb from "./Crumb/Crumb";
 import paths from "./../../routes/paths";
 import "./Breadcrumbs-new.sass";
 import { uiDateTime } from "../../utils/timeUtils";
+import { useTranslation } from "react-i18next";
 
 function Breadcrumbs({
   match: { params, path },
@@ -13,6 +13,7 @@ function Breadcrumbs({
   projInfo,
   taskNumber
 }) {
+  const{t}=useTranslation()
   const bc = [];
   if (
     path === paths.ProjectMemberEditing.url &&
@@ -235,7 +236,6 @@ function Breadcrumbs({
 export default withRouter(
   connect(state => ({
     projInfo: state.project.info,
-    foundUserInfo: state.userSearch.foundUserInfo,
     taskNumber:
       state.project.selectedTaskInitialState &&
       state.project.selectedTaskInitialState.number

@@ -6,7 +6,6 @@ import "react-toastify/dist/ReactToastify.css";
 import Routes from "../routes/routes";
 import AuthHandler from "./AuthHandler/AuthHandler";
 import "../i18n";
-import BottomStickyPolicy from "./BottomStickyPolicy/BottomStickyPolicy";
 import NotificationSocketController from "./NotificationSocketController/NotificationSocketController";
 import Dashboard from "./Dashboard/Dashboard";
 import TopAppBar from "@material/react-top-app-bar";
@@ -36,7 +35,6 @@ function App() {
           <Routes />
         </Dashboard>
       </AuthHandler>
-      <BottomStickyPolicy />
       <NotificationSocketController />
       <ToastContainer
         bodyClassName="qa_toast_text"

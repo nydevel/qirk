@@ -1,0 +1,6 @@
+export enum RequestStatus {
+  NOT_REQUESTED = "NOT_REQUESTED",
+  WAITING = "WAITING",
+  SUCCESS = "SUCCESS",
+  FAILED = "FAILED"
+}

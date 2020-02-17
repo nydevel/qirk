@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { t } from "i18next";
+
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { updateProject } from "../../actions/projectActions";
@@ -12,9 +12,6 @@ import WithFetch from "../../components/WithFetch/WithFetch";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import Loading from "../../components/Loading/Loading";
 import {
-  tagsToOptions,
-  langIdArrayToOptions,
-  langOptionsToIdArray,
   takeItemFromLocalStorageSafe
 } from "../../utils/variousUtils";
 import Select from "../../components/Select/Select";
@@ -26,11 +23,9 @@ import { toast } from "react-toastify";
 import paths from "../../routes/paths";
 import GoBackButton from "../../components/GoBackButton/GoBackButton";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
-  allLanguages: state.common.languages,
-  languagesFetchInProgress:
-    state.common.fetchLanguagesStatus === constants.WAITING,
   info: state.project.info,
   requestInProgress:
     state.project.updateProjectRequestStatus === constants.WAITING,
@@ -45,7 +40,7 @@ function ProjectsEdit({
   info,
   fetchInProgress,
   match: { params }
-}) {
+}) {const{t}=useTranslation()
   const [recordVersion, setRecordVersion] = useState(null);
   const [projectId, setProjectId] = useState(null);
   const [initialUiid, setInitialUiid] = useState("");
@@ -92,13 +87,7 @@ function ProjectsEdit({
     setCanBePublic(info && info.can_be_public);
   }, [info && info.can_be_public]);
 
-  useEffect(() => {
-    setTags(tagsToOptions(info && info.tags));
-  }, [info && info.tags]);
 
-  useEffect(() => {
-    setLanguages(langIdArrayToOptions(info && info.languages));
-  }, [info && info.languages]);
 
   const onProjectEdit = async e => {
     e.preventDefault();
@@ -116,8 +105,7 @@ function ProjectsEdit({
         private: isPrivate,
         description: description.trim(),
         tags,
-        purge_on_delete: false,
-        languages: langOptionsToIdArray(languages)
+        purge_on_delete: false
       };
       await updateProject(data);
     }

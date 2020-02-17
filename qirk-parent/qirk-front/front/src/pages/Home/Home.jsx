@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import { t } from "i18next";
 import { Cell, Grid, Row } from "@material/react-layout-grid";
 import Responsive from "react-responsive";
 import Page from "../../components/Page/Page";
@@ -8,6 +7,7 @@ import SignUpForm from "../../components/AuthHandler/SignUpForm/SignUpForm";
 import "./Home.sass";
 import Footer from "../../components/Footer/Footer";
 import DefaultHomePage from "../../pages/DefaultHomePage/DefaultHomePage";
+import { useTranslation } from "react-i18next";
 
 const breakpointCollapseMenuPx = 1020;
 
@@ -23,7 +23,7 @@ const mapStateToProps = state => ({
   isSignedIn: state.auth.isSignedIn
 });
 
-function Home({ isSignedIn }) {
+function Home({ isSignedIn }) {const{t}=useTranslation()
   if (isSignedIn) {
     return <DefaultHomePage />;
   } else {

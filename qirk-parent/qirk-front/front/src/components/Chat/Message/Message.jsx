@@ -1,13 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
 import classNames from "classnames";
-import { t } from "i18next";
 import { fetchSenderInfo } from "../../../actions/chatActions";
 import { uiUserFromUser } from "./../../../utils/variousUtils";
 import ic_spinner_dots from "./../../../assets/icons/ic_spinner_dots.svg";
 import { uiDateTime } from "../../../utils/timeUtils";
+import { useTranslation } from "react-i18next";
 
 function Message(props) {
+  const{t}=useTranslation()
   const sender = props.senders.find(
     sender => sender.id === props.message.sender_id
   );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { withRouter, Link } from "react-router-dom";
-import { t } from "i18next";
+
 import {
   resetPassword,
   setNewPassWithToken
@@ -15,8 +15,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import TextInput from "../../components/TextInput/TextInput";
+import { useTranslation } from "react-i18next";
 
 function ResetPassword(props) {
+  const{t}=useTranslation()
   const getErrorMessage = () => {
     if (props.match.params.code && newPass && newPass2) {
       if (newPass !== newPass2) {

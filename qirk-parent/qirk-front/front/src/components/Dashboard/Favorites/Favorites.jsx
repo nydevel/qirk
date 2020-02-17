@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+
 import {
   removeFavorite,
   setFavoriteIdOrder
@@ -14,6 +14,7 @@ import {
   ListGroupSubheader
 } from "@material/react-list";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 function Favorites({
   favoritesList,
@@ -23,6 +24,8 @@ function Favorites({
   divider = true,
   heading = true
 }) {
+  const { t } = useTranslation();
+  
   const getFavById = favId => favoritesList.find(fav => fav.id === favId);
 
   const onDragEnd = result => {
@@ -102,18 +105,13 @@ const mapStateToProps = state => {
   return {
     favoritesList: state.favorites.listOfFavorites,
     favoriteIdOrder: state.favorites.favoriteIdOrder,
-    requestStatus: state.common.requestStatus,
-    isSignedIn: state.auth.isSignedIn,
-    orgWithProjects: state.common.dashboardProjects
+    isSignedIn: state.auth.isSignedIn
   };
 };
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    {
-      removeFavorite,
-      setFavoriteIdOrder
-    }
-  )(Favorites)
+  connect(mapStateToProps, {
+    removeFavorite,
+    setFavoriteIdOrder
+  })(Favorites)
 );

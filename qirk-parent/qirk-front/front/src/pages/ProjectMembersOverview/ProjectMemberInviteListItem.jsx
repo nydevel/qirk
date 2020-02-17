@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { Link } from "react-router-dom";
-import { t } from "i18next";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import ReactTooltip from "react-tooltip";
 import {
@@ -14,12 +13,14 @@ import {
 import { uiUserFromUser } from "../../utils/variousUtils";
 import paths from "../../routes/paths";
 import { uiDateTime } from "../../utils/timeUtils";
+import { useTranslation } from "react-i18next";
 
 function ProjectMemberInviteListItem({
   invite: inv,
   cancelInvite,
   projectUiId: project_uiid
 }) {
+  const{t}=useTranslation()
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleClose = () => {

@@ -3,9 +3,11 @@ import Button from "@material/react-button";
 import "@material/react-button/dist/button.css";
 import Icon from "@material-ui/core/Icon";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+
+import { useTranslation } from "react-i18next";
 
 function GoBackButton({ pathToBack, history }) {
+  const{t}=useTranslation()
   return (
     <Button
       type="button"

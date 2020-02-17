@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import PropTypes from "prop-types";
 import ReactSelect from "react-select";
-import { t } from "i18next";
+
 import List, { ListItem, ListItemText } from "@material/react-list";
 import TextField from "@material-ui/core/TextField";
 import { ChipSet, Chip } from "@material/react-chips";
 import MaterialIcon from "@material/react-material-icon";
 import "./Select.sass";
+import { useTranslation } from "react-i18next";
 
 const Select = React.forwardRef(
   (
@@ -23,6 +24,8 @@ const Select = React.forwardRef(
     },
     ref
   ) => {
+    const { t } = useTranslation();
+
     const inputRef = useRef(null);
     const contextRef = ref && ref.current ? ref : inputRef;
 

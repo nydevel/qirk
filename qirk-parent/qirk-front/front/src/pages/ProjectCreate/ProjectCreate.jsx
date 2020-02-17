@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { t } from "i18next";
+import React, { useState } from "react";
+
 import endpoints from "../../utils/endpoints";
 import { connect } from "react-redux";
 import Button from "../../components/Button/Button";
@@ -7,28 +7,17 @@ import { withRouter } from "react-router-dom";
 import { createProject } from "../../actions/projectActions";
 import InputWithValidation from "../../components/InputWithValidation/InputWithValidation";
 import actions from "../../utils/constants";
-import useRequestResultToast from "../../utils/hooks/useRequestResultToast";
 import constants from "../../utils/constants";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import WithFetch from "../../components/WithFetch/WithFetch";
-import Select from "../../components/Select/Select";
-import {
-  langOptionsToIdArray,
-  responseIsStatusOk
-} from "../../utils/variousUtils";
-import CreatableChips from "../../components/CreatableChips/CreatableChips";
+
 import TextInput from "../../components/TextInput/TextInput";
 import Checkbox from "../../components/Checkbox/Checkbox";
 import { toast } from "react-toastify";
-import SimpleSelect from "../../components/SimpleSelect/SimpleSelect";
-import axios from "../../utils/axios";
-import Loading from "../../components/Loading/Loading";
 import queryString from "query-string";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
-  languages: state.common.languages,
-  languagesFetchInProgress:
-    state.common.fetchLanguagesStatus === constants.WAITING
 });
 
 function ProjectsCreate({
@@ -39,22 +28,16 @@ function ProjectsCreate({
   languagesFetchInProgress,
   location
 }) {
+  const{t}=useTranslation()
   const parsed = queryString.parse(location.search);
 
-  const [loginConfirmed, setLoginConfirmed] = useState(false);
-  const [predefinedOrganizationMode, setPredefinedOrganizationMode] = useState(
-    false
-  );
   const [name, setName] = useState("");
   const [projectUIID, setProjectUIID] = useState("");
   const [isPrivate, setIsPrivate] = useState(true);
   const [makeMeMember, setMakeMeMember] = useState(true);
   const [description, setDescription] = useState("");
-  const [tags, setTags] = useState([]);
-  const [projectLanguages, setProjectLanguages] = useState([]);
   const [UIIDTypingTimeout, setUIIDTypingTimeout] = useState(null);
   const [error, setError] = useState("");
-  useRequestResultToast(requestStatus);
 
   const onProjectSubmit = async e => {
     e.preventDefault();
@@ -69,8 +52,6 @@ function ProjectsCreate({
         ui_id: projectUIID.trim(),
         private: isPrivate,
         description: description.trim(),
-        tags,
-        languages: langOptionsToIdArray(projectLanguages),
 
         make_me_member: makeMeMember,
         redirect_to_defhomepage: parsed.redirect_to_defhomepage || false
@@ -86,14 +67,10 @@ function ProjectsCreate({
   };
 
   return (
-    <PrivatePage
-      onLoginConfirmed={() => setLoginConfirmed(true)}
-      className="organization-project-create"
-    >
+    <PrivatePage className="organization-project-create">
       <WithFetch fetchList={[constants.LAZY_FETCH_LANGUAGES]}>
         <h1>{t("Project creation")}</h1>
         <form onSubmit={onProjectSubmit}>
-
           <TextInput
             id="project_title"
             required
@@ -131,23 +108,7 @@ function ProjectsCreate({
             checked={isPrivate}
             onChange={e => setIsPrivate(e.target.checked)}
           />
-          <div style={{ paddingBottom: 20, paddingTop: 5 }}>
-            <CreatableChips
-              value={tags}
-              maxLength="127"
-              style={{ paddingBottom: 15 }}
-              onChange={e => setTags(e)}
-              label={t("Technology tags")}
-            />
-          </div>
-          <Select
-            label={t("Languages.self")}
-            isMulti
-            isLoading={languagesFetchInProgress}
-            options={[...languages]}
-            onChange={e => setProjectLanguages(e)}
-            value={projectLanguages}
-          />
+
           <div
             style={{
               marginTop: 15

@@ -4,7 +4,6 @@ import endpoints from "../../utils/endpoints";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { t } from "i18next";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import ProjectListItem from "../../components/ProjectListItem/ProjectListItem";
 import paths from "../../routes/paths";
@@ -15,8 +14,9 @@ import {
 } from "../../utils/variousUtils";
 import "./MyProjects.sass";
 import Button1 from "../../components/Button/Button";
+import { useTranslation } from "react-i18next";
 
-function MyProjects({ favProjects, favIdOrder }) {
+function MyProjects({ favProjects, favIdOrder }) { const{t}=useTranslation()
   const getFavId = projId => {
     const fav = favProjects.find(fav => fav.project.id === projId);
 

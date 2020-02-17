@@ -6,7 +6,6 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
-import { t } from "i18next";
 import LoadingScreen from "../../LoadingScreen/LoadingScreen";
 import Button from "../../Button/Button";
 import { resendRegistrationEmail } from "../../../actions/authActions";
@@ -23,6 +22,7 @@ import {
 import constants from "../../../utils/constants";
 import TextInput from "../../TextInput/TextInput";
 import paths from "../../../routes/paths";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   registrationStatusCode: state.auth.registrationStatusCode
@@ -34,6 +34,8 @@ function SignUpForm({
   setDefaultRegistrationStatusCode,
   resendRegistrationEmail
 }) {
+  const { t } = useTranslation();
+
   const [agree, setAgree] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [email, setEmail] = useState("");
@@ -215,7 +217,8 @@ SignUpForm.propTypes = {
   emailSignUp: PropTypes.func.isRequired
 };
 
-export default connect(
-  mapStateToProps,
-  { emailSignUp, resendRegistrationEmail, setDefaultRegistrationStatusCode }
-)(SignUpForm);
+export default connect(mapStateToProps, {
+  emailSignUp,
+  resendRegistrationEmail,
+  setDefaultRegistrationStatusCode
+})(SignUpForm);

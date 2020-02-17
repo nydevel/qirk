@@ -8,15 +8,17 @@ import {
 import axios from "../../utils/axios";
 import endpoints from "../../utils/endpoints";
 import { toast } from "react-toastify";
-import { t } from "i18next";
 import "./DefaultHomePage.sass";
 import { withRouter, Link } from "react-router-dom";
 import paths from "../../routes/paths";
 import classNames from "classnames";
 import queryString from "query-string";
 import { IconButton, Icon } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 function DefaultHomePage() {
+  const { t } = useTranslation();
+
   const { project_uiid } = queryString.parse(window.location.search);
   const [organizationUiid, setOrganizationUiid] = useState(null);
   const [projects, setProjects] = useState([]);
@@ -108,11 +110,6 @@ function DefaultHomePage() {
             <Link
               isActive={projects && projects.length}
               to={paths.ProjectSingle.toPath({
-                organization_uiid:
-                  organizationUiid ||
-                  (projects &&
-                    projects.length &&
-                    projects[projects.length - 1].organization.ui_id),
                 project_uiid:
                   project_uiid ||
                   (projects &&

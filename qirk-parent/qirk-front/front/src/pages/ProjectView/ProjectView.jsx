@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { withRouter, Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { t } from "i18next";
+
 import Button from "../../components/Button/Button";
 import TaskSearch from "../../components/TaskSearch/TaskSearch";
 import Page from "../../components/Page/Page";
@@ -14,6 +14,7 @@ import Icon from "@material-ui/core/Icon";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import "./ProjectView.sass";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   isSignedIn: state.auth.isSignedIn,
@@ -31,7 +32,7 @@ function ProjectView({
   canCreateTask,
   isLoading,
   match: { params }
-}) {
+}) {const{t}=useTranslation()
   const [anchorEl, setAnchorEl] = useState(null);
 
   function handleClick(event) {

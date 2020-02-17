@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import SignUpForm from "../../components/AuthHandler/SignUpForm/SignUpForm";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
 import { activateAccount } from "../../actions/authActions";
 import "./Join.sass";
 import { toast } from "react-toastify";
 import Page from "../../components/Page/Page";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   isSignedIn: state.auth.isSignedIn,
@@ -20,7 +20,7 @@ function Join({
   isSignedIn,
   history,
   match
-}) {
+}) {const{t}=useTranslation()
   useEffect(() => {
     if (activationStatusCode === "SUCCESS") {
       toast.success(t("AccountRegistration.AccountActivated"));

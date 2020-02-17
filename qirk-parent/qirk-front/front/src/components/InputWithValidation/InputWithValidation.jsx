@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { t } from "i18next";
+
 import axios from "../../utils/axios";
 import { responseIsStatusOk } from "../../utils/variousUtils";
 import TextInput from "../TextInput/TextInput";
+import { useTranslation } from "react-i18next";
 
 // Инпут, который проверяет валидность введенного значения по url
 function InputWithValidation({
@@ -18,6 +19,7 @@ function InputWithValidation({
   label,
   ...props
 }) {
+  const{t}=useTranslation()
   const [initialValue, setInitialValue] = useState(value);
 
   useState(() => {

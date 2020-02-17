@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import throttle from "lodash/throttle";
 import { v4 } from "uuid";
-import { t } from "i18next";
+
 import { toast } from "react-toastify";
 import {
   fetchChatToken,
@@ -32,10 +32,12 @@ import "./Chat.sass";
 import Button1 from "../Button/Button";
 import TextareaAutosize from "@material-ui/core/TextareaAutosize";
 import { debugDateTime } from "../../utils/timeUtils";
+import { useTranslation } from "react-i18next";
 
 const time = () => debugDateTime();
 
 function Chat(props) {
+  const{t}=useTranslation()
   const [textMessage, setTextMessage] = useState("");
 
   const stringifyAndSendToSocket = (message, socket = props.ws) => {

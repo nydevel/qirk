@@ -6,15 +6,15 @@ import "@material/react-button/dist/button.css";
 import "./Button.sass";
 
 function Button1({
-  asLink,
+  asLink = false,
   className = "",
-  onClick,
-  children,
-  secondary,
-  isLoading,
-  disabled,
-  flat,
-  style,
+  onClick = () => {},
+  children = null,
+  secondary = false,
+  isLoading = false,
+  disabled = false,
+  flat = false,
+  style = {},
   ...props
 }) {
   return (

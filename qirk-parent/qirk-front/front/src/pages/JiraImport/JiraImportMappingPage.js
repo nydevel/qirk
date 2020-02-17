@@ -10,7 +10,7 @@ import Loading from "../../components/Loading/Loading";
 import endpoints from "../../utils/endpoints";
 import paths from "../../routes/paths";
 import { toast } from "react-toastify";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 const JiraImportMappingPage = ({
   orgId,
@@ -21,6 +21,8 @@ const JiraImportMappingPage = ({
     params: { organization_uiid, timestamp }
   }
 }) => {
+  const { t } = useTranslation();
+
   const [projects, setProjects] = useState(null);
   const [loading, setLoading] = useState(false);
   const [selectedProjects, setSelectedProjects] = useState([]);
@@ -298,5 +300,4 @@ const JiraImportMappingPage = ({
   );
 };
 
-export default connect(state => ({
-}))(JiraImportMappingPage);
+export default connect(state => ({}))(JiraImportMappingPage);

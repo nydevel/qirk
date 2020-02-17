@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import WithFetch from "../../components/WithFetch/WithFetch";
 import constants from "../../utils/constants";
@@ -16,12 +16,15 @@ import endpoints from "../../utils/endpoints";
 import Checkbox from "../../components/Checkbox/Checkbox";
 import Button1 from "../../components/Button/Button";
 
+
 function ProjectPredefinedPermissionsInviteEdit({
   projectName,
   match: {
     params: { invite_id }
   }
 }) {
+  const { t } = useTranslation();
+
   const [invite, setInvite] = useState(null);
   const [isManager, setIsManager] = useState(false);
   const [allowWrite, setAllowWrite] = useState(false);

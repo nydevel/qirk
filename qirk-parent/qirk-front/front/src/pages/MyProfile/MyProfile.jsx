@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
-import { t } from "i18next";
 import { withRouter } from "react-router-dom";
 import Checkbox from "../../components/Checkbox/Checkbox";
 import Button from "../../components/Button/Button";
@@ -11,7 +10,7 @@ import WithFetch from "../../components/WithFetch/WithFetch";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import Loading from "../../components/Loading/Loading";
 import constants from "../../utils/constants";
-import { langToOption, responseIsStatusOk } from "../../utils/variousUtils";
+import { responseIsStatusOk } from "../../utils/variousUtils";
 import endpoints from "../../utils/endpoints";
 import axios from "../../utils/axios";
 import useMountEffect from "../../utils/hooks/useMountEffect";
@@ -20,11 +19,10 @@ import TextInput from "../../components/TextInput/TextInput";
 import CreatableChips from "../../components/CreatableChips/CreatableChips";
 import "./MyProfile.sass";
 import { setUserDispatch } from "../../actions/userActions";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   user: state.user,
-  langOptions: state.common.languages,
-  loadingLanguages: state.common.fetchLanguagesStatus === constants.WAITING
 });
 
 function Profile({
@@ -33,14 +31,11 @@ function Profile({
   setUserDispatch,
   user,
   location: { hash }
-}) {
+}) {const{t}=useTranslation()
   const [fullName, setFullName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isWaiting, setIsWaiting] = useState(false);
-  const [tags, setTags] = useState([]);
-  const [languages, setLanguages] = useState([]);
   const [about, setAbout] = useState("");
-  const [dontRecommend, setDontRecommend] = useState(false);
 
   const [taskCommentedNotification, setTaskCommentedNotification] = useState(
     true
@@ -64,12 +59,8 @@ function Profile({
 
       const response = await axios.get(endpoints.USER);
       setAbout(response.data.data[0].about);
-      setTags(response.data.data[0].tags.map(e => e.name));
-      setLanguages(
-        response.data.data[0].languages.map(lang => langToOption(lang))
-      );
+
       setFullName(response.data.data[0].full_name);
-      setDontRecommend(response.data.data[0].dont_recommend);
 
       setTaskCommentedNotification(
         response.data.data[0].notification_settings.task_commented
@@ -95,10 +86,9 @@ function Profile({
 
       const data = {
         about: about.trim(),
-        languages: languages.map(option => parseInt(option.value)),
-        tags,
+
         full_name: fullName.trim() || "",
-        dont_recommend: false, //dontRecommend
+
         notification_settings: {
           task_commented: taskCommentedNotification,
           task_created: taskCreatedNotification,
@@ -153,44 +143,6 @@ function Profile({
                 label={t("about_label")}
               />
 
-              <CreatableChips
-                label={t("Technology tags")}
-                value={tags}
-                maxLength="127"
-                onChange={e => setTags(e)}
-              />
-
-              {/* <div style={{ paddingTop: 20 }}>
-                <Checkbox
-                  id="is_public"
-                  label={t("Public profile")}
-                  checked={!dontRecommend}
-                  disabled={isWaiting}
-                  onChange={e => setDontRecommend(!e.target.checked)}
-                />
-              </div> */}
-              <div style={{ paddingTop: 30 }}>
-                <Select
-                  label={t("Languages.self")}
-                  isMulti
-                  className="qa_profile_form_languages_input"
-                  isWaiting={loadingLanguages}
-                  options={[...langOptions]}
-                  onChange={e => {
-                    setLanguages(e);
-
-                    // kostyl to fix lang select clickable area shifting downward
-
-                    const el = document.querySelector(".drawer-app-content");
-                    if (el) {
-                      el.scrollBy(0, -1);
-                      el.scrollBy(0, 1);
-                    }
-                  }}
-                  value={languages}
-                />
-              </div>
-
               <div style={{ paddingTop: 30 }}>{t("email_notifications")}</div>
 
               <div style={{ paddingTop: 20 }}>
@@ -239,8 +191,5 @@ function Profile({
 }
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    { setUserDispatch }
-  )(Profile)
+  connect(mapStateToProps, { setUserDispatch })(Profile)
 );

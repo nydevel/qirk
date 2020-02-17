@@ -1,9 +1,9 @@
 import React from "react";
-import { t } from "i18next";
 import "./NotFoundPage.sass";
 import Page from "../../components/Page/Page";
+import { useTranslation } from "react-i18next";
 
-function NotFoundPage() {
+function NotFoundPage() {const{t}=useTranslation()
   return (
     <Page className="not-found-page">
       <div className="not-found-page__text">

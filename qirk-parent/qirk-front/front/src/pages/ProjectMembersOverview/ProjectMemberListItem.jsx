@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { t } from "i18next";
 import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -14,6 +13,7 @@ import { uiUserFromUser, responseIsStatusOk } from "../../utils/variousUtils";
 import endpoints from "../../utils/endpoints";
 import { filterOutProjectMemberDispatch } from "../../actions/projectActions";
 import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
 
 function ProjectMemberListItem({
   member,
@@ -22,7 +22,7 @@ function ProjectMemberListItem({
   userId,
   projectId,
   match: { params }
-}) {
+}) {const{t}=useTranslation()
   const [deleteReqStarted, setDeleteReqStarted] = useState(false);
   const [leaveReqStarted, setLeaveReqStarted] = useState(false);
 

@@ -1,5 +1,4 @@
 import React from "react";
-import { t } from "i18next";
 import { Link } from "react-router-dom";
 import paths from "../../routes/paths";
 import {
@@ -10,12 +9,13 @@ import "./NotificationItem.sass";
 import { uiDateTime } from "../../utils/timeUtils";
 import { setNotificationsNeedToSendCheckAllRequestToSocketDispatch } from "./../../actions/notificationActions";
 import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 const NotificationItem = ({
   notification,
   handlerClick,
   setNotificationsNeedToSendCheckAllRequestToSocketDispatch
-}) => {
+}) => {const{t}=useTranslation()
   const {
     iso8601,
     notification_type,

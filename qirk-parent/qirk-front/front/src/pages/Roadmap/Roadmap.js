@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { Draggable } from "react-beautiful-dnd";
@@ -51,7 +51,6 @@ import useKeyPress from "../../utils/hooks/useKeyPress";
 
 const ID_NOT_PROVIDED = -42;
 const idDelimiter = "_";
-
 const RoadmapAddEditForm = props => {
   const {
     open = false,
@@ -62,6 +61,8 @@ const RoadmapAddEditForm = props => {
     onAdd = () => console.error("missing onAdd prop at RoadmapAddEditForm"),
     onEdit = () => console.error("missing onEdit prop at RoadmapAddEditForm")
   } = props;
+
+  const { t } = useTranslation();
 
   const createMode = id === ID_NOT_PROVIDED;
   const editMode = !createMode;
@@ -140,6 +141,7 @@ const CardAddForm = props => {
     onClose = () => console.error("missing onClose prop at CardAddForm"),
     onAdd = () => console.error("missing onAdd prop at CardAddForm")
   } = props;
+  const { t } = useTranslation();
 
   const [name, setName] = useState("");
   const [status, setStatus] = useState(constants.CARD_STATUSES.ACTIVE);
@@ -241,6 +243,7 @@ const DraggableRoad = ({
     console.error("onOpenCreateCardForm prop is not present at DraggableRoad")
 }) => {
   const [open, setOpen] = useState(false);
+  const { t } = useTranslation();
 
   if (!r) {
     return null;
@@ -631,6 +634,8 @@ const CardDraggable = ({
 
   const [open, setOpen] = useState(false);
 
+  const {t}=useTranslation()
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -972,6 +977,8 @@ const Roadmap = props => {
       params: { project_uiid: urlProjectUiId }
     }
   } = props;
+
+  const {t}=useTranslation()
 
   const { id: projectId } = project;
 

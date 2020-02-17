@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { t } from "i18next";
+
 import Responsive from "react-responsive";
 import paths from "../../routes/paths";
 import "./Footer.sass";
 import { connect } from "react-redux";
+import { useTranslation } from "react-i18next";
 
 // TODO Denis uncomment when static pages are ready
 const breakpointPx = 1250;
@@ -12,6 +13,8 @@ const PC = props => <Responsive {...props} minWidth={breakpointPx} />;
 const Mobile = props => <Responsive {...props} maxWidth={breakpointPx - 1} />;
 
 function Footer({ isSignedIn }) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Mobile>

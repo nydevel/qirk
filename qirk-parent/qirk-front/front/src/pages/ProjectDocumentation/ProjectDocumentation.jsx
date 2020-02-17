@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { t } from "i18next";
+
 import { Link } from "react-router-dom";
 import paths from "../../routes/paths";
 import Page from "../../components/Page/Page";
@@ -8,8 +8,9 @@ import WithFetch from "../../components/WithFetch/WithFetch";
 import constants from "../../utils/constants";
 import Loading from "../../components/Loading/Loading";
 import Button1 from "../../components/Button/Button";
+import { useTranslation } from "react-i18next";
 
-function ProjectDocumentation(props) {
+function ProjectDocumentation(props) {const{t}=useTranslation()
   return (
     <Page>
       <WithFetch fetchList={[constants.FETCH_PROJECT]}>

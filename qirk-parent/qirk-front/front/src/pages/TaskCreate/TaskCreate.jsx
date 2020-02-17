@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
 import classNames from "classnames";
 import ReactTextareaAutocomplete from "@webscopeio/react-textarea-autocomplete";
 import "@webscopeio/react-textarea-autocomplete/style.css";
@@ -12,7 +11,6 @@ import {
   setClearLinkedTasksListDispatch
 } from "../../actions/uiActions";
 import Button from "../../components/Button/Button";
-import useRequestResultToast from "../../utils/hooks/useRequestResultToast";
 import axios from "../../utils/axios";
 import actions from "../../utils/constants";
 import constants from "../../utils/constants";
@@ -47,6 +45,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   userId: state.user.id,
@@ -66,6 +65,7 @@ function TaskCreate({
   canCreateTask,
   match: { params }
 }) {
+  const{t}=useTranslation()
   const { project_uiid } = params;
   const taskStatuses = provideTaskStatusesOptions();
 
@@ -105,9 +105,6 @@ function TaskCreate({
   const handleClose = () => {
     setOpen(false);
   };
-
-  useRequestResultToast(requestStatus);
-
   useEffect(() => {
     if (description) {
       setIsEmptyDescriptionError(false);

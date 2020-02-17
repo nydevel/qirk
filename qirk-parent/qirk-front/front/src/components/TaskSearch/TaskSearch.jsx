@@ -7,7 +7,6 @@ import queryString from "query-string";
 import {
   responseIsStatusOk,
   uiUserFromUser,
-  provideTaskSortByOptions,
   provideTaskSortOrderOptions,
   saveItemToLocalStorageSafe
 } from "../../utils/variousUtils";
@@ -39,6 +38,7 @@ import Menu from "@material-ui/core/Menu";
 import AllProjectTasks from "../AllProjectTasks/AllProjectTasks";
 import useKeyPress from "../../utils/hooks/useKeyPress";
 import WithTooltip from "../WithTooltip/WithTooltip";
+import { useTranslation } from "react-i18next";
 
 const connectActions = {
   setLastProjectUiIdDispatch,
@@ -90,6 +90,7 @@ function TaskSearch({
   history,
   match: { params }
 }) {
+  const { t } = useTranslation();
   const parsed = queryString.parse(location.search);
 
   const [text, setText] = useState(parsed.text || "");
@@ -120,7 +121,7 @@ function TaskSearch({
   const [type, setType] = useState(parsed.type || "");
   const [priority, setPriority] = useState(parsed.priority || "");
   const [status, setStatus] = useState(
-    (parsed.status && parsed.status.split(",")) || [
+    (parsed && parsed.status && (parsed.status + "").split(",")) || [
       constants.TASK_STATUSES.OPEN,
       constants.TASK_STATUSES.IN_DEVELOPMENT,
       constants.TASK_STATUSES.WAITING_FOR_QA,
@@ -138,8 +139,12 @@ function TaskSearch({
   const [searchTimeout, setSearchTimeout] = useState(null);
   const [requestInProgress, setRequestInProgress] = useState(false);
 
-  const sortByOptions = provideTaskSortByOptions();
-  const sortOrderOptions = provideTaskSortOrderOptions();
+  const sortByOptions = Object.keys(constants.TASK_SORT_BY).map(key => ({
+    value: key,
+    label: t(`TaskSortBy.${key}`)
+  }));
+
+  const sortOrderOptions = provideTaskSortOrderOptions(t);
   const [sortBy, setSortBy] = useState(
     searchCol === constants.TASK_SORT_BY.UPDATED_AT
       ? sortByOptions[0]
@@ -254,7 +259,7 @@ function TaskSearch({
 
   //cacheUsers
   const fetchUsersList = async (organizationId, usersList) => {
-    if (organizationId && usersList.length > 0) {
+    if (organizationId && usersList && usersList.length > 0) {
       try {
         if (!searchAfter) {
           setRequestInProgress(true);
@@ -394,20 +399,15 @@ function TaskSearch({
     if (
       params.organization_uiid &&
       params.project_uiid &&
-      (
-        lastProjectUiId !== params.project_uiid)
+      lastProjectUiId !== params.project_uiid
     ) {
       resetTaskSearchDispatch();
       setLastProjectUiIdDispatch(params.project_uiid);
     }
-  }, [
-    params.organization_uiid,
-    params.project_uiid,
-    lastProjectUiId
-  ]);
+  }, [params.organization_uiid, params.project_uiid, lastProjectUiId]);
 
   useEffect(() => {
-      fetchUsersList( usersList);
+    fetchUsersList(usersList);
   }, [usersList]);
 
   useEffect(() => {
@@ -438,7 +438,6 @@ function TaskSearch({
 
     history.push(
       `${paths.ProjectSingle.toPath({
-        organization_uiid: params && params.organization_uiid,
         project_uiid: params && params.project_uiid
       })}?${queryString.stringify(filterParams, { arrayFormat: "comma" })}`
     );

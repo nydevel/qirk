@@ -6,8 +6,8 @@ import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
-import { t } from "i18next";
-import { uiTaskSummary, uiUserFromOrgMember } from "../../utils/variousUtils";
+
+import { uiTaskSummary } from "../../utils/variousUtils";
 import paths from "../../routes/paths";
 import {
   removeSelectedLinkedTaskDispatch,
@@ -39,8 +39,8 @@ import Loading from "../Loading/Loading";
 import classNames from "classnames";
 import "./TaskLinks.sass";
 import { Icon, IconButton } from "@material-ui/core";
-import useOutsideClickListener from "../../utils/hooks/useOutsideClickListener";
 import { setClearLinkedTasksListDispatch } from "../../actions/uiActions";
+import { useTranslation } from "react-i18next";
 
 function TaskLinks({
   data,
@@ -57,7 +57,7 @@ function TaskLinks({
   setClearLinkedTasksListDispatch,
   isTaskCreate = false,
   match: { params }
-}) {
+}) {const{t}=useTranslation()
   const deleteBtnRef = useRef();
   const dialogRef = useRef();
   const [xHoveredOver, setXHoveredOver] = useState(null);
@@ -354,7 +354,7 @@ function TaskLinks({
                       "x-hovered-linked-task": xHoveredOver === item.id
                     })}
                   >
-                    {(item.assignee && uiUserFromOrgMember(item.assignee)) ||
+                    {(item.assignee) ||
                       (item.assignee === null && (
                         <span>{t("unassigned")}</span>
                       ))}

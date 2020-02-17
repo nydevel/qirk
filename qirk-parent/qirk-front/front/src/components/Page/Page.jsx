@@ -5,7 +5,7 @@ import Breadcrumbs from "../BreadCrumbs/Breadcrumbs.jsx";
 import Footer from "../Footer/Footer";
 import LoadingScreen from "../LoadingScreen/LoadingScreen.jsx";
 import "./Page.sass";
-import constants from "../../utils/constants.js";
+import constants from "../../utils/constants";
 
 function Page({
   onLoginCheckFinished,

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { t } from "i18next";
 import PropTypes from "prop-types";
 import classNames from "classnames";
 import MButton from "@material-ui/core/Button";
@@ -27,6 +26,7 @@ import {
 } from "../../../utils/variousUtils";
 import axios from "../../../utils/axios";
 import { FormControl, FormControlLabel, Checkbox } from "@material-ui/core";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   isSignedIn: state.auth.isSignedIn,
@@ -40,6 +40,8 @@ function SignInForm({
   loginStatusCode,
   setResetPasswordStatusDispatch
 }) {
+  const { t } = useTranslation();
+
   const [resendingEmailInProgress, setResendingEmailInProgress] = useState(
     false
   );
@@ -289,8 +291,9 @@ SignInForm.propTypes = {
 };
 
 export default withRouter(
-  connect(
-    mapStateToProps,
-    { emailSignIn, setDefaultLoginStatusCode, setResetPasswordStatusDispatch }
-  )(SignInForm)
+  connect(mapStateToProps, {
+    emailSignIn,
+    setDefaultLoginStatusCode,
+    setResetPasswordStatusDispatch
+  })(SignInForm)
 );

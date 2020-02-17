@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-toastify";
-import { t } from "i18next";
+
 import { v4 } from "uuid";
 import classNames from "classnames";
 import {
@@ -32,6 +32,7 @@ import {
 import { Icon, IconButton, Button } from "@material-ui/core";
 import useOutsideClickListener from "../../utils/hooks/useOutsideClickListener";
 import { setClearAttachmentsDispatch } from "../../actions/uiActions";
+import { useTranslation } from "react-i18next";
 
 const UPLOAD_ATTEMPTS_LIMIT = 5;
 
@@ -56,6 +57,7 @@ function Attachments({
   clearAttachments,
   isTaskCreate = false
 }) {
+  const{t}=useTranslation()
   const deleteBtnRef = useRef();
   const [xHoveredOver, setXHoveredOver] = useState(null);
   const [_attachments, setAttachments] = useState(() => {

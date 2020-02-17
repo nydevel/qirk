@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { withRouter, Link } from "react-router-dom";
-import { t } from "i18next";
 import { connect } from "react-redux";
 import queryString from "query-string";
 import classNames from "classnames";
@@ -23,7 +22,7 @@ import NotficationIcon from "../NotficationIcon/NotficationIcon";
 import { logoutUser } from "./../../actions/authActions";
 import { changeDashboardSizeDispatch } from "./../../actions/uiActions";
 import "./HeaderMaterial.sass";
-import Balance from "../Balance/Balance";
+import { useTranslation } from "react-i18next";
 
 function HeaderMaterial({
   isSignedIn,
@@ -33,6 +32,7 @@ function HeaderMaterial({
   user,
   history
 }) {
+  const{t}=useTranslation()
   const [searchType, setSearchType] = useState(constants.SEARCH_EVERYWHERE);
   const [searchString, setSearchString] = useState("");
   const [showSearchOptions, setShowSearchOptions] = useState(false);
@@ -61,9 +61,10 @@ function HeaderMaterial({
   const handleClickOutside = e => {
     if (
       profileMenuRef &&
-      profileMenuRef.current && !profileMenuRef.current.contains(e.target) &&
+      profileMenuRef.current &&
+      !profileMenuRef.current.contains(e.target) &&
       profileMenuIconRef.current &&
-        !profileMenuIconRef.current.contains(e.target)
+      !profileMenuIconRef.current.contains(e.target)
     ) {
       setIsProfileMenuOpen(false);
     }
@@ -128,7 +129,7 @@ function HeaderMaterial({
           <TopAppBarTitle
             style={{
               paddingLeft: 5,
-              fontFamily: "bebas-neue, sans-serif",
+              fontFamily: "'Bebas Neue', sans-serif, cursive",
               fontWeight: "400",
               fontStyle: "normal",
               textTransform: "uppercase",
@@ -151,80 +152,11 @@ function HeaderMaterial({
             </span>
           </TopAppBarTitle>
         </Link>
-
-        {1 === 2 && (
-          <Link to={paths.UserSearch.toPath()}>
-            <Button className="white-ripples">{t("Users")}</Button>
-          </Link>
-        )}
       </TopAppBarSection>
-      <TopAppBarSection align="center" role="toolbar">
-        {/* && (
-          <form ref={searchRef} onSubmit={submit}>
-            <fieldset disabled={2 == 1}>
-              <div className="main">
-                <input
-                  required
-                  placeholder={t("search_hint")}
-                  value={searchString}
-                  onChange={e => {
-                    setSearchString(e.target.value);
-                    setSearchInFocus(true);
-                  }}
-                />
-                <button
-                  type="submit"
-                  onClick={() => {
-                    setSearchType(constants.SEARCH_EVERYWHERE);
-                  }}
-                >
-                  <img src={ic_search} alt={t("search_everywhere_btn")} />
-                </button>
-              </div>
-              {showSearchOptions && (
-                <div className="options">
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      setSearchType(constants.SEARCH_EVERYWHERE);
-                    }}
-                  >
-                    {t("search_everywhere_btn")}
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      setSearchType(constants.SEARCH_ORGANIZATIONS);
-                    }}
-                  >
-                    {t("search_organizations_btn")}
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      setSearchType(constants.SEARCH_PROJECTS);
-                    }}
-                  >
-                    {t("search_projects_btn")}
-                  </button>
-                  <button
-                    type="submit"
-                    onClick={() => {
-                      setSearchType(constants.SEARCH_USERS);
-                    }}
-                  >
-                    {t("search_users_btn")}
-                  </button>
-                </div>
-              )}
-            </fieldset>
-          </form>
-                  ) */}
-      </TopAppBarSection>
+      <TopAppBarSection align="center" role="toolbar"></TopAppBarSection>
       <TopAppBarSection align="end" className="end" role="toolbar">
         {isSignedIn ? (
           <>
-            {/*<Balance />*/}
             <NotficationIcon />
             <div ref={profileMenuIconRef}>
               <div

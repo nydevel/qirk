@@ -1,17 +1,18 @@
 import React from "react";
 import "./AllProjectTaskItem.sass";
-import { t } from "i18next";
 import constants from "../../../utils/constants";
-import { uiUserFromOrgMember } from "../../../utils/variousUtils";
 import { uiDate } from "../../../utils/timeUtils";
 import { connect } from "react-redux";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 const mapStateToProps = state => ({
   cacheUsers: state.cacheUsers.usersList
 });
 
 function AllProjectTaskItem({ itemData, cacheUsers, ...props }) {
+  const { t } = useTranslation();
+
   if (
     !itemData ||
     Object.keys(itemData).length === 0 ||
@@ -76,13 +77,13 @@ function AllProjectTaskItem({ itemData, cacheUsers, ...props }) {
             {itemData.reporter && (
               <div className="main-item-part__header__reporter">
                 <span>{t("author")}: </span>
-                {uiUserFromOrgMember(cacheUsers[itemData.reporter])}
+                {JSON.stringify(cacheUsers[itemData.reporter])}
               </div>
             )}
             {itemData.assignee && (
               <div className="main-item-part__header__assignee">
                 <span>{t("to")}: </span>
-                {uiUserFromOrgMember(cacheUsers[itemData.assignee])}
+                {JSON.stringify(cacheUsers[itemData.assignee])}
               </div>
             )}
           </div>

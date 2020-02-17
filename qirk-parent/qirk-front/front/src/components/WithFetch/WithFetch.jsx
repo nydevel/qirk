@@ -8,7 +8,6 @@ import {
   fetchTask,
   fetchTaskById
 } from "./../../actions/projectActions";
-import { fetchLanguages } from "./../../actions/commonActions";
 import {
   fetchFoundUserInfo,
   fetchUserProjectMemberships
@@ -21,12 +20,9 @@ import NotFoundPage from "../../pages/NotFoundPage/NotFoundPage";
 function WithFetch({
   children,
   fetchList,
-  fetchLanguagesStatus,
-  languages,
   fetchProjectByUIID,
   fetchProjectMembers,
   fetchProjectMember,
-  fetchLanguages,
   fetchTask,
   fetchTaskById,
   fetchFoundUserInfo,
@@ -100,20 +96,7 @@ function WithFetch({
     )
   ]);
 
-  useEffect(() => {
-    if (
-      fetchList.some(fetchEnt => fetchEnt === constants.LAZY_FETCH_LANGUAGES) &&
-      fetchLanguagesStatus === constants.NOT_REQUESTED &&
-      (!languages || !languages.length)
-    ) {
-      fetchLanguages();
-    }
-  }, [
-    fetchList.some(fetchEnt => fetchEnt === constants.LAZY_FETCH_LANGUAGES),
-    fetchLanguagesStatus
-  ]);
-
-  
+ 
 
   useEffect(() => {
     if (
@@ -180,7 +163,6 @@ function WithFetch({
     ),
     params.userId
   ]);
-
 
   useEffect(() => {
     if (
@@ -252,8 +234,6 @@ function WithFetch({
 export default withRouter(
   connect(
     state => ({
-      fetchLanguagesStatus: state.common.fetchLanguagesStatus,
-      languages: state.common.languages,
       projectNotFound: state.project.fetchStatus === constants.NOT_FOUND,
       taskNotFound: state.selectedTask,
       projectMemberNotFound:
@@ -265,7 +245,6 @@ export default withRouter(
       fetchProjectMember,
       fetchTask,
       fetchTaskById,
-      fetchLanguages,
       fetchFoundUserInfo,
       fetchUserProjectMemberships,
       fetchUserProjectManagerProjects,

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+
 import { editProjectMember } from "../../actions/projectActions";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import constants from "../../utils/constants";
@@ -10,6 +10,7 @@ import Loading from "../../components/Loading/Loading";
 import { uiUserFromUser } from "../../utils/variousUtils";
 import Button1 from "../../components/Button/Button";
 import Checkbox from "../../components/Checkbox/Checkbox";
+import { useTranslation } from "react-i18next";
 
 function ProjectMemberEditing({
   editingMemberInProgress,
@@ -19,6 +20,7 @@ function ProjectMemberEditing({
   editProjectMember,
   match: { params }
 }) {
+  const{t}=useTranslation()
   const [isManager, setIsManager] = useState(false);
   const [writeAllowed, setWriteAllowed] = useState(false);
 

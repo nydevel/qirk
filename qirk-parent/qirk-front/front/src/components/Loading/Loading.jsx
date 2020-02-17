@@ -9,7 +9,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function Loading({ style, ...props }) {
+export default function Loading({ style ={}, ...props }) {
   const classes = useStyles();
 
   return (

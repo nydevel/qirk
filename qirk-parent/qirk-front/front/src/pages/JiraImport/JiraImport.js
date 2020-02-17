@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { connect } from "react-redux";
-import { t } from "i18next";
+
 import {
   Button,
   Table,
@@ -23,6 +23,7 @@ import {
 import Loading from "../../components/Loading/Loading";
 import UploadListItem from "./UploadListItem";
 import paths from "../../routes/paths";
+import { useTranslation } from "react-i18next";
 
 const JiraImport = ({
   orgId,
@@ -33,6 +34,7 @@ const JiraImport = ({
     params: { organization_uiid }
   }
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [uploads, setUploads] = useState([]);
   const [uploading, setUploading] = useState(false);
@@ -163,5 +165,4 @@ const JiraImport = ({
   );
 };
 
-export default connect(state => ({
-}))(JiraImport);
+export default connect(state => ({}))(JiraImport);

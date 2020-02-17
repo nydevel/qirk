@@ -1,8 +1,8 @@
 import React from "react";
-import { t } from "i18next";
 import { makeStyles } from "@material-ui/core/styles";
 import { Select, FormControl, InputLabel, MenuItem } from "@material-ui/core";
 import constants from "../../../utils/constants";
+import { useTranslation } from "react-i18next";
 
 const useStyles = makeStyles(theme => ({
   formControl: {
@@ -18,6 +18,7 @@ const MapStatuses = ({
   setMappedStatuses = () => {},
   statuses = []
 }) => {
+  const{t}=useTranslation()
   const classes = useStyles();
 
   return (

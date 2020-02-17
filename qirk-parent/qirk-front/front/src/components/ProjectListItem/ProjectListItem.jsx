@@ -27,7 +27,6 @@ function ProjectListItem({ p, favProjectsIds, orgUiId }) {
         "project-item__is-not-fav": !isFav
       })}
       to={paths.ProjectSingle.toPath({
-        organization_uiid: orgUiId,
         project_uiid: p.ui_id
       })}
     >

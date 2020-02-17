@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import Button from "../../../components/Button/Button";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import TextInput from "../../../components/TextInput/TextInput";
 import { changePassword } from "../../../actions/authActions";
 
 function PasswordChangeForm(props) {
+  const { t } = useTranslation();
+
   const [currentPass, setCurrentPass] = useState("");
   const [newPassOne, setNewPassOne] = useState("");
   const [newPassTwo, setNewPassTwo] = useState("");
@@ -126,7 +128,4 @@ const mapStateToProps = state => ({
   passwordChangeStatusCode: state.auth.passwordChangeStatusCode
 });
 
-export default connect(
-  mapStateToProps,
-  { changePassword }
-)(PasswordChangeForm);
+export default connect(mapStateToProps, { changePassword })(PasswordChangeForm);

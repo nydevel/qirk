@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { connect } from "react-redux";
-import { t } from "i18next";
 import { updateProjectDocumentation } from "../../actions/projectActions";
 import WithFetch from "../../components/WithFetch/WithFetch";
 import constants from "../../utils/constants";
@@ -8,6 +7,7 @@ import Loading from "../../components/Loading/Loading";
 import PrivatePage from "../../components/PrivatePage/PrivatePage";
 import Button1 from "../../components/Button/Button";
 import TextInput from "../../components/TextInput/TextInput";
+import { useTranslation } from "react-i18next";
 
 function ProjectDocumentationEdit({
   projectInfo,
@@ -16,6 +16,7 @@ function ProjectDocumentationEdit({
   documentationRequestStatus,
   updateProjectDocumentation
 }) {
+  const{t}=useTranslation()
   const [documentation, setDocumentation] = useState("");
   useState(() => {
     setDocumentation(projectInfo && projectInfo.documentation_md);

@@ -1,13 +1,14 @@
 import React from "react";
-import { t } from "i18next";
 import { Link } from "react-router-dom";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import ConfirmRegistrationForm from "../../components/ConfirmRegistrationForm/ConfirmRegistrationForm";
 import Page from "../../components/Page/Page";
 import paths from "../../routes/paths";
 import Button from "../../components/Button/Button";
+import { useTranslation } from "react-i18next";
 
 const RegisterConfirmation = () => {
+  const { t } = useTranslation();
   return (
     <Page
       pageWrapperStyle={{ position: "relative" }}

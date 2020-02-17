@@ -1,11 +1,12 @@
 import React from "react";
 import { withRouter } from "react-router-dom";
-import { t } from "i18next";
+import { useTranslation } from "react-i18next";
 import { Card, CardContent, Typography } from "@material-ui/core";
 import Page from "../../components/Page/Page";
 import ConfirmRegistrationForm from "../../components/ConfirmRegistrationForm/ConfirmRegistrationForm";
 
 function AcceptEmailInvite() {
+  const { t } = useTranslation();
   return (
     <Page
       pageWrapperStyle={{ position: "relative" }}
