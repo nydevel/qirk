@@ -95,9 +95,7 @@ public class DefaultAuthnService implements AuthnService {
                     (System.currentTimeMillis() - topAttempt.getFailedAt());
 
             if (retryAfterMillis > 0L) {
-                if (loginDTO.gRecaptchaResponse == null) {
-                    throw new TooManyLoginAttemptsException(retryAfterMillis, "");
-                }
+                throw new TooManyLoginAttemptsException(retryAfterMillis, "");
             }
         }
 

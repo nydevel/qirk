@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 import org.wrkr.clb.common.mail.DevOpsMailService;
 import org.wrkr.clb.repo.MainDatabaseRepo;
 import org.wrkr.clb.repo.auth.AuthDatabaseRepo;
-import org.wrkr.clb.services.api.elasticsearch.ElasticsearchClusterService;
 import org.wrkr.clb.services.jms.JMSCheckService;
 
 @Component("mainSelfCheckJobService")
@@ -44,9 +43,6 @@ public class SelfCheckJobService {
     private AuthDatabaseRepo authRepo;
 
     @Autowired
-    private ElasticsearchClusterService elasticsearchService;
-
-    @Autowired
     private JMSCheckService jmsService;
 
     public void checkPostgresMain() {
@@ -62,14 +58,6 @@ public class SelfCheckJobService {
             authRepo.check();
         } catch (Exception e) {
             mailService.sendResourceFailedEmail("PostgreSQL clb_auth database", e);
-        }
-    }
-
-    public void checkElasticsearch() {
-        try {
-            elasticsearchService.checkClusterHealth();
-        } catch (Exception e) {
-            mailService.sendResourceFailedEmail("Elasticsearch", e);
         }
     }
 

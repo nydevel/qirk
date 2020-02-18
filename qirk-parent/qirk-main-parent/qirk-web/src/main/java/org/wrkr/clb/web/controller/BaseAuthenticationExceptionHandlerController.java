@@ -39,12 +39,6 @@ public abstract class BaseAuthenticationExceptionHandlerController extends BaseE
                 "No account found with the given credentials.");
     }
 
-    @ExceptionHandler(DisabledException.class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    private JsonContainer<Void, Void> handleDisabledException(@SuppressWarnings("unused") DisabledException e) {
-        return JsonContainer.fromCodeAndReason(JsonStatusCode.ACCOUNT_DISABLED, "Account is disabled.");
-    }
-
     @ExceptionHandler(TooManyLoginAttemptsException.class)
     private JsonContainer<Void, RetryAfterDTO> handleTooManyLoginAttemptsException(HttpServletResponse response,
             TooManyLoginAttemptsException e) {

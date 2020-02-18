@@ -28,7 +28,4 @@ public class LoginDTO {
 
     @NotNull(message = "password in LoginDTO must not be null")
     public String password;
-
-    @JsonProperty(value = "g_recaptcha_response")
-    public String gRecaptchaResponse;
 }

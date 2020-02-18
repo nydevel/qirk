@@ -86,8 +86,6 @@
             fixed-rate="${selfcheck.rate.millis}" />
         <task:scheduled ref="mainSelfCheckJobService" method="checkPostgresAuth"
             fixed-rate="${selfcheck.rate.millis}" />
-        <task:scheduled ref="mainSelfCheckJobService" method="checkElasticsearch"
-            fixed-rate="${selfcheck.rate.millis}" />
         <task:scheduled ref="mainSelfCheckJobService" method="checkActiveMQQueue"
             fixed-rate="${selfcheck.rate.millis}" />
         <task:scheduled ref="mainSelfCheckJobService" method="checkActiveMQTopic"
