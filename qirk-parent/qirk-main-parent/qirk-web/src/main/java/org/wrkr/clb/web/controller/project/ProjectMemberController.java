@@ -43,7 +43,6 @@ import org.wrkr.clb.services.util.exception.BadRequestException;
 import org.wrkr.clb.web.controller.BaseExceptionHandlerController;
 import org.wrkr.clb.web.json.JsonContainer;
 
-
 @RestController
 @RequestMapping(path = "project-member", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public class ProjectMemberController extends BaseExceptionHandlerController {
@@ -104,15 +103,6 @@ public class ProjectMemberController extends BaseExceptionHandlerController {
             throw new BadRequestException("Neither parameter 'project_id' nor parameter 'project_ui_id' is present.");
         }
         logProcessingTimeFromStartTime(startTime, "listByProject", projectId, projectUiId);
-        return new JsonContainer<ProjectMemberReadDTO, Void>(projectMemberDTOList);
-    }
-
-    @GetMapping(value = "list-by-user")
-    public JsonContainer<ProjectMemberReadDTO, Void> listByUser(HttpSession session,
-            @RequestParam(name = "user_id") Long userId) {
-        long startTime = System.currentTimeMillis();
-        List<ProjectMemberReadDTO> projectMemberDTOList = projectMemberService.listByUser(getSessionUser(session), userId);
-        logProcessingTimeFromStartTime(startTime, "listByUser", userId);
         return new JsonContainer<ProjectMemberReadDTO, Void>(projectMemberDTOList);
     }
 

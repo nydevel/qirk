@@ -18,7 +18,6 @@ package org.wrkr.clb.repo.project;
 
 import java.util.List;
 
-import javax.persistence.Tuple;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
@@ -142,20 +141,6 @@ public class ProjectMemberRepo extends JPADeletingRepo<ProjectMember> {
         Join<ProjectMember, Project> projectJoin = memberRoot.join(ProjectMember_.project);
 
         query.where(cb.equal(projectJoin.get(Project_.uiId), projectUiId), cb.equal(memberRoot.get(ProjectMember_.fired), false));
-        return getResultList(query);
-    }
-
-    public List<Tuple> listPublicByUserIdAndFetchProject(Long userId) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Tuple> query = cb.createTupleQuery();
-
-        Root<ProjectMember> memberRoot = query.from(ProjectMember.class);
-        Join<ProjectMember, User> userJoin = memberRoot.join(ProjectMember_.user);
-        Join<ProjectMember, Project> projectJoin = memberRoot.join(ProjectMember_.project);
-
-        query.multiselect(memberRoot, projectJoin);
-        query.where(cb.equal(userJoin.get(User_.id), userId), cb.equal(projectJoin.get(Project_.isPrivate), false));
-        query.orderBy(cb.asc(memberRoot.get(ProjectMember_.fired)), cb.desc(memberRoot.get(ProjectMember_.hiredAt)));
         return getResultList(query);
     }
 }

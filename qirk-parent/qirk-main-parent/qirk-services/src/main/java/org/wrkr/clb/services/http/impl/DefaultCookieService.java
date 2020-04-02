@@ -64,7 +64,7 @@ public class DefaultCookieService implements CookieService {
     @Override
     public HttpServletResponse removeCookie(HttpServletResponse response, Cookie cookie) {
         if (cookie != null) {
-            cookie = new Cookie(cookie.getName(), cookie.getValue());
+            cookie = new Cookie(cookie.getName(), "");
             cookie.setMaxAge(0);
             cookie.setPath("/");
             response.addCookie(cookie);

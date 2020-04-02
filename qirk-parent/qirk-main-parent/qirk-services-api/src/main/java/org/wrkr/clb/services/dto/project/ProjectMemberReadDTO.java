@@ -19,10 +19,7 @@ package org.wrkr.clb.services.dto.project;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Tuple;
-
 import org.wrkr.clb.common.util.datetime.DateTimeUtils;
-import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 import org.wrkr.clb.services.dto.IdDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
@@ -103,16 +100,6 @@ public class ProjectMemberReadDTO extends IdDTO {
         List<ProjectMemberReadDTO> dtoList = new ArrayList<ProjectMemberReadDTO>(memberList.size());
         for (ProjectMember member : memberList) {
             dtoList.add(fromEntityWithUserAndPermissions(member));
-        }
-        return dtoList;
-    }
-
-    public static List<ProjectMemberReadDTO> fromProjectMemberWithProjectTuples(List<Tuple> memberList) {
-        List<ProjectMemberReadDTO> dtoList = new ArrayList<ProjectMemberReadDTO>();
-        for (Tuple member : memberList) {
-            ProjectMemberReadDTO dto = fromEntityWithTimestamps(member.get(0, ProjectMember.class));
-            dto.project = ProjectNameAndUiIdDTO.fromEntity(member.get(1, Project.class));
-            dtoList.add(dto);
         }
         return dtoList;
     }

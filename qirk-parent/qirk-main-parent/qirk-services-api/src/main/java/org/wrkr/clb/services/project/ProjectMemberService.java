@@ -61,9 +61,6 @@ public interface ProjectMemberService {
     public List<ProjectMemberReadDTO> listByProjectUiId(User currentUser,
             @NotNull(message = "projectUiId must not be null") String projectUiId);
 
-    public List<ProjectMemberReadDTO> listByUser(User currentUser,
-            @NotNull(message = "userId must not be null") Long userId);
-
     public void delete(User currentUser,
             @NotNull(message = "id must not be null") Long id) throws Exception;
 

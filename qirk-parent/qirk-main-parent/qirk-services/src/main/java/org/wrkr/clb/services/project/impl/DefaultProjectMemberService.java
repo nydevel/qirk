@@ -19,8 +19,6 @@ package org.wrkr.clb.services.project.impl;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Tuple;
-
 import org.elasticsearch.search.SearchHits;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -224,17 +222,6 @@ public class DefaultProjectMemberService implements ProjectMemberService {
 
         List<ProjectMember> memberList = projectMemberRepo.listNotFiredByProjectUiIdAndFetchUser(projectUiId);
         return ProjectMemberReadDTO.fromEntitiesForProject(memberList);
-    }
-
-    @Override
-    @Transactional(value = "jpaTransactionManager", rollbackFor = Throwable.class, readOnly = true)
-    public List<ProjectMemberReadDTO> listByUser(User currentUser, Long userId) {
-        // security start
-        authnSecurityService.authzCanReadUserProfile(currentUser, userId);
-        // security finish
-
-        List<Tuple> memberList = projectMemberRepo.listPublicByUserIdAndFetchProject(userId);
-        return ProjectMemberReadDTO.fromProjectMemberWithProjectTuples(memberList);
     }
 
     private void delete(ProjectMember member, boolean deleteUserFavorite) {
