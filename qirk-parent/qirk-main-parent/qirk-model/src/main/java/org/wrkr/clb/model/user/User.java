@@ -1,19 +1,3 @@
-/*
- * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.wrkr.clb.model.user;
 
 import java.time.OffsetDateTime;
@@ -25,16 +9,11 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.wrkr.clb.model.BaseIdEntity;
-import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.project.Issue;
 import org.wrkr.clb.model.project.ProjectMember;
 
@@ -70,16 +49,6 @@ public class User extends BaseIdEntity {
     private NotificationSettings notificationSettings;
     @Transient
     private Boolean sendEmailNotifications;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_tag", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "tag_id") })
-    private List<Tag> tags = new ArrayList<Tag>();
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_language", joinColumns = { @JoinColumn(name = "user_id") }, inverseJoinColumns = {
-            @JoinColumn(name = "language_id") })
-    private List<Language> languages = new ArrayList<Language>();
 
     // Projects
 
@@ -154,22 +123,6 @@ public class User extends BaseIdEntity {
 
     public void setSendEmailNotifications(Boolean sendEmailNotifications) {
         this.sendEmailNotifications = sendEmailNotifications;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public List<Language> getLanguages() {
-        return languages;
-    }
-
-    public void setLanguages(List<Language> languages) {
-        this.languages = languages;
     }
 
     public List<ProjectMember> getProjectMembership() {

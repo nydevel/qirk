@@ -74,7 +74,7 @@ ALTER SEQUENCE application_status_id_seq OWNED BY application_status.id;
 CREATE TABLE attachment (
     id bigint NOT NULL,
     filename character varying(511) NOT NULL,
-    path character varying(511) NOT NULL,
+    external_path character varying(511) NOT NULL,
     task_id bigint NOT NULL,
     deleted boolean DEFAULT false NOT NULL
 );
@@ -304,41 +304,6 @@ CREATE TABLE jira_upload (
     upload_timestamp bigint NOT NULL,
     archive_filename character varying(511) NOT NULL
 );
-
-
-
-
---
--- Name: languages; Type: TABLE; Schema: public
---
-
-CREATE TABLE languages (
-    id bigint NOT NULL,
-    name_code character varying(50) NOT NULL
-);
-
-
-
-
---
--- Name: languages_id_seq; Type: SEQUENCE; Schema: public
---
-
-CREATE SEQUENCE languages_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
-
---
--- Name: languages_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
-ALTER SEQUENCE languages_id_seq OWNED BY languages.id;
 
 
 --
@@ -587,18 +552,6 @@ ALTER SEQUENCE project_invite_token_id_seq OWNED BY project_invite_token.id;
 
 
 --
--- Name: project_language; Type: TABLE; Schema: public
---
-
-CREATE TABLE project_language (
-    project_id bigint NOT NULL,
-    language_id bigint NOT NULL
-);
-
-
-
-
---
 -- Name: project_member; Type: TABLE; Schema: public
 --
 
@@ -635,18 +588,6 @@ CREATE SEQUENCE project_member_id_seq
 --
 
 ALTER SEQUENCE project_member_id_seq OWNED BY project_member.id;
-
-
---
--- Name: project_tag; Type: TABLE; Schema: public
---
-
-CREATE TABLE project_tag (
-    project_id bigint NOT NULL,
-    tag_id bigint NOT NULL
-);
-
-
 
 
 --
@@ -717,39 +658,6 @@ CREATE SEQUENCE road_id_seq
 --
 
 ALTER SEQUENCE road_id_seq OWNED BY road.id;
-
-
---
--- Name: tag; Type: TABLE; Schema: public
---
-
-CREATE TABLE tag (
-    id bigint NOT NULL,
-    name character varying(127) NOT NULL
-);
-
-
-
-
---
--- Name: tag_id_seq; Type: SEQUENCE; Schema: public
---
-
-CREATE SEQUENCE tag_id_seq
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1;
-
-
-
-
---
--- Name: tag_id_seq; Type: SEQUENCE OWNED BY; Schema: public
---
-
-ALTER SEQUENCE tag_id_seq OWNED BY tag.id;
 
 
 --
@@ -1061,18 +969,6 @@ ALTER SEQUENCE user_favorite_id_seq OWNED BY user_favorite.id;
 
 
 --
--- Name: user_language; Type: TABLE; Schema: public
---
-
-CREATE TABLE user_language (
-    user_id bigint NOT NULL,
-    language_id bigint NOT NULL
-);
-
-
-
-
---
 -- Name: user_profile; Type: TABLE; Schema: public
 --
 
@@ -1108,18 +1004,6 @@ CREATE SEQUENCE user_profile_id_seq
 --
 
 ALTER SEQUENCE user_profile_id_seq OWNED BY user_profile.id;
-
-
---
--- Name: user_tag; Type: TABLE; Schema: public
---
-
-CREATE TABLE user_tag (
-    user_id bigint NOT NULL,
-    tag_id bigint NOT NULL
-);
-
-
 
 
 --
@@ -1162,13 +1046,6 @@ ALTER TABLE invite_status ALTER COLUMN id SET DEFAULT nextval('invite_status_id_
 --
 
 ALTER TABLE issue ALTER COLUMN id SET DEFAULT nextval('issue_id_seq'::regclass);
-
-
---
--- Name: languages id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE languages ALTER COLUMN id SET DEFAULT nextval('languages_id_seq'::regclass);
 
 
 --
@@ -1239,13 +1116,6 @@ ALTER TABLE project_task_number_sequence ALTER COLUMN id SET DEFAULT nextval('pr
 --
 
 ALTER TABLE road ALTER COLUMN id SET DEFAULT nextval('road_id_seq'::regclass);
-
-
---
--- Name: tag id; Type: DEFAULT; Schema: public
---
-
-ALTER TABLE tag ALTER COLUMN id SET DEFAULT nextval('tag_id_seq'::regclass);
 
 
 --
@@ -1409,22 +1279,6 @@ ALTER TABLE jira_upload
 
 
 --
--- Name: languages languages_name_code_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE languages
-    ADD CONSTRAINT languages_name_code_uniq UNIQUE (name_code);
-
-
---
--- Name: languages languages_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE languages
-    ADD CONSTRAINT languages_pkey PRIMARY KEY (id);
-
-
---
 -- Name: login_statistics login_statistics_pkey; Type: CONSTRAINT; Schema: public
 --
 
@@ -1505,14 +1359,6 @@ ALTER TABLE project_invite_token
 
 
 --
--- Name: project_language project_language_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_language
-    ADD CONSTRAINT project_language_pkey PRIMARY KEY (project_id, language_id);
-
-
---
 -- Name: project_member project_member_pkey; Type: CONSTRAINT; Schema: public
 --
 
@@ -1529,14 +1375,6 @@ ALTER TABLE project
 
 
 --
--- Name: project_tag project_tag_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_tag
-    ADD CONSTRAINT project_tag_pkey PRIMARY KEY (project_id, tag_id);
-
-
---
 -- Name: project_task_number_sequence project_task_number_sequence_pkey; Type: CONSTRAINT; Schema: public
 --
 
@@ -1550,22 +1388,6 @@ ALTER TABLE project_task_number_sequence
 
 ALTER TABLE road
     ADD CONSTRAINT road_pkey PRIMARY KEY (id);
-
-
---
--- Name: tag tag__name_uniq; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE tag
-    ADD CONSTRAINT tag__name_uniq UNIQUE (name);
-
-
---
--- Name: tag tag_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE tag
-    ADD CONSTRAINT tag_pkey PRIMARY KEY (id);
 
 
 --
@@ -1689,14 +1511,6 @@ ALTER TABLE user_favorite
 
 
 --
--- Name: user_language user_language_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_language
-    ADD CONSTRAINT user_language_pkey PRIMARY KEY (user_id, language_id);
-
-
---
 -- Name: user_profile user_profile__email_uniq; Type: CONSTRAINT; Schema: public
 --
 
@@ -1710,14 +1524,6 @@ ALTER TABLE user_profile
 
 ALTER TABLE user_profile
     ADD CONSTRAINT user_profile_pkey PRIMARY KEY (id);
-
-
---
--- Name: user_tag user_tag_pkey; Type: CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_tag
-    ADD CONSTRAINT user_tag_pkey PRIMARY KEY (user_id, tag_id);
 
 
 --
@@ -2163,22 +1969,6 @@ ALTER TABLE project_invite_token
 
 
 --
--- Name: project_language project_language_language_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_language
-    ADD CONSTRAINT project_language_language_id_fkey FOREIGN KEY (language_id) REFERENCES languages(id) ON UPDATE CASCADE;
-
-
---
--- Name: project_language project_language_project_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_language
-    ADD CONSTRAINT project_language_project_id_fkey FOREIGN KEY (project_id) REFERENCES project(id) ON UPDATE CASCADE;
-
-
---
 -- Name: project_member project_member__project_id__project_fkey; Type: FK CONSTRAINT; Schema: public
 --
 
@@ -2192,22 +1982,6 @@ ALTER TABLE project_member
 
 ALTER TABLE project_member
     ADD CONSTRAINT project_member__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
-
-
---
--- Name: project_tag project_tag_project_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_tag
-    ADD CONSTRAINT project_tag_project_id_fkey FOREIGN KEY (project_id) REFERENCES project(id) ON UPDATE CASCADE;
-
-
---
--- Name: project_tag project_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE project_tag
-    ADD CONSTRAINT project_tag_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON UPDATE CASCADE;
 
 
 --
@@ -2393,41 +2167,6 @@ ALTER TABLE user_favorite
 ALTER TABLE user_favorite
     ADD CONSTRAINT user_favorite__user_id__user_profile_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id);
 
-
---
--- Name: user_language user_language_language_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_language
-    ADD CONSTRAINT user_language_language_id_fkey FOREIGN KEY (language_id) REFERENCES languages(id) ON UPDATE CASCADE;
-
-
---
--- Name: user_language user_language_user_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_language
-    ADD CONSTRAINT user_language_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id) ON UPDATE CASCADE;
-
-
---
--- Name: user_tag user_tag_tag_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_tag
-    ADD CONSTRAINT user_tag_tag_id_fkey FOREIGN KEY (tag_id) REFERENCES tag(id) ON UPDATE CASCADE;
-
-
---
--- Name: user_tag user_tag_user_id_fkey; Type: FK CONSTRAINT; Schema: public
---
-
-ALTER TABLE user_tag
-    ADD CONSTRAINT user_tag_user_id_fkey FOREIGN KEY (user_id) REFERENCES user_profile(id) ON UPDATE CASCADE;
-
-
-INSERT INTO languages(name_code) VALUES('EN_US');
-INSERT INTO languages(name_code) VALUES('RU_RU');
 
 INSERT INTO task_type(name_code) VALUES('TASK');
 INSERT INTO task_type(name_code) VALUES('BUG');

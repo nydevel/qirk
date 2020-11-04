@@ -9,17 +9,17 @@ Response structure:
 
 /csrf/refresh
 Method: GET
-Response.data: [{}]
+Response.data: []
 
 /authn/login/
 Method: POST
 Request: {"username":"aaa", "password":"121212", "g_recaptcha_response":""}
-Response.data: [{}]
+Response.data: []
 
 /authn/logout/
 Method: POST
 Request: {}
-Response.data: [{}]
+Response.data: []
 
 /authn/check/
 Method: GET
@@ -49,7 +49,7 @@ Response.data: [{"email_sent":true}
 /user/activate/
 Method: POST
 Request: {"token":"aaa", "username":"aaa", "full_name":"aaa"}
-Response.data: [{}]
+Response.data: []
 
 /user/reset-password/
 Method: POST
@@ -63,7 +63,7 @@ Request: {
 	"new_password":"aaa",
 	"token":"aaa"
 }
-Response.data: [{}]
+Response.data: []
 
 /user/
 Method: GET
@@ -402,7 +402,7 @@ Request: {
 	"task1":1,
 	"task2":2
 }
-Response.data: [{}]
+Response.data: []
 
 /task/link/
 Method: DELETE
@@ -410,7 +410,7 @@ Request: {
 	"task1":1,
 	"task2":2
 }
-Response.data: [{}]
+Response.data: []
 
 /task/list-cardless/
 Method: GET
@@ -552,7 +552,7 @@ Method: DELETE
 Request: {
 	"id":1
 }
-Response.data: [{}]
+Response.data: []
 
 /user-favorite/
 Method: POST
@@ -596,7 +596,7 @@ Response.data: [{
 /user-favorite/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /memo/
 Method: POST
@@ -632,7 +632,7 @@ Response.data: [{
 /memo/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /issue/
 Method: POST
@@ -866,7 +866,7 @@ Response.data: [{
 /granted-permissions-project-invite/accept/
 Method: POST
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /granted-permissions-project-invite/reject/
 Method: PUT
@@ -906,7 +906,7 @@ Response.data: [{
 /granted-permissions-project-invite/cancel/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /project-invite-token/check-token/
 Method: GET
@@ -921,7 +921,7 @@ Request: {
 	"username":"aaa", (nullable)
 	"full_name":"aaa" (nullable)
 }
-Response.data: [{}]
+Response.data: []
 
 /project-invite-token/reject/
 Method: PUT
@@ -1010,7 +1010,7 @@ Response.data: [{
 /project-application/cancel/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /project-member/
 Method: POST
@@ -1084,12 +1084,12 @@ Response.data: [{
 /project-member/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /project-member/leave/
 Method: DELETE
 Request: {"project":1}
-Response.data: [{}]
+Response.data: []
 
 /task-hashtag/search/
 Method: GET
@@ -1105,12 +1105,12 @@ Response.data: [
 /task-hashtag/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /task-subscriber/
 Method: POST
 Request: {"task_id":1}
-Response.data: [{}]
+Response.data: []
 
 /task-subscriber/list/?task_id=1
 Method: GET
@@ -1119,7 +1119,7 @@ Response.data: [{"users": [1, 2]}
 /task-subscriber/
 Method: DELETE
 Request: {"task_id":1}
-Response.data: [{}]
+Response.data: []
 
 /road/
 Method: POST
@@ -1155,7 +1155,7 @@ Request: {
 	"previous":1,		(nullable)
 	"next":1			(nullable)
 }
-Response.data: [{}]
+Response.data: []
 
 /road/list/
 Method: GET
@@ -1186,7 +1186,7 @@ Response.data: [{
 /road/
 Method: DELETE
 Request: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /task-card/
 Method: POST
@@ -1231,7 +1231,7 @@ Request: {
 	"next":1,			(nullable)
 	"road":1			(nullable; null means staying in the same road)
 }
-Response.data: [{}]
+Response.data: []
 
 /task-card/list/
 Method: GET
@@ -1253,7 +1253,7 @@ Request: {
 	"id":1,
 	"record_version":1
 }
-Response.data: [{}]
+Response.data: []
 
 /task-card/archive/
 Method: GET
@@ -1272,7 +1272,7 @@ esponse.data: [{
 
 /task-card/
 Method: DELETE: {"id":1}
-Response.data: [{}]
+Response.data: []
 
 /jira-import/upload/
 Headers:

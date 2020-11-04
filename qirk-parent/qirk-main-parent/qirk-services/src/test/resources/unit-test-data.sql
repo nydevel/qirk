@@ -1,6 +1,3 @@
-INSERT INTO languages(id, name_code) VALUES(1, 'EN_US');
-INSERT INTO languages(id, name_code) VALUES(2, 'RU_RU');
-
 INSERT INTO task_type(id, name_code) VALUES(1, 'TASK');
 INSERT INTO task_type(id, name_code) VALUES(2, 'BUG');
 INSERT INTO task_type(id, name_code) VALUES(3, 'IMPROVEMENT');

@@ -1,22 +1,6 @@
 /*
  * Copyright  
  */
-/*
- * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.wrkr.clb.web.controller.user;
 
 import java.util.List;
@@ -40,11 +24,10 @@ import org.wrkr.clb.model.user.User;
 import org.wrkr.clb.services.dto.ExistsDTO;
 import org.wrkr.clb.services.dto.IdOrUiIdDTO;
 import org.wrkr.clb.services.dto.user.ActivationDTO;
-import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.EmailAddressDTO;
 import org.wrkr.clb.services.dto.user.PasswordChangeDTO;
 import org.wrkr.clb.services.dto.user.PriofileUpdateDTO;
-import org.wrkr.clb.services.dto.user.PublicProfileDTO;
+import org.wrkr.clb.services.dto.user.ProfileDTO;
 import org.wrkr.clb.services.dto.user.PublicUserDTO;
 import org.wrkr.clb.services.user.AuthnService;
 import org.wrkr.clb.services.user.ProfileRetryWrapperService;
@@ -176,12 +159,12 @@ public class UserController extends BaseAuthenticationExceptionHandlerController
     }
 
     @GetMapping(value = "/")
-    public JsonContainer<PublicProfileDTO, Void> get(@SuppressWarnings("unused") HttpSession session,
+    public JsonContainer<PublicUserDTO, Void> get(@SuppressWarnings("unused") HttpSession session,
             @RequestParam(name = "id") Long id) throws Exception {
         long startTime = System.currentTimeMillis();
-        PublicProfileDTO profileDTO = userService.get(id);
+        PublicUserDTO profileDTO = userService.get(id);
         logProcessingTimeFromStartTime(startTime, "get", id);
-        return new JsonContainer<PublicProfileDTO, Void>(profileDTO);
+        return new JsonContainer<PublicUserDTO, Void>(profileDTO);
     }
 
     @GetMapping(value = "list")

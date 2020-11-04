@@ -22,12 +22,6 @@ curl --user elastic -X PUT -H 'Content-Type: application/json' http://127.0.0.1:
 				},
 				"doc_values": false
 			},
-			"tags": {
-				"type": "text",
-				"index": true,
-				"index_options": "docs",
-				"doc_values": false
-			},
 			"projects": {
 				"type": "nested",
 				"properties": {

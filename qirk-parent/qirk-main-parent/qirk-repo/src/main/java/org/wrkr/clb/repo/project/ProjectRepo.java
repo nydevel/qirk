@@ -1,19 +1,3 @@
-/*
- * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.wrkr.clb.repo.project;
 
 import java.util.ArrayList;
@@ -117,17 +101,6 @@ public class ProjectRepo extends JPAIdEntityRepo<Project> {
         return getResultList(idsQuery);
     }
 
-    public List<Project> listAndFetchTags() {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Project> query = cb.createQuery(Project.class);
-
-        Root<Project> root = query.from(Project.class);
-        root.fetch(Project_.tags, JoinType.LEFT);
-
-        query = query.select(root);
-        return getResultList(query);
-    }
-
     public List<Project> listAndOrderAscByName() {
         CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
         CriteriaQuery<Project> query = cb.createQuery(Project.class);
@@ -197,20 +170,6 @@ public class ProjectRepo extends JPAIdEntityRepo<Project> {
                 cb.equal(projectMemberJoin.get(ProjectMember_.manager), true));
         query.orderBy(cb.asc(projectRoot.get(Project_.name)));
         query.distinct(true);
-        return getResultList(query);
-    }
-
-    public List<Project> searchPublicByNameAndFetchTagsAndOrderAscByName(String name) {
-        CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
-        CriteriaQuery<Project> query = cb.createQuery(Project.class);
-
-        Root<Project> projectRoot = query.from(Project.class);
-        projectRoot.fetch(Project_.tags, JoinType.LEFT);
-
-        query.where(cb.like(cb.lower(projectRoot.get(Project_.name)), "%" + name.toLowerCase() + "%"),
-                cb.equal(projectRoot.get(Project_.isPrivate), false));
-        query.distinct(true);
-        query.orderBy(cb.asc(projectRoot.get(Project_.name)));
         return getResultList(query);
     }
 }

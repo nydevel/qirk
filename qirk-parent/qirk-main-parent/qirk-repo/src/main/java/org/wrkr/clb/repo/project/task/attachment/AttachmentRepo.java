@@ -1,19 +1,3 @@
-/*
- * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.wrkr.clb.repo.project.task.attachment;
 
 import java.sql.Array;
@@ -40,14 +24,14 @@ public class AttachmentRepo extends JDBCIdEntityRepo {
 
     private static final String INSERT = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " + // 1
-            AttachmentMeta.path + ", " + // 2
+            AttachmentMeta.externalPath + ", " + // 2
             AttachmentMeta.taskId + ") " + // 3
             "VALUES (?, ?, ?) " +
             "RETURNING " + AttachmentMeta.id + ";";
 
     private static final String INSERT_BATCH = "INSERT INTO " + AttachmentMeta.TABLE_NAME + " " +
             "(" + AttachmentMeta.filename + ", " +
-            AttachmentMeta.path + ", " +
+            AttachmentMeta.externalPath + ", " +
             AttachmentMeta.taskId + ") " +
             "(SELECT " + TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.filename + ", " +
             TemporaryAttachmentMeta.TABLE_NAME + "." + TemporaryAttachmentMeta.path + ", " +
@@ -97,7 +81,7 @@ public class AttachmentRepo extends JDBCIdEntityRepo {
             PreparedStatement ps = connection.prepareStatement(INSERT,
                     new String[] { AttachmentMeta.id });
             ps.setString(1, attachment.getFilename());
-            ps.setString(2, attachment.getPath());
+            ps.setString(2, attachment.getExternalPath());
             ps.setLong(3, attachment.getTaskId());
             return ps;
         }, keyHolder);

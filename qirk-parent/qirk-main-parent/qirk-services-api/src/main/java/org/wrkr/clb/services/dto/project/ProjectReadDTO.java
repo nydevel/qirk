@@ -1,26 +1,8 @@
-/*
- * This file is part of the Java API to Qirk.
- * Copyright (C) 2020 Memfis Inc.
- *
- * This program is free software: you can redistribute it and/or modify it under the terms of
- * the GNU General Public License as published by the Free Software Foundation, either version 3
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- * See the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this program.
- * If not, see <http://www.gnu.org/licenses/>.
- *
- */
 package org.wrkr.clb.services.dto.project;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.wrkr.clb.model.Language;
-import org.wrkr.clb.model.Tag;
 import org.wrkr.clb.model.project.Project;
 import org.wrkr.clb.model.project.ProjectMember;
 
@@ -59,12 +41,6 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     @JsonInclude(Include.NON_NULL)
     public String documentationMd;
 
-    @JsonInclude(Include.NON_NULL)
-    public List<Tag> tags;
-
-    @JsonInclude(Include.NON_NULL)
-    public List<Language> languages;
-
     @JsonProperty(value = "is_member")
     @JsonInclude(Include.NON_NULL)
     public boolean isMember = false;
@@ -81,8 +57,7 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     @JsonInclude(Include.NON_NULL)
     public ProjectApplicationStatusDTO application;
 
-    private static ProjectReadDTO fromEntity(Project project,
-            boolean includeDescription, boolean includeDoc, boolean includeTagsAndLanguages) {
+    private static ProjectReadDTO fromEntity(Project project, boolean includeDescription, boolean includeDoc) {
         ProjectReadDTO dto = new ProjectReadDTO();
 
         dto.id = project.getId();
@@ -102,24 +77,19 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
             dto.documentationMd = project.getDocumentationMd();
         }
 
-        if (includeTagsAndLanguages) {
-            dto.tags = project.getTags();
-            dto.languages = project.getLanguages();
-        }
-
         return dto;
     }
 
     public static ProjectReadDTO fromEntityWithDescription(Project project) {
-        return fromEntity(project, true, false, false);
+        return fromEntity(project, true, false);
     }
 
     public static ProjectReadDTO fromEntityWithDescriptionAndDocs(Project project) {
-        return fromEntity(project, true, true, false);
+        return fromEntity(project, true, true);
     }
 
-    public static ProjectReadDTO fromEntityWithEverythingForRead(Project project) {
-        ProjectReadDTO dto = fromEntity(project, true, false, true);
+    public static ProjectReadDTO fromEntityWithDescriptionAndPermissions(Project project) {
+        ProjectReadDTO dto = fromEntity(project, true, false);
 
         ProjectMember currentProjectMember = (project.getMembers().isEmpty()
                 ? null
@@ -135,7 +105,7 @@ public class ProjectReadDTO extends ProjectNameAndUiIdDTO {
     public static List<ProjectReadDTO> fromEntitiesWithEverythingForList(List<Project> projectList) {
         List<ProjectReadDTO> dtoList = new ArrayList<ProjectReadDTO>(projectList.size());
         for (Project project : projectList) {
-            dtoList.add(fromEntity(project, false, false, false));
+            dtoList.add(fromEntity(project, false, false));
         }
         return dtoList;
     }
