@@ -7,7 +7,7 @@
 	<version>3.14.0-RELEASE</version>
 
 	<properties>
-		<aws.java.sdk.version>1.11.652</aws.java.sdk.version>
+		<aws.java.sdk.version>1.12.261</aws.java.sdk.version>
 	</properties>
 
 	<build>
