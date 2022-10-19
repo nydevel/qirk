@@ -7,7 +7,7 @@
 	<version>3.14.0-RELEASE</version>
 
 	<properties>
-		<jackson.version>2.11.3</jackson.version>
+		<jackson.version>2.13.4.1</jackson.version>
 	</properties>
 
 	<build>
