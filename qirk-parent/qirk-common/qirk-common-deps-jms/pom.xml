@@ -8,7 +8,7 @@
 
 	<properties>
 		<activemq.version>5.15.9</activemq.version>
-		<commons-net.version>3.6</commons-net.version>
+		<commons-net.version>3.9.0</commons-net.version>
 		<jmdns.version>3.4.1</jmdns.version>
 	</properties>
 
